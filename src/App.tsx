@@ -589,7 +589,7 @@ function LaunchedFromHarbor() {
                           add(card, (qty as any)[card.id] || 1);
                           window.dispatchEvent(
                             new CustomEvent("flash", {
-                              detail: `${card.title} added to War Chest`,
+                              detail: `${card.title} added to Chest`,
                             })
                           );
                         }}
@@ -649,25 +649,25 @@ function HomePage() {
         className="relative overflow-hidden border-b border-neutral-800"
       >
         <img
-          src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2000&auto=format&fit=crop"
+          src="deck-top-blur.png"
           alt="Stormy sea"
-          className="absolute inset-0 h-full w-full object-cover opacity-40 contrast-125"
+          className="absolute inset-0 h-full w-full object-cover opacity-70 contrast-180"
         />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,193,7,0.10),transparent_60%)]" />
-        <div className="absolute inset-0 bg-neutral-950/40 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
         <Container className="relative py-24 md:py-32">
-          <div className="grid md:grid-cols-12 gap-10 items-center">
+          <div className="grid md:grid-cols-12 gap-10 items-start">
             <div className="md:col-span-7">
               <div className="space-y-10">
                 <IntroRow
                   img="ironship.png"
                   text="Inspired by the ship that defied an empire."
-                  tone="text-amber-200"
+                  tone="text-amber-400"
                 />
                 <IntroRow
-                  img="oak-copper-table.png"
+                  img="copper table.png"
                   text="Forged in oak & copper, tempered by fire and flame."
-                  tone="text-amber-300"
+                  tone="text-amber-400"
                 />
                 <IntroRow
                   img="bean-smell.png"
@@ -684,12 +684,12 @@ function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="md:col-span-5">
+            <div className="md:col-span-5" self-start>
               <div className="relative aspect-[3/4] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
                   src="officer-window.png"
                   alt="Old Ironsides hero"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover object-top"
                 />
               </div>
             </div>
@@ -1276,7 +1276,7 @@ function CartPage() {
       <Container>
         <BackButton />
         <SectionTitle
-          title="War Chest"
+          title="Chest"
           subtitle={
             cart.length ? `${cart.length} item(s)` : "Your chest is empty."
           }
@@ -1405,7 +1405,7 @@ function HeaderNavLink({ to, children }: any) {
 
 function Layout() {
   const { count } = useCart();
-  const [shrunk, setShrunk] = useState(false);
+  const [shrunk, setShrunk] = useState(true);
   useEffect(() => {
     const onScroll = () => setShrunk(window.scrollY > 20);
     onScroll();
@@ -1476,7 +1476,7 @@ function Layout() {
                   className="relative px-1.5 py-1 rounded-md text-amber-300 inline-flex items-center gap-1.5"
                 >
                   <ChestIcon className="h-6 w-6 md:h-7 md:w-7" />
-                  <span className="text-sm md:text-base">War Chest</span>
+                  <span className="text-sm md:text-base">Chest</span>
                   {count > 0 && (
                     <span className="absolute -top-1.5 -right-2 bg-amber-400 text-neutral-900 text-[10px] font-bold rounded-full px-1.5">
                       {count}
@@ -1490,7 +1490,7 @@ function Layout() {
       </header>
 
       {/* spacer so content doesn’t hide under header */}
-      <div className={shrunk ? "h-[120px]" : "h-[180px] md:h-[200px]"} />
+      <div className="h-[120px]" />
 
       <Outlet />
 

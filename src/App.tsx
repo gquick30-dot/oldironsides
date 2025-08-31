@@ -242,8 +242,8 @@ const roastCards = [
     title: "Flagship",
     subTitle: "Medium Roast",
     note: "Balanced, Enduring, Everyday",
-    img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=1400&auto=format&fit=crop",
-    price: 20.0,
+    img: "Flagship-web.png",
+    price: 22.0,
     canBuy: true,
     variant: "12oz • Ground",
     battleDate: "Commissioned October 21, 1797",
@@ -264,8 +264,8 @@ const roastCards = [
     title: "Baptism by Fire",
     subTitle: "Dark Roast",
     note: "Bold, Smooth, Unyielding",
-    img: "https://images.unsplash.com/photo-1527168027773-0cc890c4f42d?q=80&w=1400&auto=format&fit=crop",
-    price: 20.0,
+    img: "baptism-web.png",
+    price: 22.0,
     canBuy: true,
     variant: "12oz • Ground",
     battleDate: "August 19, 1812",
@@ -286,8 +286,8 @@ const roastCards = [
     title: "The Java Action",
     subTitle: "Medium Roast",
     note: "Captivating, Decisive Finish.",
-    img: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop",
-    price: 20.0,
+    img: "java-web.png",
+    price: 22.0,
     canBuy: true,
     variant: "12oz • Ground",
     battleDate: "December 29, 1812",
@@ -306,7 +306,7 @@ const roastCards = [
     title: "Oak & Copper",
     subTitle: "Coming Soon",
     note: "Bourbon barrel-aged seasonal.",
-    img: "Copper-deck.png",
+    img: "oak-copper-deck.png",
     price: 0,
     canBuy: false,
     variant: "Limited Release",
@@ -489,10 +489,27 @@ function NotifyForm({ onSubmit }: any) {
   );
 }
 function LaunchedFromHarbor() {
+  const { add } = useCart();
+  const [qtyById, setQtyById] = useState<Record<string, number>>({});
+  const getQty = (id: string) => Math.max(1, qtyById[id] ?? 1);
+  const setQty = (id: string, next: number) =>
+    setQtyById((q) => ({
+      ...q,
+      [id]: Math.max(1, Math.min(99, Math.trunc(next || 1))),
+    }));
+  const handleAdd = (card: any) => {
+    const qty = getQty(card.id);
+    add(card, qty);
+    window.dispatchEvent(
+      new CustomEvent("flash", {
+        detail: `${qty} × ${card.title} added to Chest`,
+      })
+    );
+  };
   return (
     <section
       id="fleet"
-      className="relative py-12 md:py-20 overflow-hidden min-h-[1000px]"
+      className="relative py-12 md:py-20 overflow-hidden min-h-[1100px]"
     >
       {/* Background image just for this section */}
       <img
@@ -526,7 +543,7 @@ function LaunchedFromHarbor() {
                 <img
                   src={card.img}
                   alt={card.title}
-                  className="h-56 w-full object-cover"
+                  className="h-64 w-full object-cover"
                 />
               </Link>
 
@@ -542,28 +559,62 @@ function LaunchedFromHarbor() {
                 <p className="text-sm text-neutral-400">{card.variant}</p>
                 <p className="text-sm text-neutral-400 flex-1">{card.note}</p>
                 <div className="mt-4 flex items-center gap-3">
-                  <div className="text-sm text-neutral-300">
-                    {card.slug === "oak-and-copper" ? (
-                      <span className="text-neutral-500">—</span>
+                  <div className="mt-4 flex items-center gap-3">
+                    <div className="text-sm text-neutral-300">
+                      {card.slug === "oak-and-copper" ? (
+                        <span className="text-neutral-500">—</span>
+                      ) : (
+                        fmt(card.price)
+                      )}
+                    </div>
+
+                    {card.canBuy ? (
+                      <>
+                        <div className="ml-auto inline-flex items-center rounded-lg border border-neutral-700">
+                          <button
+                            type="button"
+                            onClick={() => setQty(card.id, getQty(card.id) - 1)}
+                            className="px-2 py-1 hover:bg-neutral-800 rounded-l-lg"
+                            aria-label="Decrease quantity"
+                          >
+                            <Minus className="h-4 w-4" />
+                          </button>
+                          <input
+                            value={getQty(card.id)}
+                            onChange={(e) =>
+                              setQty(card.id, Number(e.target.value))
+                            }
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            className="w-12 text-center bg-neutral-900/70 py-1 text-sm outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setQty(card.id, getQty(card.id) + 1)}
+                            className="px-2 py-1 hover:bg-neutral-800 rounded-r-lg"
+                            aria-label="Increase quantity"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </button>
+                        </div>
+
+                        <button
+                          onClick={() => handleAdd(card)}
+                          className="px-3 py-2 rounded-lg font-semibold bg-amber-400 text-neutral-900 hover:bg-amber-300"
+                          aria-label={`Add ${card.title} to Chest`}
+                        >
+                          Add to Chest
+                        </button>
+                      </>
                     ) : (
-                      fmt(card.price)
+                      <Link
+                        to={`/roast/${card.slug}`}
+                        className="ml-auto px-3 py-2 rounded-lg font-semibold border border-neutral-700 hover:border-amber-400/50 hover:text-amber-300"
+                      >
+                        Reserve / Learn
+                      </Link>
                     )}
                   </div>
-                  {card.canBuy ? (
-                    <Link
-                      to={`/roast/${card.slug}`}
-                      className="ml-auto px-3 py-2 rounded-lg font-semibold bg-amber-400 text-neutral-900 hover:bg-amber-300"
-                    >
-                      View Roast
-                    </Link>
-                  ) : (
-                    <Link
-                      to={`/roast/${card.slug}`}
-                      className="ml-auto px-3 py-2 rounded-lg font-semibold border border-neutral-700 hover:border-amber-400/50 hover:text-amber-300"
-                    >
-                      Reserve / Learn
-                    </Link>
-                  )}
                 </div>
               </div>
             </div>
@@ -681,9 +732,14 @@ function HomePage() {
 
       <section
         id="fleet-stories"
-        className="border-t border-neutral-800 py-16 md:py-24"
+        className="relative overflow-hidden border-t border-neutral-800 py-20 md:py-32 min-h-[1100px]"
       >
-        <Container>
+        <img
+          src="/maps-books.png"
+          alt="Stories backdrop"
+          className="absolute inset-0 w-full h-full object-cover opacity-40 z-0"
+        />
+        <Container className="relative z-10">
           <SectionTitle
             title="The True History Behind the Fleet"
             subtitle="Explore the real battles and ships that inspired our roasts."
@@ -803,8 +859,13 @@ function FleetStoryPage() {
   }, []);
 
   return (
-    <main className="py-12 md:py-20">
-      <Container>
+    <main className="relative py-12 md:py-20 overflow-hidden">
+      <img
+        src="/maps-books.png"
+        alt="Fleet story backdrop"
+        className="absolute inset-0 w-full h-full object-cover opacity-40 z-0"
+      />
+      <Container className="relative z-10">
         <BackButton />
         <SectionTitle
           title={card.storyTitle}

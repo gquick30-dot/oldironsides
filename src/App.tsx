@@ -543,7 +543,7 @@ function LaunchedFromHarbor() {
                 <img
                   src={card.img}
                   alt={card.title}
-                  className="h-64 w-full object-cover"
+                  className="h-72 sm:h-80 md:h-96 w-full object-cover"
                 />
               </Link>
 
@@ -664,6 +664,7 @@ function HomePage() {
         />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,193,7,0.10),transparent_60%)]" />
         <div className="absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
+
         <Container className="relative py-24 md:py-32">
           <div className="grid md:grid-cols-12 gap-10 items-start">
             <div className="md:col-span-7">
@@ -714,6 +715,7 @@ function HomePage() {
                 </div>
               </div>
             </div>
+
             <div className="md:col-span-5" self-start>
               <div className="relative aspect-[3/4] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
@@ -754,7 +756,7 @@ function HomePage() {
                 <img
                   src={card.img}
                   alt={String(card.title)}
-                  className="h-56 w-full object-cover"
+                  className="h-72 sm:h-80 md:h-96 w-full object-cover"
                 />
                 <div className="p-5 flex flex-col flex-1">
                   <div className="flex items-center gap-3 text-amber-300 mb-1">
@@ -839,12 +841,7 @@ function HomePage() {
 
 function FleetPage() {
   return (
-    <main className="py-16">
-      <Container>
-        <BackButton />
-        <SectionTitle title="The Fleet" subtitle="Choose your roast." />
-      </Container>
-
+    <main className="py-6 md:py-8">
       <LaunchedFromHarbor />
     </main>
   );
@@ -905,12 +902,24 @@ function FleetStoryPage() {
 function RoastDetailPage() {
   const { slug } = useParams();
   const card = roastCards.find((c) => c.slug === slug);
+  const { add } = useCart();
+  const [qty, setQty] = useState(1);
 
   if (!card) return <NotFoundPage />;
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  const addToChest = () => {
+    const n = Math.max(1, Math.min(99, Math.trunc(qty || 1)));
+    setQty(n);
+    add(card, n);
+    window.dispatchEvent(
+      new CustomEvent("flash", {
+        detail: `${n} × ${card.title} added to Chest`,
+      })
+    );
+  };
   return (
     <main className="py-12 md:py-20">
       <Container>
@@ -918,20 +927,73 @@ function RoastDetailPage() {
 
         <div className="mt-6 grid md:grid-cols-2 gap-8 items-start">
           <div>
-            <BackButton /> {/* moved here so it’s right above the image */}
-            <div className="rounded-3xl overflow-hidden ring-1 ring-neutral-800">
+            {/* moved here so it’s right above the image */}
+            <div className="rounded-3xl overflow-hidden ring-1 ring-neutral-800 max-w-[75%]">
               <img
                 src={card.img}
                 alt={card.title}
-                className="w-full h-[520px] object-cover"
+                className="w-full h-[540px] sm:h-[600px] md:h-[640px] lg:h-[680px] object-cover"
               />
             </div>
           </div>
-
           <div className="space-y-4">
             <p className="text-neutral-300 text-lg leading-relaxed">
               This is the roast profile page for <strong>{card.title}</strong>.
             </p>
+
+            {/* Buy row */}
+            {card.canBuy ? (
+              <div className="pt-2">
+                <div className="text-sm text-neutral-300 mb-2">
+                  {fmt(card.price)} <span className="text-neutral-500">•</span>{" "}
+                  {card.variant}
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="inline-flex items-center rounded-lg border border-neutral-700">
+                    <button
+                      type="button"
+                      onClick={() => setQty((q) => Math.max(1, (q || 1) - 1))}
+                      className="px-2 py-1 hover:bg-neutral-800 rounded-l-lg"
+                      aria-label="Decrease quantity"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <input
+                      value={qty}
+                      onChange={(e) => setQty(Number(e.target.value))}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      className="w-14 text-center bg-neutral-900/70 py-2 text-sm outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setQty((q) => Math.min(99, (q || 1) + 1))}
+                      className="px-2 py-1 hover:bg-neutral-800 rounded-r-lg"
+                      aria-label="Increase quantity"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={addToChest}
+                    className="w-full sm:w-auto px-4 py-2 rounded-lg font-semibold bg-amber-400 text-neutral-900 hover:bg-amber-300"
+                    aria-label={`Add ${card.title} to Chest`}
+                  >
+                    Add to Chest
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="pt-2">
+                <div className="text-sm text-neutral-300 mb-2">
+                  {card.variant}
+                </div>
+                <div className="text-neutral-400">
+                  Coming soon. Join the Fleet on the Store page to get notified.
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </Container>
@@ -1103,38 +1165,130 @@ function MissionPage() {
 
 function OriginsPage() {
   return (
-    <main className="py-16 md:py-24">
+    <main className="pt-24 md:pt-28 pb-16">
       <Container>
-        <BackButton />
         <SectionTitle
           title={
             <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
               Origins & Voyages
             </span>
           }
-          subtitle="Stories from the land and the hands that grow our beans."
+          subtitle={
+            <span className="block text-lg md:text-2xl font-semibold text-amber-300">
+              From Distant Shores to Roasting Flames
+            </span>
+          }
         />
-        <div className="mt-6 max-w-3xl text-neutral-300 space-y-6">
-          <p>
-            Paragraph 1 — your origin/voyage intro copy goes here. Talk region,
-            altitude, varietals, and harvest practices.
-          </p>
-          <div className="aspect-[16/9] rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 grid place-content-center text-neutral-500">
-            Photo slot
-          </div>
-          <p>
-            Paragraph 2 — describe processing (washed, natural, honey), drying
-            beds, and farmer partnerships.
-          </p>
-          <div className="aspect-[16/9] rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 grid place-content-center text-neutral-500">
-            Photo slot
-          </div>
-          <p>
-            Paragraph 3 — tasting notes, cupping scores, and how origin
-            influences roast decisions.
-          </p>
-        </div>
       </Container>
+
+      {/* ===== The Lands ===== */}
+      <section className="relative overflow-hidden border-t border-neutral-800">
+        <img
+          src="/farm1-web.jpg"
+          alt="The Lands backdrop"
+          className="absolute inset-0 w-full h-full object-cover opacity-90 z-0 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+        <Container>
+          <div className="relative z-10 py-12 md:py-16">
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
+              {/* Photo LEFT */}
+              <div className="flex justify-center md:justify-start">
+                <div className="w-64 md:w-[32rem] aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/bean-stock3.jpg"
+                    alt="Hands with beans"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              {/* Title + Paragraph RIGHT */}
+              <div className="space-y-3">
+                <h3 className="text-xl md:text-2xl font-bold text-amber-300">
+                  The Lands
+                </h3>
+                <p className="text-neutral-300 text-lg leading-relaxed max-w-[32rem]">
+                  From rich volcanic soil to high mountain climates, our beans
+                  begin in nutrient-dense lands that shape their bold character.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ===== The Hands That Grow Our Beans ===== */}
+      <section className="relative overflow-hidden border-t border-neutral-800">
+        <img
+          src="/hands-bowl.jpg"
+          alt="Growers backdrop"
+          className="absolute inset-0 w-full h-full object-cover opacity-90 z-0 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+        <Container>
+          <div className="relative z-10 py-12 md:py-16">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] items-center gap-4 md:gap-6">
+              {/* Text LEFT */}
+              <div className="order-2 md:order-1 space-y-3 md:justify-self-end">
+                <h3 className="text-xl md:text-2xl font-bold text-amber-300">
+                  The Hands That Grow Our Beans
+                </h3>
+                <p className="text-neutral-300 text-lg leading-relaxed max-w-[32rem]">
+                  Small family farms nurture every harvest with care, treat
+                  their people fairly, and protect the health of each bean.
+                </p>
+              </div>
+              {/* Photo RIGHT */}
+              <div className="order-1 md:order-2 flex justify-center md:justify-end">
+                <div className="relative w-64 md:w-[32rem] aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/hands-beans.jpg"
+                    alt="Hands with beans"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ===== The Roasting Process ===== */}
+      <section className="relative overflow-hidden border-t border-neutral-800">
+        <img
+          src="/roasted-dark.jpg"
+          alt="Roasting process backdrop"
+          className="absolute inset-0 w-full h-full object-cover opacity-100 z-0 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+        <Container>
+          <div className="relative z-10 py-12 md:py-16">
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
+              {/* Photo LEFT */}
+              <div className="flex justify-center md:justify-start">
+                <div className="w-64 md:w-[32rem] aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/roasted-cup.jpg"
+                    alt="Hands with beans"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              {/* Title + Paragraph RIGHT */}
+              <div className="space-y-3">
+                <h3 className="text-xl md:text-2xl font-bold text-amber-300">
+                  The Roasting Process
+                </h3>
+                <p className="text-neutral-300 text-lg leading-relaxed max-w-[32rem]">
+                  Our medium roast is smooth and balanced for everyday
+                  enjoyment. Our dark roast is bold and full-bodied—crafted
+                  without bitterness for a finish you must experience.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
     </main>
   );
 }
@@ -1443,12 +1597,20 @@ function HeaderNavLink({ to, children }: any) {
     </Link>
   );
 }
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
+  return null;
+}
 
 function Layout() {
   const { count } = useCart();
   const location = useLocation();
   const isHome = location.pathname === "/";
   const isFleet = location.pathname.startsWith("/fleet");
+  const isRoast = location.pathname.startsWith("/roast");
 
   const [shrunk, setShrunk] = useState(true);
   useEffect(() => {
@@ -1459,6 +1621,7 @@ function Layout() {
   }, []);
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100 overflow-x-hidden">
+      <ScrollToTop />
       <FlashToast />
       {/* FIXED, SHRINK-ON-SCROLL HEADER */}
       <header className="fixed top-0 inset-x-0 z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800">
@@ -1470,11 +1633,11 @@ function Layout() {
                 src="/emblem-black.png"
                 alt="Old Ironsides emblem"
                 className={
-                  shrunk
-                    ? "h-20 md:h-24 w-auto object-contain select-none transition-all"
-                    : "h-28 md:h-36 w-auto object-contain select-none transition-all"
+                  (shrunk ? "h-20 md:h-24" : "h-28 md:h-36") +
+                  " w-auto object-contain select-none transition-all transform origin-center scale-[1.18] md:scale-[1.25]"
                 }
               />
+
               <div className="flex flex-col text-left -mt-1">
                 <div
                   className={
@@ -1488,8 +1651,8 @@ function Layout() {
                 <div
                   className={
                     shrunk
-                      ? "text-[10px] md:text-xs text-amber-200"
-                      : "text-xs md:text-base text-amber-200"
+                      ? "text-xs md:text-sm text-amber-200"
+                      : "text-sm md:text-lg text-amber-200"
                   }
                 >
                   Ignite the Spirit, Savor the Victory!
@@ -1497,8 +1660,8 @@ function Layout() {
                 <div
                   className={
                     shrunk
-                      ? "hidden md:block text-[10px] text-neutral-300"
-                      : "text-[10px] md:text-xs text-neutral-300"
+                      ? "hidden md:block md:text-sm text-neutral-300"
+                      : "text-sm md:text-base text-neutral-300"
                   }
                 >
                   Veteran-owned and operated.
@@ -1511,9 +1674,9 @@ function Layout() {
               <div className="flex items-center gap-5">
                 <HeaderNavLink to="/">Home Port</HeaderNavLink>
                 <HeaderNavLink to="/fleet">The Fleet</HeaderNavLink>
+                <HeaderNavLink to="/origins">Origins & Voyages</HeaderNavLink>
                 <HeaderNavLink to="/store">Ship’s Store</HeaderNavLink>
                 <HeaderNavLink to="/mission">Admiral’s Log</HeaderNavLink>
-                <HeaderNavLink to="/origins">Origins & Voyages</HeaderNavLink>
                 <HeaderNavLink to="/contact">Contact the Crew</HeaderNavLink>
                 <HeaderNavLink to="/sdvosb">SDVOSB</HeaderNavLink>
                 <Link
@@ -1538,10 +1701,12 @@ function Layout() {
       <div
         className={
           isHome
-            ? "h-[110px]" // Home = super tight, hero sits high
+            ? "h-[110px]"
             : isFleet
-            ? "h-[150px] md:h-[170px]" // Fleet = more space so Back button clears
-            : "h-[120px] md:h-[140px]" // All other pages = medium space
+            ? "h-[120px] md:h-[130px]"
+            : isRoast
+            ? "h-[150px] md:h-[170px]"
+            : "h-[130px] md:h-[140px]"
         }
       />
 

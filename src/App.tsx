@@ -488,7 +488,10 @@ function NotifyForm({ onSubmit }: any) {
     </form>
   );
 }
-function LaunchedFromHarbor() {
+function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+  const isStore = location.pathname.startsWith("/store");
   const { add } = useCart();
   const [qtyById, setQtyById] = useState<Record<string, number>>({});
   const getQty = (id: string) => Math.max(1, qtyById[id] ?? 1);
@@ -509,16 +512,23 @@ function LaunchedFromHarbor() {
   return (
     <section
       id="fleet"
-      className="relative py-12 md:py-20 overflow-hidden min-h-[1100px]"
+      className={`relative overflow-hidden ${
+        isHome
+          ? "py-10 md:py-14 min-h-[820px]" // HOME size
+          : isStore
+          ? "py-10 md:py-14 min-h-[1000px]" // STORE size
+          : "py-12 md:py-20 min-h-[1100px]" // default elsewhere
+      }`}
     >
       {/* Background image just for this section */}
-      <img
-        src="/old-boston-harbor.png"
-        alt="Boston Harbor backdrop"
-        className="absolute inset-0 w-full h-full object-cover opacity-40 -z-0"
-      />
-
-      <Container className="relative z-10">
+      {!noBg && (
+        <img
+          src="/old-boston-harbor.png"
+          alt="Boston Harbor backdrop"
+          className="absolute inset-0 w-full h-full object-cover opacity-40 -z-0"
+        />
+      )}
+      <Container className={`relative z-10 ${isStore ? "pt-10 md:pt-16" : ""}`}>
         <SectionTitle
           title="Launched From The Harbor"
           subtitle={
@@ -658,9 +668,9 @@ function HomePage() {
         className="relative overflow-hidden border-b border-neutral-800"
       >
         <img
-          src="deck-top-blur.png"
+          src="emblem-black.png"
           alt="Stormy sea"
-          className="absolute inset-0 h-full w-full object-cover opacity-70 contrast-180"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[900px] object-contain opacity-10 pointer-events-none select-none"
         />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,193,7,0.10),transparent_60%)]" />
         <div className="absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
@@ -671,24 +681,14 @@ function HomePage() {
               <div className="space-y-10">
                 <IntroRow
                   img="ironship.png"
-                  text={
-                    <>
-                      Inspired by the ship
-                      <br />
-                      that defied an empire.
-                    </>
-                  }
+                  text={<>Inspired by the ship that defied an empire.</>}
                   tone="text-amber-400"
                 />
 
                 <IntroRow
                   img="copper table.png"
                   text={
-                    <>
-                      Forged in oak & copper,
-                      <br />
-                      tempered by fire and flame.
-                    </>
+                    <>Forged in oak & copper, tempered by fire and flame.</>
                   }
                   tone="text-amber-400"
                 />
@@ -697,9 +697,7 @@ function HomePage() {
                   img="bean-smell.png"
                   text={
                     <>
-                      Only premium roasted coffee,
-                      <br />
-                      crafted for modern legends.
+                      Only premium roasted coffee, crafted for modern legends.
                     </>
                   }
                   tone="text-amber-400"
@@ -728,20 +726,14 @@ function HomePage() {
           </div>
         </Container>
       </header>
-
-      <LaunchedFromHarbor />
+      <LaunchedFromHarbor noBg />
       <RingThatBellBox />
 
       <section
         id="fleet-stories"
-        className="relative overflow-hidden border-t border-neutral-800 py-20 md:py-32 min-h-[1100px]"
+        className="relative border-t border-neutral-800 py-12 md:py-16"
       >
-        <img
-          src="/maps-books.png"
-          alt="Stories backdrop"
-          className="absolute inset-0 w-full h-full object-cover opacity-40 z-0"
-        />
-        <Container className="relative z-10">
+        <Container>
           <SectionTitle
             title="The True History Behind the Fleet"
             subtitle="Explore the real battles and ships that inspired our roasts."
@@ -750,7 +742,7 @@ function HomePage() {
             {roastCards.map((card) => (
               <Link
                 key={`story-${card.slug}`}
-                to={`/fleet/${card.slug}`}
+                to={`/roast/${card.slug}`}
                 className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
               >
                 <img
@@ -1000,7 +992,6 @@ function RoastDetailPage() {
     </main>
   );
 }
-
 function StorePage() {
   const tiles = [
     {
@@ -1036,65 +1027,62 @@ function StorePage() {
   ];
 
   return (
-    <main className="relative overflow-hidden py-16 md:py-24">
-      {/* Full-bleed backdrop */}
-      <img
-        src="/store-rack.png"
-        alt="Ship’s Store backdrop"
-        className="absolute inset-0 w-full h-full object-cover opacity-60 -z-0"
-      />
-      <div className="absolute inset-0 bg-neutral-950/40 -z-0" />
-
-      <Container className="relative z-10">
-        <BackButton />
-        <SectionTitle
-          title={
-            <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
-              Ship’s Store — Coming Soon
-            </span>
-          }
-          subtitle="Browse categories and join the Fleet to get notified when drops go live."
+    <main className="relative overflow-hidden">
+      {/* 1) Fleet content at the very top (keeps its own full-bleed harbor backdrop) */}
+      <LaunchedFromHarbor />
+      {/* 2) Store content below */}
+      <section className="relative overflow-hidden pt-10 pb-16 md:pt-12 md:pb-24">
+        {/* Edge-to-edge backdrop over merch */}
+        <img
+          src="/store-rack.png"
+          alt="Ship’s Store backdrop"
+          className="absolute inset-0 w-full h-full object-cover opacity-40 -z-0"
         />
-        <div className="mt-4 max-w-xl">
-          <div className="rounded-2xl ring-1 ring-amber-400/50 bg-neutral-900/60 p-5">
-            <div className="text-sm text-neutral-200">
-              Want first dibs on merch?
+        <div className="absolute inset-0 bg-neutral-950/40 -z-0" />
+        <Container className="relative z-10">
+          <div className="max-w-xl">
+            <h2 className="text-2xl md:text-4xl font-extrabold text-amber-300">
+              Merch Coming Soon!
+            </h2>
+            <p className="mt-1 text-white">
+              Subscribe to be notified when available
+            </p>
+            <div className="mt-3 w-full max-w-[18rem]">
+              <NotifyForm onSubmit={() => {}} />
             </div>
-            <NotifyForm onSubmit={() => {}} />
           </div>
-        </div>
-
-        <div className="mt-8 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {tiles.map((t) => (
-            <div
-              key={t.key}
-              className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition text-left overflow-hidden flex flex-col"
-            >
-              <Link to={`/store/${t.key}`} className="block">
-                <div className="aspect-[4/3] w-full overflow-hidden">
-                  <img
-                    src={t.img}
-                    alt={`${t.label} preview`}
-                    className="h-full w-full object-cover"
-                  />
+          <div className="mt-8 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {tiles.map((t) => (
+              <div
+                key={t.key}
+                className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition text-left overflow-hidden flex flex-col"
+              >
+                <Link to={`/store/${t.key}`} className="block">
+                  <div className="aspect-[4/3] w-full overflow-hidden">
+                    <img
+                      src={t.img}
+                      alt={`${t.label} preview`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </Link>
+                <Link to={`/store/${t.key}`} className="p-6 block">
+                  <div className="flex items-center gap-3 text-amber-300 font-semibold">
+                    {t.icon}
+                    <span>{t.label}</span>
+                  </div>
+                </Link>
+                <div className="px-6 pb-6">
+                  <div className="mt-2 text-sm text-neutral-400">
+                    Join the Fleet to be notified when available.
+                  </div>
+                  <NotifyForm onSubmit={() => {}} />
                 </div>
-              </Link>
-              <Link to={`/store/${t.key}`} className="p-6 block">
-                <div className="flex items-center gap-3 text-amber-300 font-semibold">
-                  {t.icon}
-                  <span>{t.label}</span>
-                </div>
-              </Link>
-              <div className="px-6 pb-6">
-                <div className="mt-2 text-sm text-neutral-400">
-                  Join the Fleet to be notified when available.
-                </div>
-                <NotifyForm onSubmit={() => {}} />
               </div>
-            </div>
-          ))}
-        </div>
-      </Container>
+            ))}
+          </div>
+        </Container>
+      </section>
     </main>
   );
 }
@@ -1682,9 +1670,8 @@ function Layout() {
             <nav className="mt-4 flex justify-center">
               <div className="flex items-center gap-5">
                 <HeaderNavLink to="/">Home Port</HeaderNavLink>
-                <HeaderNavLink to="/fleet">The Fleet</HeaderNavLink>
-                <HeaderNavLink to="/origins">Origins & Voyages</HeaderNavLink>
                 <HeaderNavLink to="/store">Ship’s Store</HeaderNavLink>
+                <HeaderNavLink to="/origins">Origins & Voyages</HeaderNavLink>
                 <HeaderNavLink to="/mission">Admiral’s Log</HeaderNavLink>
                 <HeaderNavLink to="/contact">Contact the Crew</HeaderNavLink>
                 <HeaderNavLink to="/sdvosb">SDVOSB</HeaderNavLink>
@@ -1801,8 +1788,6 @@ function AppShell() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="fleet" element={<FleetPage />} />
-        <Route path="fleet/:slug" element={<FleetStoryPage />} />
         <Route path="roast/:slug" element={<RoastDetailPage />} />
         <Route path="store" element={<StorePage />} />
         <Route path="store/:slug" element={<StoreCategoryPage />} />

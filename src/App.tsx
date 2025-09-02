@@ -1007,37 +1007,45 @@ function StorePage() {
       key: "tees",
       label: "Tees",
       icon: <Shirt className="h-5 w-5" />,
-      img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1200&auto=format&fit=crop",
+      img: "shirts-web.png",
     },
     {
-      key: "mugs",
-      label: "Mugs",
+      key: "Hats",
+      label: "Hats",
       icon: <span className="text-sm">☕</span>,
-      img: "https://images.unsplash.com/photo-1503481766315-7a586b20f66b?q=80&w=1200&auto=format&fit=crop",
+      img: "hat1-web.png",
     },
     {
-      key: "coasters",
-      label: "Coasters",
+      key: "Mugs",
+      label: "Mugs",
       icon: <span className="text-sm">◼︎</span>,
-      img: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?q=80&w=1200&auto=format&fit=crop",
+      img: "Mugs-deck.png",
     },
     {
-      key: "shot",
-      label: "Shot Glasses",
+      key: "Coasters",
+      label: "Coffee Coasters",
       icon: <span className="text-sm">🥃</span>,
-      img: "https://images.unsplash.com/photo-1541976076758-347942db1973?q=80&w=1200&auto=format&fit=crop",
+      img: "coasters2.png",
     },
     {
       key: "accessories",
       label: "Coffee Accessories",
       icon: <PackageOpen className="h-5 w-5" />,
-      img: "https://images.unsplash.com/photo-1523365280197-f1783db9fe62?q=80&w=1200&auto=format&fit=crop",
+      img: "canister-web.png",
     },
   ];
 
   return (
-    <main className="py-16 md:py-24">
-      <Container>
+    <main className="relative overflow-hidden py-16 md:py-24">
+      {/* Full-bleed backdrop */}
+      <img
+        src="/store-rack.png"
+        alt="Ship’s Store backdrop"
+        className="absolute inset-0 w-full h-full object-cover opacity-60 -z-0"
+      />
+      <div className="absolute inset-0 bg-neutral-950/40 -z-0" />
+
+      <Container className="relative z-10">
         <BackButton />
         <SectionTitle
           title={
@@ -1055,6 +1063,7 @@ function StorePage() {
             <NotifyForm onSubmit={() => {}} />
           </div>
         </div>
+
         <div className="mt-8 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {tiles.map((t) => (
             <div

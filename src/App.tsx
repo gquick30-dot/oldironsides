@@ -396,15 +396,29 @@ const LinkA = ({ to, children, className }: any) => (
   </Link>
 );
 
-function IntroRow({ img, text, tone }: any) {
+function IntroRow({
+  img,
+  text,
+  tone,
+}: {
+  img: string;
+  text: React.ReactNode;
+  tone?: string;
+}) {
   return (
-    <div className="flex items-start gap-6">
+    <div className="flex items-center gap-6">
       <img
         src={img}
         alt="row art"
-        className="w-40 h-40 md:w-44 md:h-44 rounded-xl object-cover ring-1 ring-amber-500"
+        className="w-48 h-56 md:w-52 md:h-60 rounded-xl object-cover ring-1 ring-amber-500"
       />
-      <div className={`text-lg md:text-xl leading-relaxed ${tone}`}>{text}</div>
+      <div
+        className={`text-[1.3rem] md:text-[1.44rem] leading-relaxed ${
+          tone ?? ""
+        } whitespace-nowrap`}
+      >
+        {text}
+      </div>
     </div>
   );
 }
@@ -686,9 +700,12 @@ function HomePage() {
                 />
 
                 <IntroRow
-                  img="copper table.png"
+                  img="roasted-cup.jpg"
                   text={
-                    <>Forged in oak & copper, tempered by fire and flame.</>
+                    <>
+                      Darkest to lightest, our roasts are always smooth. Never
+                      bitter.
+                    </>
                   }
                   tone="text-amber-400"
                 />
@@ -704,7 +721,10 @@ function HomePage() {
                 />
 
                 <div className="pt-2">
-                  <p className="text-3xl md:text-4xl font-extrabold tracking-[0.18em] text-amber-300">
+                  <p
+                    className="text-3xl md:text-4xl font-bold tracking-[0.18em] text-amber-300"
+                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+                  >
                     OLD IRONSIDES COFFEE
                   </p>
                   <p className="text-base md:text-lg font-medium text-amber-200 mt-1">
@@ -1177,8 +1197,6 @@ function OriginsPage() {
           }
         />
       </Container>
-
-      {/* ===== The Lands ===== */}
       <section className="relative overflow-hidden border-t border-neutral-800">
         <img
           src="/farm1-web.jpg"
@@ -1204,7 +1222,7 @@ function OriginsPage() {
                 <h3 className="text-xl md:text-2xl font-bold text-amber-300">
                   The Lands
                 </h3>
-                <p className="text-neutral-300 text-lg leading-relaxed max-w-[32rem]">
+                <p className="text-neutral-300 text-2xl md:text-3xl leading-snug max-w-[42rem]">
                   From rich volcanic soil to high mountain climates, our beans
                   begin in nutrient-dense lands that shape their bold character.
                 </p>
@@ -1213,7 +1231,6 @@ function OriginsPage() {
           </div>
         </Container>
       </section>
-
       {/* ===== The Hands That Grow Our Beans ===== */}
       <section className="relative overflow-hidden border-t border-neutral-800">
         <img
@@ -1230,7 +1247,7 @@ function OriginsPage() {
                 <h3 className="text-xl md:text-2xl font-bold text-amber-300">
                   The Hands That Grow Our Beans
                 </h3>
-                <p className="text-neutral-300 text-lg leading-relaxed max-w-[32rem]">
+                <p className="text-neutral-300 text-2xl md:text-3xl leading-snug max-w-[42rem]">
                   Small family farms nurture every harvest with care, treat
                   their people fairly, and protect the health of each bean.
                 </p>
@@ -1249,7 +1266,6 @@ function OriginsPage() {
           </div>
         </Container>
       </section>
-
       {/* ===== The Roasting Process ===== */}
       <section className="relative overflow-hidden border-t border-neutral-800">
         <img
@@ -1265,7 +1281,7 @@ function OriginsPage() {
               <div className="flex justify-center md:justify-start">
                 <div className="w-64 md:w-[32rem] aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
                   <img
-                    src="/roasted-cup.jpg"
+                    src="/roast-machine.jpg"
                     alt="Hands with beans"
                     className="w-full h-full object-cover"
                   />
@@ -1276,7 +1292,7 @@ function OriginsPage() {
                 <h3 className="text-xl md:text-2xl font-bold text-amber-300">
                   The Roasting Process
                 </h3>
-                <p className="text-neutral-300 text-lg leading-relaxed max-w-[32rem]">
+                <p className="text-neutral-300 text-2xl md:text-3xl leading-snug max-w-[42rem]">
                   Our medium roast is smooth and balanced for everyday
                   enjoyment. Our dark roast is bold and full-bodied—crafted
                   without bitterness for a finish you must experience.
@@ -1639,9 +1655,10 @@ function Layout() {
                 <div
                   className={
                     shrunk
-                      ? "text-2xl md:text-4xl font-extrabold tracking-[0.18em] text-neutral-300"
-                      : "text-3xl md:text-5xl font-extrabold tracking-[0.18em] text-neutral-300"
+                      ? "text-2xl md:text-4xl font-bold tracking-[0.18em] text-neutral-300"
+                      : "text-3xl md:text-5xl font-bold tracking-[0.18em] text-neutral-300"
                   }
+                  style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
                 >
                   OLD IRONSIDES COFFEE
                 </div>

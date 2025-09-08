@@ -184,31 +184,40 @@ const Container = ({ children, className = "" }: any) => (
   </div>
 );
 
-const BackButton = () => {
+const BackButton = ({
+  to,
+  size = "lg",
+}: {
+  to?: string;
+  size?: "lg" | "sm";
+}) => {
   const navigate = useNavigate();
+  const base =
+    "inline-flex items-center gap-2 rounded-2xl border-2 border-amber-400 bg-amber-500/20 font-bold text-amber-300 hover:bg-amber-400 hover:text-neutral-900";
+  const sz = size === "sm" ? "px-3 py-2 text-sm" : "px-6 py-4 text-lg";
+  const iconCls = size === "sm" ? "h-5 w-5" : "h-7 w-7";
   return (
-    <div className="mb-6">
-      <button
-        onClick={() => {
-          try {
-            if (
-              typeof window !== "undefined" &&
-              window.history &&
-              window.history.length <= 1
-            ) {
-              navigate("/");
-            } else {
-              navigate(-1);
-            }
-          } catch {
+    <button
+      onClick={() => {
+        try {
+          if (to) return navigate(to);
+          if (
+            typeof window !== "undefined" &&
+            window.history &&
+            window.history.length > 1
+          ) {
+            navigate(-1);
+          } else {
             navigate("/");
           }
-        }}
-        className="inline-flex items-center gap-3 rounded-2xl border-2 border-amber-400 bg-amber-500/20 px-6 py-4 text-lg font-bold text-amber-300 hover:bg-amber-400 hover:text-neutral-900"
-      >
-        <ArrowLeft className="h-7 w-7" /> Back
-      </button>
-    </div>
+        } catch {
+          navigate(to || "/");
+        }
+      }}
+      className={`${base} ${sz}`}
+    >
+      <ArrowLeft className={iconCls} /> Back
+    </button>
   );
 };
 
@@ -406,16 +415,17 @@ function IntroRow({
   tone?: string;
 }) {
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-4">
       <img
         src={img}
         alt="row art"
-        className="w-48 h-56 md:w-52 md:h-60 rounded-xl object-cover ring-1 ring-amber-500"
+        className="w-40 h-48 md:w-44 md:h-52 rounded-xl object-cover ring-1 ring-amber-500 shadow-2xl shadow-black/30"
       />
       <div
-        className={`text-[1.3rem] md:text-[1.44rem] leading-relaxed ${
+        className={`text-[1.05rem] md:text-[1.2rem] leading-snug ${
           tone ?? ""
-        } whitespace-nowrap`}
+        } font-bold`}
+        style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
       >
         {text}
       </div>
@@ -543,19 +553,27 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         />
       )}
       <Container className={`relative z-10 ${isStore ? "pt-10 md:pt-16" : ""}`}>
-        <SectionTitle
-          title="Launched From The Harbor"
-          subtitle={
-            <>
-              <div className="text-amber-300 font-semibold">
-                Our premium roasts, crafted for modern legends.
-              </div>
-              <div className="text-amber-300 mt-3">
-                Choose your roast from the fleet.
-              </div>
-            </>
-          }
-        />
+        <div className="flex items-start justify-between">
+          <SectionTitle
+            title={
+              <span className="text-4xl md:text-6xl font-extrabold text-amber-300 tracking-tight whitespace-nowrap">
+                Launched From The Harbor
+              </span>
+            }
+            subtitle={
+              <>
+                <div className="text-neutral-300 font-normal mb-4 text-lg md:text-xl tracking-tight">
+                  Our premium roasts, crafted for modern legends.
+                </div>
+                <div className="text-amber-300 font-normal text-lg md:text-xl tracking-tight">
+                  Choose your roast from the fleet.
+                </div>
+              </>
+            }
+          />
+
+          {!isHome && <BackButton size="sm" />}
+        </div>
 
         <div className="mt-2 grid md:grid-cols-4 gap-6">
           {roastCards.map((card) => (
@@ -573,7 +591,10 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
 
               <div className="p-5 flex flex-col flex-1">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-extrabold text-amber-300">
+                  <h3
+                    className="text-3xl md:text-4xl font-extrabold text-amber-300"
+                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                  >
                     {card.title}
                   </h3>
                 </div>
@@ -689,13 +710,31 @@ function HomePage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,193,7,0.10),transparent_60%)]" />
         <div className="absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
 
-        <Container className="relative py-24 md:py-32">
-          <div className="grid md:grid-cols-12 gap-10 items-start">
+        <Container className="relative py-14 md:py-18">
+          <div className="grid md:grid-cols-12 gap-8 items-start">
             <div className="md:col-span-7">
-              <div className="space-y-10">
+              <div className="space-y-6">
                 <IntroRow
                   img="ironship.png"
-                  text={<>Inspired by the ship that defied an empire.</>}
+                  text={
+                    <>
+                      Inspired by the ship that defied an empire. <br />
+                      Forged in oak and copper. <br />
+                      Tempered by fire and flame.{" "}
+                    </>
+                  }
+                  tone="text-amber-500"
+                />
+
+                <IntroRow
+                  img="bean-smell.png"
+                  text={
+                    <>
+                      Premium. <br />
+                      Organically Grown. <br />
+                      Fair Trade Sourced.
+                    </>
+                  }
                   tone="text-amber-400"
                 />
 
@@ -703,27 +742,17 @@ function HomePage() {
                   img="roasted-cup.jpg"
                   text={
                     <>
-                      Darkest to lightest, our roasts are always smooth. Never
-                      bitter.
+                      From Darkest to Lightest <br /> Always Smooth. <br />
+                      Never Bitter
                     </>
                   }
-                  tone="text-amber-400"
-                />
-
-                <IntroRow
-                  img="bean-smell.png"
-                  text={
-                    <>
-                      Only premium roasted coffee, crafted for modern legends.
-                    </>
-                  }
-                  tone="text-amber-400"
+                  tone="text-amber-300"
                 />
 
                 <div className="pt-2">
                   <p
-                    className="text-3xl md:text-4xl font-bold tracking-[0.18em] text-amber-300"
-                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+                    className="text-4xl md:text-[2.7rem] font-extrabold tracking-[0.18em] text-amber-300"
+                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
                   >
                     OLD IRONSIDES COFFEE
                   </p>
@@ -734,12 +763,21 @@ function HomePage() {
               </div>
             </div>
 
-            <div className="md:col-span-5" self-start>
-              <div className="relative aspect-[3/4] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
+            <div className="md:col-span-5 self-start">
+              {/* Tight shadow box that shrinks with the image */}
+              <div className="inline-block ml-0 md:ml-[12%] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
                   src="officer-window.png"
                   alt="Old Ironsides hero"
-                  className="h-full w-full object-cover object-top"
+                  className="
+        block
+        w-auto
+        h-auto
+        max-w-full
+        max-h-[calc(100vh-220px)]
+        md:max-h-[calc(100vh-240px)]
+        object-contain
+      "
                 />
               </div>
             </div>
@@ -755,9 +793,14 @@ function HomePage() {
       >
         <Container>
           <SectionTitle
-            title="The True History Behind the Fleet"
+            title={
+              <span className="text-4xl md:text-6xl font-extrabold text-amber-300 whitespace-nowrap">
+                The True History Behind the Fleet
+              </span>
+            }
             subtitle="Explore the real battles and ships that inspired our roasts."
           />
+
           <div className="mt-10 grid md:grid-cols-4 gap-6">
             {roastCards.map((card) => (
               <Link
@@ -875,15 +918,17 @@ function FleetStoryPage() {
         className="absolute inset-0 w-full h-full object-cover opacity-40 z-0"
       />
       <Container className="relative z-10">
-        <BackButton />
-        <SectionTitle
-          title={card.storyTitle}
-          subtitle={
-            <span className="text-amber-300 font-semibold">
-              {card.battleDate}
-            </span>
-          }
-        />
+        <div className="flex items-start justify-between">
+          <SectionTitle
+            title={card.storyTitle}
+            subtitle={
+              <span className="text-amber-300 font-semibold">
+                {card.battleDate}
+              </span>
+            }
+          />
+          <BackButton size="sm" />
+        </div>
         <div className="mt-6 grid md:grid-cols-2 gap-8 items-start">
           <img
             src={card.img}
@@ -935,20 +980,43 @@ function RoastDetailPage() {
   return (
     <main className="py-12 md:py-20">
       <Container>
-        <SectionTitle title={card.title} subtitle={card.subTitle} />
+        <div className="flex items-center justify-between gap-4">
+          <BackButton to="/store" size="sm" />
+        </div>
 
-        <div className="mt-6 grid md:grid-cols-2 gap-8 items-start">
-          <div>
-            {/* moved here so it’s right above the image */}
-            <div className="rounded-3xl overflow-hidden ring-1 ring-neutral-800 max-w-[75%]">
+        <div className="mt-6 grid md:grid-cols-[auto,1fr] gap-6 items-center">
+          {/* IMAGE COLUMN */}
+          {/* IMAGE COLUMN (fit fully above the fold, tight shadow box) */}
+          <div className="flex justify-center md:justify-start">
+            <div className="inline-block rounded-3xl overflow-hidden ring-1 ring-neutral-800 shadow-2xl shadow-black/40">
               <img
                 src={card.img}
                 alt={card.title}
-                className="w-full h-[540px] sm:h-[600px] md:h-[640px] lg:h-[680px] object-cover"
+                className="
+        block
+        h-auto
+        w-auto
+        max-h-[50vh]
+        sm:max-h-[52vh]
+        md:max-h-[55vh]
+        object-contain
+      "
               />
             </div>
           </div>
-          <div className="space-y-4">
+
+          {/* TEXT / BUY COLUMN (now vertically centered with the photo) */}
+          <div className="self-center space-y-4">
+            {/* Title moved into the text block */}
+            <div>
+              <h1 className="m-0 text-2xl md:text-3xl font-extrabold leading-tight tracking-tight text-amber-300">
+                {card.title}
+              </h1>
+              <div className="text-sm md:text-base text-neutral-400">
+                {card.subTitle}
+              </div>
+            </div>
+
             <p className="text-neutral-300 text-lg leading-relaxed">
               This is the roast profile page for <strong>{card.title}</strong>.
             </p>
@@ -1120,7 +1188,7 @@ function StoreCategoryPage() {
   return (
     <main className="py-16 md:py-24">
       <Container>
-        <BackButton />
+        <BackButton to="/store" size="sm" />
         <SectionTitle
           title={
             <span className="text-3xl md:text-5xl font-extrabold text-amber-300">{`${title} — Coming Soon`}</span>
@@ -1154,15 +1222,18 @@ function MissionPage() {
   return (
     <main className="py-16 md:py-24">
       <Container>
-        <BackButton />
-        <SectionTitle
-          title={
-            <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
-              Mission — Ignite the Spirit, Savor the Victory
-            </span>
-          }
-          subtitle="Veteran-owned roastery honoring the craft, the crew, and the Constitution."
-        />
+        <div className="flex items-start justify-between">
+          <SectionTitle
+            title={
+              <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
+                Mission — Ignite the Spirit, Savor the Victory
+              </span>
+            }
+            subtitle="Veteran-owned roastery honoring the craft, the crew, and the Constitution."
+          />
+          <BackButton size="sm" />
+        </div>
+
         <div className="mt-6 max-w-3xl text-neutral-300 space-y-4">
           <p>
             We roast small-batch coffee that’s as rugged and refined as the
@@ -1181,35 +1252,49 @@ function MissionPage() {
 }
 
 function OriginsPage() {
+  // Shared frame for all three
+  const SECTION_FRAME = "relative overflow-hidden border-t border-neutral-800";
+  // Normal size for sections (Hands & Roasting)
+  const SECTION_INNER =
+    "relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16";
+
   return (
-    <main className="pt-24 md:pt-28 pb-16">
-      <Container>
-        <SectionTitle
-          title={
-            <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
-              Origins & Voyages
-            </span>
-          }
-          subtitle={
-            <span className="block text-lg md:text-2xl font-semibold text-amber-300">
-              From Distant Shores to Roasting Flames
-            </span>
-          }
-        />
-      </Container>
-      <section className="relative overflow-hidden border-t border-neutral-800">
+    <main className="pt-0">
+      {/* ===== LANDS (taller + title/back nudged down, farm image shifted down) ===== */}
+      <section className={SECTION_FRAME}>
+        {/* Backdrop (shifted down to show lower portion) */}
         <img
           src="/farm1-web.jpg"
           alt="The Lands backdrop"
-          className="absolute inset-0 w-full h-full object-cover opacity-90 z-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover object-[50%_68%] opacity-90 z-0 pointer-events-none"
         />
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+
         <Container>
-          <div className="relative z-10 py-12 md:py-16">
+          {/* Lands is a bit taller for breathing room */}
+          <div className="relative z-10 min-h-[720px] md:min-h-[820px] py-12 md:py-16">
+            {/* Title + Back (nudged down a bit from header) */}
+            <div className="flex items-start justify-between mt-4 md:mt-6 mb-8 md:mb-10">
+              <SectionTitle
+                title={
+                  <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
+                    Origins & Voyages
+                  </span>
+                }
+                subtitle={
+                  <span className="block text-lg md:text-2xl font-semibold text-amber-300">
+                    From Distant Shores to Roasting Flames
+                  </span>
+                }
+              />
+              <BackButton size="sm" />
+            </div>
+
+            {/* Content row */}
             <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              {/* Photo LEFT */}
-              <div className="flex justify-center md:justify-start">
-                <div className="w-64 md:w-[32rem] aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+              {/* Photo LEFT (anchored) */}
+              <div className="justify-self-center self-center">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
                   <img
                     src="/bean-stock3.jpg"
                     alt="Hands with beans"
@@ -1217,7 +1302,7 @@ function OriginsPage() {
                   />
                 </div>
               </div>
-              {/* Title + Paragraph RIGHT */}
+              {/* Text RIGHT */}
               <div className="space-y-3">
                 <h3 className="text-xl md:text-2xl font-bold text-amber-300">
                   The Lands
@@ -1231,16 +1316,18 @@ function OriginsPage() {
           </div>
         </Container>
       </section>
-      {/* ===== The Hands That Grow Our Beans ===== */}
-      <section className="relative overflow-hidden border-t border-neutral-800">
+
+      {/* ===== HANDS (normal size, background centered, foreground photo centered) ===== */}
+      <section className={SECTION_FRAME}>
         <img
           src="/hands-bowl.jpg"
           alt="Growers backdrop"
-          className="absolute inset-0 w-full h-full object-cover opacity-90 z-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-90 z-0 pointer-events-none"
         />
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+
         <Container>
-          <div className="relative z-10 py-12 md:py-16">
+          <div className={SECTION_INNER}>
             <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] items-center gap-4 md:gap-6">
               {/* Text LEFT */}
               <div className="order-2 md:order-1 space-y-3 md:justify-self-end">
@@ -1252,9 +1339,9 @@ function OriginsPage() {
                   their people fairly, and protect the health of each bean.
                 </p>
               </div>
-              {/* Photo RIGHT */}
-              <div className="order-1 md:order-2 flex justify-center md:justify-end">
-                <div className="relative w-64 md:w-[32rem] aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+              {/* Photo RIGHT (centered in section) */}
+              <div className="order-1 md:order-2 justify-self-center self-center">
+                <div className="relative w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
                   <img
                     src="/hands-beans.jpg"
                     alt="Hands with beans"
@@ -1266,28 +1353,30 @@ function OriginsPage() {
           </div>
         </Container>
       </section>
-      {/* ===== The Roasting Process ===== */}
-      <section className="relative overflow-hidden border-t border-neutral-800">
+
+      {/* ===== ROASTING (normal size, background centered, foreground photo centered) ===== */}
+      <section className={SECTION_FRAME}>
         <img
           src="/roasted-dark.jpg"
           alt="Roasting process backdrop"
-          className="absolute inset-0 w-full h-full object-cover opacity-100 z-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-100 z-0 pointer-events-none"
         />
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+
         <Container>
-          <div className="relative z-10 py-12 md:py-16">
+          <div className={SECTION_INNER}>
             <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              {/* Photo LEFT */}
-              <div className="flex justify-center md:justify-start">
-                <div className="w-64 md:w-[32rem] aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+              {/* Photo LEFT (centered in section) */}
+              <div className="justify-self-center self-center">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
                   <img
                     src="/roast-machine.jpg"
-                    alt="Hands with beans"
+                    alt="Roaster"
                     className="w-full h-full object-cover"
                   />
                 </div>
               </div>
-              {/* Title + Paragraph RIGHT */}
+              {/* Text RIGHT */}
               <div className="space-y-3">
                 <h3 className="text-xl md:text-2xl font-bold text-amber-300">
                   The Roasting Process
@@ -1317,15 +1406,18 @@ function ContactPage() {
   return (
     <main className="py-16 md:py-24">
       <Container>
-        <BackButton />
-        <SectionTitle
-          title={
-            <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
-              Contact — Hail the quarterdeck
-            </span>
-          }
-          subtitle="Questions, wholesale, press – we’ll get back fast."
-        />
+        <div className="flex items-start justify-between">
+          <SectionTitle
+            title={
+              <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
+                Contact — Hail the quarterdeck
+              </span>
+            }
+            subtitle="Questions, wholesale, press – we’ll get back fast."
+          />
+          <BackButton size="sm" />
+        </div>
+
         <div className="mt-8 grid md:grid-cols-3 gap-6 text-sm">
           <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
             <div className="flex items-center gap-3">
@@ -1398,11 +1490,14 @@ function SDVOSBPage() {
   return (
     <main className="py-16 md:py-24">
       <Container>
-        <BackButton />
-        <SectionTitle
-          title="DoD / Government Contracting Profile"
-          subtitle="Central repository for CAGE, SAM, NAICS, UEI, and capability statements."
-        />
+        <div className="flex items-start justify-between">
+          <SectionTitle
+            title="DoD / Government Contracting Profile"
+            subtitle="Central repository for CAGE, SAM, NAICS, UEI, and capability statements."
+          />
+          <BackButton size="sm" />
+        </div>
+
         <div className="mt-6 grid md:grid-cols-2 gap-6">
           <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
             <h3 className="text-amber-300 font-semibold">Core Identifiers</h3>
@@ -1453,19 +1548,21 @@ function LegalPage() {
   const { slug } = useParams();
   const titles: any = {
     returns: "Return Policy",
-    shipping: "Shipping",
-    privacy: "Privacy Policy",
+    shipping: "Roast & Shipping",
     terms: "Terms of Service",
+    privacy: "Privacy Policy",
   };
-  const title = titles[slug as string] || "Policy";
+  const title = titles[slug as string] || "Roast & Shipping";
   return (
     <main className="py-16">
       <Container>
-        <BackButton />
-        <SectionTitle
-          title={title}
-          subtitle="Fill in with your official policy text."
-        />
+        <div className="flex items-start justify-between">
+          <SectionTitle
+            title={title}
+            subtitle="Fill in with your official policy text."
+          />
+          <BackButton size="sm" />
+        </div>
         <div className="mt-6 space-y-4 text-neutral-300">
           <p>
             Placeholder content for {title}. Replace with your finalized policy
@@ -1478,90 +1575,106 @@ function LegalPage() {
 }
 
 function CartPage() {
-  const { cart, inc, dec, remove, clear, subtotal } = useCart();
+  const { cart, inc, dec, remove, subtotal } = useCart();
+
   return (
-    <main className="py-16 md:py-24">
+    <main className="pt-28 md:pt-36 pb-16 md:pb-24">
       <Container>
-        <BackButton />
-        <SectionTitle
-          title="Chest"
-          subtitle={
-            cart.length ? `${cart.length} item(s)` : "Your chest is empty."
-          }
-        />
+        <div className="flex items-start justify-between">
+          <SectionTitle title="Chest" />
+          <BackButton size="sm" />
+        </div>
+
         {cart.length ? (
-          <div className="mt-6 grid md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 space-y-4">
-              {cart.map((item: any) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-4 rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 p-4"
-                >
-                  <img
-                    src={item.img}
-                    alt={item.title}
-                    className="h-16 w-16 object-cover rounded-lg"
-                  />
-                  <div className="flex-1">
-                    <div className="font-semibold text-amber-300">
-                      {item.title}
-                    </div>
-                    <div className="text-xs text-neutral-400">
-                      {item.variant}
-                    </div>
-                    <div className="mt-1 text-sm">{fmt(item.price)}</div>
-                  </div>
-                  <div className="inline-flex items-center rounded-lg border border-neutral-700">
-                    <button
-                      onClick={() => dec(item.id)}
-                      className="px-2 py-1 hover:bg-neutral-800 rounded-l-lg"
-                      aria-label="Decrease"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </button>
-                    <div className="w-10 text-center bg-neutral-900/70 py-1 text-sm">
-                      {item.qty}
-                    </div>
-                    <button
-                      onClick={() => inc(item.id)}
-                      className="px-2 py-1 hover:bg-neutral-800 rounded-r-lg"
-                      aria-label="Increase"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => remove(item.id)}
-                    className="p-2 rounded-lg hover:bg-neutral-800"
-                    aria-label="Remove"
-                  >
-                    <Trash2 className="h-5 w-5" />
-                  </button>
-                </div>
-              ))}
+          <div>
+            {/* Message centered, nudged upward toward banner */}
+            <div className="mb-6 text-center relative">
+              <p className="text-sm md:text-base text-red-400 relative -top-[100px]">
+                All of our coffees are roasted and packaged to order every
+                Monday, then shipped Tuesday and Wednesday to ensure maximum
+                freshness. <br />
+                Orders placed before 5 p.m. EST on Sunday will be roasted and
+                shipped that same week, while orders placed after will ship the
+                following week. <br />
+                Because we roast to order, your coffee won’t arrive overnight
+                like Amazon, but it will arrive fresh. <br />
+                If you miss the deadline and you need your coffee sooner, just
+                leave a note at checkout <br /> or reply to your confirmation
+                email and we’ll do our best to accommodate.
+              </p>
             </div>
-            <aside className="rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 h-max">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-neutral-400">Subtotal</span>
-                <span className="font-semibold">{fmt(subtotal)}</span>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="md:col-span-2 space-y-4">
+                {cart.map((item: any) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center gap-4 rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 p-4"
+                  >
+                    <img
+                      src={item.img}
+                      alt={item.title}
+                      className="h-16 w-16 object-cover rounded-lg"
+                    />
+                    <div className="flex-1">
+                      <div className="font-semibold text-amber-300">
+                        {item.title}
+                      </div>
+                      <div className="text-xs text-neutral-400">
+                        {item.variant}
+                      </div>
+                      <div className="mt-1 text-sm">{fmt(item.price)}</div>
+                    </div>
+
+                    <div className="inline-flex items-center rounded-lg border border-neutral-700">
+                      <button
+                        onClick={() => dec(item.id)}
+                        className="px-2 py-1 hover:bg-neutral-800 rounded-l-lg"
+                        aria-label="Decrease"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </button>
+                      <div className="w-10 text-center bg-neutral-900/70 py-1 text-sm">
+                        {item.qty}
+                      </div>
+                      <button
+                        onClick={() => inc(item.id)}
+                        className="px-2 py-1 hover:bg-neutral-800 rounded-r-lg"
+                        aria-label="Increase"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </button>
+                    </div>
+
+                    <button
+                      onClick={() => remove(item.id)}
+                      className="p-2 rounded-lg hover:bg-neutral-800"
+                      aria-label="Remove"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
+                  </div>
+                ))}
               </div>
-              <button className="mt-4 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
-                Checkout
-              </button>
-              <button
-                onClick={clear}
-                className="mt-3 w-full px-4 py-2 rounded-lg border border-neutral-700 text-neutral-300 hover:text-amber-300 hover:border-amber-400/50"
-              >
-                Clear Chest
-              </button>
-            </aside>
+
+              {/* Checkout sidebar */}
+              <aside className="rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 h-max">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-neutral-400">Subtotal</span>
+                  <span className="font-semibold">{fmt(subtotal)}</span>
+                </div>
+                <button className="mt-4 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+                  Checkout
+                </button>
+              </aside>
+            </div>
           </div>
         ) : (
           <div className="mt-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-10 text-center">
             <p className="text-neutral-400">
               No items yet. Return to the{" "}
-              <Link to="/fleet" className="text-amber-300 hover:underline">
-                Fleet
+              <Link to="/store" className="text-amber-300 hover:underline">
+                Ship’s Store
               </Link>
               .
             </p>
@@ -1576,13 +1689,20 @@ function NotFoundPage() {
   return (
     <main className="py-24">
       <Container>
-        <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-10 text-center">
-          <h1 className="text-3xl font-extrabold text-amber-300">
-            Page not found
-          </h1>
-          <p className="mt-2 text-neutral-400">
-            The page you’re looking for was sunk by the British!
-          </p>
+        <div className="flex items-start justify-between">
+          <SectionTitle
+            title={
+              <span className="text-3xl font-extrabold text-amber-300">
+                Page not found
+              </span>
+            }
+            subtitle="The page you’re looking for was sunk by the British!"
+          />
+          <BackButton size="sm" />
+        </div>
+
+        <div className="mt-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-10 text-center">
+          {/* keep the rest of your existing card content, but remove the duplicate h1/subtitle inside */}
           <Link
             to="/"
             className="mt-4 inline-block px-5 py-2 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
@@ -1639,34 +1759,40 @@ function Layout() {
       {/* FIXED, SHRINK-ON-SCROLL HEADER */}
       <header className="fixed top-0 inset-x-0 z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800">
         <Container>
-          <div className={shrunk ? "pt-2 md:pt-3" : "pt-6 md:pt-8"}>
-            {/* Top row: Emblem + Title */}
-            <div className="flex items-center gap-4 justify-center">
+          <div className={shrunk ? "pt-4 md:pt-5 pb-3" : "pt-10 md:pt-12 pb-5"}>
+            {/* Centered stack; emblem sits to the left and does NOT affect width */}
+            <div className="relative mx-auto w-max">
+              {/* Emblem to the LEFT of the centered stack */}
               <img
                 src="/emblem-black.png"
                 alt="Old Ironsides emblem"
                 className={
-                  (shrunk ? "h-20 md:h-24" : "h-28 md:h-36") +
-                  " w-auto object-contain select-none transition-all transform origin-center scale-[1.18] md:scale-[1.25]"
+                  (shrunk ? "h-24 md:h-28" : "h-36 md:h-44") +
+                  " w-auto object-contain select-none transition-all " +
+                  "absolute top-1/2 -translate-y-1/2 right-[calc(100%+16px)]"
                 }
               />
 
-              <div className="flex flex-col text-left -mt-1">
+              {/* Title + taglines */}
+              <div className="flex flex-col items-center -mt-1">
+                {/* TITLE now centered */}
                 <div
                   className={
                     shrunk
-                      ? "text-2xl md:text-4xl font-bold tracking-[0.18em] text-neutral-300"
-                      : "text-3xl md:text-5xl font-bold tracking-[0.18em] text-neutral-300"
+                      ? "text-2xl md:text-4xl font-bold tracking-[0.18em] text-neutral-300 text-center"
+                      : "text-3xl md:text-5xl font-bold tracking-[0.18em] text-neutral-300 text-center"
                   }
                   style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
                 >
                   OLD IRONSIDES COFFEE
                 </div>
+
+                {/* Tagline + Veteran-owned remain centered */}
                 <div
                   className={
                     shrunk
-                      ? "text-xs md:text-sm text-amber-200"
-                      : "text-sm md:text-lg text-amber-200"
+                      ? "text-xs md:text-sm text-amber-200 text-center"
+                      : "text-sm md:text-lg text-amber-200 text-center"
                   }
                 >
                   Ignite the Spirit, Savor the Victory!
@@ -1674,38 +1800,38 @@ function Layout() {
                 <div
                   className={
                     shrunk
-                      ? "hidden md:block md:text-sm text-neutral-300"
-                      : "text-sm md:text-base text-neutral-300"
+                      ? "hidden md:block md:text-sm text-neutral-300 text-center"
+                      : "text-sm md:text-base text-neutral-300 text-center"
                   }
                 >
                   Veteran-owned and operated.
                 </div>
               </div>
-            </div>
 
-            {/* Bottom row: Nav */}
-            <nav className="mt-4 flex justify-center">
-              <div className="flex items-center gap-5">
-                <HeaderNavLink to="/">Home Port</HeaderNavLink>
-                <HeaderNavLink to="/store">Ship’s Store</HeaderNavLink>
-                <HeaderNavLink to="/origins">Origins & Voyages</HeaderNavLink>
-                <HeaderNavLink to="/mission">Admiral’s Log</HeaderNavLink>
-                <HeaderNavLink to="/contact">Contact the Crew</HeaderNavLink>
-                <HeaderNavLink to="/sdvosb">SDVOSB</HeaderNavLink>
-                <Link
-                  to="/cart"
-                  className="relative px-1.5 py-1 rounded-md text-amber-300 inline-flex items-center gap-1.5"
-                >
-                  <ChestIcon className="h-6 w-6 md:h-7 md:w-7" />
-                  <span className="text-sm md:text-base">Chest</span>
-                  {count > 0 && (
-                    <span className="absolute -top-1.5 -right-2 bg-amber-400 text-neutral-900 text-[10px] font-bold rounded-full px-1.5">
-                      {count}
-                    </span>
-                  )}
-                </Link>
-              </div>
-            </nav>
+              {/* Nav shares the same left edge as the title */}
+              <nav className="mt-3 flex justify-start">
+                <div className="flex items-center gap-5">
+                  <HeaderNavLink to="/">Home Port</HeaderNavLink>
+                  <HeaderNavLink to="/store">Ship’s Store</HeaderNavLink>
+                  <HeaderNavLink to="/origins">Origins & Voyages</HeaderNavLink>
+                  <HeaderNavLink to="/mission">Mission Log</HeaderNavLink>
+                  <HeaderNavLink to="/contact">Contact the Crew</HeaderNavLink>
+                  <HeaderNavLink to="/sdvosb">SDVOSB</HeaderNavLink>
+                  <Link
+                    to="/cart"
+                    className="relative px-1.5 py-1 rounded-md text-amber-300 inline-flex items-center gap-1.5"
+                  >
+                    <ChestIcon className="h-6 w-6 md:h-7 md:w-7" />
+                    <span className="text-sm md:text-base">Chest</span>
+                    {count > 0 && (
+                      <span className="absolute -top-1.5 -right-2 bg-amber-400 text-neutral-900 text-[10px] font-bold rounded-full px-1.5">
+                        {count}
+                      </span>
+                    )}
+                  </Link>
+                </div>
+              </nav>
+            </div>
           </div>
         </Container>
       </header>
@@ -1714,45 +1840,48 @@ function Layout() {
       <div
         className={
           isHome
-            ? "h-[110px]"
+            ? "h-[140px] md:h-[168px]" // +20–28px
             : isFleet
-            ? "h-[120px] md:h-[130px]"
+            ? "h-[120px] md:h-[140px]" // +20–30px
             : isRoast
-            ? "h-[150px] md:h-[170px]"
-            : "h-[130px] md:h-[140px]"
+            ? "h-[140px] md:h-[168px]" // +20–28px
+            : "h-[125px] md:h-[145px]" // +20–30px
         }
       />
-
       <Outlet />
-
       <footer className="border-t border-neutral-800 bg-neutral-950">
-        <Container className="py-10 text-sm">
+        <Container className="py-14 text-sm">
           <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="text-sm tracking-[0.2em] text-amber-300">
+            {/* Brand + Vet-owned + Flag (centered) */}
+            <div className="flex flex-col items-center text-center">
+              {/* Title ~15% larger */}
+              <div className="text-base tracking-[0.5em] text-amber-300">
                 OLD IRONSIDES COFFEE
               </div>
-              <div className="text-neutral-300 mt-2">
+
+              {/* Vet line pulled closer to title */}
+              <div className="mt-0 text-base text-neutral-300 leading-tight">
                 Veteran-owned and operated.
               </div>
+
+              {/* Flag spacing unchanged (still below vet line) */}
+              <img
+                src="/stars-stripes.png"
+                alt="American flag"
+                className="mt-1 w-44 h-auto rounded-sm shadow-md"
+              />
             </div>
+
+            {/* Support */}
             <div>
               <div className="text-neutral-400 font-semibold mb-2">Support</div>
               <ul className="space-y-1">
                 <li>
                   <Link
                     className="text-neutral-300 hover:text-amber-300"
-                    to="/legal/privacy"
+                    to="/legal/shipping"
                   >
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="text-neutral-300 hover:text-amber-300"
-                    to="/legal/terms"
-                  >
-                    Terms of Service
+                    Roast & Shipping
                   </Link>
                 </li>
                 <li>
@@ -1766,13 +1895,23 @@ function Layout() {
                 <li>
                   <Link
                     className="text-neutral-300 hover:text-amber-300"
-                    to="/legal/shipping"
+                    to="/legal/terms"
                   >
-                    Shipping
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="text-neutral-300 hover:text-amber-300"
+                    to="/legal/privacy"
+                  >
+                    Privacy Policy
                   </Link>
                 </li>
               </ul>
             </div>
+
+            {/* Contact */}
             <div>
               <div className="text-neutral-400 font-semibold mb-2">Contact</div>
               <ul className="space-y-1 text-neutral-300">
@@ -1780,6 +1919,8 @@ function Layout() {
                 <li>6 Liberty Square #2564, Boston, MA 02109</li>
               </ul>
             </div>
+
+            {/* Follow */}
             <div>
               <div className="text-neutral-400 font-semibold mb-2">Follow</div>
               <div className="flex gap-4 text-neutral-300">
@@ -1789,6 +1930,7 @@ function Layout() {
               </div>
             </div>
           </div>
+
           <div className="mt-8 text-xs text-neutral-500">
             © {new Date().getFullYear()} Old Ironsides Coffee. All rights
             reserved.

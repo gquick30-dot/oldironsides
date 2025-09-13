@@ -422,7 +422,7 @@ function IntroRow({
         className="w-40 h-48 md:w-44 md:h-52 rounded-xl object-cover ring-1 ring-amber-500 shadow-2xl shadow-black/30"
       />
       <div
-        className={`text-[1.05rem] md:text-[1.2rem] leading-snug ${
+        className={`text-[1.20rem] md:text-[1.6rem] leading-snug ${
           tone ?? ""
         } font-bold`}
         style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
@@ -556,8 +556,11 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         <div className="flex items-start justify-between">
           <SectionTitle
             title={
-              <span className="text-4xl md:text-6xl font-extrabold text-amber-300 tracking-tight whitespace-nowrap">
-                Launched From The Harbor
+              <span
+                className="text-3xl md:text-5xl font-bold text-amber-300 tracking-tight whitespace-nowrap"
+                style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+              >
+                LAUNCHED FROM HARBOR
               </span>
             }
             subtitle={
@@ -718,9 +721,9 @@ function HomePage() {
                   img="ironship.png"
                   text={
                     <>
-                      Inspired by the ship that defied an empire. <br />
-                      Forged in oak and copper. <br />
-                      Tempered by fire and flame.{" "}
+                      INSPIRED BY THE SHIP THAT DEFIED AN EMPIRE. <br />
+                      FORGED IN OAK AND COPPER. <br />
+                      TEMPERED BY FIRE AND FLAME.{" "}
                     </>
                   }
                   tone="text-amber-500"
@@ -730,9 +733,9 @@ function HomePage() {
                   img="bean-smell.png"
                   text={
                     <>
-                      Premium. <br />
-                      Organically Grown. <br />
-                      Fair Trade Sourced.
+                      PREMIUM. <br />
+                      ORGANICALLY GROWN. <br />
+                      FAIR TRADE SOURCED.
                     </>
                   }
                   tone="text-amber-400"
@@ -742,8 +745,8 @@ function HomePage() {
                   img="roasted-cup.jpg"
                   text={
                     <>
-                      From Darkest to Lightest <br /> Always Smooth. <br />
-                      Never Bitter
+                      FROM DARKEST TO LIGHTEST <br /> ALWAYS SMOOTH. <br />
+                      NEVER BITTER.
                     </>
                   }
                   tone="text-amber-300"
@@ -751,12 +754,13 @@ function HomePage() {
 
                 <div className="pt-2">
                   <p
-                    className="text-4xl md:text-[2.7rem] font-extrabold tracking-[0.18em] text-amber-300"
-                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                    className="text-4xl md:text-[2.7rem] font-bold tracking-[0.18em] text-neutral-300"
+                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
                   >
                     OLD IRONSIDES COFFEE
                   </p>
-                  <p className="text-base md:text-lg font-medium text-amber-200 mt-1">
+
+                  <p className="text-base md:text-lg font-medium text-neutral-300 mt-1">
                     Ignite the Spirit, Savor the Victory!
                   </p>
                 </div>
@@ -1218,38 +1222,202 @@ function StoreCategoryPage() {
   );
 }
 
+// ===== PASTE THIS NEW VERSION OF MissionPage =====
 function MissionPage() {
+  // Match the Origins page frame/sizing
+  const SECTION_FRAME = "relative overflow-hidden border-t border-neutral-800";
+  const SECTION_INNER =
+    "relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16";
+
   return (
-    <main className="py-16 md:py-24">
-      <Container>
-        <div className="flex items-start justify-between">
-          <SectionTitle
-            title={
-              <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
-                Mission — Ignite the Spirit, Savor the Victory
-              </span>
-            }
-            subtitle="Veteran-owned roastery honoring the craft, the crew, and the Constitution."
+    <main className="pt-0">
+      {/* ===== SECTION 1: Title + intro alternating (photo LEFT, text RIGHT) ===== */}
+      <section className={SECTION_FRAME}>
+        {/* Backdrop emblem centered */}
+        <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
+          <img
+            src="/emblem-black.png"
+            alt="Mission backdrop"
+            className="max-w-[90%] max-h-[90%] object-contain opacity-20"
           />
-          <BackButton size="sm" />
         </div>
 
-        <div className="mt-6 max-w-3xl text-neutral-300 space-y-4">
-          <p>
-            We roast small-batch coffee that’s as rugged and refined as the
-            frigate that inspired our name. Every bag honors the grit of
-            American shipwrights and sailors who forged a legend in oak and
-            copper.
-          </p>
-          <p>
-            We’re committed to quality sourcing, meticulous roasting, and
-            supporting veteran communities and maritime preservation.
-          </p>
-        </div>
-      </Container>
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+
+        <Container>
+          <div className="relative z-10 min-h-[720px] md:min-h-[820px] py-12 md:py-16">
+            <div className="flex items-start justify-between mt-4 md:mt-6 mb-8 md:mb-10">
+              <SectionTitle
+                title={
+                  <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
+                    Mission Log
+                  </span>
+                }
+                subtitle={
+                  <span className="block text-lg md:text-2xl font-semibold text-amber-300">
+                    Revive our history. Strengthen our spirit. Honor those who
+                    served.
+                  </span>
+                }
+              />
+              <BackButton size="sm" />
+            </div>
+
+            {/* PHOTO LEFT / TEXT RIGHT */}
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
+              <div className="justify-self-center self-center">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/flag-close.jpg" // swap later
+                    alt="Mission intro"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                  THE HEART OF OLD IRONSIDES COFFEE
+                </h3>
+
+                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  At Old Ironsides Coffee, our mission is to do more than serve
+                  an amazing cup of coffee. We aim to strengthen American pride
+                  and spirit while preserving our history, all of which are in
+                  danger of being lost. We carry forward the legacy of
+                  resilience and courage to overcome adversity. This is the
+                  heart of Old Ironsides Coffee.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+      {/* ===== SECTION 2: Hero (LEFT) + Text (CENTER) + Alternating half-offset stack (RIGHT) ===== */}
+      <section className={SECTION_FRAME}>
+        {/* Backdrop */}
+        <img
+          src="/iraq-moon.JPG"
+          alt="Craft backdrop"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-90 z-0 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+
+        <Container>
+          {/* Make this section taller so the top/bottom cards can hug the edges */}
+          <div className="relative z-10 min-h-[900px] md:min-h-[960px] py-12 md:py-16">
+            {/* Three columns: hero | text | photo stack */}
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr,auto] items-center gap-8">
+              {/* LEFT: HERO (vertically centered with text & middle-right photo) */}
+              <div className="justify-self-center md:justify-self-start self-center">
+                <div className="w-56 sm:w-64 md:w-[19.5rem] lg:w-[22rem] aspect-[4/5] rounded-2xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50 shadow-2xl shadow-black/40">
+                  <img
+                    src="/officer-window.png"
+                    alt="Hero"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+
+              {/* CENTER: TEXT */}
+              <div className="text-center md:text-left self-center">
+                <h3 className="font-cinzel text-2xl md:text-3xl font-extrabold text-amber-300 tracking-wide uppercase">
+                  FROM THE SAND TO THE SEA
+                </h3>
+
+                <p className="mt-3 text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  Although my boots were in the sand, not on the deck, the
+                  spirit of Old Ironsides has always inspired me. She is a
+                  reminder that grit, sacrifice, and courage win the day. Those
+                  same values carried me through my service and are now at the
+                  heart of Old Ironsides Coffee. Building this company is my way
+                  of honoring that spirit and sharing it with others.
+                </p>
+              </div>
+
+              {/* RIGHT: ALTERNATING STACK (Top Left / Middle Right / Bottom Left) */}
+              <div className="justify-self-center md:justify-self-end">
+                {/* The stack canvas is exactly 2× the card width so half-offsets are exact.
+              Top and bottom cards are pinned to edges for separation. */}
+                <div className="relative w-[36rem] h-[48rem]">
+                  {/* Shared card size: 18rem wide (Tailwind w-72) with 4:3 ratio */}
+
+                  {/* TOP (LEFT): right edge on centerline, pinned to top */}
+                  <div className="absolute left-1/2 top-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                    <img
+                      src="/humvee-turret.jpg"
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* MIDDLE (RIGHT): left edge on centerline, centered vertically */}
+                  <div className="absolute left-1/2 top-1/2 -translate-y-1/2 w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-2xl">
+                    <img
+                      src="/iraq-self1.JPG"
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* BOTTOM (LEFT): right edge on centerline, pinned to bottom */}
+                  <div className="absolute left-1/2 bottom-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                    <img
+                      src="/rocket.jpg"
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ===== SECTION 3: Standard alternating (photo LEFT, text RIGHT) ===== */}
+      <section className={SECTION_FRAME}>
+        <img
+          src="/flags-ground.jpg" // swap later
+          alt="Service backdrop"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-40 z-0 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+
+        <Container>
+          <div className={SECTION_INNER}>
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
+              <div className="justify-self-center self-center">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/veteran-chair.jpg"
+                    alt="Roaster"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                  GIVING BACK
+                </h3>
+
+                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  Even as a startup with thin profits, giving back is at the
+                  core of Old Ironsides Coffee. As a combat veteran, I believe
+                  supporting organizations that focus on veterans’ health and
+                  well-being is not optional, it is who we are. With every bag
+                  sold, we donate a portion of profits to trusted organizations
+                  that provide real help to the veterans who need it most.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
     </main>
   );
 }
+// ===== END NEW VERSION =====
 
 function OriginsPage() {
   // Shared frame for all three
@@ -1589,7 +1757,7 @@ function CartPage() {
           <div>
             {/* Message centered, nudged upward toward banner */}
             <div className="mb-6 text-center relative">
-              <p className="text-sm md:text-base text-red-400 relative -top-[100px]">
+              <p className="text-sm md:text-base text-blue-300 relative -top-[50px]">
                 All of our coffees are roasted and packaged to order every
                 Monday, then shipped Tuesday and Wednesday to ensure maximum
                 freshness. <br />
@@ -1852,19 +2020,19 @@ function Layout() {
       <footer className="border-t border-neutral-800 bg-neutral-950">
         <Container className="py-14 text-sm">
           <div className="grid md:grid-cols-4 gap-8">
-            {/* Brand + Vet-owned + Flag (centered) */}
-            <div className="flex flex-col items-center text-center">
-              {/* Title ~15% larger */}
+            {/* Brand + Vet-owned + Flag (centered and nudged up) */}
+            <div className="relative -top-4 md:-top-5 flex flex-col items-center text-center">
+              {/* Title */}
               <div className="text-base tracking-[0.5em] text-amber-300">
                 OLD IRONSIDES COFFEE
               </div>
 
-              {/* Vet line pulled closer to title */}
+              {/* Vet line (aligned with Support) */}
               <div className="mt-0 text-base text-neutral-300 leading-tight">
                 Veteran-owned and operated.
               </div>
 
-              {/* Flag spacing unchanged (still below vet line) */}
+              {/* Flag, centered just below vet line */}
               <img
                 src="/stars-stripes.png"
                 alt="American flag"

@@ -40,9 +40,13 @@ function FlashToast() {
           : "opacity-0 scale-95 pointer-events-none"
       }`}
     >
-      <div className="rounded-lg bg-amber-400/95 px-4 py-2 text-neutral-900 font-semibold shadow-xl">
-        {msg}
-      </div>
+<div
+  className="rounded-lg bg-amber-400/95 px-4 py-2 text-neutral-900 font-semibold shadow-xl"
+  role="status"
+  aria-live="polite"
+>
+  {msg}
+</div>
     </div>
   );
 }
@@ -409,17 +413,23 @@ function IntroRow({
   img,
   text,
   tone,
+  className,
+  imgClassName,
 }: {
   img: string;
   text: React.ReactNode;
   tone?: string;
+  className?: string;
+  imgClassName?: string;
 }) {
   return (
-    <div className="flex items-center gap-4">
+    <div className={`flex items-center gap-4 ${className ?? ""}`}>
       <img
         src={img}
         alt="row art"
-        className="w-40 h-48 md:w-44 md:h-52 rounded-xl object-cover ring-1 ring-amber-500 shadow-2xl shadow-black/30"
+        className={`w-[12.5rem] h-[15rem] md:w-[13.75rem] md:h-[16.25rem] translate-y-4 md:translate-y-6 transform rounded-xl object-cover ring-1 ring-amber-500 shadow-2xl shadow-black/30 ${
+          imgClassName ?? ""
+        }`}
       />
       <div
         className={`text-[1.20rem] md:text-[1.6rem] leading-snug ${
@@ -451,12 +461,18 @@ function RingThatBellBox() {
               Ring That Bell
             </h3>
           </div>
-          <p className="text-neutral-300 mb-5">Join the Fleet and save 10%</p>
+          <p className="text-neutral-300 mb-5 text-lg md:text-xl">
+            Join the Fleet and save 15%
+          </p>
+
           <form
             onSubmit={submit}
             className="flex justify-center gap-3 max-w-md mx-auto"
           >
             <input
+              type="email"
+              autoComplete="email"
+              name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@domain.com"
@@ -466,6 +482,16 @@ function RingThatBellBox() {
               Join
             </button>
           </form>
+          <div className="mt-3 text-xs text-neutral-400">
+            Already a member?{" "}
+            <Link
+              to="/account/login"
+              className="text-amber-300 hover:underline"
+            >
+              Sign in
+            </Link>
+          </div>
+
           {submitted && (
             <p className="mt-3 text-sm text-emerald-400">
               Welcome aboard — your discount is on the way.
@@ -474,6 +500,154 @@ function RingThatBellBox() {
         </div>
       </Container>
     </section>
+  );
+}
+function MegaSubscribeBox({
+  email,
+  setEmail,
+  done,
+  onSubmit,
+  title,
+  subtitle,
+  buttonText,
+}: {
+  email: string;
+  setEmail: (v: string) => void;
+  done: boolean;
+  onSubmit: (e: any) => void;
+  title?: string;
+  subtitle?: string;
+  buttonText?: string;
+}) {
+  const heading = title ?? "Ring That Bell";
+  const sub = subtitle ?? "Join the Fleet and save 15%";
+  const btn = buttonText ?? "Join";
+
+  return (
+    <div className="w-full lg:w-[36rem]">
+      <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-8 text-center">
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <Bell className="h-7 w-7 text-amber-300" />
+          <h3 className="text-2xl font-extrabold text-amber-300">{heading}</h3>
+        </div>
+        <p className="text-neutral-300 mb-5 text-lg md:text-xl">{sub}</p>
+
+        <form
+          onSubmit={onSubmit}
+          className="flex justify-center gap-3 max-w-md mx-auto"
+        >
+          <input
+            type="email"
+            name="email"
+            autoComplete="email"
+            inputMode="email"
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@domain.com"
+            className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+          />
+          <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+            {btn}
+          </button>
+        </form>
+        <div className="mt-3 text-xs text-neutral-400">
+          Already a member?{" "}
+          <Link to="/account/login" className="text-amber-300 hover:underline">
+            Sign in
+          </Link>
+        </div>
+
+        {done && (
+          <p className="mt-3 text-sm text-emerald-400">
+            Welcome aboard — your discount is on the way.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+function CompactSubscribeBox() {
+  const [email, setEmail] = useState("");
+  const [done, setDone] = useState(false);
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailOk(email)) return alert("Enter a valid email.");
+    setDone(true);
+    // TODO: integrate with your ESP/signup endpoint
+  };
+
+  return (
+    <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-5 text-center">
+      <div className="flex items-center justify-center gap-2 mb-2">
+        <Bell className="h-5 w-5 text-amber-300" />
+        <h4 className="text-lg font-extrabold text-amber-300">
+          Ring That Bell
+        </h4>
+      </div>
+      <p className="text-neutral-300 text-sm mb-3">
+        Join the Fleet and save 15%
+      </p>
+      <form onSubmit={onSubmit} className="flex gap-2">
+        <input
+          type="email"
+          autoComplete="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@domain.com"
+          className="flex-1 rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+        />
+        <button className="px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300">
+          Join
+        </button>
+      </form>
+      <div className="mt-2 text-[11px] text-neutral-400">
+        Already a member?{" "}
+        <Link to="/account/login" className="text-amber-300 hover:underline">
+          Sign in
+        </Link>
+      </div>
+      {done && (
+        <p className="mt-2 text-xs text-emerald-400">
+          Welcome aboard — your discount is on the way.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function GovXLoginBox() {
+  return (
+    <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-5 text-center">
+      <div className="flex items-center justify-center gap-2 mb-2">
+        {/* reuse Bell or swap to a shield icon if you add one later */}
+        <Bell className="h-5 w-5 text-amber-300" />
+        <h4 className="text-lg font-extrabold text-amber-300">GovX Login</h4>
+      </div>
+      <p className="text-neutral-300 text-sm">
+        Enjoy <span className="font-semibold text-amber-300">15% off</span> both
+        coffee and merch — plus{" "}
+        <span className="font-semibold text-amber-300">$1 extra per bag</span>{" "}
+        is donated to trusted organizations that help veterans.
+      </p>
+      <button
+        // TODO: point this to your GovX verification route or modal
+        onClick={() => window.location.assign("/account?govx=1")}
+        className="mt-3 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+        aria-label="Verify with GovX"
+      >
+        Verify with GovX
+      </button>
+      <div className="mt-2 text-[11px] text-neutral-400">
+        Need help?{" "}
+        <Link to="/contact" className="text-amber-300 hover:underline">
+          Contact the crew
+        </Link>
+      </div>
+    </div>
   );
 }
 
@@ -716,53 +890,31 @@ function HomePage() {
         <Container className="relative py-14 md:py-18">
           <div className="grid md:grid-cols-12 gap-8 items-start">
             <div className="md:col-span-7">
-              <div className="space-y-6">
-                <IntroRow
-                  img="ironship.png"
-                  text={
-                    <>
-                      INSPIRED BY THE SHIP THAT DEFIED AN EMPIRE. <br />
-                      FORGED IN OAK AND COPPER. <br />
-                      TEMPERED BY FIRE AND FLAME.{" "}
-                    </>
-                  }
-                  tone="text-amber-500"
-                />
+              <div className="space-y-0">
+                {/* scaled intro row (kept as-is visually) */}
+                <div className="relative z-0 transform scale-125 origin-center">
+                  <IntroRow
+                    img="bean-smell.png"
+                    text={
+                      <>
+                        PREMIUM, SMALL BATCH COFFEE. <br />
+                        ROASTED TO ORDER. <br />
+                        ETHICALLY SOURCED.
+                        <br />
+                        VETERAN OWNED.
+                      </>
+                    }
+                    tone="text-amber-400"
+                  />
+                </div>
 
-                <IntroRow
-                  img="bean-smell.png"
-                  text={
-                    <>
-                      PREMIUM. <br />
-                      ORGANICALLY GROWN. <br />
-                      FAIR TRADE SOURCED.
-                    </>
-                  }
-                  tone="text-amber-400"
-                />
+                {/* HARD SPACER to clear the scaled/translated image overhang */}
+                <div aria-hidden className="h-28 sm:h-32 md:h-40 lg:h-44"></div>
 
-                <IntroRow
-                  img="roasted-cup.jpg"
-                  text={
-                    <>
-                      FROM DARKEST TO LIGHTEST <br /> ALWAYS SMOOTH. <br />
-                      NEVER BITTER.
-                    </>
-                  }
-                  tone="text-amber-300"
-                />
-
-                <div className="pt-2">
-                  <p
-                    className="text-4xl md:text-[2.7rem] font-bold tracking-[0.18em] text-neutral-300"
-                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
-                  >
-                    OLD IRONSIDES COFFEE
-                  </p>
-
-                  <p className="text-base md:text-lg font-medium text-neutral-300 mt-1">
-                    Ignite the Spirit, Savor the Victory!
-                  </p>
+                {/* boxes go below the spacer */}
+                <div className="relative z-10 sm:max-w-xl grid gap-3">
+                  <CompactSubscribeBox />
+                  <GovXLoginBox />
                 </div>
               </div>
             </div>
@@ -790,50 +942,41 @@ function HomePage() {
       </header>
       <LaunchedFromHarbor noBg />
       <RingThatBellBox />
+      {/* ===== GIVING BACK (copied from Origins) ===== */}
+      <section className="relative overflow-hidden border-t border-neutral-800">
+        <img
+          src="/flags-ground.jpg"
+          alt="Giving back backdrop"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-40 z-0 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
-      <section
-        id="fleet-stories"
-        className="relative border-t border-neutral-800 py-12 md:py-16"
-      >
         <Container>
-          <SectionTitle
-            title={
-              <span className="text-4xl md:text-6xl font-extrabold text-amber-300 whitespace-nowrap">
-                The True History Behind the Fleet
-              </span>
-            }
-            subtitle="Explore the real battles and ships that inspired our roasts."
-          />
-
-          <div className="mt-10 grid md:grid-cols-4 gap-6">
-            {roastCards.map((card) => (
-              <Link
-                key={`story-${card.slug}`}
-                to={`/roast/${card.slug}`}
-                className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
-              >
-                <img
-                  src={card.img}
-                  alt={String(card.title)}
-                  className="h-72 sm:h-80 md:h-96 w-full object-cover"
-                />
-                <div className="p-5 flex flex-col flex-1">
-                  <div className="flex items-center gap-3 text-amber-300 mb-1">
-                    <Compass className="h-4 w-4" />
-                    <div>{card.storyTitle}</div>
-                  </div>
-                  <div className="text-sm md:text-base text-amber-300 font-semibold">
-                    {card.battleDate}
-                  </div>
-                  <p className="mt-1 text-sm text-neutral-300 flex-1">
-                    {card.story}
-                  </p>
-                  <span className="mt-4 inline-block text-sm text-amber-300">
-                    Learn more
-                  </span>
+          <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16">
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
+              <div className="justify-self-center self-center">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/veteran-chair.jpg"
+                    alt="Giving back"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-              </Link>
-            ))}
+              </div>
+              <div className="space-y-3">
+                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                  GIVING BACK
+                </h3>
+                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  Even as a startup with thin profits, giving back is at the
+                  core of Old Ironsides Coffee. As a combat veteran, I believe
+                  supporting organizations that focus on veterans’ health and
+                  well-being is not optional—it is who we are. With every bag
+                  sold, we donate a portion of profits to trusted organizations
+                  that provide real help to the veterans who need it most.
+                </p>
+              </div>
+            </div>
           </div>
         </Container>
       </section>
@@ -966,6 +1109,20 @@ function RoastDetailPage() {
   const { add } = useCart();
   const [qty, setQty] = useState(1);
 
+  // Subscribe state
+  const [subEmail, setSubEmail] = useState("");
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailOk(subEmail)) {
+      alert("Enter a valid email.");
+      return;
+    }
+    window.dispatchEvent(
+      new CustomEvent("flash", { detail: "Subscribed — 10% code on the way." })
+    );
+    setSubEmail("");
+  };
+
   if (!card) return <NotFoundPage />;
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -981,58 +1138,180 @@ function RoastDetailPage() {
       })
     );
   };
+
+  const isFlagship = card.slug === "flagship";
+  const isBaptism = card.title === "Baptism by Fire";
+  const discounted = Number((card.price * 0.85).toFixed(2));
+
   return (
-    <main className="py-12 md:py-20">
+    <main className="min-h-[calc(100vh-140px)] py-16 md:py-24">
       <Container>
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-4 mt-3 md:mt-4">
           <BackButton to="/store" size="sm" />
         </div>
 
-        <div className="mt-6 grid md:grid-cols-[auto,1fr] gap-6 items-center">
-          {/* IMAGE COLUMN */}
-          {/* IMAGE COLUMN (fit fully above the fold, tight shadow box) */}
+        <div className="mt-0 grid md:grid-cols-[auto,1fr] gap-6 items-center">
+          {/* IMAGE */}
           <div className="flex justify-center md:justify-start">
             <div className="inline-block rounded-3xl overflow-hidden ring-1 ring-neutral-800 shadow-2xl shadow-black/40">
               <img
                 src={card.img}
                 alt={card.title}
-                className="
-        block
-        h-auto
-        w-auto
-        max-h-[50vh]
-        sm:max-h-[52vh]
-        md:max-h-[55vh]
-        object-contain
-      "
+                className="block h-auto w-auto max-h-[48vh] md:max-h-[50vh] object-contain"
               />
             </div>
           </div>
 
-          {/* TEXT / BUY COLUMN (now vertically centered with the photo) */}
+          {/* TEXT */}
           <div className="self-center space-y-4">
-            {/* Title moved into the text block */}
+            {/* Header */}
             <div>
-              <h1 className="m-0 text-2xl md:text-3xl font-extrabold leading-tight tracking-tight text-amber-300">
-                {card.title}
+              <h1
+                className="m-0 text-3xl md:text-4xl font-extrabold tracking-tight text-amber-300"
+                style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+              >
+                {isFlagship
+                  ? "FLAGSHIP"
+                  : isBaptism
+                  ? "BAPTISM BY FIRE"
+                  : card.title}
               </h1>
               <div className="text-sm md:text-base text-neutral-400">
-                {card.subTitle}
+                {isFlagship
+                  ? "Medium Roast"
+                  : isBaptism
+                  ? "Dark Roast"
+                  : card.subTitle}
               </div>
             </div>
 
-            <p className="text-neutral-300 text-lg leading-relaxed">
-              This is the roast profile page for <strong>{card.title}</strong>.
-            </p>
+            {/* Content blocks */}
+            {isFlagship && (
+              <div className="space-y-6">
+                <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
+                  <p>USS Constitution – Old Ironsides</p>
+                  <p>Commissioned October 21, 1797</p>
+                  <p>
+                    Manned by the spirit of a new nation, she defied the world’s
+                    greatest navy. British cannonballs struck her hull with
+                    fury, but bounced away in awe as one sailor was heard to
+                    say, “Her sides are made of iron!”
+                  </p>
+                  <p>
+                    This roast honors the ship and the souls who sailed her into
+                    history. Balanced, bold, and enduring, our Flagship Medium
+                    Roast carries her legacy in every cup.
+                  </p>
+                  <p>
+                    Old Ironsides Coffee – Ignite the Spirit, Savor the Victory!
+                  </p>
+                </div>
+                <hr className="border-t-2 border-neutral-600 my-8" />
+                <div className="space-y-3">
+                  <h3 className="text-xl md:text-2xl font-bold text-amber-300">
+                    THE COFFEE
+                  </h3>
+                  <p className="text-neutral-300 text-lg leading-relaxed">
+                    Our everyday staple, Flagship is a breakfast-style medium
+                    roast that is smooth, reliable, and never bitter. A roast
+                    you can reach for day after day.
+                  </p>
+                  <ul className="list-disc list-inside text-neutral-300 text-lg space-y-1">
+                    <li>
+                      <span className="text-amber-300">Origin:</span> El
+                      Salvador and Indonesia
+                    </li>
+                    <li>
+                      <span className="text-amber-300">Profile:</span> Balanced,
+                      clean, and versatile, equally good black or with cream
+                    </li>
+                    <li>
+                      <span className="text-amber-300">Finish:</span> Smooth
+                      with no bitterness every time
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            )}
 
-            {/* Buy row */}
+            {isBaptism && (
+              <div className="space-y-6">
+                <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
+                  <p>USS Constitution vs HMS Guerriere – August 19, 1812</p>
+                  <p>
+                    The Constitution’s first great reckoning came in a deadly
+                    duel at sea against the world’s most feared navy. With
+                    courage and grit, Old Ironsides answered cannon for cannon,
+                    British shot striking her hull with fury, yet bouncing away
+                    in awe as one sailor cried, “Her sides are made of iron!”
+                  </p>
+                  <p>
+                    The Guerriere was left wrecked and wallowing, and at last
+                    claimed by the sea.
+                  </p>
+                  <p>
+                    This bold roast pays tribute to the day a legend was born,
+                    fierce, proud, and forged in victory.
+                  </p>
+                  <p>
+                    Old Ironsides Coffee – Ignite the Spirit, Savor the Victory!
+                  </p>
+                </div>
+                <hr className="border-t-2 border-neutral-600 my-8" />
+                <div className="space-y-3">
+                  <h3 className="text-xl md:text-2xl font-bold text-amber-300">
+                    THE COFFEE
+                  </h3>
+                  <p className="text-neutral-300 text-lg leading-relaxed">
+                    Our darkest and most intense roast in the fleet, full-bodied
+                    and unyielding with a finish so smooth you have to taste it
+                    to believe it.
+                  </p>
+                  <ul className="list-disc list-inside text-neutral-300 text-lg space-y-1">
+                    <li>
+                      <span className="text-amber-300">Origin:</span> Indonesia
+                      and Colombia
+                    </li>
+                    <li>
+                      <span className="text-amber-300">Profile:</span> Dark,
+                      bold, smooth
+                    </li>
+                    <li>
+                      <span className="text-amber-300">Finish:</span> Rich and
+                      smoky, never burnt
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* BUY AREA identical for all roasts */}
             {card.canBuy ? (
               <div className="pt-2">
-                <div className="text-sm text-neutral-300 mb-2">
-                  {fmt(card.price)} <span className="text-neutral-500">•</span>{" "}
-                  {card.variant}
+                {/* Row 1: price + Ring that Bell */}
+                <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+                  <div className="text-sm md:text-base">
+                    <span className="font-semibold text-amber-300">
+                      {fmt(card.price)}
+                    </span>{" "}
+                    <span className="text-neutral-500">•</span>{" "}
+                    <span className="text-neutral-300">{card.variant}</span>
+                  </div>
+                  <div className="flex items-baseline gap-2 ml-[14rem]">
+                    <span className="text-base md:text-lg font-semibold text-amber-300 whitespace-nowrap">
+                      Ring that Bell &amp; Save 15%
+                    </span>
+                    <span className="text-base md:text-lg line-through text-amber-300/80">
+                      {fmt(card.price)}
+                    </span>
+                    <span className="text-base md:text-lg font-semibold text-amber-300">
+                      {fmt(discounted)}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-wrap items-center gap-3">
+
+                {/* Row 2: qty + Add to Chest + email + Subscribe */}
+                <div className="mt-3 flex flex-wrap items-center gap-3">
                   <div className="inline-flex items-center rounded-lg border border-neutral-700">
                     <button
                       type="button"
@@ -1066,11 +1345,38 @@ function RoastDetailPage() {
                   >
                     Add to Chest
                   </button>
+
+                  <form
+                    onSubmit={handleSubscribe}
+                    className="flex flex-wrap items-center gap-2 ml-36"
+                  >
+                    <input
+                      value={subEmail}
+                      onChange={(e) => setSubEmail(e.target.value)}
+                      placeholder="you@domain.com"
+                      className="min-w-[14rem] sm:min-w-[16rem] rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    />
+                    <button
+                      type="submit"
+                      className="px-4 py-2 rounded-lg font-semibold bg-amber-400 text-neutral-900 hover:bg-amber-300"
+                    >
+                      Subscribe
+                    </button>
+                  </form>
+                  <div className="mt-3 text-xs text-neutral-400">
+                    Already a member?{" "}
+                    <Link
+                      to="/account/login"
+                      className="text-amber-300 hover:underline"
+                    >
+                      Sign in
+                    </Link>
+                  </div>
                 </div>
               </div>
             ) : (
               <div className="pt-2">
-                <div className="text-sm text-neutral-300 mb-2">
+                <div className="text-sm text-neutral-300 mb-8">
                   {card.variant}
                 </div>
                 <div className="text-neutral-400">
@@ -1084,6 +1390,7 @@ function RoastDetailPage() {
     </main>
   );
 }
+
 function StorePage() {
   const tiles = [
     {
@@ -1105,12 +1412,6 @@ function StorePage() {
       img: "Mugs-deck.png",
     },
     {
-      key: "Coasters",
-      label: "Coffee Coasters",
-      icon: <span className="text-sm">🥃</span>,
-      img: "coasters2.png",
-    },
-    {
       key: "accessories",
       label: "Coffee Accessories",
       icon: <PackageOpen className="h-5 w-5" />,
@@ -1123,50 +1424,38 @@ function StorePage() {
       {/* 1) Fleet content at the very top (keeps its own full-bleed harbor backdrop) */}
       <LaunchedFromHarbor />
       {/* 2) Store content below */}
-      <section className="relative overflow-hidden pt-10 pb-16 md:pt-12 md:pb-24">
-        {/* Edge-to-edge backdrop over merch */}
-        <img
-          src="/store-rack.png"
-          alt="Ship’s Store backdrop"
-          className="absolute inset-0 w-full h-full object-cover opacity-40 -z-0"
-        />
-        <div className="absolute inset-0 bg-neutral-950/40 -z-0" />
-        <Container className="relative z-10">
-          <div className="max-w-xl">
-            <h2 className="text-2xl md:text-4xl font-extrabold text-amber-300">
-              Merch Coming Soon!
-            </h2>
-            <p className="mt-1 text-white">
-              Subscribe to be notified when available
-            </p>
-            <div className="mt-3 w-full max-w-[18rem]">
-              <NotifyForm onSubmit={() => {}} />
-            </div>
-          </div>
-          <div className="mt-8 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      <section
+        id="merch"
+        className="relative overflow-hidden pt-10 pb-16 md:pt-12 md:pb-24 scroll-mt-28 md:scroll-mt-36"
+      >
+        <Container>
+          <SectionTitle
+            title="Launching Winter 2025!"
+            subtitle="Apparel, mugs, hats, and gear for the Fleet."
+          />
+          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {tiles.map((t) => (
               <div
                 key={t.key}
-                className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition text-left overflow-hidden flex flex-col"
+                className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 transition text-left overflow-hidden flex flex-col"
               >
-                <Link to={`/store/${t.key}`} className="block">
-                  <div className="aspect-[4/3] w-full overflow-hidden">
-                    <img
-                      src={t.img}
-                      alt={`${t.label} preview`}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                </Link>
-                <Link to={`/store/${t.key}`} className="p-6 block">
+                <div className="aspect-[4/3] w-full overflow-hidden">
+                  <img
+                    src={t.img}
+                    alt={`${t.label} preview`}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="p-6">
                   <div className="flex items-center gap-3 text-amber-300 font-semibold">
                     {t.icon}
                     <span>{t.label}</span>
                   </div>
-                </Link>
+                </div>
                 <div className="px-6 pb-6">
                   <div className="mt-2 text-sm text-neutral-400">
-                    Join the Fleet to be notified when available.
+                    Join the Fleet to get first access on gear — plus save 15%
+                    on coffee.
                   </div>
                   <NotifyForm onSubmit={() => {}} />
                 </div>
@@ -1184,7 +1473,6 @@ function StoreCategoryPage() {
   const titleMap: any = {
     tees: "Tees",
     mugs: "Mugs",
-    coasters: "Coasters",
     shot: "Shot Glasses",
     accessories: "Coffee Accessories",
   };
@@ -1363,7 +1651,7 @@ function MissionPage() {
                   {/* BOTTOM (LEFT): right edge on centerline, pinned to bottom */}
                   <div className="absolute left-1/2 bottom-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
                     <img
-                      src="/rocket.jpg"
+                      src="/iraq-kids.JPG"
                       alt=""
                       className="w-full h-full object-cover"
                     />
@@ -1420,52 +1708,33 @@ function MissionPage() {
 // ===== END NEW VERSION =====
 
 function OriginsPage() {
-  // Shared frame for all three
+  // Shared frame for all sections
   const SECTION_FRAME = "relative overflow-hidden border-t border-neutral-800";
-  // Normal size for sections (Hands & Roasting)
   const SECTION_INNER =
     "relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16";
 
   return (
     <main className="pt-0">
-      {/* ===== LANDS (taller + title/back nudged down, farm image shifted down) ===== */}
-      <section className={SECTION_FRAME}>
-        {/* Backdrop (shifted down to show lower portion) */}
+      {/* ===== ROASTING PROCESS ===== */}
+      <section
+        id="origins-roasting"
+        className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
+      >
         <img
-          src="/farm1-web.jpg"
-          alt="The Lands backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-[50%_68%] opacity-90 z-0 pointer-events-none"
+          src="/roasted-dark.jpg"
+          alt="Roasting process backdrop"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-100 z-0 pointer-events-none"
         />
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
-
         <Container>
-          {/* Lands is a bit taller for breathing room */}
-          <div className="relative z-10 min-h-[720px] md:min-h-[820px] py-12 md:py-16">
-            {/* Title + Back (nudged down a bit from header) */}
-            <div className="flex items-start justify-between mt-4 md:mt-6 mb-8 md:mb-10">
-              <SectionTitle
-                title={
-                  <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
-                    Origins & Voyages
-                  </span>
-                }
-                subtitle={
-                  <span className="block text-lg md:text-2xl font-semibold text-amber-300">
-                    From Distant Shores to Roasting Flames
-                  </span>
-                }
-              />
-              <BackButton size="sm" />
-            </div>
-
-            {/* Content row */}
+          <div className={SECTION_INNER}>
             <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              {/* Photo LEFT (anchored) */}
+              {/* Photo LEFT */}
               <div className="justify-self-center self-center">
                 <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
                   <img
-                    src="/bean-stock3.jpg"
-                    alt="Hands with beans"
+                    src="/roast-machine.jpg"
+                    alt="Roaster"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -1473,7 +1742,187 @@ function OriginsPage() {
               {/* Text RIGHT */}
               <div className="space-y-3">
                 <h3 className="text-xl md:text-2xl font-bold text-amber-300">
-                  The Lands
+                  Roasting Process
+                </h3>
+                <p className="text-neutral-300 text-2xl md:text-3xl leading-snug max-w-[42rem]">
+                  Our medium roast is smooth and balanced for everyday
+                  enjoyment. Our dark roast is bold and full-bodied—crafted
+                  without bitterness for a finish you must experience.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ===== ABOUT OLD IRONSIDES COFFEE ===== */}
+      <section
+        id="origins-about"
+        className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
+      >
+        {/* Backdrop emblem centered */}
+        <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
+          <img
+            src="/emblem-black.png"
+            alt="About backdrop"
+            className="max-w-[90%] max-h-[90%] object-contain opacity-20"
+          />
+        </div>
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+        <Container>
+          <div className="relative z-10 min-h-[720px] md:min-h-[820px] py-12 md:py-16">
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
+              {/* Photo LEFT */}
+              <div className="justify-self-center self-center">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/flag-close.jpg"
+                    alt="Old Ironsides legacy"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              {/* Text RIGHT */}
+              <div className="space-y-3">
+                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                  About Old Ironsides Coffee
+                </h3>
+                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  USS Constitution—“Old Ironsides”—embodies resilience and
+                  courage. Her story inspires our brand and blends, carrying
+                  forward a legacy of grit, pride, and craftsmanship in every
+                  cup.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ===== THE HISTORY BEHIND THE FLEET ===== */}
+      <section
+        id="origins-history"
+        className="relative border-t border-neutral-800 py-12 md:py-16 scroll-mt-28 md:scroll-mt-36"
+      >
+        <Container>
+          <SectionTitle
+            title={
+              <span
+                className="text-3xl md:text-5xl font-bold text-amber-300 tracking-tight whitespace-nowrap"
+                style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+              >
+                The History Behind The Fleet
+              </span>
+            }
+            subtitle="Explore the real battles and ships that inspired our roasts."
+          />
+          <div className="mt-10 grid md:grid-cols-4 gap-6">
+            {/* Order: Java Action, Baptism by Fire, Flagship */}
+            {["java-action", "baptism-by-fire", "flagship"].map((slug) => {
+              const card = roastCards.find((c) => c.slug === slug);
+              if (!card) return null;
+              return (
+                <Link
+                  key={`story-${card.slug}`}
+                  to={`/roast/${card.slug}`}
+                  className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
+                >
+                  <img
+                    src={card.img}
+                    alt={String(card.title)}
+                    className="h-72 sm:h-80 md:h-96 w-full object-cover"
+                  />
+                  <div className="p-5 flex flex-col flex-1">
+                    <div className="flex items-center gap-3 text-amber-300 mb-1">
+                      <Compass className="h-4 w-4" />
+                      <div>{card.storyTitle}</div>
+                    </div>
+                    <div className="text-sm md:text-base text-amber-300 font-semibold">
+                      {card.battleDate}
+                    </div>
+                    <p className="mt-1 text-sm text-neutral-300 flex-1">
+                      {card.story}
+                    </p>
+                    <span className="mt-4 inline-block text-sm text-amber-300">
+                      Learn more
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </Container>
+      </section>
+
+      {/* ===== GIVING BACK TO THOSE WHO SERVED ===== */}
+      <section
+        id="origins-giving-back"
+        className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
+      >
+        <img
+          src="/flags-ground.jpg"
+          alt="Giving back backdrop"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-40 z-0 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+        <Container>
+          <div className={SECTION_INNER}>
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
+              <div className="justify-self-center self-center">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/veteran-chair.jpg"
+                    alt="Giving back"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                  Giving Back To Those Who Served
+                </h3>
+                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  Even as a startup with thin profits, giving back is at the
+                  core of Old Ironsides Coffee. As a combat veteran, I believe
+                  supporting organizations that focus on veterans’ health and
+                  well-being is not optional—it is who we are. With every bag
+                  sold, we donate a portion of profits to trusted organizations
+                  that provide real help to the veterans who need it most.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ===== THE LANDS WHERE OUR BEANS ARE GROWN ===== */}
+      <section
+        id="origins-lands"
+        className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
+      >
+        <img
+          src="/farm1-web.jpg"
+          alt="Origins & Voyages backdrop"
+          className="absolute inset-0 w-full h-full object-cover object-[50%_68%] opacity-90 z-0 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+        <Container>
+          <div className="relative z-10 min-h-[720px] md:min-h-[820px] py-12 md:py-16">
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
+              {/* Photo LEFT */}
+              <div className="justify-self-center self-center">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/bean-stock3.jpg"
+                    alt="Beans lands"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              {/* Text RIGHT */}
+              <div className="space-y-3">
+                <h3 className="text-xl md:text-2xl font-bold text-amber-300">
+                  The Lands Where Our Beans Are Grown
                 </h3>
                 <p className="text-neutral-300 text-2xl md:text-3xl leading-snug max-w-[42rem]">
                   From rich volcanic soil to high mountain climates, our beans
@@ -1485,15 +1934,17 @@ function OriginsPage() {
         </Container>
       </section>
 
-      {/* ===== HANDS (normal size, background centered, foreground photo centered) ===== */}
-      <section className={SECTION_FRAME}>
+      {/* ===== THE HANDS THAT GROW OUR BEANS ===== */}
+      <section
+        id="origins-hands"
+        className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
+      >
         <img
           src="/hands-bowl.jpg"
           alt="Growers backdrop"
           className="absolute inset-0 w-full h-full object-cover object-center opacity-90 z-0 pointer-events-none"
         />
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
-
         <Container>
           <div className={SECTION_INNER}>
             <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] items-center gap-4 md:gap-6">
@@ -1507,7 +1958,7 @@ function OriginsPage() {
                   their people fairly, and protect the health of each bean.
                 </p>
               </div>
-              {/* Photo RIGHT (centered in section) */}
+              {/* Photo RIGHT */}
               <div className="order-1 md:order-2 justify-self-center self-center">
                 <div className="relative w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
                   <img
@@ -1522,38 +1973,70 @@ function OriginsPage() {
         </Container>
       </section>
 
-      {/* ===== ROASTING (normal size, background centered, foreground photo centered) ===== */}
-      <section className={SECTION_FRAME}>
+      {/* ===== FROM THE SAND TO THE SEA ===== */}
+      <section
+        id="origins-service"
+        className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
+      >
         <img
-          src="/roasted-dark.jpg"
-          alt="Roasting process backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-100 z-0 pointer-events-none"
+          src="/iraq-moon.JPG"
+          alt="Service backdrop"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-90 z-0 pointer-events-none"
         />
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
-
         <Container>
-          <div className={SECTION_INNER}>
-            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              {/* Photo LEFT (centered in section) */}
-              <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+          <div className="relative z-10 min-h-[900px] md:min-h-[960px] py-12 md:py-16">
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr,auto] items-center gap-8">
+              {/* LEFT HERO */}
+              <div className="justify-self-center md:justify-self-start self-center">
+                <div className="w-56 sm:w-64 md:w-[19.5rem] lg:w-[22rem] aspect-[4/5] rounded-2xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50 shadow-2xl shadow-black/40">
                   <img
-                    src="/roast-machine.jpg"
-                    alt="Roaster"
+                    src="/officer-window.png"
+                    alt="Founder portrait"
                     className="w-full h-full object-cover"
                   />
                 </div>
               </div>
-              {/* Text RIGHT */}
-              <div className="space-y-3">
-                <h3 className="text-xl md:text-2xl font-bold text-amber-300">
-                  The Roasting Process
+
+              {/* CENTER TEXT */}
+              <div className="text-center md:text-left self-center">
+                <h3 className="font-cinzel text-2xl md:text-3xl font-extrabold text-amber-300 tracking-wide uppercase">
+                  From The Sand To The Sea
                 </h3>
-                <p className="text-neutral-300 text-2xl md:text-3xl leading-snug max-w-[42rem]">
-                  Our medium roast is smooth and balanced for everyday
-                  enjoyment. Our dark roast is bold and full-bodied—crafted
-                  without bitterness for a finish you must experience.
+                <p className="mt-3 text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  Although my boots were in the sand, not on the deck, the
+                  spirit of Old Ironsides has always inspired me. She is a
+                  reminder that grit, sacrifice, and courage win the day. Those
+                  same values carried me through my service and are now at the
+                  heart of Old Ironsides Coffee.
                 </p>
+              </div>
+
+              {/* RIGHT STACK */}
+              <div className="justify-self-center md:justify-self-end">
+                <div className="relative w-[36rem] h-[48rem]">
+                  <div className="absolute left-1/2 top-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                    <img
+                      src="/humvee-turret.jpg"
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute left-1/2 top-1/2 -translate-y-1/2 w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-2xl">
+                    <img
+                      src="/iraq-self1.JPG"
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute left-1/2 bottom-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                    <img
+                      src="/iraq-kids.JPG"
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1744,6 +2227,19 @@ function LegalPage() {
 
 function CartPage() {
   const { cart, inc, dec, remove, subtotal } = useCart();
+  // Sidebar "Ring That Bell" state/submit (mimics MegaSubscribeBox)
+const [sbEmail, setSbEmail] = useState("");
+const [sbDone, setSbDone] = useState(false);
+const onSbSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!emailOk(sbEmail)) return alert("Enter a valid email.");
+  setSbDone(true);
+  window.dispatchEvent(
+    new CustomEvent("flash", { detail: "Welcome aboard — your discount is on the way." })
+  );
+  setSbEmail("");
+};
+
 
   return (
     <main className="pt-28 md:pt-36 pb-16 md:pb-24">
@@ -1757,84 +2253,166 @@ function CartPage() {
           <div>
             {/* Message centered, nudged upward toward banner */}
             <div className="mb-6 text-center relative">
-              <p className="text-sm md:text-base text-blue-300 relative -top-[50px]">
-                All of our coffees are roasted and packaged to order every
-                Monday, then shipped Tuesday and Wednesday to ensure maximum
-                freshness. <br />
-                Orders placed before 5 p.m. EST on Sunday will be roasted and
-                shipped that same week, while orders placed after will ship the
-                following week. <br />
-                Because we roast to order, your coffee won’t arrive overnight
-                like Amazon, but it will arrive fresh. <br />
-                If you miss the deadline and you need your coffee sooner, just
-                leave a note at checkout <br /> or reply to your confirmation
-                email and we’ll do our best to accommodate.
-              </p>
+            <p className="text-sm md:text-base text-blue-300 relative -top-[50px]">
+  {(() => {
+    const now = new Date();
+    const day = now.getDay(); // 0=Sunday, 1=Monday...
+    const nextMonday = new Date(now);
+    nextMonday.setDate(
+      now.getDate() + ((1 - day + 7) % 7 || 7)
+    );
+
+    const roastDate = nextMonday.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "short",
+      day: "numeric",
+    });
+
+    return (
+      <>
+        All of our coffees are roasted fresh every Monday and ship
+        Tuesday/Wednesday. <br />
+        Your next eligible roast date is{" "}
+        <span className="font-semibold text-amber-300">
+          {roastDate}
+        </span>
+        . <br />
+        Orders placed before 5 p.m. EST on Sunday make that week’s
+        roast; after that, they roll to the following week. <br />
+        Because we roast to order, your coffee won’t arrive overnight
+        like Amazon, but it will arrive fresh. <br />
+        Need it sooner? Leave a note at checkout or reply to your
+        confirmation email — we’ll do our best to accommodate.
+      </>
+    );
+  })()}
+</p>
+
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
               <div className="md:col-span-2 space-y-4">
                 {cart.map((item: any) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center gap-4 rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 p-4"
-                  >
-                    <img
-                      src={item.img}
-                      alt={item.title}
-                      className="h-16 w-16 object-cover rounded-lg"
-                    />
-                    <div className="flex-1">
-                      <div className="font-semibold text-amber-300">
-                        {item.title}
-                      </div>
-                      <div className="text-xs text-neutral-400">
-                        {item.variant}
-                      </div>
-                      <div className="mt-1 text-sm">{fmt(item.price)}</div>
-                    </div>
-
-                    <div className="inline-flex items-center rounded-lg border border-neutral-700">
-                      <button
-                        onClick={() => dec(item.id)}
-                        className="px-2 py-1 hover:bg-neutral-800 rounded-l-lg"
-                        aria-label="Decrease"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </button>
-                      <div className="w-10 text-center bg-neutral-900/70 py-1 text-sm">
-                        {item.qty}
-                      </div>
-                      <button
-                        onClick={() => inc(item.id)}
-                        className="px-2 py-1 hover:bg-neutral-800 rounded-r-lg"
-                        aria-label="Increase"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
-                    </div>
-
-                    <button
-                      onClick={() => remove(item.id)}
-                      className="p-2 rounded-lg hover:bg-neutral-800"
-                      aria-label="Remove"
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
-                  </div>
+        <div
+        key={item.id}
+        className="flex items-center gap-4 rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 p-4"
+      >
+        {/* Product image */}
+        <img
+          src={item.img}
+          alt={item.title}
+          className="h-16 w-16 object-cover rounded-lg"
+        />
+      
+        {/* Title + variant + price (flex-1 pushes controls to the right) */}
+        <div className="flex-1">
+          <div className="font-semibold text-amber-300">
+            {item.title}
+          </div>
+          <div className="text-xs text-neutral-400">{item.variant}</div>
+          <div className="mt-1 text-sm">{fmt(item.price)}</div>
+        </div>
+      
+        {/* Right-side controls (qty + remove) */}
+        <div className="flex items-center gap-2">
+          <div
+            className="inline-flex items-center rounded-lg border border-neutral-700"
+            role="group"
+            aria-label={`Quantity controls for ${item.title}`}
+          >
+            <button
+              onClick={() => dec(item.id)}
+              className="px-2 py-1 hover:bg-neutral-800 rounded-l-lg"
+              aria-label={`Decrease quantity of ${item.title}`}
+            >
+              <Minus className="h-4 w-4" />
+            </button>
+            <div
+              className="w-10 text-center bg-neutral-900/70 py-1 text-sm"
+              role="status"
+              aria-live="polite"
+            >
+              {item.qty}
+            </div>
+            <button
+              onClick={() => inc(item.id)}
+              className="px-2 py-1 hover:bg-neutral-800 rounded-r-lg"
+              aria-label={`Increase quantity of ${item.title}`}
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+          </div>
+      
+          <button
+            onClick={() => remove(item.id)}
+            className="p-2 rounded-lg hover:bg-neutral-800"
+            aria-label={`Remove ${item.title}`}
+          >
+            <Trash2 className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+      
                 ))}
               </div>
 
               {/* Checkout sidebar */}
-              <aside className="rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 h-max">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-neutral-400">Subtotal</span>
-                  <span className="font-semibold">{fmt(subtotal)}</span>
-                </div>
-                <button className="mt-4 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
-                  Checkout
-                </button>
-              </aside>
+              <aside className="space-y-6">
+  {/* Checkout box */}
+  <div className="rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 h-max">
+    <div className="flex items-center justify-between text-sm">
+      <span className="text-neutral-400">Subtotal</span>
+      <span className="font-semibold">{fmt(subtotal)}</span>
+    </div>
+    <button className="mt-4 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+      Checkout
+    </button>
+  </div>
+
+ {/* Ring That Bell subscribe box — EXACT mimic of MegaSubscribeBox visual */}
+<div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-8 text-center">
+  <div className="flex items-center justify-center gap-3 mb-3">
+    <Bell className="h-7 w-7 text-amber-300" />
+    <h3 className="text-2xl font-extrabold text-amber-300">Ring That Bell</h3>
+  </div>
+  <p className="text-neutral-300 mb-5 text-lg md:text-xl">Join the Fleet and save 15%</p>
+
+  <form onSubmit={onSbSubmit} className="flex justify-center gap-3 max-w-md mx-auto">
+    <input
+      type="email"
+      name="email"
+      autoComplete="email"
+      inputMode="email"
+      autoCapitalize="off"
+      autoCorrect="off"
+      spellCheck={false}
+      value={sbEmail}
+      onChange={(e) => setSbEmail(e.target.value)}
+      placeholder="you@domain.com"
+      className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+    />
+    <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+      Join
+    </button>
+  </form>
+
+  <div className="mt-3 text-xs text-neutral-400">
+    Already a member?{" "}
+    <Link to="/account/login" className="text-amber-300 hover:underline">
+      Sign in
+    </Link>
+  </div>
+
+  {sbDone && (
+    <p className="mt-3 text-sm text-emerald-400">
+      Welcome aboard — your discount is on the way.
+    </p>
+  )}
+</div>
+
+
+</aside>
+
             </div>
           </div>
         ) : (
@@ -1846,6 +2424,420 @@ function CartPage() {
               </Link>
               .
             </p>
+          </div>
+        )}
+      </Container>
+    </main>
+  );
+}
+/* ===================== Account / Subscribe & Manage ===================== */
+function SubscribeManagePage({
+  initialTab = "overview",
+}: {
+  initialTab?: "overview" | "login";
+}) {
+  // super-light “auth” using localStorage (swap later)
+  const [user, setUser] = useState<any>(() => {
+    try {
+      return JSON.parse(localStorage.getItem("oi_user") || "null");
+    } catch {
+      return null;
+    }
+  });
+  const [tab, setTab] = useState<
+    "overview" | "login" | "subscriptions" | "orders" | "profile"
+  >(initialTab ?? (user ? "overview" : "login"));
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Mock data so the UI works now
+  const [subs, setSubs] = useState<any[]>([
+    {
+      id: "sub_1",
+      product: "Flagship Medium Roast",
+      nextCharge: "2025-10-10",
+      frequency: "Monthly",
+      status: "active",
+    },
+  ]);
+  const [orders, setOrders] = useState<any[]>([
+    {
+      id: "ORD-10001",
+      date: "2025-08-01",
+      total: 44.0,
+      items: [{ title: "Flagship Medium Roast", qty: 2 }],
+    },
+  ]);
+
+  useEffect(() => {
+    if (!user) setTab("login");
+  }, [user]);
+
+  // ---------- Auth (mock today) ----------
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    const fd = new FormData(e.currentTarget);
+    const email = String(fd.get("email") || "");
+    const password = String(fd.get("password") || "");
+    try {
+      if (!emailOk(email) || !password)
+        throw new Error("Check your email and password.");
+      // INTEGRATE HERE: call Shopify Storefront (customerAccessTokenCreate) or Jack's backend login.
+      await new Promise((r) => setTimeout(r, 400));
+      const u = { id: "c1", email, name: email.split("@")[0] };
+      localStorage.setItem("oi_user", JSON.stringify(u));
+      setUser(u);
+      setTab("overview");
+      window.dispatchEvent(
+        new CustomEvent("flash", { detail: "Welcome back!" })
+      );
+    } catch (err: any) {
+      setError(err?.message || "Login failed.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    const fd = new FormData(e.currentTarget);
+    const name = String(fd.get("name") || "");
+    const email = String(fd.get("email") || "");
+    const password = String(fd.get("password") || "");
+    try {
+      if (!name || !emailOk(email) || !password)
+        throw new Error("Fill all fields.");
+      // INTEGRATE HERE: call Shopify Storefront customerCreate OR Jack's signup endpoint.
+      await new Promise((r) => setTimeout(r, 500));
+      const u = { id: "c1", email, name };
+      localStorage.setItem("oi_user", JSON.stringify(u));
+      setUser(u);
+      setTab("overview");
+      window.dispatchEvent(
+        new CustomEvent("flash", { detail: "Account created!" })
+      );
+    } catch (err: any) {
+      setError(err?.message || "Registration failed.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("oi_user");
+    setUser(null);
+    setTab("login");
+  }
+
+  // ---------- Subscription actions (mock today) ----------
+  async function skipNextCharge(subId: string) {
+    // INTEGRATE HERE: call Recharge/Skio/Bold or Jack’s subscription API.
+    setSubs((list) =>
+      list.map((s) => (s.id === subId ? { ...s, nextCharge: "2025-11-10" } : s))
+    );
+    window.dispatchEvent(
+      new CustomEvent("flash", { detail: "Next delivery skipped." })
+    );
+  }
+  async function pauseSub(subId: string) {
+    setSubs((list) =>
+      list.map((s) => (s.id === subId ? { ...s, status: "paused" } : s))
+    );
+    window.dispatchEvent(
+      new CustomEvent("flash", { detail: "Subscription paused." })
+    );
+  }
+  async function cancelSub(subId: string) {
+    setSubs((list) => list.filter((s) => s.id !== subId));
+    window.dispatchEvent(
+      new CustomEvent("flash", { detail: "Subscription canceled." })
+    );
+  }
+
+  const TabBtn = ({ id, children }: any) => (
+    <button
+      onClick={() => setTab(id)}
+      className={
+        "px-3 py-2 rounded-lg text-sm " +
+        (tab === id
+          ? "bg-amber-400 text-neutral-900 font-semibold"
+          : "border border-neutral-700 hover:border-amber-400/40 text-neutral-300")
+      }
+    >
+      {children}
+    </button>
+  );
+
+  if (!user && tab === "login") {
+    return (
+      <main className="py-16 md:py-24">
+        <Container>
+          <div className="flex items-start justify-between">
+            <SectionTitle
+              title={
+                <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
+                  Account
+                </span>
+              }
+              subtitle="Log in or create an account to manage subscriptions and orders."
+            />
+            <BackButton size="sm" />
+          </div>
+
+          <div className="mt-6 grid md:grid-cols-2 gap-6">
+            {/* Login */}
+            <form
+              onSubmit={handleLogin}
+              className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
+            >
+              <div className="text-lg font-semibold text-amber-300 mb-3">
+                Log in
+              </div>
+              <div className="space-y-3">
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="you@domain.com"
+                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                />
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="password"
+                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                />
+                {error && <div className="text-sm text-red-300">{error}</div>}
+                <button
+                  disabled={loading}
+                  className="w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
+                >
+                  {loading ? "…" : "Log in"}
+                </button>
+              </div>
+            </form>
+
+            {/* Register */}
+            <form
+              onSubmit={handleRegister}
+              className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
+            >
+              <div className="text-lg font-semibold text-amber-300 mb-3">
+                Create account
+              </div>
+              <div className="space-y-3">
+                <input
+                  name="name"
+                  placeholder="Your name"
+                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                />
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="you@domain.com"
+                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                />
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="password"
+                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                />
+                <button
+                  disabled={loading}
+                  className="w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
+                >
+                  {loading ? "…" : "Create account"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </Container>
+      </main>
+    );
+  }
+
+  // ---------- Logged-in view ----------
+  return (
+    <main className="py-16 md:py-24">
+      <Container>
+        <div className="flex items-start justify-between">
+          <SectionTitle
+            title={
+              <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
+                Account
+              </span>
+            }
+            subtitle={
+              <span className="text-neutral-300">
+                Welcome,{" "}
+                <span className="text-amber-300 font-semibold">
+                  {user?.name || user?.email}
+                </span>
+              </span>
+            }
+          />
+          <BackButton size="sm" />
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <TabBtn id="overview">Overview</TabBtn>
+          <TabBtn id="subscriptions">Subscriptions</TabBtn>
+          <TabBtn id="orders">Orders</TabBtn>
+          <TabBtn id="profile">Profile</TabBtn>
+          <div className="ml-auto">
+            <button
+              onClick={handleLogout}
+              className="px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/40 text-neutral-300 text-sm"
+            >
+              Log out
+            </button>
+          </div>
+        </div>
+
+        {/* PANELS */}
+        {tab === "overview" && (
+          <div className="mt-6 grid md:grid-cols-3 gap-6">
+            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+              <div className="text-amber-300 font-semibold">Next Delivery</div>
+              <div className="mt-2 text-neutral-300 text-sm">
+                {subs[0]
+                  ? `${subs[0].product} — ${subs[0].nextCharge}`
+                  : "No active subscriptions."}
+              </div>
+              <Link
+                to="#"
+                onClick={() => setTab("subscriptions")}
+                className="mt-3 inline-block text-amber-300 text-sm"
+              >
+                Manage subscription →
+              </Link>
+            </div>
+            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+              <div className="text-amber-300 font-semibold">Recent Order</div>
+              <div className="mt-2 text-neutral-300 text-sm">
+                {orders[0]
+                  ? `${orders[0].id} — ${orders[0].date}`
+                  : "No orders yet."}
+              </div>
+              <Link
+                to="#"
+                onClick={() => setTab("orders")}
+                className="mt-3 inline-block text-amber-300 text-sm"
+              >
+                View orders →
+              </Link>
+            </div>
+            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+              <div className="text-amber-300 font-semibold">Payment Method</div>
+              <div className="mt-2 text-neutral-300 text-sm">
+                Update your card securely.
+              </div>
+              {/* INTEGRATE HERE: link to hosted card update (Recharge/Skio/Bold) or Jack’s PCI-compliant page */}
+              <button className="mt-3 px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold">
+                Update card
+              </button>
+            </div>
+          </div>
+        )}
+
+        {tab === "subscriptions" && (
+          <div className="mt-6 grid gap-4">
+            {subs.length === 0 && (
+              <div className="text-neutral-400">No active subscriptions.</div>
+            )}
+            {subs.map((s) => (
+              <div
+                key={s.id}
+                className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
+              >
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="font-semibold text-amber-300">
+                    {s.product}
+                  </div>
+                  <div className="text-sm text-neutral-400">
+                    • Next: {s.nextCharge}
+                  </div>
+                  <div className="text-sm text-neutral-400">
+                    • {s.frequency}
+                  </div>
+                  <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300">
+                    {s.status}
+                  </div>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    onClick={() => skipNextCharge(s.id)}
+                    className="px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/50 text-sm"
+                  >
+                    Skip next
+                  </button>
+                  <button
+                    onClick={() => pauseSub(s.id)}
+                    className="px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/50 text-sm"
+                  >
+                    Pause
+                  </button>
+                  <button
+                    onClick={() => cancelSub(s.id)}
+                    className="px-3 py-2 rounded-lg border border-red-800 text-red-300 hover:border-red-600 text-sm"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {tab === "orders" && (
+          <div className="mt-6 grid gap-4">
+            {orders.map((o) => (
+              <div
+                key={o.id}
+                className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
+              >
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="font-semibold text-amber-300">{o.id}</div>
+                  <div className="text-sm text-neutral-400">• {o.date}</div>
+                  <div className="text-sm text-neutral-400">
+                    • {fmt(o.total)}
+                  </div>
+                </div>
+                <ul className="mt-2 text-sm text-neutral-300 list-disc list-inside">
+                  {o.items.map((it: any, i: number) => (
+                    <li key={i}>
+                      {it.title} × {it.qty}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {tab === "profile" && (
+          <div className="mt-6 grid md:grid-cols-2 gap-6">
+            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+              <div className="text-amber-300 font-semibold">Contact</div>
+              <div className="mt-2 text-sm text-neutral-300">
+                Email: {user?.email}
+              </div>
+              {/* INTEGRATE HERE: addresses from Shopify Storefront API or Jack's backend */}
+              <div className="mt-4 text-sm text-neutral-400">
+                Addresses coming soon.
+              </div>
+            </div>
+            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+              <div className="text-amber-300 font-semibold">Security</div>
+              <div className="mt-2 text-sm text-neutral-300">
+                Change password (coming soon).
+              </div>
+              {/* INTEGRATE HERE: password update via backend */}
+            </div>
           </div>
         )}
       </Container>
@@ -1884,36 +2876,239 @@ function NotFoundPage() {
 }
 
 /* ================= Layout & Footer ================= */
-function HeaderNavLink({ to, children }: any) {
+function HeaderNavLink({
+  to,
+  children,
+}: {
+  to: string;
+  children: React.ReactNode;
+}) {
   const location = useLocation();
-  const active = location.pathname === to;
+
+  // Special case: treat /store and /store#merch the same
+  const isActive =
+    location.pathname === to ||
+    (to.startsWith("/store") && location.pathname === "/store");
+
   return (
     <Link
       to={to}
-      className={`text-[12px] md:text-[13px] uppercase tracking-wide whitespace-nowrap transition ${
-        active ? "text-amber-300" : "text-neutral-300 hover:text-amber-300"
-      }`}
+      className={
+        "px-1.5 py-1 rounded-md " +
+        (isActive
+          ? "text-amber-300 font-semibold"
+          : "text-neutral-300 hover:text-amber-200") +
+        " text-base md:text-lg transition-colors"
+      }
     >
       {children}
     </Link>
   );
 }
+
+
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
+
   useEffect(() => {
+    // If there’s a hash like #merch, try to scroll to it after render
+    if (hash) {
+      // wait a tick so the section exists in the DOM
+      requestAnimationFrame(() => {
+        const id = hash.slice(1);
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          // fallback if anchor not found
+          window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        }
+      });
+      return;
+    }
+
+    // No hash: normal behavior
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [pathname]);
+  }, [pathname, hash]);
+
   return null;
 }
+/* ================= Promo Subscribe Modal (global) ================= */
+function PromoSubscribeModal() {
+  const [open, setOpen] = React.useState(false);
+  const [email, setEmail] = React.useState("");
+  const [done, setDone] = React.useState(false);
+
+  React.useEffect(() => {
+    const onOpen = () => {
+      setOpen(true);
+      setDone(false);
+      setEmail("");
+    };
+    window.addEventListener("promo-subscribe", onOpen as any);
+    return () => window.removeEventListener("promo-subscribe", onOpen as any);
+  }, []);
+
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    if (open) window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailOk(email)) return alert("Enter a valid email.");
+    setDone(true);
+    window.dispatchEvent(
+      new CustomEvent("flash", { detail: "Welcome aboard — your 20% code is on the way." })
+    );
+    // TODO: integrate with your ESP endpoint
+  };
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[120] flex items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Get 20% off your first order"
+      onClick={(e) => {
+        // click backdrop to close
+        if (e.target === e.currentTarget) setOpen(false);
+      }}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+      {/* Modal */}
+      <div className="relative z-10 w-[92vw] max-w-md">
+        <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-8 text-center">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <Bell className="h-7 w-7 text-amber-300" />
+            <h3 className="text-2xl font-extrabold text-amber-300">
+              Ring That Bell
+            </h3>
+          </div>
+          <p className="text-neutral-300 mb-5 text-lg md:text-xl">
+            Join the Fleet and save 20% on your first order
+          </p>
+
+          <form onSubmit={onSubmit} className="flex justify-center gap-3 max-w-md mx-auto">
+            <input
+              type="email"
+              name="email"
+              autoComplete="email"
+              inputMode="email"
+              autoCapitalize="off"
+              autoCorrect="off"
+              spellCheck={false}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@domain.com"
+              className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+            />
+            <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+              Get Code
+            </button>
+          </form>
+
+          <div className="mt-3 text-xs text-neutral-400">
+            Already a member?{" "}
+            <Link to="/account/login" className="text-amber-300 hover:underline">
+              Sign in
+            </Link>
+          </div>
+
+          {done && (
+            <p className="mt-3 text-sm text-emerald-400">
+              Welcome aboard — your discount is on the way.
+            </p>
+          )}
+
+          {/* Close button */}
+          <button
+            onClick={() => setOpen(false)}
+            className="absolute top-2 right-2 px-2 py-1 rounded-md text-neutral-300 hover:text-amber-300"
+            aria-label="Close modal"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 function Layout() {
   const { count } = useCart();
   const location = useLocation();
   const isHome = location.pathname === "/";
-  const isFleet = location.pathname.startsWith("/fleet");
+  const isFleet = location.pathname.startsWith("/coffee");
   const isRoast = location.pathname.startsWith("/roast");
+  const panelRef = React.useRef<HTMLDivElement | null>(null);
 
   const [shrunk, setShrunk] = useState(true);
+  const [stickyOpen, setStickyOpen] = useState(false);
+  const megaRef = React.useRef<HTMLDivElement | null>(null);
+  // Mega menu: null | 'coffee' | 'merch' | 'origins'
+  const [openMega, setOpenMega] = useState<
+    null | "coffee" | "merch" | "origins"
+  >(null);
+  // Inline subscribe state for Origins mega panel
+  const [mmEmail, setMmEmail] = useState("");
+  const [mmDone, setMmDone] = useState(false);
+  const submitMegaSubscribe = (e: any) => {
+    e.preventDefault();
+    if (!emailOk(mmEmail)) return alert("Enter a valid email.");
+    setMmDone(true);
+  };
+  // Hover-intent helpers so the mega menu doesn't close while moving into it or typing
+  const closeTimer = React.useRef<number | null>(null);
+  const scheduleClose = React.useCallback(() => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => {
+      const panel = panelRef.current as any;
+      const active = document.activeElement as HTMLElement | null;
+
+      const focusWithin =
+        !!panel &&
+        ((!!active && panel.contains(active)) ||
+          panel.matches?.(":focus-within"));
+
+      const until = panel?.__suppressUntil || 0;
+      const sticky = !!panel?.__sticky;
+
+      // Only close if: not focused inside, not sticky, and no suppression window active
+      if (!focusWithin && !sticky && Date.now() > until) {
+        setOpenMega(null);
+      }
+    }, 700) as unknown as number; // a bit more time for the autofill popup
+  }, []);
+
+  const cancelClose = React.useCallback(() => {
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }, []);
+
+  // Minimal merch cards to show in the dropdown (keys match your store)
+  const merchTiles = [
+    { key: "tees", label: "Tees", img: "shirts-web.png" },
+    { key: "hats", label: "Hats", img: "hat1-web.png" },
+    { key: "mugs", label: "Mugs", img: "Mugs-deck.png" },
+    {
+      key: "accessories",
+      label: "Coffee Accessories",
+      img: "canister-web.png",
+    },
+  ];  
+  const flagship = roastCards.find((c) => c.slug === "flagship");
+
   useEffect(() => {
     const onScroll = () => setShrunk(window.scrollY > 20);
     onScroll();
@@ -1924,81 +3119,400 @@ function Layout() {
     <div className="min-h-screen bg-neutral-950 text-neutral-100 overflow-x-hidden">
       <ScrollToTop />
       <FlashToast />
-      {/* FIXED, SHRINK-ON-SCROLL HEADER */}
+      <PromoSubscribeModal /> 
       <header className="fixed top-0 inset-x-0 z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800">
-        <Container>
-          <div className={shrunk ? "pt-4 md:pt-5 pb-3" : "pt-10 md:pt-12 pb-5"}>
-            {/* Centered stack; emblem sits to the left and does NOT affect width */}
-            <div className="relative mx-auto w-max">
-              {/* Emblem to the LEFT of the centered stack */}
-              <img
-                src="/emblem-black.png"
-                alt="Old Ironsides emblem"
-                className={
-                  (shrunk ? "h-24 md:h-28" : "h-36 md:h-44") +
-                  " w-auto object-contain select-none transition-all " +
-                  "absolute top-1/2 -translate-y-1/2 right-[calc(100%+16px)]"
-                }
-              />
+  {/* === TOP BAR (40px) === */}
+  <div className="border-b border-neutral-800">
+    <Container>
+      <div className="h-10 flex items-center relative">
+        {/* Centered promo text */}
+        <div className="absolute left-1/2 -translate-x-1/2 text-amber-300 text-xs md:text-sm font-semibold tracking-wide text-center space-x-3">
+  {/* First Order button now opens modal */}
+  <button
+    type="button"
+    onClick={() =>
+      window.dispatchEvent(new CustomEvent("promo-subscribe"))
+    }
+    className="hover:text-amber-200 underline-offset-2 hover:underline"
+  >
+    20% OFF First Order
+  </button>
 
-              {/* Title + taglines */}
-              <div className="flex flex-col items-center -mt-1">
-                {/* TITLE now centered */}
-                <div
-                  className={
-                    shrunk
-                      ? "text-2xl md:text-4xl font-bold tracking-[0.18em] text-neutral-300 text-center"
-                      : "text-3xl md:text-5xl font-bold tracking-[0.18em] text-neutral-300 text-center"
-                  }
-                  style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
-                >
-                  OLD IRONSIDES COFFEE
+  <span>|</span>
+
+  {/* Subscribe & Save link */}
+  <Link to="/account/login" className="hover:text-amber-200">
+    15% OFF Subscribe &amp; Save
+  </Link>
+
+  <span>|</span>
+
+  {/* Free Shipping link */}
+  <Link to="/legal/shipping" className="hover:text-amber-200">
+    Free Shipping on 3+ Bags
+  </Link>
+</div>
+
+        {/* Right-aligned My Fleet login */}
+        <Link
+  to="/account"
+  className="ml-auto inline-flex items-center gap-2 text-amber-300 hover:text-amber-200 text-sm md:text-base font-semibold"
+  aria-label="My Fleet"
+  title="My Fleet"
+>
+  <span aria-hidden className="text-lg md:text-xl">⚓</span>
+  <span>My Fleet</span>
+</Link>
+
+      </div>
+    </Container>
+  </div>
+
+  <Container>
+
+  <div
+  className={
+    (shrunk ? "pt-2 md:pt-3 pb-2" : "pt-6 md:pt-8 pb-3") +
+    " relative"
+  }
+>
+
+  
+       {/* ===== HEADER STACK + NAV (fixed CHEST) ===== */}
+
+{/* Centered stack; emblem sits to the left and does NOT affect width */}
+<div className="relative mx-auto w-max">
+  {/* Emblem to the LEFT of the centered stack (clickable) */}
+  <Link to="/" aria-label="Go to Home Port">
+  <img
+  src="/emblem-black.png"
+  alt="Old Ironsides emblem"
+  className={
+    (shrunk
+      ? "h-28 md:h-32 top-[calc(50%+6px)]"
+      : "h-40 md:h-48 top-[calc(50%+12px)]") +
+    " w-auto object-contain select-none transition-all cursor-pointer " +
+    "absolute -translate-y-1/2 right-[calc(100%+72px)]"
+  }
+/>
+
+
+
+  </Link>
+
+  {/* Title + taglines */}
+  <div className="flex flex-col items-center">
+
+    <div
+      className={
+        shrunk
+          ? "text-2xl md:text-4xl font-bold tracking-[0.18em] text-neutral-300 text-center"
+          : "text-3xl md:text-5xl font-bold tracking-[0.18em] text-neutral-300 text-center"
+      }
+      style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+    >
+      OLD IRONSIDES COFFEE
+    </div>
+
+    <div
+      className={
+        shrunk
+          ? "text-xs md:text-sm text-amber-200 text-center"
+          : "text-sm md:text-lg text-amber-200 text-center"
+      }
+    >
+      Ignite the Spirit, Savor the Victory!
+    </div>
+    <div
+      className={
+        shrunk
+          ? "hidden md:block md:text-sm text-neutral-300 text-center"
+          : "text-sm md:text-base text-neutral-300 text-center"
+      }
+    >
+      Proudly Veteran-owned
+    </div>
+  </div>
+</div>
+
+{/* === NAV ROW (relative wrapper) ===
+   - nav is centered
+   - CHEST is absolutely pinned to the right INSIDE this row
+   - No padding shims, no overlap math */}
+<div
+  className="relative mt-3"
+  onMouseEnter={cancelClose}
+  onMouseLeave={scheduleClose}
+>
+  {/* CHEST pinned to the right of this row */}
+  <Link
+  to="/cart"
+  className="hidden md:flex items-center gap-3 h-11 px-4 rounded-xl
+             ring-1 ring-amber-400/60 bg-neutral-900/60 text-amber-300
+             hover:bg-amber-400 hover:text-neutral-900 transition shadow-lg
+             divide-x divide-neutral-700 z-30 absolute right-0 top-1/2 -translate-y-1/2"
+  aria-label="Open Chest (Cart)"
+  title="Chest"
+>
+  <span className="flex items-center gap-2 pr-3">
+    <ChestIcon className="h-6 w-6" />
+    <span className="uppercase tracking-wide font-bold text-base md:text-lg">
+      CHEST
+    </span>
+  </span>
+  <span className="pl-3 font-bold tabular-nums text-base md:text-lg">
+    {count ?? 0}
+  </span>
+</Link>
+
+
+  {/* Centered nav */}
+  <nav className="flex justify-center">
+    <div className="flex items-center gap-6">
+      {/* COFFEE */}
+      <div
+        onMouseEnter={() => {
+          cancelClose();
+          setOpenMega("coffee");
+        }}
+        className="relative"
+      >
+        <HeaderNavLink to="/coffee">SHOP COFFEE</HeaderNavLink>
+      </div>
+
+      {/* MERCH */}
+      <div
+        onMouseEnter={() => {
+          cancelClose();
+          setOpenMega("merch");
+        }}
+        className="relative"
+      >
+        <HeaderNavLink to="/store#merch">GEAR</HeaderNavLink>
+      </div>
+
+      {/* ORIGINS */}
+      <div
+        onMouseEnter={() => {
+          cancelClose();
+          setOpenMega("origins");
+        }}
+        className="relative"
+      >
+        <HeaderNavLink to="/origins">ORIGINS AND VOYAGES</HeaderNavLink>
+      </div>
+
+      {/* CONTACT */}
+      <HeaderNavLink to="/contact">CONTACT THE CREW</HeaderNavLink>
+    </div>
+  </nav>
+
+  {/* Mega menu panel (full content, unchanged except wrapper positioning) */}
+  {openMega && (
+    <div
+      ref={panelRef}
+      className="absolute left-1/2 -translate-x-1/2 w-screen z-40"
+      onMouseEnter={() => {
+        const p = panelRef.current as any;
+        if (p) p.__sticky = true;
+      }}
+      onMouseLeave={() => {
+        const p = panelRef.current as any;
+        if (p) p.__sticky = false;
+        setTimeout(() => {
+          const active = document.activeElement as HTMLElement | null;
+          const within =
+            !!panelRef.current &&
+            ((!!active && panelRef.current.contains(active)) ||
+              (panelRef.current as any).matches?.(":focus-within"));
+          const until = (panelRef.current as any)?.__suppressUntil || 0;
+          if (!within && Date.now() > until) setOpenMega(null);
+        }, 600);
+      }}
+      onFocusCapture={() => {
+        const p = panelRef.current as any;
+        if (p) p.__sticky = true;
+      }}
+      onBlurCapture={() => {
+        setTimeout(() => {
+          const active = document.activeElement as HTMLElement | null;
+          const within =
+            !!panelRef.current &&
+            ((!!active && panelRef.current.contains(active)) ||
+              (panelRef.current as any).matches?.(":focus-within"));
+          const until = (panelRef.current as any)?.__suppressUntil || 0;
+          if (!within && Date.now() > until) setOpenMega(null);
+        }, 600);
+      }}
+      onPointerDownCapture={() => {
+        const p = panelRef.current as any;
+        if (p) p.__suppressUntil = Date.now() + 2000;
+      }}
+      onKeyDownCapture={(e) => {
+        if (e.key === "Tab" || e.key === "Enter") {
+          const p = panelRef.current as any;
+          if (p) p.__suppressUntil = Date.now() + 1200;
+        }
+      }}
+    >
+      <div className="mt-2 border-t border-neutral-800">
+        <div className="relative">
+          <div className="absolute inset-0 bg-neutral-950/95 backdrop-blur" />
+          <Container className="relative py-4 md:py-6">
+            {/* COFFEE PANEL */}
+            {openMega === "coffee" && (
+              <div className="grid lg:grid-cols-[1fr,auto] gap-8 items-start">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {roastCards.map((card) => (
+                    <Link
+                      key={`mega-roast-${card.id}`}
+                      to={`/roast/${card.slug}`}
+                      className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
+                    >
+                      <img
+                        src={card.img}
+                        alt={card.title}
+                        className="h-52 sm:h-60 lg:h-60 w-full object-cover"
+                      />
+                      <div className="p-3">
+                        <div
+                          className="text-lg font-extrabold text-amber-300"
+                          style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                        >
+                          {card.title}
+                        </div>
+                        <div className="text-xs text-neutral-400">{card.variant}</div>
+                        <div className="text-xs md:text-sm text-neutral-300">
+                          {card.subTitle}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
 
-                {/* Tagline + Veteran-owned remain centered */}
-                <div
-                  className={
-                    shrunk
-                      ? "text-xs md:text-sm text-amber-200 text-center"
-                      : "text-sm md:text-lg text-amber-200 text-center"
-                  }
-                >
-                  Ignite the Spirit, Savor the Victory!
-                </div>
-                <div
-                  className={
-                    shrunk
-                      ? "hidden md:block md:text-sm text-neutral-300 text-center"
-                      : "text-sm md:text-base text-neutral-300 text-center"
-                  }
-                >
-                  Veteran-owned and operated.
-                </div>
+                <MegaSubscribeBox
+                  email={mmEmail}
+                  setEmail={setMmEmail}
+                  done={mmDone}
+                  onSubmit={submitMegaSubscribe}
+                />
               </div>
+            )}
 
-              {/* Nav shares the same left edge as the title */}
-              <nav className="mt-3 flex justify-start">
-                <div className="flex items-center gap-5">
-                  <HeaderNavLink to="/">Home Port</HeaderNavLink>
-                  <HeaderNavLink to="/store">Ship’s Store</HeaderNavLink>
-                  <HeaderNavLink to="/origins">Origins & Voyages</HeaderNavLink>
-                  <HeaderNavLink to="/mission">Mission Log</HeaderNavLink>
-                  <HeaderNavLink to="/contact">Contact the Crew</HeaderNavLink>
-                  <HeaderNavLink to="/sdvosb">SDVOSB</HeaderNavLink>
-                  <Link
-                    to="/cart"
-                    className="relative px-1.5 py-1 rounded-md text-amber-300 inline-flex items-center gap-1.5"
-                  >
-                    <ChestIcon className="h-6 w-6 md:h-7 md:w-7" />
-                    <span className="text-sm md:text-base">Chest</span>
-                    {count > 0 && (
-                      <span className="absolute -top-1.5 -right-2 bg-amber-400 text-neutral-900 text-[10px] font-bold rounded-full px-1.5">
-                        {count}
-                      </span>
-                    )}
-                  </Link>
+            {/* MERCH PANEL */}
+            {openMega === "merch" && (
+              <div className="grid lg:grid-cols-[1fr,auto] gap-8 items-start">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {merchTiles.map((t) => (
+                    <div
+                      key={`mega-merch-${t.key}`}
+                      className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 transition shadow-lg flex flex-col"
+                    >
+                      <div className="h-52 sm:h-60 lg:h-60 w-full overflow-hidden">
+                        <img
+                          src={t.img}
+                          alt={`${t.label} preview`}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div className="p-3">
+                        <div className="text-lg font-extrabold text-amber-300">
+                          {t.label}
+                        </div>
+                        <div className="text-xs text-neutral-400">Coming soon</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </nav>
+
+                <MegaSubscribeBox
+                  email={mmEmail}
+                  setEmail={setMmEmail}
+                  done={mmDone}
+                  onSubmit={submitMegaSubscribe}
+                  title="Ring That Bell"
+                  subtitle="Get first access to gear — plus 15% off your coffee."
+                  buttonText="Join"
+                />
+              </div>
+            )}
+
+            {/* ORIGINS PANEL */}
+            {openMega === "origins" && (
+              <div className="grid md:grid-cols-[auto,1fr,auto] gap-8 items-start">
+                <Link
+                  to="/coffee"
+                  className="group block rounded-2xl overflow-hidden ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition text-center justify-self-center md:justify-self-start w-40 sm:w-48 md:w-56"
+                >
+                  <div className="aspect-[4/3] w-full overflow-hidden">
+                    <img
+                      src={flagship?.img || "Flagship-web.png"}
+                      alt="Shop Coffee"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="p-3">
+                    <div className="text-sm md:text-base text-amber-300 font-semibold group-hover:underline">
+                      Shop Coffee
+                    </div>
+                  </div>
+                </Link>
+
+                <div className="justify-self-center">
+                  <ul className="space-y-2 text-neutral-300 text-sm md:text-base">
+                    <li>
+                      <Link to="/origins#origins-roasting" className="hover:text-amber-300">
+                        Roasting Process
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/origins#origins-about" className="hover:text-amber-300">
+                        About Old Ironsides Coffee
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/origins#origins-history" className="hover:text-amber-300">
+                        The History Behind The Fleet
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/origins#origins-giving-back" className="hover:text-amber-300">
+                        Giving Back To Those Who Served
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/origins#origins-lands" className="hover:text-amber-300">
+                        The Lands Where Our Beans Are Grown
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/origins#origins-hands" className="hover:text-amber-300">
+                        The Hands That Grow Our Beans
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/origins#origins-service" className="hover:text-amber-300">
+                        Founder’s Bio
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                <MegaSubscribeBox
+                  email={mmEmail}
+                  setEmail={setMmEmail}
+                  done={mmDone}
+                  onSubmit={submitMegaSubscribe}
+                />
+              </div>
+            )}
+          </Container>
+        </div>
+      </div>
+    </div>
+  )}
+
+
             </div>
           </div>
         </Container>
@@ -2006,16 +3520,18 @@ function Layout() {
 
       {/* spacer so content doesn’t hide under header */}
       <div
-        className={
-          isHome
-            ? "h-[140px] md:h-[168px]" // +20–28px
-            : isFleet
-            ? "h-[120px] md:h-[140px]" // +20–30px
-            : isRoast
-            ? "h-[140px] md:h-[168px]" // +20–28px
-            : "h-[125px] md:h-[145px]" // +20–30px
-        }
-      />
+  className={
+    isHome
+      ? "h-[175px] md:h-[205px]"   // HOME: push hero down more so it’s not crowding the banner
+      : isFleet
+      ? "h-[130px] md:h-[150px]"   // FLEET: moderate
+      : isRoast
+      ? "h-[125px] md:h-[140px]"   // ROAST DETAIL: even tighter than before
+      : "h-[140px] md:h-[160px]"   // Everything else
+  }
+/>
+
+
       <Outlet />
       <footer className="border-t border-neutral-800 bg-neutral-950">
         <Container className="py-14 text-sm">
@@ -2115,15 +3631,21 @@ function AppShell() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
+        <Route path="coffee" element={<FleetPage />} />
         <Route path="roast/:slug" element={<RoastDetailPage />} />
         <Route path="store" element={<StorePage />} />
         <Route path="store/:slug" element={<StoreCategoryPage />} />
-        <Route path="mission" element={<MissionPage />} />
+        {/* mission removed; merged into Origins */}
         <Route path="origins" element={<OriginsPage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="sdvosb" element={<SDVOSBPage />} />
         <Route path="legal/:slug" element={<LegalPage />} />
         <Route path="cart" element={<CartPage />} />
+        <Route path="account" element={<SubscribeManagePage />} />
+        <Route
+          path="account/login"
+          element={<SubscribeManagePage initialTab="login" />}
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

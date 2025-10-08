@@ -150,6 +150,7 @@ const ChestIcon = (p?: any) => (
     <circle cx="12" cy="12" r="1" />
   </svg>
 );
+
 /* ================= Config ================= */
 const SHOW_DATES_IN_BUY_CARDS = false;
 
@@ -1183,17 +1184,6 @@ function RoastDetailPage() {
     );
   };
 
-  // Roast-specific “Origin” and “Description in amber under story”
-  const ORIGIN = isFlagship
-    ? "El Salvador and Indonesia"
-    : isBaptism
-    ? "Indonesia and Colombia"
-    : isJava
-    ? "Seasonal lots from the Americas"
-    : isOak
-    ? "Barrel-aged selection (limited)"
-    : "";
-
   const AMBER_DESC = isFlagship
     ? "Our everyday staple, Flagship is a breakfast-style medium roast that is smooth, reliable, and never bitter. A roast you can reach for day after day."
     : isBaptism
@@ -1203,6 +1193,41 @@ function RoastDetailPage() {
     : isOak
     ? "Barrel-aged description placeholder — oak, vanilla, caramel notes. (Update copy)"
     : "";
+  // Origins by roast
+  let origins: string[] = [];
+  if (isFlagship) origins = ["El Salvador", "Indonesia"];
+  else if (isBaptism) origins = ["Indonesia", "Colombia"];
+  else if (isJava) origins = ["Guatemala", "Ethiopia", "Colombia"];
+  else if (isOak) origins = ["Colombia", "Indonesia"];
+
+  // Roast level by roast (1–5)
+  const roastLevel = isBaptism ? 4 : 3; // Flagship, Java, Oak = 3; Baptism = 4
+
+  // Map display name -> file slug (handles your columbia.png upload)
+  const FILE_ALIAS: Record<string, string> = {
+    Colombia: "columbia", // your file name
+    "El Salvador": "el-salvador",
+    Ethiopia: "ethiopia",
+    Guatemala: "guatemala",
+    Indonesia: "indonesia",
+  };
+
+  const SCALE_BY_COUNTRY: Record<string, string> = {
+    "El Salvador": "scale-[0.80] md:scale-[0.75]",
+    Guatemala: "scale-[0.95] md:scale-[0.90]",
+    Ethiopia: "scale-[0.92] md:scale-[0.88]",
+    Colombia: "scale-[0.95] md:scale-[0.92]",
+    Indonesia: "scale-100",
+  };
+
+  // Placeholder notes (you can override per roast later)
+  const signatureNotes = isBaptism
+    ? ["Dark chocolate", "Molasses", "Smoke"]
+    : isOak
+    ? ["Oak", "Vanilla", "Caramel"]
+    : isJava
+    ? ["Citrus", "Cocoa", "Stone fruit"]
+    : ["Hazelnut", "Caramel", "Apple"]; // Flagship default
 
   return (
     <main className="relative overflow-hidden min-h-[calc(100vh-140px)] py-10 md:py-16">
@@ -1496,89 +1521,104 @@ function RoastDetailPage() {
         </div>
       </Container>
 
-      {/* ===== THE COFFEE — full-bleed, with divider lifted and tight top padding ===== */}
+      {/* ===== THE COFFEE (notes, origins with outlines, roast level) ===== */}
       {(isFlagship || isBaptism || isJava || isOak) && (
         <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
-          <div className="border-t-2 border-amber-400/70 relative translate-y-6 md:translate-y-10" />
+          <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
+
           <div className="bg-neutral-950 mt-[-1px]">
-            <Container className="pt-10 md:pt-14 pb-10 md:pb-16">
+            <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
               <div className="max-w-[80ch]">
                 <h2 className="text-xl md:text-2xl font-bold text-amber-300">
                   THE COFFEE
                 </h2>
 
-                {/* Details (Origin removed from bullets) */}
-                {isFlagship && (
-                  <div className="mt-4 space-y-3">
-                    <ul className="list-disc list-inside text-neutral-300 text-lg space-y-1">
-                      <li>
-                        <span className="text-amber-300">Origin:</span> {ORIGIN}
-                      </li>
-                      <li>
-                        <span className="text-amber-300">Profile:</span>{" "}
-                        Balanced, clean, versatile — great black or with cream
-                      </li>
-                      <li>
-                        <span className="text-amber-300">Finish:</span> Smooth
-                        with no bitterness every time
-                      </li>
-                    </ul>
+                {/* Signature Notes */}
+                <div className="mt-3">
+                  <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+                    Signature Notes
+                  </h3>
+                  <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
+                    {signatureNotes.join(", ")}
                   </div>
-                )}
+                </div>
 
-                {isBaptism && (
-                  <div className="mt-4 space-y-3">
-                    <ul className="list-disc list-inside text-neutral-300 text-lg space-y-1">
-                      <li>
-                        <span className="text-amber-300">Origin:</span> {ORIGIN}
-                      </li>
-                      <li>
-                        <span className="text-amber-300">Profile:</span> Dark,
-                        bold, smooth
-                      </li>
-                      <li>
-                        <span className="text-amber-300">Finish:</span> Rich and
-                        smoky, never burnt
-                      </li>
-                    </ul>
-                  </div>
-                )}
+                {/* faint amber divider */}
+                {/* faint amber divider (extended width) */}
+                {/* faint amber divider — full bleed */}
+                <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen h-px bg-amber-400/30 my-5" />
 
-                {isJava && (
-                  <div className="mt-4 space-y-3">
-                    <ul className="list-disc list-inside text-neutral-300 text-lg space-y-1">
-                      <li>
-                        <span className="text-amber-300">Origin:</span> {ORIGIN}
-                      </li>
-                      <li>
-                        <span className="text-amber-300">Profile:</span> Medium
-                        body, clean sweetness
-                      </li>
-                      <li>
-                        <span className="text-amber-300">Finish:</span> Crisp,
-                        satisfying, no harsh edges
-                      </li>
-                    </ul>
-                  </div>
-                )}
+                {/* Coffee Bean Origins — images, bottom-aligned, scaled */}
+                <div className="mt-0">
+                  <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
+                    Coffee Bean Origins
+                  </h3>
 
-                {isOak && (
-                  <div className="mt-4 space-y-3">
-                    <ul className="list-disc list-inside text-neutral-300 text-lg space-y-1">
-                      <li>
-                        <span className="text-amber-300">Origin:</span> {ORIGIN}
-                      </li>
-                      <li>
-                        <span className="text-amber-300">Profile:</span>{" "}
-                        Bourbon-kissed, rounded sweetness
-                      </li>
-                      <li>
-                        <span className="text-amber-300">Finish:</span> Long,
-                        warming, elegant
-                      </li>
-                    </ul>
+                  {/* 3-up on desktop, 2-up on small screens; align to bottom */}
+                  <div
+                    className={`grid ${
+                      origins.length === 2
+                        ? "grid-cols-2 md:grid-cols-2 gap-12 md:gap-20"
+                        : "grid-cols-2 md:grid-cols-3 gap-8 md:gap-12"
+                    } items-end justify-items-center`}
+                  >
+                    {origins.map((name) => {
+                      const fileKey =
+                        FILE_ALIAS[name] ||
+                        name.toLowerCase().replace(/\s+/g, "-");
+                      const scaleCls = SCALE_BY_COUNTRY[name] || "scale-100";
+                      return (
+                        <div
+                          key={name}
+                          className="flex flex-col items-center text-center w-[16rem] md:w-[20rem]"
+                        >
+                          <img
+                            src={`/${fileKey}.png`}
+                            alt={name}
+                            className={`w-full h-auto brightness-110 contrast-125 opacity-95 hover:opacity-100 transition ${scaleCls} drop-shadow-[0_0_14px_rgba(251,191,36,0.25)] ${
+                              (card?.title === "Baptism by Fire" ||
+                                card?.title === "Oak & Copper") &&
+                              name === "Indonesia"
+                                ? "-translate-y-20 md:-translate-y-24"
+                                : ""
+                            }`}
+                          />
+                          <div className="mt-2 text-amber-400/90 tracking-wider text-sm font-semibold uppercase">
+                            {name}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                )}
+                </div>
+
+                {/* faint amber divider */}
+                {/* faint amber divider (extended width) */}
+                {/* faint amber divider — full bleed */}
+                <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen h-px bg-amber-400/30 my-5" />
+
+                {/* Roast Level (anchors 1–5) */}
+                <div className="mt-2">
+                  <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+                    Roast Level
+                  </h3>
+
+                  <div className="mt-2 flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <span
+                        key={n}
+                        className={
+                          "inline-block h-4 w-4 md:h-5 md:w-5 rounded-[2px] " +
+                          (n <= roastLevel ? "bg-amber-300" : "bg-neutral-700")
+                        }
+                        aria-hidden
+                      />
+                    ))}
+                    <span className="ml-2 text-sm text-neutral-400">
+                      {roastLevel} / 5
+                    </span>
+                  </div>
+                </div>
               </div>
             </Container>
           </div>

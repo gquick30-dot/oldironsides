@@ -913,8 +913,27 @@ function HomePage() {
                       PREMIUM, SMALL-BATCH COFFEE
                     </h2>
 
-                    <div className="mt-1 text-neutral-300 text-base md:text-xl">
-                      Ethically Sourced • Roasted to Order • Veteran Owned
+                    <div className="mt-1 text-neutral-300 text-sm md:text-lg">
+                      <span>Ethically Sourced</span>
+                      <span className="mx-1.5 text-amber-400/70" aria-hidden>
+                        •
+                      </span>
+                      <span>Roasted to Order</span>
+                      <span className="mx-1.5 text-amber-400/70" aria-hidden>
+                        •
+                      </span>
+                      <span>Veteran Owned</span>
+                      <span className="mx-1.5 text-amber-400/70" aria-hidden>
+                        •
+                      </span>
+                      <a
+                        href="/govx" /* swap to your real GovX URL if needed */
+                        className="text-amber-200/90 hover:text-amber-300 hover:underline underline-offset-2"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        GovX Partner
+                      </a>
                     </div>
 
                     <div aria-hidden className="h-5 md:h-6" />
@@ -1213,11 +1232,11 @@ function RoastDetailPage() {
   };
 
   const SCALE_BY_COUNTRY: Record<string, string> = {
-    "El Salvador": "scale-[0.80] md:scale-[0.75]",
-    Guatemala: "scale-[0.95] md:scale-[0.90]",
-    Ethiopia: "scale-[0.92] md:scale-[0.88]",
-    Colombia: "scale-[0.95] md:scale-[0.92]",
-    Indonesia: "scale-100",
+    "El Salvador": "scale-[0.70] md:scale-[0.65]",
+    Guatemala: "scale-[0.85] md:scale-[0.80]",
+    Ethiopia: "scale-[0.82] md:scale-[0.78]",
+    Colombia: "scale-[0.85] md:scale-[0.82]",
+    Indonesia: "scale-[0.90]",
   };
 
   // Placeholder notes (you can override per roast later)
@@ -1228,6 +1247,10 @@ function RoastDetailPage() {
     : isJava
     ? ["Citrus", "Cocoa", "Stone fruit"]
     : ["Hazelnut", "Caramel", "Apple"]; // Flagship default
+  const GRID_COLS =
+    origins.length === 2
+      ? "grid-cols-[auto_auto]"
+      : "grid-cols-[auto_auto_auto]";
 
   return (
     <main className="relative overflow-hidden min-h-[calc(100vh-140px)] py-10 md:py-16">
@@ -1546,7 +1569,7 @@ function RoastDetailPage() {
                 {/* faint amber divider */}
                 {/* faint amber divider (extended width) */}
                 {/* faint amber divider — full bleed */}
-                <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen h-px bg-amber-400/30 my-5" />
+                <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
 
                 {/* Coffee Bean Origins — images, bottom-aligned, scaled */}
                 <div className="mt-0">
@@ -1556,11 +1579,7 @@ function RoastDetailPage() {
 
                   {/* 3-up on desktop, 2-up on small screens; align to bottom */}
                   <div
-                    className={`grid ${
-                      origins.length === 2
-                        ? "grid-cols-2 md:grid-cols-2 gap-12 md:gap-20"
-                        : "grid-cols-2 md:grid-cols-3 gap-8 md:gap-12"
-                    } items-end justify-items-center`}
+                    className={`inline-grid ${GRID_COLS} gap-4 md:gap-6 items-end justify-center mx-auto`}
                   >
                     {origins.map((name) => {
                       const fileKey =
@@ -1570,16 +1589,16 @@ function RoastDetailPage() {
                       return (
                         <div
                           key={name}
-                          className="flex flex-col items-center text-center w-[16rem] md:w-[20rem]"
+                          className="flex flex-col items-center text-center"
                         >
                           <img
                             src={`/${fileKey}.png`}
                             alt={name}
-                            className={`w-full h-auto brightness-110 contrast-125 opacity-95 hover:opacity-100 transition ${scaleCls} drop-shadow-[0_0_14px_rgba(251,191,36,0.25)] ${
+                            className={`h-auto max-w-[9.5rem] md:max-w-[11rem]${scaleCls} drop-shadow-[0_0_14px_rgba(251,191,36,0.25)] ${
                               (card?.title === "Baptism by Fire" ||
                                 card?.title === "Oak & Copper") &&
                               name === "Indonesia"
-                                ? "-translate-y-20 md:-translate-y-24"
+                                ? "-translate-y-12 md:-translate-y-16"
                                 : ""
                             }`}
                           />
@@ -1595,25 +1614,69 @@ function RoastDetailPage() {
                 {/* faint amber divider */}
                 {/* faint amber divider (extended width) */}
                 {/* faint amber divider — full bleed */}
-                <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen h-px bg-amber-400/30 my-5" />
+                <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
 
                 {/* Roast Level (anchors 1–5) */}
                 <div className="mt-2">
                   <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
                     Roast Level
                   </h3>
-
-                  <div className="mt-2 flex items-center gap-2">
-                    {[1, 2, 3, 4, 5].map((n) => (
-                      <span
-                        key={n}
-                        className={
-                          "inline-block h-4 w-4 md:h-5 md:w-5 rounded-[2px] " +
-                          (n <= roastLevel ? "bg-amber-300" : "bg-neutral-700")
-                        }
+                  <div className="mt-2 flex items-center gap-3">
+                    {/* rope behind the anchors */}
+                    <div className="relative flex items-center gap-3">
+                      <div
+                        className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+                 bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
                         aria-hidden
                       />
-                    ))}
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <div key={n} className="relative">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className={
+                              "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+                              (n <= roastLevel
+                                ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                                : "text-neutral-600")
+                            }
+                            aria-hidden
+                          >
+                            {/* masks */}
+                            <rect
+                              x="11"
+                              y="0"
+                              width="2"
+                              height="24"
+                              fill="currentColor"
+                              className="text-neutral-950"
+                            />
+                            <circle
+                              cx="12"
+                              cy="4"
+                              r="1.6"
+                              fill="currentColor"
+                              className="text-neutral-950"
+                            />
+
+                            {/* anchor strokes */}
+                            <circle cx="12" cy="4" r="2" />
+                            <path d="M12 6v11" />
+                            <path d="M8 10h8" />
+                            <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+                            <path d="M7 17l-2 2" />
+                            <path d="M17 17l2 2" />
+                          </svg>
+
+                          <span className="sr-only">{`Roast level ${n}`}</span>
+                        </div>
+                      ))}
+                    </div>
+
                     <span className="ml-2 text-sm text-neutral-400">
                       {roastLevel} / 5
                     </span>
@@ -2125,8 +2188,13 @@ function OriginsPage() {
             subtitle="Explore the hisory of the USS Constitution and her victoires that inspired our roasts."
           />
           <div className="mt-10 grid md:grid-cols-4 gap-6">
-            {/* Order: Java Action, Baptism by Fire, Flagship */}
-            {["java-action", "baptism-by-fire", "flagship"].map((slug) => {
+            {/* Order: Java Action, Baptism by Fire, Flagship, Oak & Copper */}
+            {[
+              "java-action",
+              "baptism-by-fire",
+              "flagship",
+              "oak-and-copper",
+            ].map((slug) => {
               const card = roastCards.find((c) => c.slug === slug);
               if (!card) return null;
               return (

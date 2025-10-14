@@ -1255,80 +1255,371 @@ function RoastDetailPage() {
     },
   };
 
-  const reviewData =
-  reviewDataBySlug[card.slug] ?? { avg: 0, count: 0, breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } };
+  const reviewData = reviewDataBySlug[card.slug] ?? {
+    avg: 0,
+    count: 0,
+    breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+  };
 
-// ---------- TESTIMONIAL REVIEWS (8 per page UI) ----------
-type Review = {
-  id: string;
-  name: string;
-  date: string; // "October 3, 2025"
-  rating: number; // 1..5
-  title?: string;
-  body: string;
-};
+  // ---------- TESTIMONIAL REVIEWS (8 per page UI) ----------
+  type Review = {
+    id: string;
+    name: string;
+    date: string; // "October 3, 2025"
+    rating: number; // 1..5
+    title?: string;
+    body: string;
+  };
 
-const reviewListBySlug: Record<string, Review[]> = {
-  flagship: [
-    { id: "f1", name: "Jacob S.", date: "October 12, 2025", rating: 5, title: "Best flavor", body: "Smooth, balanced, never bitter. This is my daily cup." },
-    { id: "f2", name: "Megan T.", date: "October 9, 2025", rating: 5, body: "Great with cream or black. Reliable roast." },
-    { id: "f3", name: "Paul R.", date: "October 7, 2025", rating: 4, body: "Nice balance. Would buy again." },
-    { id: "f4", name: "Nate D.", date: "October 5, 2025", rating: 5, body: "Fresh and clean finish. Ships fast." },
-    { id: "f5", name: "Erika L.", date: "October 4, 2025", rating: 5, body: "Crowd pleaser at our office." },
-    { id: "f6", name: "Kate W.", date: "October 2, 2025", rating: 5, body: "Balanced and smooth. Hits the mark." },
-    { id: "f7", name: "Victor H.", date: "September 30, 2025", rating: 5, body: "Exactly what I want in a medium roast." },
-    { id: "f8", name: "Ryan C.", date: "September 28, 2025", rating: 5, body: "Rich aroma and consistent flavor." },
-    { id: "f9", name: "Amanda G.", date: "September 27, 2025", rating: 4, body: "Very good daily drinker." },
-    { id: "f10", name: "Chris P.", date: "September 25, 2025", rating: 5, body: "Smooth from first sip to last." },
-    { id: "f11", name: "Lindsay K.", date: "September 23, 2025", rating: 5, body: "My new go to." },
-    { id: "f12", name: "Derek B.", date: "September 20, 2025", rating: 5, body: "Balanced and flavorful." },
-  ],
-  "baptism-by-fire": [
-    { id: "b1", name: "Tom O.", date: "October 10, 2025", rating: 5, body: "Bold and smooth without harsh bite." },
-    { id: "b2", name: "Sarah V.", date: "October 8, 2025", rating: 5, body: "Dark chocolate notes. Excellent." },
-    { id: "b3", name: "Nick F.", date: "October 6, 2025", rating: 4, body: "Great dark roast for mornings." },
-    { id: "b4", name: "Jose M.", date: "October 4, 2025", rating: 5, body: "Deep flavor with a clean finish." },
-    { id: "b5", name: "Evan J.", date: "October 3, 2025", rating: 5, body: "Powerful and smooth." },
-    { id: "b6", name: "Cara S.", date: "October 1, 2025", rating: 5, body: "Perfect dark cup." },
-    { id: "b7", name: "Walt A.", date: "September 29, 2025", rating: 4, body: "Rich and satisfying." },
-    { id: "b8", name: "Helen D.", date: "September 27, 2025", rating: 5, body: "My favorite of the lineup." },
-    { id: "b9", name: "Ivy N.", date: "September 26, 2025", rating: 5, body: "Smooth for a dark roast." },
-    { id: "b10", name: "Zack T.", date: "September 24, 2025", rating: 5, body: "Lives up to the name." },
-    { id: "b11", name: "Anna R.", date: "September 22, 2025", rating: 5, body: "Fantastic body and aroma." },
-    { id: "b12", name: "Peter Q.", date: "September 20, 2025", rating: 4, body: "Solid dark roast." },
-  ],
-  "java-action": [
-    { id: "j1", name: "Mark S.", date: "October 9, 2025", rating: 5, body: "Full bodied and smooth. Great mornings." },
-    { id: "j2", name: "Jen L.", date: "October 7, 2025", rating: 5, body: "Hazelnut and caramel pop." },
-    { id: "j3", name: "Omar H.", date: "October 6, 2025", rating: 4, body: "Nice daily medium." },
-    { id: "j4", name: "Theo B.", date: "October 5, 2025", rating: 5, body: "Balanced and rich." },
-    { id: "j5", name: "Gina P.", date: "October 3, 2025", rating: 5, body: "Smooth and consistent." },
-    { id: "j6", name: "Sam W.", date: "October 1, 2025", rating: 4, body: "Reliable cup." },
-    { id: "j7", name: "Iris K.", date: "September 29, 2025", rating: 5, body: "Lovely finish." },
-    { id: "j8", name: "Caleb D.", date: "September 28, 2025", rating: 5, body: "Goes great with breakfast." },
-    { id: "j9", name: "Noah M.", date: "September 26, 2025", rating: 4, body: "Smooth ride." },
-    { id: "j10", name: "Rae C.", date: "September 25, 2025", rating: 5, body: "Buying again." },
-    { id: "j11", name: "Luis V.", date: "September 23, 2025", rating: 5, body: "Great flavor." },
-    { id: "j12", name: "Becca Y.", date: "September 21, 2025", rating: 5, body: "Solid medium roast." },
-  ],
-  "oak-and-copper": [
-    { id: "o1", name: "Quinn P.", date: "October 11, 2025", rating: 5, body: "Oak and caramel show up nicely." },
-    { id: "o2", name: "Dana S.", date: "October 9, 2025", rating: 5, body: "Smooth bourbon kissed finish." },
-    { id: "o3", name: "Harper G.", date: "October 8, 2025", rating: 4, body: "Unique and rich." },
-    { id: "o4", name: "Kurt E.", date: "October 7, 2025", rating: 5, body: "New favorite special roast." },
-    { id: "o5", name: "Elle F.", date: "October 6, 2025", rating: 5, body: "Deep oak notes without bitterness." },
-    { id: "o6", name: "Sean R.", date: "October 4, 2025", rating: 5, body: "Great weekend treat." },
-    { id: "o7", name: "Yara T.", date: "October 3, 2025", rating: 5, body: "Delicious and smooth." },
-    { id: "o8", name: "Vlad K.", date: "October 2, 2025", rating: 5, body: "Awesome barrel character." },
-    { id: "o9", name: "Mia C.", date: "September 30, 2025", rating: 4, body: "Nice twist on medium roast." },
-    { id: "o10", name: "Iain D.", date: "September 28, 2025", rating: 5, body: "Rich and balanced." },
-    { id: "o11", name: "Nora H.", date: "September 26, 2025", rating: 5, body: "Love the finish." },
-    { id: "o12", name: "Zoe N.", date: "September 24, 2025", rating: 5, body: "Fantastic flavor." },
-  ],
-};
+  const reviewListBySlug: Record<string, Review[]> = {
+    flagship: [
+      {
+        id: "f1",
+        name: "Jacob S.",
+        date: "October 12, 2025",
+        rating: 5,
+        title: "Best flavor",
+        body: "Smooth, balanced, never bitter. This is my daily cup.",
+      },
+      {
+        id: "f2",
+        name: "Megan T.",
+        date: "October 9, 2025",
+        rating: 5,
+        body: "Great with cream or black. Reliable roast.",
+      },
+      {
+        id: "f3",
+        name: "Paul R.",
+        date: "October 7, 2025",
+        rating: 4,
+        body: "Nice balance. Would buy again.",
+      },
+      {
+        id: "f4",
+        name: "Nate D.",
+        date: "October 5, 2025",
+        rating: 5,
+        body: "Fresh and clean finish. Ships fast.",
+      },
+      {
+        id: "f5",
+        name: "Erika L.",
+        date: "October 4, 2025",
+        rating: 5,
+        body: "Crowd pleaser at our office.",
+      },
+      {
+        id: "f6",
+        name: "Kate W.",
+        date: "October 2, 2025",
+        rating: 5,
+        body: "Balanced and smooth. Hits the mark.",
+      },
+      {
+        id: "f7",
+        name: "Victor H.",
+        date: "September 30, 2025",
+        rating: 5,
+        body: "Exactly what I want in a medium roast.",
+      },
+      {
+        id: "f8",
+        name: "Ryan C.",
+        date: "September 28, 2025",
+        rating: 5,
+        body: "Rich aroma and consistent flavor.",
+      },
+      {
+        id: "f9",
+        name: "Amanda G.",
+        date: "September 27, 2025",
+        rating: 4,
+        body: "Very good daily drinker.",
+      },
+      {
+        id: "f10",
+        name: "Chris P.",
+        date: "September 25, 2025",
+        rating: 5,
+        body: "Smooth from first sip to last.",
+      },
+      {
+        id: "f11",
+        name: "Lindsay K.",
+        date: "September 23, 2025",
+        rating: 5,
+        body: "My new go to.",
+      },
+      {
+        id: "f12",
+        name: "Derek B.",
+        date: "September 20, 2025",
+        rating: 5,
+        body: "Balanced and flavorful.",
+      },
+    ],
+    "baptism-by-fire": [
+      {
+        id: "b1",
+        name: "Tom O.",
+        date: "October 10, 2025",
+        rating: 5,
+        body: "Bold and smooth without harsh bite.",
+      },
+      {
+        id: "b2",
+        name: "Sarah V.",
+        date: "October 8, 2025",
+        rating: 5,
+        body: "Dark chocolate notes. Excellent.",
+      },
+      {
+        id: "b3",
+        name: "Nick F.",
+        date: "October 6, 2025",
+        rating: 4,
+        body: "Great dark roast for mornings.",
+      },
+      {
+        id: "b4",
+        name: "Jose M.",
+        date: "October 4, 2025",
+        rating: 5,
+        body: "Deep flavor with a clean finish.",
+      },
+      {
+        id: "b5",
+        name: "Evan J.",
+        date: "October 3, 2025",
+        rating: 5,
+        body: "Powerful and smooth.",
+      },
+      {
+        id: "b6",
+        name: "Cara S.",
+        date: "October 1, 2025",
+        rating: 5,
+        body: "Perfect dark cup.",
+      },
+      {
+        id: "b7",
+        name: "Walt A.",
+        date: "September 29, 2025",
+        rating: 4,
+        body: "Rich and satisfying.",
+      },
+      {
+        id: "b8",
+        name: "Helen D.",
+        date: "September 27, 2025",
+        rating: 5,
+        body: "My favorite of the lineup.",
+      },
+      {
+        id: "b9",
+        name: "Ivy N.",
+        date: "September 26, 2025",
+        rating: 5,
+        body: "Smooth for a dark roast.",
+      },
+      {
+        id: "b10",
+        name: "Zack T.",
+        date: "September 24, 2025",
+        rating: 5,
+        body: "Lives up to the name.",
+      },
+      {
+        id: "b11",
+        name: "Anna R.",
+        date: "September 22, 2025",
+        rating: 5,
+        body: "Fantastic body and aroma.",
+      },
+      {
+        id: "b12",
+        name: "Peter Q.",
+        date: "September 20, 2025",
+        rating: 4,
+        body: "Solid dark roast.",
+      },
+    ],
+    "java-action": [
+      {
+        id: "j1",
+        name: "Mark S.",
+        date: "October 9, 2025",
+        rating: 5,
+        body: "Full bodied and smooth. Great mornings.",
+      },
+      {
+        id: "j2",
+        name: "Jen L.",
+        date: "October 7, 2025",
+        rating: 5,
+        body: "Hazelnut and caramel pop.",
+      },
+      {
+        id: "j3",
+        name: "Omar H.",
+        date: "October 6, 2025",
+        rating: 4,
+        body: "Nice daily medium.",
+      },
+      {
+        id: "j4",
+        name: "Theo B.",
+        date: "October 5, 2025",
+        rating: 5,
+        body: "Balanced and rich.",
+      },
+      {
+        id: "j5",
+        name: "Gina P.",
+        date: "October 3, 2025",
+        rating: 5,
+        body: "Smooth and consistent.",
+      },
+      {
+        id: "j6",
+        name: "Sam W.",
+        date: "October 1, 2025",
+        rating: 4,
+        body: "Reliable cup.",
+      },
+      {
+        id: "j7",
+        name: "Iris K.",
+        date: "September 29, 2025",
+        rating: 5,
+        body: "Lovely finish.",
+      },
+      {
+        id: "j8",
+        name: "Caleb D.",
+        date: "September 28, 2025",
+        rating: 5,
+        body: "Goes great with breakfast.",
+      },
+      {
+        id: "j9",
+        name: "Noah M.",
+        date: "September 26, 2025",
+        rating: 4,
+        body: "Smooth ride.",
+      },
+      {
+        id: "j10",
+        name: "Rae C.",
+        date: "September 25, 2025",
+        rating: 5,
+        body: "Buying again.",
+      },
+      {
+        id: "j11",
+        name: "Luis V.",
+        date: "September 23, 2025",
+        rating: 5,
+        body: "Great flavor.",
+      },
+      {
+        id: "j12",
+        name: "Becca Y.",
+        date: "September 21, 2025",
+        rating: 5,
+        body: "Solid medium roast.",
+      },
+    ],
+    "oak-and-copper": [
+      {
+        id: "o1",
+        name: "Quinn P.",
+        date: "October 11, 2025",
+        rating: 5,
+        body: "Oak and caramel show up nicely.",
+      },
+      {
+        id: "o2",
+        name: "Dana S.",
+        date: "October 9, 2025",
+        rating: 5,
+        body: "Smooth bourbon kissed finish.",
+      },
+      {
+        id: "o3",
+        name: "Harper G.",
+        date: "October 8, 2025",
+        rating: 4,
+        body: "Unique and rich.",
+      },
+      {
+        id: "o4",
+        name: "Kurt E.",
+        date: "October 7, 2025",
+        rating: 5,
+        body: "New favorite special roast.",
+      },
+      {
+        id: "o5",
+        name: "Elle F.",
+        date: "October 6, 2025",
+        rating: 5,
+        body: "Deep oak notes without bitterness.",
+      },
+      {
+        id: "o6",
+        name: "Sean R.",
+        date: "October 4, 2025",
+        rating: 5,
+        body: "Great weekend treat.",
+      },
+      {
+        id: "o7",
+        name: "Yara T.",
+        date: "October 3, 2025",
+        rating: 5,
+        body: "Delicious and smooth.",
+      },
+      {
+        id: "o8",
+        name: "Vlad K.",
+        date: "October 2, 2025",
+        rating: 5,
+        body: "Awesome barrel character.",
+      },
+      {
+        id: "o9",
+        name: "Mia C.",
+        date: "September 30, 2025",
+        rating: 4,
+        body: "Nice twist on medium roast.",
+      },
+      {
+        id: "o10",
+        name: "Iain D.",
+        date: "September 28, 2025",
+        rating: 5,
+        body: "Rich and balanced.",
+      },
+      {
+        id: "o11",
+        name: "Nora H.",
+        date: "September 26, 2025",
+        rating: 5,
+        body: "Love the finish.",
+      },
+      {
+        id: "o12",
+        name: "Zoe N.",
+        date: "September 24, 2025",
+        rating: 5,
+        body: "Fantastic flavor.",
+      },
+    ],
+  };
 
-const reviews: Review[] = reviewListBySlug[card.slug] ?? [];
-
+  const reviews: Review[] = reviewListBySlug[card.slug] ?? [];
 
   const { add } = useCart();
   const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("one");
@@ -1404,39 +1695,42 @@ const reviews: Review[] = reviewListBySlug[card.slug] ?? [];
                       : card.title}
                   </h1>
 
-       {/* Subtitle + stars + count (subtitle + right-aligned reviews; line matches this width) */}
-<div className="mt-1 max-w-[72ch]">
-  <div className="flex items-baseline justify-between gap-3 text-neutral-400">
-    {/* 20% larger subtitle */}
-    <div className="text-[1.05rem] md:text-[1.2rem]">
-      {isFlagship ? "Medium Roast" : isBaptism ? "Dark Roast" : card.subTitle}
-    </div>
+                  {/* Subtitle + stars + count (subtitle + right-aligned reviews; line matches this width) */}
+                  <div className="mt-1 max-w-[72ch]">
+                    <div className="flex items-baseline justify-between gap-3 text-neutral-400">
+                      {/* 20% larger subtitle */}
+                      <div className="text-[1.05rem] md:text-[1.2rem]">
+                        {isFlagship
+                          ? "Medium Roast"
+                          : isBaptism
+                          ? "Dark Roast"
+                          : card.subTitle}
+                      </div>
 
-    {/* stars + count aligned to the right edge (REVIEWS ends at line end) */}
-    <div className="flex items-center gap-2 shrink-0">
-      <div className="flex items-center gap-1">
-        {[...Array(5)].map((_, i) => (
-          <svg
-            key={i}
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="h-5 w-5 text-amber-400"
-            aria-hidden
-          >
-            <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-          </svg>
-        ))}
-      </div>
-      <span className="text-xs md:text-sm text-neutral-400/80 tracking-wide whitespace-nowrap">
-        {reviewData.count} REVIEWS
-      </span>
-    </div>
-  </div>
+                      {/* stars + count aligned to the right edge (REVIEWS ends at line end) */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <div className="flex items-center gap-1">
+                          {[...Array(5)].map((_, i) => (
+                            <svg
+                              key={i}
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                              className="h-5 w-5 text-amber-400"
+                              aria-hidden
+                            >
+                              <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                            </svg>
+                          ))}
+                        </div>
+                        <span className="text-xs md:text-sm text-neutral-400/80 tracking-wide whitespace-nowrap">
+                          {reviewData.count} REVIEWS
+                        </span>
+                      </div>
+                    </div>
 
-  {/* faint amber line sized to story text width */}
-  <div className="h-px w-full bg-amber-400/30 mt-2" />
-</div>
-
+                    {/* faint amber line sized to story text width */}
+                    <div className="h-px w-full bg-amber-400/30 mt-2" />
+                  </div>
                 </div>
 
                 <BackButton to="/store" size="sm" />
@@ -1675,8 +1969,12 @@ const reviews: Review[] = reviewListBySlug[card.slug] ?? [];
       </Container>
 
       {/* ===== PER-ROAST "THE CRAFT IN THE CUP" SECTION ===== */}
-      <RoastCoffeeSection slug={card.slug} craftSubtitle={craftSubtitle} reviewData={reviewData} reviews={reviews} />
-
+      <RoastCoffeeSection
+        slug={card.slug}
+        craftSubtitle={craftSubtitle}
+        reviewData={reviewData}
+        reviews={reviews}
+      />
     </main>
   );
 }
@@ -1695,18 +1993,41 @@ function RoastCoffeeSection({
 }) {
   switch (slug) {
     case "flagship":
-      return <TheCoffeeFlagship craftSubtitle={craftSubtitle} reviewData={reviewData} reviews={reviews} />;
+      return (
+        <TheCoffeeFlagship
+          craftSubtitle={craftSubtitle}
+          reviewData={reviewData}
+          reviews={reviews}
+        />
+      );
     case "baptism-by-fire":
-      return <TheCoffeeBaptism craftSubtitle={craftSubtitle} reviewData={reviewData} reviews={reviews} />;
+      return (
+        <TheCoffeeBaptism
+          craftSubtitle={craftSubtitle}
+          reviewData={reviewData}
+          reviews={reviews}
+        />
+      );
     case "java-action":
-      return <TheCoffeeJava craftSubtitle={craftSubtitle} reviewData={reviewData} reviews={reviews} />;
+      return (
+        <TheCoffeeJava
+          craftSubtitle={craftSubtitle}
+          reviewData={reviewData}
+          reviews={reviews}
+        />
+      );
     case "oak-and-copper":
-      return <TheCoffeeOak craftSubtitle={craftSubtitle} reviewData={reviewData} reviews={reviews} />;
+      return (
+        <TheCoffeeOak
+          craftSubtitle={craftSubtitle}
+          reviewData={reviewData}
+          reviews={reviews}
+        />
+      );
     default:
       return null;
   }
 }
-
 
 /* ================== SHARED PARTS ================== */
 function OriginImg({
@@ -1771,13 +2092,21 @@ function RoastLevelAnchors({
 
   return (
     <section className="text-center max-w-[980px] mx-auto px-4">
-      <h2 className="text-xl md:text-2xl font-bold text-amber-300 mb-3">CUSTOMER REVIEWS</h2>
+      <h2 className="text-xl md:text-2xl font-bold text-amber-300 mb-3">
+        CUSTOMER REVIEWS
+      </h2>
 
       {/* Overall stars + count */}
       <div className="flex items-center justify-center gap-2 mb-2">
         <div className="flex items-center gap-1">
           {[...Array(5)].map((_, i) => (
-            <svg key={i} viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 text-amber-400" aria-hidden>
+            <svg
+              key={i}
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="h-6 w-6 text-amber-400"
+              aria-hidden
+            >
               <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
             </svg>
           ))}
@@ -1791,9 +2120,14 @@ function RoastLevelAnchors({
           <div key={s} className="flex items-center gap-3 py-1">
             <div className="w-8 text-right text-sm text-neutral-300">{s}★</div>
             <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
-              <div className="h-full bg-amber-400" style={{ width: `${pct(b[s] || 0)}%` }} />
+              <div
+                className="h-full bg-amber-400"
+                style={{ width: `${pct(b[s] || 0)}%` }}
+              />
             </div>
-            <div className="w-12 text-left text-sm text-neutral-400">{b[s] || 0}</div>
+            <div className="w-12 text-left text-sm text-neutral-400">
+              {b[s] || 0}
+            </div>
           </div>
         ))}
       </div>
@@ -1815,15 +2149,24 @@ function RoastLevelAnchors({
                   key={i}
                   viewBox="0 0 24 24"
                   fill={i < r.rating ? "currentColor" : "none"}
-                  className={"h-4 w-4 " + (i < r.rating ? "text-amber-400" : "text-neutral-700")}
+                  className={
+                    "h-4 w-4 " +
+                    (i < r.rating ? "text-amber-400" : "text-neutral-700")
+                  }
                   stroke="currentColor"
                 >
                   <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
                 </svg>
               ))}
             </div>
-            {r.title && <div className="mt-2 text-sm font-semibold text-neutral-200">{r.title}</div>}
-            <p className="mt-1 text-sm text-neutral-300 leading-relaxed">{r.body}</p>
+            {r.title && (
+              <div className="mt-2 text-sm font-semibold text-neutral-200">
+                {r.title}
+              </div>
+            )}
+            <p className="mt-1 text-sm text-neutral-300 leading-relaxed">
+              {r.body}
+            </p>
           </article>
         ))}
       </div>
@@ -1895,7 +2238,6 @@ function TheCoffeeFlagship({
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
 }) {
-
   const notes = ["Hazelnut", "Spice", "Cream"];
   const origins = ["El Salvador", "Indonesia"];
   const level: 1 | 2 | 3 | 4 | 5 = 3;
@@ -1943,20 +2285,23 @@ function TheCoffeeFlagship({
             </div>
 
             <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
-          </div> {/* end .max-w-[80ch] */}
+          </div>{" "}
+          {/* end .max-w-[80ch] */}
         </Container>
 
         {/* full-bleed divider + centered reviews (mirrors the top border) */}
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <RoastLevelAnchors level={level} reviewData={reviewData} reviews={reviews} />
-
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+            />
           </Container>
         </div>
       </div>
     </section>
-
   );
 }
 function TheCoffeeBaptism({
@@ -1968,8 +2313,6 @@ function TheCoffeeBaptism({
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
 }) {
-
-
   const notes = ["Dark chocolate", "Molasses", "Smoke"];
   const origins = ["Indonesia", "Colombia"];
   const level: 1 | 2 | 3 | 4 | 5 = 4;
@@ -2017,21 +2360,23 @@ function TheCoffeeBaptism({
             </div>
 
             <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
-          </div> {/* end .max-w-[80ch] */}
+          </div>{" "}
+          {/* end .max-w-[80ch] */}
         </Container>
 
         {/* full-bleed divider + centered reviews (mirrors the top border) */}
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <RoastLevelAnchors level={level} reviewData={reviewData} reviews={reviews} />
-
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+            />
           </Container>
         </div>
       </div>
     </section>
-
-
   );
 }
 function TheCoffeeJava({
@@ -2043,7 +2388,6 @@ function TheCoffeeJava({
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
 }) {
-
   const notes = ["Hazelnut", "Carmel", "Apple"];
   const origins = ["Guatemala", "Ethiopia", "Colombia"];
   const level: 1 | 2 | 3 | 4 | 5 = 3;
@@ -2090,21 +2434,23 @@ function TheCoffeeJava({
               ))}
             </div>
             <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
-          </div> {/* end .max-w-[80ch] */}
+          </div>{" "}
+          {/* end .max-w-[80ch] */}
         </Container>
 
         {/* full-bleed divider + centered reviews (mirrors the top border) */}
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <RoastLevelAnchors level={level} reviewData={reviewData} reviews={reviews} />
-
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+            />
           </Container>
         </div>
       </div>
     </section>
-
-
   );
 }
 
@@ -2117,7 +2463,6 @@ function TheCoffeeOak({
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
 }) {
-
   const notes = ["Dark Chocolate", "Caramel", "Toasted Oak"];
   const origins = ["Colombia", "Indonesia"];
   const level: 1 | 2 | 3 | 4 | 5 = 3;
@@ -2165,21 +2510,23 @@ function TheCoffeeOak({
             </div>
 
             <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
-          </div> {/* end .max-w-[80ch] */}
+          </div>{" "}
+          {/* end .max-w-[80ch] */}
         </Container>
 
         {/* full-bleed divider + centered reviews (mirrors the top border) */}
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <RoastLevelAnchors level={level} reviewData={reviewData} reviews={reviews} />
-
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+            />
           </Container>
         </div>
       </div>
     </section>
-
-
   );
 }
 
@@ -2875,15 +3222,13 @@ function OriginsPage() {
             <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
               {/* Photo LEFT */}
               <div className="justify-self-center self-center">
-               <div className="w-64 md:w-[32rem] mx-auto aspect-[10/13] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50"
->
-  <img
-    src="/ironship.png"
-    alt="Old Ironsides legacy"
-    className="w-full h-full object-cover"
-  />
-</div>
-
+                <div className="w-64 md:w-[32rem] mx-auto aspect-[10/13] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/ironship.png"
+                    alt="Old Ironsides legacy"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
 
               {/* Text RIGHT */}
@@ -3105,34 +3450,33 @@ function LegalPage() {
 
         {/* Live roast schedule notice only on Roast & Shipping */}
         {slug === "shipping" && (
-  <>
-    <div className="mt-6 mb-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-    <p className="text-sm md:text-base text-neutral-200">
-  <>
-    All of our coffees are roasted fresh every Monday and ship
-    Tuesday/Wednesday. <br />
-    <br />
-    Your next eligible roast date is{" "}
-    <span className="font-semibold text-amber-300">
-      {nextRoastLabel()}
-    </span>
-    . <br />
-    <br />
-    Orders placed before 5 p.m. EST on Sunday make that week’s
-    roast; after that, they roll to the following week. <br />
-    Because we roast to order, your coffee won’t arrive
-    overnight like Amazon, but it will arrive fresh. <br />
-    Need it sooner? Leave a note at checkout or reply to your
-    confirmation email — we’ll do our best to accommodate.
-    <br />
-    <br />
-    We use UPS standard shipping for all orders.
-  </>
-</p>
-
-    </div>
-  </>
-)}
+          <>
+            <div className="mt-6 mb-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+              <p className="text-sm md:text-base text-neutral-200">
+                <>
+                  All of our coffees are roasted fresh every Monday and ship
+                  Tuesday/Wednesday. <br />
+                  <br />
+                  Your next eligible roast date is{" "}
+                  <span className="font-semibold text-amber-300">
+                    {nextRoastLabel()}
+                  </span>
+                  . <br />
+                  <br />
+                  Orders placed before 5 p.m. EST on Sunday make that week’s
+                  roast; after that, they roll to the following week. <br />
+                  Because we roast to order, your coffee won’t arrive overnight
+                  like Amazon, but it will arrive fresh. <br />
+                  Need it sooner? Leave a note at checkout or reply to your
+                  confirmation email — we’ll do our best to accommodate.
+                  <br />
+                  <br />
+                  We use UPS standard shipping for all orders.
+                </>
+              </p>
+            </div>
+          </>
+        )}
 
         {/* Returns & Freshness Policy */}
         {/* Returns & Freshness Policy — tightened layout, wrapped width */}
@@ -4249,24 +4593,23 @@ function CartPage() {
           <div>
             {/* Message centered, nudged upward toward banner */}
             <div className="mb-6 text-center relative">
-            <p className="text-sm md:text-base text-blue-300 relative -top-[50px]">
-  <>
-    All of our coffees are roasted fresh every Monday and ship
-    Tuesday/Wednesday. <br />
-    Your next eligible roast date is{" "}
-    <span className="font-semibold text-amber-300">
-      {nextRoastLabel()}
-    </span>
-    . <br />
-    Orders placed before 5 p.m. EST on Sunday make that week’s
-    roast; after that, they roll to the following week. <br />
-    Because we roast to order, your coffee won’t arrive
-    overnight like Amazon, but it will arrive fresh. <br />
-    Need it sooner? Leave a note at checkout or reply to your
-    confirmation email — we’ll do our best to accommodate.
-  </>
-</p>
-
+              <p className="text-sm md:text-base text-blue-300 relative -top-[50px]">
+                <>
+                  All of our coffees are roasted fresh every Monday and ship
+                  Tuesday/Wednesday. <br />
+                  Your next eligible roast date is{" "}
+                  <span className="font-semibold text-amber-300">
+                    {nextRoastLabel()}
+                  </span>
+                  . <br />
+                  Orders placed before 5 p.m. EST on Sunday make that week’s
+                  roast; after that, they roll to the following week. <br />
+                  Because we roast to order, your coffee won’t arrive overnight
+                  like Amazon, but it will arrive fresh. <br />
+                  Need it sooner? Leave a note at checkout or reply to your
+                  confirmation email — we’ll do our best to accommodate.
+                </>
+              </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -4928,12 +5271,18 @@ function PromoSubscribeModal() {
 
   React.useEffect(() => {
     const onOpen = () => {
-      if (localStorage.getItem("promo_subscribed") === "1") return;
       setOpen(true);
       setEmail("");
     };
+
+    // Listen on BOTH window and document for maximum reliability
     window.addEventListener("promo-subscribe", onOpen as any);
-    return () => window.removeEventListener("promo-subscribe", onOpen as any);
+    document.addEventListener("promo-subscribe", onOpen as any);
+
+    return () => {
+      window.removeEventListener("promo-subscribe", onOpen as any);
+      document.removeEventListener("promo-subscribe", onOpen as any);
+    };
   }, []);
 
   React.useEffect(() => {
@@ -5172,7 +5521,12 @@ function Layout() {
                 <button
                   type="button"
                   onClick={() =>
-                    window.dispatchEvent(new CustomEvent("promo-subscribe"))
+                    document.dispatchEvent(
+                      new CustomEvent("promo-subscribe", {
+                        bubbles: true,
+                        composed: true,
+                      })
+                    )
                   }
                   className="hover:text-amber-200 underline-offset-2 hover:underline"
                 >
@@ -5668,53 +6022,50 @@ function Layout() {
 
             {/* Contact */}
             <div>
-  <div className="text-neutral-400 font-semibold mb-2">Contact</div>
-  <ul className="space-y-1 text-neutral-300">
-    <li>
-      <a
-        href="mailto:HQ@oldironsidescoffee.org"
-        className="hover:text-amber-300"
-      >
-        HQ@oldironsidescoffee.org
-      </a>
-    </li>
-    <li>6 Liberty Square #2564, Boston, MA 02109</li>
-  </ul>
-</div>
-
-
+              <div className="text-neutral-400 font-semibold mb-2">Contact</div>
+              <ul className="space-y-1 text-neutral-300">
+                <li>
+                  <a
+                    href="mailto:HQ@oldironsidescoffee.org"
+                    className="hover:text-amber-300"
+                  >
+                    HQ@oldironsidescoffee.org
+                  </a>
+                </li>
+                <li>6 Liberty Square #2564, Boston, MA 02109</li>
+              </ul>
+            </div>
 
             {/* Follow */}
             <div>
-  <div className="text-neutral-400 font-semibold mb-2">Follow</div>
-  <div className="flex gap-4 text-neutral-300">
-    <a
-      href="https://instagram.com/oldironsidescoffee"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="hover:text-amber-300"
-    >
-      Instagram
-    </a>
-    <a
-      href="https://youtube.com/@oldironsidescoffee"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="hover:text-amber-300"
-    >
-      YouTube
-    </a>
-    <a
-      href="https://facebook.com/oldironsidescoffee"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="hover:text-amber-300"
-    >
-      Facebook
-    </a>
-  </div>
-</div>
-
+              <div className="text-neutral-400 font-semibold mb-2">Follow</div>
+              <div className="flex gap-4 text-neutral-300">
+                <a
+                  href="https://instagram.com/oldironsidescoffee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-300"
+                >
+                  Instagram
+                </a>
+                <a
+                  href="https://youtube.com/@oldironsidescoffee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-300"
+                >
+                  YouTube
+                </a>
+                <a
+                  href="https://facebook.com/oldironsidescoffee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-300"
+                >
+                  Facebook
+                </a>
+              </div>
+            </div>
           </div>
 
           <div className="mt-8 text-xs text-neutral-500">

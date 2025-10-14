@@ -735,7 +735,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                 className="text-3xl md:text-5xl font-bold text-amber-300 tracking-tight whitespace-nowrap"
                 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
               >
-                LAUNCHED FROM HARBOR
+                LAUNCHED FROM THE HARBOR
               </span>
             }
             subtitle={
@@ -899,7 +899,7 @@ function HomePage() {
                     <img
                       src="bean-smell.png"
                       alt="Smelling beans"
-                      className="self-start w-[12.5rem] h-[15rem] md:w-[13.75rem] md:h-[16.25rem] translate-y-6 md:translate-y-8 rounded-xl object-cover ring-1 ring-amber-500 shadow-2xl shadow-black/30"
+                      className="self-start w-[15.125rem] h-[18.975rem] md:w-[16.6375rem] md:h-[20.55625rem] translate-y-6 md:translate-y-8 rounded-xl object-cover ring-1 ring-amber-500 shadow-2xl shadow-black/30"
                     />
 
                     {/* bring photo down tighter to headline */}
@@ -922,7 +922,7 @@ function HomePage() {
                       <span className="mx-1.5 text-amber-400/70" aria-hidden>
                         •
                       </span>
-                      <span>Veteran Owned</span>
+                      <span>Veteran-owned</span>
                       <span className="mx-1.5 text-amber-400/70" aria-hidden>
                         •
                       </span>
@@ -1169,6 +1169,7 @@ function FleetStoryPage() {
     </main>
   );
 }
+/* ================== ROAST DETAIL PAGE (CLEAN) ================== */
 function RoastDetailPage() {
   const { slug } = useParams();
   const card = roastCards.find((c) => c.slug === slug);
@@ -1178,10 +1179,156 @@ function RoastDetailPage() {
     window.scrollTo(0, 0);
   }, []);
 
+  // drop-in replacement for craftSubtitleMap (no names/emojis in the text)
+  const craftSubtitleMap: Record<string, React.ReactNode> = {
+    flagship: (
+      <>
+        From the volcanic highlands of El Salvador to the islands of Indonesia,
+        Flagship is a balanced roast, smooth, reliable, and crafted for those
+        who lead from the front.
+      </>
+    ),
+    "baptism-by-fire": (
+      <>
+        From the fertile soils of Sumatra to the mountains of Colombia, Baptism
+        by Fire is a dark roast, bold, smooth, and forged for those who thrive
+        under pressure.
+      </>
+    ),
+    "java-action": (
+      <>
+        From the lush hills of Colombia to the highlands of Guatemala, The Java
+        Action is a medium roast, full-bodied, smooth, and crafted for those who
+        rise ready to seize the day.
+      </>
+    ),
+    "oak-and-copper": (
+      <>
+        Aged in American bourbon barrels, Oak &amp; Copper is a full-bodied
+        roast with deep oak richness and a smooth, bourbon-kissed finish.
+      </>
+    ),
+  };
+  const craftSubtitle = craftSubtitleMap[card.slug] ?? null;
+
+  // Roast flags
   const isFlagship = card.slug === "flagship";
   const isBaptism = card.title === "Baptism by Fire";
   const isJava = card.slug === "java-action";
   const isOak = card.slug === "oak-and-copper";
+
+  // ⬇️ INSERT THIS BLOCK RIGHT HERE ⬇️
+  const AMBER_DESC = isFlagship
+    ? "Our everyday staple, Flagship is a breakfast-style medium roast that is smooth, reliable, and never bitter. A roast you can reach for day after day."
+    : isBaptism
+    ? "Our darkest and most intense roast in the fleet — full-bodied and unyielding, with a finish so smooth you have to taste it to believe it."
+    : isJava
+    ? "Medium roast description placeholder — balanced, decisive finish. (Update copy)"
+    : isOak
+    ? "Barrel-aged description placeholder — oak, vanilla, caramel notes. (Update copy)"
+    : "";
+
+  // review data used for stars + counts beside the subtitle and in the histogram
+  const reviewDataBySlug: Record<
+    string,
+    { avg: number; count: number; breakdown: Record<number, number> }
+  > = {
+    flagship: {
+      avg: 4.9,
+      count: 128,
+      breakdown: { 5: 110, 4: 12, 3: 4, 2: 1, 1: 1 },
+    },
+    "baptism-by-fire": {
+      avg: 4.8,
+      count: 96,
+      breakdown: { 5: 80, 4: 10, 3: 4, 2: 1, 1: 1 },
+    },
+    "java-action": {
+      avg: 4.7,
+      count: 64,
+      breakdown: { 5: 50, 4: 9, 3: 3, 2: 1, 1: 1 },
+    },
+    "oak-and-copper": {
+      avg: 4.9,
+      count: 72,
+      breakdown: { 5: 62, 4: 7, 3: 2, 2: 1, 1: 0 },
+    },
+  };
+
+  const reviewData =
+  reviewDataBySlug[card.slug] ?? { avg: 0, count: 0, breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } };
+
+// ---------- TESTIMONIAL REVIEWS (8 per page UI) ----------
+type Review = {
+  id: string;
+  name: string;
+  date: string; // "October 3, 2025"
+  rating: number; // 1..5
+  title?: string;
+  body: string;
+};
+
+const reviewListBySlug: Record<string, Review[]> = {
+  flagship: [
+    { id: "f1", name: "Jacob S.", date: "October 12, 2025", rating: 5, title: "Best flavor", body: "Smooth, balanced, never bitter. This is my daily cup." },
+    { id: "f2", name: "Megan T.", date: "October 9, 2025", rating: 5, body: "Great with cream or black. Reliable roast." },
+    { id: "f3", name: "Paul R.", date: "October 7, 2025", rating: 4, body: "Nice balance. Would buy again." },
+    { id: "f4", name: "Nate D.", date: "October 5, 2025", rating: 5, body: "Fresh and clean finish. Ships fast." },
+    { id: "f5", name: "Erika L.", date: "October 4, 2025", rating: 5, body: "Crowd pleaser at our office." },
+    { id: "f6", name: "Kate W.", date: "October 2, 2025", rating: 5, body: "Balanced and smooth. Hits the mark." },
+    { id: "f7", name: "Victor H.", date: "September 30, 2025", rating: 5, body: "Exactly what I want in a medium roast." },
+    { id: "f8", name: "Ryan C.", date: "September 28, 2025", rating: 5, body: "Rich aroma and consistent flavor." },
+    { id: "f9", name: "Amanda G.", date: "September 27, 2025", rating: 4, body: "Very good daily drinker." },
+    { id: "f10", name: "Chris P.", date: "September 25, 2025", rating: 5, body: "Smooth from first sip to last." },
+    { id: "f11", name: "Lindsay K.", date: "September 23, 2025", rating: 5, body: "My new go to." },
+    { id: "f12", name: "Derek B.", date: "September 20, 2025", rating: 5, body: "Balanced and flavorful." },
+  ],
+  "baptism-by-fire": [
+    { id: "b1", name: "Tom O.", date: "October 10, 2025", rating: 5, body: "Bold and smooth without harsh bite." },
+    { id: "b2", name: "Sarah V.", date: "October 8, 2025", rating: 5, body: "Dark chocolate notes. Excellent." },
+    { id: "b3", name: "Nick F.", date: "October 6, 2025", rating: 4, body: "Great dark roast for mornings." },
+    { id: "b4", name: "Jose M.", date: "October 4, 2025", rating: 5, body: "Deep flavor with a clean finish." },
+    { id: "b5", name: "Evan J.", date: "October 3, 2025", rating: 5, body: "Powerful and smooth." },
+    { id: "b6", name: "Cara S.", date: "October 1, 2025", rating: 5, body: "Perfect dark cup." },
+    { id: "b7", name: "Walt A.", date: "September 29, 2025", rating: 4, body: "Rich and satisfying." },
+    { id: "b8", name: "Helen D.", date: "September 27, 2025", rating: 5, body: "My favorite of the lineup." },
+    { id: "b9", name: "Ivy N.", date: "September 26, 2025", rating: 5, body: "Smooth for a dark roast." },
+    { id: "b10", name: "Zack T.", date: "September 24, 2025", rating: 5, body: "Lives up to the name." },
+    { id: "b11", name: "Anna R.", date: "September 22, 2025", rating: 5, body: "Fantastic body and aroma." },
+    { id: "b12", name: "Peter Q.", date: "September 20, 2025", rating: 4, body: "Solid dark roast." },
+  ],
+  "java-action": [
+    { id: "j1", name: "Mark S.", date: "October 9, 2025", rating: 5, body: "Full bodied and smooth. Great mornings." },
+    { id: "j2", name: "Jen L.", date: "October 7, 2025", rating: 5, body: "Hazelnut and caramel pop." },
+    { id: "j3", name: "Omar H.", date: "October 6, 2025", rating: 4, body: "Nice daily medium." },
+    { id: "j4", name: "Theo B.", date: "October 5, 2025", rating: 5, body: "Balanced and rich." },
+    { id: "j5", name: "Gina P.", date: "October 3, 2025", rating: 5, body: "Smooth and consistent." },
+    { id: "j6", name: "Sam W.", date: "October 1, 2025", rating: 4, body: "Reliable cup." },
+    { id: "j7", name: "Iris K.", date: "September 29, 2025", rating: 5, body: "Lovely finish." },
+    { id: "j8", name: "Caleb D.", date: "September 28, 2025", rating: 5, body: "Goes great with breakfast." },
+    { id: "j9", name: "Noah M.", date: "September 26, 2025", rating: 4, body: "Smooth ride." },
+    { id: "j10", name: "Rae C.", date: "September 25, 2025", rating: 5, body: "Buying again." },
+    { id: "j11", name: "Luis V.", date: "September 23, 2025", rating: 5, body: "Great flavor." },
+    { id: "j12", name: "Becca Y.", date: "September 21, 2025", rating: 5, body: "Solid medium roast." },
+  ],
+  "oak-and-copper": [
+    { id: "o1", name: "Quinn P.", date: "October 11, 2025", rating: 5, body: "Oak and caramel show up nicely." },
+    { id: "o2", name: "Dana S.", date: "October 9, 2025", rating: 5, body: "Smooth bourbon kissed finish." },
+    { id: "o3", name: "Harper G.", date: "October 8, 2025", rating: 4, body: "Unique and rich." },
+    { id: "o4", name: "Kurt E.", date: "October 7, 2025", rating: 5, body: "New favorite special roast." },
+    { id: "o5", name: "Elle F.", date: "October 6, 2025", rating: 5, body: "Deep oak notes without bitterness." },
+    { id: "o6", name: "Sean R.", date: "October 4, 2025", rating: 5, body: "Great weekend treat." },
+    { id: "o7", name: "Yara T.", date: "October 3, 2025", rating: 5, body: "Delicious and smooth." },
+    { id: "o8", name: "Vlad K.", date: "October 2, 2025", rating: 5, body: "Awesome barrel character." },
+    { id: "o9", name: "Mia C.", date: "September 30, 2025", rating: 4, body: "Nice twist on medium roast." },
+    { id: "o10", name: "Iain D.", date: "September 28, 2025", rating: 5, body: "Rich and balanced." },
+    { id: "o11", name: "Nora H.", date: "September 26, 2025", rating: 5, body: "Love the finish." },
+    { id: "o12", name: "Zoe N.", date: "September 24, 2025", rating: 5, body: "Fantastic flavor." },
+  ],
+};
+
+const reviews: Review[] = reviewListBySlug[card.slug] ?? [];
+
 
   const { add } = useCart();
   const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("one");
@@ -1203,64 +1350,13 @@ function RoastDetailPage() {
     );
   };
 
-  const AMBER_DESC = isFlagship
-    ? "Our everyday staple, Flagship is a breakfast-style medium roast that is smooth, reliable, and never bitter. A roast you can reach for day after day."
-    : isBaptism
-    ? "Our darkest and most intense roast in the fleet — full-bodied and unyielding, with a finish so smooth you have to taste it to believe it."
-    : isJava
-    ? "Medium roast description placeholder — balanced, decisive finish. (Update copy)"
-    : isOak
-    ? "Barrel-aged description placeholder — oak, vanilla, caramel notes. (Update copy)"
-    : "";
-  // Origins by roast
-  let origins: string[] = [];
-  if (isFlagship) origins = ["El Salvador", "Indonesia"];
-  else if (isBaptism) origins = ["Indonesia", "Colombia"];
-  else if (isJava) origins = ["Guatemala", "Ethiopia", "Colombia"];
-  else if (isOak) origins = ["Colombia", "Indonesia"];
-
-  // Roast level by roast (1–5)
-  const roastLevel = isBaptism ? 4 : 3; // Flagship, Java, Oak = 3; Baptism = 4
-
-  // Map display name -> file slug (handles your columbia.png upload)
-  const FILE_ALIAS: Record<string, string> = {
-    Colombia: "columbia", // your file name
-    "El Salvador": "el-salvador",
-    Ethiopia: "ethiopia",
-    Guatemala: "guatemala",
-    Indonesia: "indonesia",
-  };
-
-  const SCALE_BY_COUNTRY: Record<string, string> = {
-    "El Salvador": "scale-[0.70] md:scale-[0.65]",
-    Guatemala: "scale-[0.85] md:scale-[0.80]",
-    Ethiopia: "scale-[0.82] md:scale-[0.78]",
-    Colombia: "scale-[0.85] md:scale-[0.82]",
-    Indonesia: "scale-[0.90]",
-  };
-
-  // Placeholder notes (you can override per roast later)
-  const signatureNotes = isBaptism
-    ? ["Dark chocolate", "Molasses", "Smoke"]
-    : isOak
-    ? ["Oak", "Vanilla", "Caramel"]
-    : isJava
-    ? ["Citrus", "Cocoa", "Stone fruit"]
-    : ["Hazelnut", "Caramel", "Apple"]; // Flagship default
-  const GRID_COLS =
-    origins.length === 2
-      ? "grid-cols-[auto_auto]"
-      : "grid-cols-[auto_auto_auto]";
-
   return (
     <main className="relative overflow-hidden min-h-[calc(100vh-140px)] py-10 md:py-16">
-      {/* subtle dark wash */}
       <div className="absolute inset-0 z-0 bg-neutral-950/30" aria-hidden />
 
       <Container className="relative z-10">
-        {/* ===== HERO WRAPPER — emblem centered INSIDE the hero box ===== */}
+        {/* ===== HERO ===== */}
         <div className="relative">
-          {/* Nudge with top-[..%] if needed */}
           <div
             className="pointer-events-none select-none absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 z-0"
             aria-hidden
@@ -1272,24 +1368,31 @@ function RoastDetailPage() {
             />
           </div>
 
-          {/* Hero grid above emblem */}
           <div className="relative z-10 mt-2 md:mt-3 grid md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-start">
             {/* HERO IMAGE */}
             <div className="flex flex-col items-center md:items-start">
               <div className="inline-block rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20 bg-neutral-900/40">
-                <img
-                  src={card.img}
-                  alt={card.title}
-                  className="block h-auto w-auto max-h-[61vh] md:max-h-[65vh] object-contain scale-[1.1]"
-                />
+                {/* Fixed, tall frame that the image fully fills */}
+                <div className="flex flex-col items-center md:items-start">
+                  <img
+                    src={card.img}
+                    alt={card.title}
+                    loading="eager"
+                    decoding="async"
+                    className="block h-auto w-auto max-h-[61vh] md:max-h-[65vh] object-contain
+               rounded-2xl md:rounded-3xl ring-1 ring-amber-400/60
+               shadow-2xl shadow-amber-500/20"
+                  />
+                </div>
               </div>
             </div>
 
             {/* TEXT COLUMN */}
             <div className="self-start space-y-4">
               {/* Title row */}
-              <div className="mb-1 flex items-center justify-between gap-3">
-                <div>
+              <div className="mb-1 flex items-start justify-between gap-3">
+                <div className="w-full">
+                  {/* Title */}
                   <h1
                     className="m-0 text-3xl md:text-4xl font-extrabold tracking-tight text-amber-300"
                     style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
@@ -1300,19 +1403,51 @@ function RoastDetailPage() {
                       ? "BAPTISM BY FIRE"
                       : card.title}
                   </h1>
-                  <div className="text-sm md:text-base text-neutral-400">
-                    {isFlagship
-                      ? "Medium Roast"
-                      : isBaptism
-                      ? "Dark Roast"
-                      : card.subTitle}
-                  </div>
+
+       {/* Subtitle + stars + count (subtitle + right-aligned reviews; line matches this width) */}
+<div className="mt-1 max-w-[72ch]">
+  <div className="flex items-baseline justify-between gap-3 text-neutral-400">
+    {/* 20% larger subtitle */}
+    <div className="text-[1.05rem] md:text-[1.2rem]">
+      {isFlagship ? "Medium Roast" : isBaptism ? "Dark Roast" : card.subTitle}
+    </div>
+
+    {/* stars + count aligned to the right edge (REVIEWS ends at line end) */}
+    <div className="flex items-center gap-2 shrink-0">
+      <div className="flex items-center gap-1">
+        {[...Array(5)].map((_, i) => (
+          <svg
+            key={i}
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="h-5 w-5 text-amber-400"
+            aria-hidden
+          >
+            <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+          </svg>
+        ))}
+      </div>
+      <span className="text-xs md:text-sm text-neutral-400/80 tracking-wide whitespace-nowrap">
+        {reviewData.count} REVIEWS
+      </span>
+    </div>
+  </div>
+
+  {/* faint amber line sized to story text width */}
+  <div className="h-px w-full bg-amber-400/30 mt-2" />
+</div>
+
                 </div>
+
                 <BackButton to="/store" size="sm" />
               </div>
 
-              {/* SHIP STORY / HERO COPY */}
-              <div className="max-w-[76ch] md:max-w-[82ch] leading-relaxed">
+              {/* SHIP STORY / HERO COPY — tightened measure + smarter wrapping */}
+              <div
+                className="max-w-[64ch] sm:max-w-[68ch] md:max-w-[70ch] lg:max-w-[72ch] text-pretty leading-[1.85]"
+                lang="en"
+                style={{ hyphens: "auto", textWrap: "balance" as any }}
+              >
                 {isFlagship && (
                   <div className="space-y-6">
                     <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
@@ -1337,7 +1472,7 @@ function RoastDetailPage() {
                       </p>
                     </div>
 
-                    {/* AMBER DESCRIPTION (replaces old standalone price block) */}
+                    {/* AMBER DESCRIPTION (kept as-is) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
                       {AMBER_DESC}
                     </div>
@@ -1371,7 +1506,7 @@ function RoastDetailPage() {
                       </p>
                     </div>
 
-                    {/* AMBER DESCRIPTION (replaces old standalone price block) */}
+                    {/* AMBER DESCRIPTION (kept as-is) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
                       {AMBER_DESC}
                     </div>
@@ -1379,7 +1514,7 @@ function RoastDetailPage() {
                   </div>
                 )}
 
-                {/* Java & Oak: amber placeholders under story (also replaces price) */}
+                {/* Java & Oak: keep amber desc below story area */}
                 {!isFlagship && !isBaptism && AMBER_DESC && (
                   <>
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
@@ -1421,7 +1556,6 @@ function RoastDetailPage() {
                   </button>
                 </div>
               </div>
-              <div className="h-1 md:h-2" />
 
               {/* Subscription frequency */}
               {purchaseMode === "sub" && (
@@ -1451,7 +1585,7 @@ function RoastDetailPage() {
               )}
 
               {/* Add to Chest */}
-              {card.canBuy && (
+              {card.canBuy ? (
                 <div className="mt-10 w-full max-w-[36rem]">
                   <div className="inline-flex items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-3 px-4 shadow-md shadow-amber-400/10">
                     <div className="inline-flex items-center rounded-lg border border-neutral-700">
@@ -1490,7 +1624,6 @@ function RoastDetailPage() {
                       Add to Chest
                     </button>
 
-                    {/* Price echo stays by the button */}
                     <div className="ml-2 text-sm text-neutral-300">
                       {purchaseMode === "sub" ? (
                         <>
@@ -1523,10 +1656,7 @@ function RoastDetailPage() {
                     </span>{" "}
                   </div>
                 </div>
-              )}
-
-              {/* Coming soon */}
-              {!card.canBuy && (
+              ) : (
                 <div className="pt-2">
                   <div className="text-sm text-neutral-300 mb-8">
                     {card.variant}
@@ -1544,150 +1674,512 @@ function RoastDetailPage() {
         </div>
       </Container>
 
-      {/* ===== THE COFFEE (notes, origins with outlines, roast level) ===== */}
-      {(isFlagship || isBaptism || isJava || isOak) && (
-        <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
-          <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
+      {/* ===== PER-ROAST "THE CRAFT IN THE CUP" SECTION ===== */}
+      <RoastCoffeeSection slug={card.slug} craftSubtitle={craftSubtitle} reviewData={reviewData} reviews={reviews} />
 
-          <div className="bg-neutral-950 mt-[-1px]">
-            <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-              <div className="max-w-[80ch]">
-                <h2 className="text-xl md:text-2xl font-bold text-amber-300">
-                  THE COFFEE
-                </h2>
-
-                {/* Signature Notes */}
-                <div className="mt-3">
-                  <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                    Signature Notes
-                  </h3>
-                  <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
-                    {signatureNotes.join(", ")}
-                  </div>
-                </div>
-
-                {/* faint amber divider */}
-                {/* faint amber divider (extended width) */}
-                {/* faint amber divider — full bleed */}
-                <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
-
-                {/* Coffee Bean Origins — images, bottom-aligned, scaled */}
-                <div className="mt-0">
-                  <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
-                    Coffee Bean Origins
-                  </h3>
-
-                  {/* 3-up on desktop, 2-up on small screens; align to bottom */}
-                  <div
-                    className={`inline-grid ${GRID_COLS} gap-4 md:gap-6 items-end justify-center mx-auto`}
-                  >
-                    {origins.map((name) => {
-                      const fileKey =
-                        FILE_ALIAS[name] ||
-                        name.toLowerCase().replace(/\s+/g, "-");
-                      const scaleCls = SCALE_BY_COUNTRY[name] || "scale-100";
-                      return (
-                        <div
-                          key={name}
-                          className="flex flex-col items-center text-center"
-                        >
-                          <img
-                            src={`/${fileKey}.png`}
-                            alt={name}
-                            className={`h-auto max-w-[9.5rem] md:max-w-[11rem]${scaleCls} drop-shadow-[0_0_14px_rgba(251,191,36,0.25)] ${
-                              (card?.title === "Baptism by Fire" ||
-                                card?.title === "Oak & Copper") &&
-                              name === "Indonesia"
-                                ? "-translate-y-12 md:-translate-y-16"
-                                : ""
-                            }`}
-                          />
-                          <div className="mt-2 text-amber-400/90 tracking-wider text-sm font-semibold uppercase">
-                            {name}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* faint amber divider */}
-                {/* faint amber divider (extended width) */}
-                {/* faint amber divider — full bleed */}
-                <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
-
-                {/* Roast Level (anchors 1–5) */}
-                <div className="mt-2">
-                  <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                    Roast Level
-                  </h3>
-                  <div className="mt-2 flex items-center gap-3">
-                    {/* rope behind the anchors */}
-                    <div className="relative flex items-center gap-3">
-                      <div
-                        className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
-                 bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
-                        aria-hidden
-                      />
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        <div key={n} className="relative">
-                          <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className={
-                              "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
-                              (n <= roastLevel
-                                ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                                : "text-neutral-600")
-                            }
-                            aria-hidden
-                          >
-                            {/* masks */}
-                            <rect
-                              x="11"
-                              y="0"
-                              width="2"
-                              height="24"
-                              fill="currentColor"
-                              className="text-neutral-950"
-                            />
-                            <circle
-                              cx="12"
-                              cy="4"
-                              r="1.6"
-                              fill="currentColor"
-                              className="text-neutral-950"
-                            />
-
-                            {/* anchor strokes */}
-                            <circle cx="12" cy="4" r="2" />
-                            <path d="M12 6v11" />
-                            <path d="M8 10h8" />
-                            <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                            <path d="M7 17l-2 2" />
-                            <path d="M17 17l2 2" />
-                          </svg>
-
-                          <span className="sr-only">{`Roast level ${n}`}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <span className="ml-2 text-sm text-neutral-400">
-                      {roastLevel} / 5
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Container>
-          </div>
-        </section>
-      )}
     </main>
+  );
+}
+
+/* ================== COFFEE SECTION ROUTER ================== */
+function RoastCoffeeSection({
+  slug,
+  craftSubtitle,
+  reviewData,
+  reviews,
+}: {
+  slug: string;
+  craftSubtitle: React.ReactNode | null;
+  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
+  reviews: Review[];
+}) {
+  switch (slug) {
+    case "flagship":
+      return <TheCoffeeFlagship craftSubtitle={craftSubtitle} reviewData={reviewData} reviews={reviews} />;
+    case "baptism-by-fire":
+      return <TheCoffeeBaptism craftSubtitle={craftSubtitle} reviewData={reviewData} reviews={reviews} />;
+    case "java-action":
+      return <TheCoffeeJava craftSubtitle={craftSubtitle} reviewData={reviewData} reviews={reviews} />;
+    case "oak-and-copper":
+      return <TheCoffeeOak craftSubtitle={craftSubtitle} reviewData={reviewData} reviews={reviews} />;
+    default:
+      return null;
+  }
+}
+
+
+/* ================== SHARED PARTS ================== */
+function OriginImg({
+  name,
+  bumpIndonesia = false,
+}: {
+  name: string;
+  bumpIndonesia?: boolean;
+}) {
+  const FILE_ALIAS: Record<string, string> = {
+    Colombia: "columbia", // your filename
+    "El Salvador": "el-salvador",
+    Ethiopia: "ethiopia",
+    Guatemala: "guatemala",
+    Indonesia: "indonesia",
+  };
+  const SCALE_BY_COUNTRY: Record<string, string> = {
+    "El Salvador": "scale-[0.70] md:scale-[0.65]",
+    Guatemala: "scale-[0.85] md:scale-[0.80]",
+    Ethiopia: "scale-[0.82] md:scale-[0.78]",
+    Colombia: "scale-[0.85] md:scale-[0.82]",
+    Indonesia: "scale-[0.90]",
+  };
+  const fileKey = FILE_ALIAS[name] || name.toLowerCase().replace(/\s+/g, "-");
+  const scaleCls = SCALE_BY_COUNTRY[name] || "scale-100";
+  const nudge =
+    bumpIndonesia && name === "Indonesia"
+      ? "-translate-y-12 md:-translate-y-16"
+      : "";
+
+  return (
+    <div className="flex flex-col items-center text-center">
+      <img
+        src={`/${fileKey}.png`}
+        alt={name}
+        className={`h-auto max-w-[9.5rem] md:max-w-[11rem] ${scaleCls} drop-shadow-[0_0_14px_rgba(251,191,36,0.25)] ${nudge}`}
+      />
+      <div className="mt-2 text-amber-400/90 tracking-wider text-sm font-semibold uppercase">
+        {name}
+      </div>
+    </div>
+  );
+}
+function RoastLevelAnchors({
+  level,
+  reviewData,
+  reviews,
+}: {
+  level: 1 | 2 | 3 | 4 | 5;
+  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
+  reviews: Review[];
+}) {
+  const total = reviewData?.count || 0;
+  const b = reviewData?.breakdown || { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  const pct = (n: number) => (total ? Math.round((n / total) * 100) : 0);
+
+  const [page, setPage] = useState(1);
+  const pageSize = 8;
+  const pageCount = Math.max(1, Math.ceil((reviews?.length || 0) / pageSize));
+  const start = (page - 1) * pageSize;
+  const pageItems = (reviews || []).slice(start, start + pageSize);
+
+  return (
+    <section className="text-center max-w-[980px] mx-auto px-4">
+      <h2 className="text-xl md:text-2xl font-bold text-amber-300 mb-3">CUSTOMER REVIEWS</h2>
+
+      {/* Overall stars + count */}
+      <div className="flex items-center justify-center gap-2 mb-2">
+        <div className="flex items-center gap-1">
+          {[...Array(5)].map((_, i) => (
+            <svg key={i} viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 text-amber-400" aria-hidden>
+              <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+            </svg>
+          ))}
+        </div>
+        <div className="text-neutral-400 text-sm">{total} REVIEWS</div>
+      </div>
+
+      {/* Histogram box */}
+      <div className="mt-4 mx-auto max-w-[780px] w-full rounded-xl border border-amber-400/40 bg-black/40 p-4 md:p-6">
+        {[5, 4, 3, 2, 1].map((s) => (
+          <div key={s} className="flex items-center gap-3 py-1">
+            <div className="w-8 text-right text-sm text-neutral-300">{s}★</div>
+            <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
+              <div className="h-full bg-amber-400" style={{ width: `${pct(b[s] || 0)}%` }} />
+            </div>
+            <div className="w-12 text-left text-sm text-neutral-400">{b[s] || 0}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Testimonials grid (8 per page) */}
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {pageItems.map((r) => (
+          <article
+            key={r.id}
+            className="text-left rounded-lg border border-amber-400/30 bg-black/50 p-4 shadow-sm shadow-amber-400/10"
+          >
+            <div className="flex items-center justify-between">
+              <div className="font-semibold text-amber-300">{r.name}</div>
+              <div className="text-xs text-neutral-400">{r.date}</div>
+            </div>
+            <div className="mt-1 flex items-center gap-1">
+              {[...Array(5)].map((_, i) => (
+                <svg
+                  key={i}
+                  viewBox="0 0 24 24"
+                  fill={i < r.rating ? "currentColor" : "none"}
+                  className={"h-4 w-4 " + (i < r.rating ? "text-amber-400" : "text-neutral-700")}
+                  stroke="currentColor"
+                >
+                  <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                </svg>
+              ))}
+            </div>
+            {r.title && <div className="mt-2 text-sm font-semibold text-neutral-200">{r.title}</div>}
+            <p className="mt-1 text-sm text-neutral-300 leading-relaxed">{r.body}</p>
+          </article>
+        ))}
+      </div>
+
+      {/* Pager */}
+      {pageCount > 1 && (
+        <div className="mt-6 flex items-center justify-center gap-2">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className={
+              "px-3 py-1.5 rounded-md border text-sm " +
+              (page === 1
+                ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+                : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+            }
+            aria-label="Previous reviews page"
+          >
+            ‹ Prev
+          </button>
+
+          {[...Array(pageCount)].map((_, i) => {
+            const n = i + 1;
+            const active = n === page;
+            return (
+              <button
+                key={n}
+                onClick={() => setPage(n)}
+                className={
+                  "h-8 min-w-[2rem] px-2 rounded-md border text-sm " +
+                  (active
+                    ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
+                    : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+                }
+                aria-current={active ? "page" : undefined}
+                aria-label={`Go to page ${n}`}
+              >
+                {n}
+              </button>
+            );
+          })}
+
+          <button
+            onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+            disabled={page === pageCount}
+            className={
+              "px-3 py-1.5 rounded-md border text-sm " +
+              (page === pageCount
+                ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+                : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+            }
+            aria-label="Next reviews page"
+          >
+            Next ›
+          </button>
+        </div>
+      )}
+    </section>
+  );
+}
+
+/* ================== PER-ROAST SECTIONS ================== */
+function TheCoffeeFlagship({
+  craftSubtitle,
+  reviewData,
+  reviews,
+}: {
+  craftSubtitle: React.ReactNode | null;
+  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
+  reviews: Review[];
+}) {
+
+  const notes = ["Hazelnut", "Spice", "Cream"];
+  const origins = ["El Salvador", "Indonesia"];
+  const level: 1 | 2 | 3 | 4 | 5 = 3;
+  const GRID =
+    origins.length === 2
+      ? "grid-cols-[auto_auto]"
+      : "grid-cols-[auto_auto_auto]";
+
+  return (
+    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
+      <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
+      <div className="bg-neutral-950 mt-[-1px]">
+        <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+          <div className="max-w-[80ch]">
+            <h2 className="text-xl md:text-2xl font-bold text-amber-300">
+              THE CRAFT IN THE CUP
+            </h2>
+            {craftSubtitle && (
+              <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
+                {craftSubtitle}
+              </div>
+            )}
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+
+            <div className="mt-3">
+              <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+                Signature Notes
+              </h3>
+              <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
+                {notes.join(", ")}
+              </div>
+            </div>
+
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+
+            <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
+              Bean Origins
+            </h3>
+            <div
+              className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center mx-auto`}
+            >
+              {origins.map((name) => (
+                <OriginImg key={name} name={name} />
+              ))}
+            </div>
+
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+          </div> {/* end .max-w-[80ch] */}
+        </Container>
+
+        {/* full-bleed divider + centered reviews (mirrors the top border) */}
+        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
+        <div className="bg-neutral-950">
+          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+          <RoastLevelAnchors level={level} reviewData={reviewData} reviews={reviews} />
+
+          </Container>
+        </div>
+      </div>
+    </section>
+
+  );
+}
+function TheCoffeeBaptism({
+  craftSubtitle,
+  reviewData,
+  reviews,
+}: {
+  craftSubtitle: React.ReactNode | null;
+  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
+  reviews: Review[];
+}) {
+
+
+  const notes = ["Dark chocolate", "Molasses", "Smoke"];
+  const origins = ["Indonesia", "Colombia"];
+  const level: 1 | 2 | 3 | 4 | 5 = 4;
+  const GRID =
+    origins.length === 2
+      ? "grid-cols-[auto_auto]"
+      : "grid-cols-[auto_auto_auto]";
+
+  return (
+    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
+      <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
+      <div className="bg-neutral-950 mt-[-1px]">
+        <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+          <div className="max-w-[80ch]">
+            <h2 className="text-xl md:text-2xl font-bold text-amber-300">
+              THE CRAFT IN THE CUP
+            </h2>
+            {craftSubtitle && (
+              <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
+                {craftSubtitle}
+              </div>
+            )}
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+
+            <div className="mt-3">
+              <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+                Signature Notes
+              </h3>
+              <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
+                {notes.join(", ")}
+              </div>
+            </div>
+
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+
+            <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
+              Bean Origins
+            </h3>
+            <div
+              className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center mx-auto`}
+            >
+              {origins.map((name) => (
+                <OriginImg key={name} name={name} bumpIndonesia />
+              ))}
+            </div>
+
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+          </div> {/* end .max-w-[80ch] */}
+        </Container>
+
+        {/* full-bleed divider + centered reviews (mirrors the top border) */}
+        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
+        <div className="bg-neutral-950">
+          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+          <RoastLevelAnchors level={level} reviewData={reviewData} reviews={reviews} />
+
+          </Container>
+        </div>
+      </div>
+    </section>
+
+
+  );
+}
+function TheCoffeeJava({
+  craftSubtitle,
+  reviewData,
+  reviews,
+}: {
+  craftSubtitle: React.ReactNode | null;
+  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
+  reviews: Review[];
+}) {
+
+  const notes = ["Hazelnut", "Carmel", "Apple"];
+  const origins = ["Guatemala", "Ethiopia", "Colombia"];
+  const level: 1 | 2 | 3 | 4 | 5 = 3;
+  const GRID =
+    origins.length === 2
+      ? "grid-cols-[auto_auto]"
+      : "grid-cols-[auto_auto_auto]";
+
+  return (
+    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
+      <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
+      <div className="bg-neutral-950 mt-[-1px]">
+        <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+          <div className="max-w-[80ch]">
+            <h2 className="text-xl md:text-2xl font-bold text-amber-300">
+              THE CRAFT IN THE CUP
+            </h2>
+            {craftSubtitle && (
+              <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
+                {craftSubtitle}
+              </div>
+            )}
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+
+            <div className="mt-3">
+              <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+                Signature Notes
+              </h3>
+              <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
+                {notes.join(", ")}
+              </div>
+            </div>
+
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+
+            <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
+              Bean Origins
+            </h3>
+            <div
+              className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center mx-auto`}
+            >
+              {origins.map((name) => (
+                <OriginImg key={name} name={name} />
+              ))}
+            </div>
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+          </div> {/* end .max-w-[80ch] */}
+        </Container>
+
+        {/* full-bleed divider + centered reviews (mirrors the top border) */}
+        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
+        <div className="bg-neutral-950">
+          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+          <RoastLevelAnchors level={level} reviewData={reviewData} reviews={reviews} />
+
+          </Container>
+        </div>
+      </div>
+    </section>
+
+
+  );
+}
+
+function TheCoffeeOak({
+  craftSubtitle,
+  reviewData,
+  reviews,
+}: {
+  craftSubtitle: React.ReactNode | null;
+  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
+  reviews: Review[];
+}) {
+
+  const notes = ["Dark Chocolate", "Caramel", "Toasted Oak"];
+  const origins = ["Colombia", "Indonesia"];
+  const level: 1 | 2 | 3 | 4 | 5 = 3;
+  const GRID =
+    origins.length === 2
+      ? "grid-cols-[auto_auto]"
+      : "grid-cols-[auto_auto_auto]";
+
+  return (
+    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
+      <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
+      <div className="bg-neutral-950 mt-[-1px]">
+        <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+          <div className="max-w-[80ch]">
+            <h2 className="text-xl md:text-2xl font-bold text-amber-300">
+              THE CRAFT IN THE CUP
+            </h2>
+            {craftSubtitle && (
+              <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
+                {craftSubtitle}
+              </div>
+            )}
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+
+            <div className="mt-3">
+              <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+                Signature Notes
+              </h3>
+              <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
+                {notes.join(", ")}
+              </div>
+            </div>
+
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+
+            <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
+              Bean Origins
+            </h3>
+            <div
+              className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center mx-auto`}
+            >
+              {origins.map((name) => (
+                <OriginImg key={name} name={name} bumpIndonesia />
+              ))}
+            </div>
+
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+          </div> {/* end .max-w-[80ch] */}
+        </Container>
+
+        {/* full-bleed divider + centered reviews (mirrors the top border) */}
+        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
+        <div className="bg-neutral-950">
+          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+          <RoastLevelAnchors level={level} reviewData={reviewData} reviews={reviews} />
+
+          </Container>
+        </div>
+      </div>
+    </section>
+
+
   );
 }
 
@@ -2015,7 +2507,7 @@ function OriginsPage() {
 
   return (
     <main className="pt-0">
-      {/* ===== ROASTING PROCESS ===== */}
+      {/* ===== ROASTING PROCESS (buy box + fonts ~15% larger) ===== */}
       <section
         id="origins-roasting"
         className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
@@ -2028,7 +2520,6 @@ function OriginsPage() {
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
         <Container>
-          {/* Make the inner wrapper a flex container and center its content vertically */}
           <div className={`${SECTION_INNER} flex items-center`}>
             <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
               {/* Photo LEFT */}
@@ -2042,12 +2533,12 @@ function OriginsPage() {
                 </div>
               </div>
 
-              {/* Text RIGHT */}
+              {/* Text RIGHT (fonts bumped ~15%) */}
               <div className="space-y-3">
-                <h3 className="text-2xl md:text-4xl font-bold text-amber-300">
+                <h3 className="font-bold text-amber-300 text-[1.7rem] md:text-[2.6rem]">
                   ROASTING PROCESS
                 </h3>
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                <p className="text-neutral-300 leading-relaxed tracking-[0.02em] text-[1.4375rem] md:text-[1.725rem]">
                   Coffee is at its best in the first days after roasting when
                   the oils are alive, the aroma is full, and the flavor is at
                   its peak. That is why we roast to order every Monday and
@@ -2058,11 +2549,14 @@ function OriginsPage() {
                   experienced.
                   <br /> <br />
                 </p>
+
+                {/* Buy box ~15% larger: font + padding increased */}
                 <Link
                   to="/coffee"
-                  className="mt-6 inline-block px-5 py-2 rounded-lg ring-1 ring-amber-400/60 
-             text-amber-400 font-semibold text-base md:text-lg 
-             hover:bg-amber-400 hover:text-neutral-900 transition-all"
+                  className="mt-7 inline-block rounded-xl ring-1 ring-amber-400/60 
+                       text-amber-400 font-semibold text-[1.15rem] md:text-[1.3rem]
+                       px-[1.45rem] py-[0.6rem]
+                       hover:bg-amber-400 hover:text-neutral-900 transition-all"
                 >
                   ⚓ SHOP OUR FRESHLY ROASTED COFFEE
                 </Link>
@@ -2072,7 +2566,7 @@ function OriginsPage() {
         </Container>
       </section>
 
-      {/* ===== THE LANDS WHERE OUR BEANS ARE GROWN ===== */}
+      {/* ===== THE LANDS WHERE OUR BEANS ARE GROWN (photo RIGHT, text LEFT) ===== */}
       <section
         id="origins-lands"
         className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
@@ -2085,21 +2579,9 @@ function OriginsPage() {
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
         <Container>
-          {/* Flex wrapper vertically centers the grid */}
           <div className="relative z-10 flex items-center min-h-[720px] md:min-h-[820px] py-12 md:py-16">
-            <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              {/* Photo LEFT */}
-              <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
-                  <img
-                    src="/bean-stock3.jpg"
-                    alt="Beans lands"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-
-              {/* Text RIGHT */}
+            <div className="grid w-full grid-cols-1 md:grid-cols-[1fr,auto] gap-4 md:gap-6 items-center">
+              {/* Text LEFT */}
               <div className="space-y-3">
                 <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                   The Lands Where Our Beans Are Grown
@@ -2114,12 +2596,23 @@ function OriginsPage() {
                   becomes the soul of every cup of Old Ironsides Coffee.
                 </p>
               </div>
+
+              {/* Photo RIGHT */}
+              <div className="justify-self-center self-center">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/bean-stock3.jpg"
+                    alt="Beans lands"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </Container>
       </section>
 
-      {/* ===== THE HANDS THAT GROW OUR BEANS ===== */}
+      {/* ===== THE HANDS THAT GROW OUR BEANS (3-stack offset: top/bottom far LEFT, middle shifted RIGHT; text snug) ===== */}
       <section
         id="origins-hands"
         className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
@@ -2132,13 +2625,42 @@ function OriginsPage() {
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
         <Container>
-          {/* Flex wrapper vertically centers the grid */}
           <div
             className={`${SECTION_INNER} flex items-center min-h-[720px] md:min-h-[820px]`}
           >
-            <div className="grid w-full grid-cols-1 md:grid-cols-[1fr,auto] items-center gap-4 md:gap-6">
-              {/* Text LEFT */}
-              <div className="order-2 md:order-1 space-y-3 md:justify-self-end">
+            <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-3 md:gap-4">
+              {/* 3-stack LEFT (top/bottom pinned LEFT, middle offset RIGHT) */}
+              <div className="justify-self-center md:justify-self-start self-center">
+                <div className="relative w-[22rem] sm:w-[28rem] md:w-[36rem] h-[30rem] sm:h-[40rem] md:h-[48rem]">
+                  {/* Top card (far LEFT) */}
+                  <div className="absolute left-0 top-0 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                    <img
+                      src="/workergirl1.jpg"
+                      alt="Harvest and selection"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {/* Middle card (offset to RIGHT) — existing hands pic */}
+                  <div className="absolute left-[58%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-2xl">
+                    <img
+                      src="/hands-beans.jpg"
+                      alt="Hands with beans"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {/* Bottom card (far LEFT) */}
+                  <div className="absolute left-0 bottom-0 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                    <img
+                      src="/woman2.jpg"
+                      alt="Care at every step"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Text RIGHT (snug to image stack) */}
+              <div className="space-y-3 md:justify-self-start">
                 <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                   The Hands That Grow Our Beans
                 </h3>
@@ -2147,23 +2669,12 @@ function OriginsPage() {
                   Generations of farmers rise before dawn, nurturing each tree
                   by hand and protecting the land that sustains them. Their
                   knowledge, patience, and respect for nature give our coffee
-                  its strength and character. <br /> <br /> These small family
-                  farms are the heart of what we do. Every bean is ethically
-                  sourced, every grower treated with fairness and dignity. Their
-                  craftsmanship and pride live on in every roast, carrying
-                  forward the spirit of Old Ironsides Coffee.
+                  its strength and character. <br /> <br />
+                  These small family farms are the heart of what we do. Every
+                  bean is ethically sourced, every grower treated with fairness
+                  and dignity. Their craftsmanship and pride live on in every
+                  roast, carrying forward the spirit of Old Ironsides Coffee.
                 </p>
-              </div>
-
-              {/* Photo RIGHT */}
-              <div className="order-1 md:order-2 justify-self-center self-center">
-                <div className="relative w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
-                  <img
-                    src="/hands-beans.jpg"
-                    alt="Hands with beans"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -2185,10 +2696,9 @@ function OriginsPage() {
                 The History Behind The Fleet
               </span>
             }
-            subtitle="Explore the hisory of the USS Constitution and her victoires that inspired our roasts."
+            subtitle="Explore the history of the USS Constitution and her victories that inspired our roasts."
           />
           <div className="mt-10 grid md:grid-cols-4 gap-6">
-            {/* Order: Java Action, Baptism by Fire, Flagship, Oak & Copper */}
             {[
               "java-action",
               "baptism-by-fire",
@@ -2230,7 +2740,7 @@ function OriginsPage() {
         </Container>
       </section>
 
-      {/* ===== FROM THE SAND TO THE SEA ===== */}
+      {/* ===== FROM THE SAND TO THE SEA (unchanged) ===== */}
       <section
         id="origins-service"
         className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
@@ -2243,7 +2753,6 @@ function OriginsPage() {
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
         <Container>
-          {/* Flex wrapper vertically centers the grid */}
           <div className="relative z-10 flex items-center min-h-[900px] md:min-h-[960px] py-12 md:py-16">
             <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr,auto] items-center gap-8">
               {/* LEFT HERO */}
@@ -2302,7 +2811,7 @@ function OriginsPage() {
         </Container>
       </section>
 
-      {/* ===== GIVING BACK (copied from Origins) — placed between Service and About ===== */}
+      {/* ===== GIVING BACK (switch: text LEFT, hero pic RIGHT) ===== */}
       <section
         id="origins-giving-back"
         className="relative overflow-hidden border-t border-neutral-800 scroll-mt-28 md:scroll-mt-36"
@@ -2315,18 +2824,10 @@ function OriginsPage() {
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
         <Container>
-          <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex flex-col items-center justify-center text-center">
-            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
-                  <img
-                    src="/veteran-chair.jpg"
-                    alt="Giving back"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-              <div className="space-y-3">
+          <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex items-center">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] gap-4 md:gap-6 items-center w-full">
+              {/* Text LEFT */}
+              <div className="space-y-3 md:text-left text-center">
                 <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                   Giving Back To Those Who Served
                 </h3>
@@ -2340,38 +2841,49 @@ function OriginsPage() {
                   it most.
                 </p>
               </div>
+
+              {/* Hero RIGHT */}
+              <div className="justify-self-center self-center">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/veteran-chair.jpg"
+                    alt="Giving back"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </Container>
       </section>
-      {/* ===== ABOUT OLD IRONSIDES COFFEE ===== */}
+
+      {/* ===== ABOUT OLD IRONSIDES COFFEE (unchanged) ===== */}
       <section
         id="origins-about"
         className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
       >
-        {/* Backdrop emblem centered */}
-        <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
-          <img
-            src="/emblem-black.png"
-            alt="About backdrop"
-            className="max-w-[90%] max-h-[90%] object-contain opacity-20"
-          />
-        </div>
+        {/* Backdrop image full-bleed */}
+        <img
+          src="/flag-close.jpg"
+          alt="About backdrop"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-30 z-0 pointer-events-none"
+        />
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
         <Container>
-          {/* Flex + items-center vertically centers the grid in this section */}
           <div className="relative z-10 flex items-center min-h-[720px] md:min-h-[820px] py-12 md:py-16">
             <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
               {/* Photo LEFT */}
               <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
-                  <img
-                    src="/flag-close.jpg"
-                    alt="Old Ironsides legacy"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+               <div className="w-64 md:w-[32rem] mx-auto aspect-[10/13] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50"
+>
+  <img
+    src="/ironship.png"
+    alt="Old Ironsides legacy"
+    className="w-full h-full object-cover"
+  />
+</div>
+
               </div>
 
               {/* Text RIGHT */}
@@ -2489,6 +3001,19 @@ function ContactPage() {
     </main>
   );
 }
+function nextRoastLabel() {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun, 1=Mon, ...
+  const nextMonday = new Date(now);
+  nextMonday.setHours(0, 0, 0, 0);
+  // always the NEXT Monday (not today if it's Monday)
+  nextMonday.setDate(now.getDate() + ((1 - day + 7) % 7 || 7));
+  return nextMonday.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "short",
+    day: "numeric",
+  });
+}
 
 function SDVOSBPage() {
   return (
@@ -2551,28 +3076,1145 @@ function SDVOSBPage() {
 function LegalPage() {
   const { slug } = useParams();
   const titles: any = {
-    returns: "Return Policy",
+    returns: "Returns & Freshness Policy",
     shipping: "Roast & Shipping",
     terms: "Terms of Service",
     privacy: "Privacy Policy",
   };
   const title = titles[slug as string] || "Roast & Shipping";
+
   return (
     <main className="py-16">
       <Container>
         <div className="flex items-start justify-between">
           <SectionTitle
             title={title}
-            subtitle="Fill in with your official policy text."
+            subtitle={
+              slug === "shipping"
+                ? "Roast schedule, shipping timing, and free-shipping details."
+                : slug === "returns"
+                ? "How we handle freshness, replacements, and damage."
+                : slug === "privacy"
+                ? "How we collect, use, and protect your information."
+                : undefined
+            }
           />
+
           <BackButton size="sm" />
         </div>
-        <div className="mt-6 space-y-4 text-neutral-300">
-          <p>
-            Placeholder content for {title}. Replace with your finalized policy
-            language.
-          </p>
-        </div>
+
+        {/* Live roast schedule notice only on Roast & Shipping */}
+        {slug === "shipping" && (
+  <>
+    <div className="mt-6 mb-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+    <p className="text-sm md:text-base text-neutral-200">
+  <>
+    All of our coffees are roasted fresh every Monday and ship
+    Tuesday/Wednesday. <br />
+    <br />
+    Your next eligible roast date is{" "}
+    <span className="font-semibold text-amber-300">
+      {nextRoastLabel()}
+    </span>
+    . <br />
+    <br />
+    Orders placed before 5 p.m. EST on Sunday make that week’s
+    roast; after that, they roll to the following week. <br />
+    Because we roast to order, your coffee won’t arrive
+    overnight like Amazon, but it will arrive fresh. <br />
+    Need it sooner? Leave a note at checkout or reply to your
+    confirmation email — we’ll do our best to accommodate.
+    <br />
+    <br />
+    We use UPS standard shipping for all orders.
+  </>
+</p>
+
+    </div>
+  </>
+)}
+
+        {/* Returns & Freshness Policy */}
+        {/* Returns & Freshness Policy — tightened layout, wrapped width */}
+        {slug === "returns" && (
+          <section className="mt-6 text-neutral-100">
+            <div className="max-w-[72ch] leading-relaxed">
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    Short version
+                  </h3>
+                  <p className="mt-1">
+                    Our coffee is roasted to your order and sails out fresh. We
+                    cannot accept returns on roasted coffee. If your order
+                    arrives damaged or something is wrong, we will make it
+                    right.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    Why no returns on coffee
+                  </h3>
+                  <p className="mt-1">
+                    Once beans are roasted and ship out, they’re like a frigate
+                    leaving port. We cannot resell opened or returned coffee,
+                    and we do not restock roasted bags.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    We’ll always make it right
+                  </h3>
+                  <p className="mt-1">
+                    If your package is damaged, the coffee is defective in any
+                    way, or we made a mistake, contact us. We will replace it or
+                    refund you.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    If you’re unhappy
+                  </h3>
+                  <p className="mt-1">
+                    Email us and we will not leave you at the harbor. We can
+                    recommend a better fit, credit your account, or find a fix.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    How to report an issue (quick steps)
+                  </h3>
+                  <ol className="mt-1 list-decimal list-outside pl-5 space-y-1">
+                    <li>Contact us within 7 days of delivery.</li>
+                    <li>
+                      Include your order number, a brief note on the issue, and
+                      photos if the package or bag is damaged.
+                    </li>
+                    <li>We’ll reply with a replacement or refund plan.</li>
+                  </ol>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    What this covers
+                  </h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>Damaged in transit</li>
+                    <li>Wrong item received</li>
+                    <li>
+                      Defective product (seal issues, off roast, quality
+                      problems)
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    What this doesn’t cover
+                  </h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      Returns or exchanges on roasted coffee that was correctly
+                      fulfilled
+                    </li>
+                    <li>
+                      Taste preferences after correct fulfillment
+                      <span className="text-neutral-400">
+                        {" "}
+                        (still contact us and we’ll carefully review your case)
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">Contact</h3>
+                  <p className="mt-1">
+                    <a
+                      href="mailto:HQ@oldironsides.org"
+                      className="text-amber-300 hover:underline"
+                    >
+                      HQ@oldironsidescoffee.org
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+        {/* Terms of Service — tightened layout, wrapped width */}
+        {slug === "terms" && (
+          <section className="mt-3 text-neutral-100">
+            <div className="max-w-[72ch] leading-relaxed">
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    Effective Date
+                  </h3>
+                  <p className="mt-1">October 11, 2025</p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">Overview</h3>
+                  <p className="mt-1">
+                    These Terms of Service govern your access to and use of the
+                    websites, online stores, and services operated by Liberty
+                    Lighthouse Supply Co., dba Old Ironsides Coffee (“Company,”
+                    “we,” “us,” or “our”). By visiting our site, placing an
+                    order, creating an account, or subscribing to any product,
+                    you agree to these Terms and to our Privacy Policy
+                    (incorporated by reference). If you do not agree, do not use
+                    our site or services.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    1. Eligibility and Accounts
+                  </h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      You must be at least 18 years old and able to enter a
+                      binding contract.
+                    </li>
+                    <li>
+                      You are responsible for your account and for safeguarding
+                      your credentials.
+                    </li>
+                    <li>
+                      You agree to provide accurate information and keep it
+                      updated.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    2. Orders, Acceptance, and Right to Refuse Service
+                  </h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      Your order is an offer to buy. We may accept, reject, or
+                      cancel any order at our discretion.
+                    </li>
+                    <li>
+                      We may refuse service, cancel orders, or terminate
+                      subscriptions for any reason (e.g., suspected fraud,
+                      abuse, resale, policy violations, or risk to our
+                      business).
+                    </li>
+                    <li>
+                      We may limit or cancel quantities per person, household,
+                      account, payment card, or order.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    3. Pricing, Availability, and Errors
+                  </h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      Prices, descriptions, and availability may change without
+                      notice.
+                    </li>
+                    <li>
+                      We may correct errors or cancel orders placed with
+                      incorrect information, even after submission.
+                    </li>
+                    <li>
+                      Applicable taxes, shipping, and handling appear at
+                      checkout and are your responsibility unless stated
+                      otherwise.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">4. Payment</h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      You authorize us and our processors to charge your
+                      selected payment method for all amounts due.
+                    </li>
+                    <li>
+                      If payment fails, you remain responsible; we may suspend
+                      or cancel shipments or subscriptions until resolved.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    5. Subscriptions and Auto-Renewal
+                  </h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      Subscriptions renew automatically at the stated interval
+                      until you cancel.
+                    </li>
+                    <li>
+                      Cancel any time before the renewal cutoff shown in your
+                      account or emails. Cancellations apply to future renewals
+                      and do not affect orders already processed.
+                    </li>
+                    <li>
+                      We may change subscription pricing or terms with notice.
+                      Continued use after the effective date means acceptance.
+                    </li>
+                    <li>
+                      We may pause or cancel a subscription for any reason,
+                      including failed payments or product unavailability.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    6. Shipping, Risk of Loss, and Delivery
+                  </h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      We ship to the address you provide. Title and risk of loss
+                      pass when the carrier accepts the shipment.
+                    </li>
+                    <li>
+                      Delivery dates are estimates. We are not liable for delays
+                      outside our control.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    7. Returns, Replacements, and Freshness Policy
+                  </h3>
+                  <p className="mt-1">
+                    To avoid any conflict, this section mirrors our Returns
+                    &amp; Freshness Policy and controls if inconsistent
+                    elsewhere.
+                  </p>
+                  <ul className="mt-2 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      No returns on roasted coffee that was correctly fulfilled;
+                      we do not restock roasted bags.
+                    </li>
+                    <li>
+                      If damaged, defective, or if we made a mistake, contact
+                      us—we’ll replace or refund.
+                    </li>
+                    <li>
+                      Not happy? Email us. We can recommend a better fit, credit
+                      your account, or find a solution.
+                    </li>
+                    <li>
+                      Report issues within 7 days of delivery. Include your
+                      order number, a brief note, and photos if the package/bag
+                      is damaged.
+                    </li>
+                    <li>
+                      Covers: damaged in transit, wrong item, defective product
+                      (seal, off roast, quality).
+                    </li>
+                    <li>
+                      Doesn’t cover: correctly fulfilled roasted coffee; pure
+                      taste preferences (still contact us—we’ll help).
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    8. Promotions, Gift Cards, and Referral Codes
+                  </h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      Promotions/coupons/codes are subject to their own rules
+                      and may be modified or canceled at any time.
+                    </li>
+                    <li>
+                      Gift cards are not reloadable, refundable, or redeemable
+                      for cash unless required by law.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    9. Personal Use Only and Resale
+                  </h3>
+                  <p className="mt-1">
+                    Products are intended for personal use. We may refuse or
+                    cancel suspected resale orders without written consent.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    10. User Content and Reviews
+                  </h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      You grant us a worldwide, royalty-free, perpetual license
+                      to use, reproduce, modify, publish, translate, and display
+                      your content.
+                    </li>
+                    <li>
+                      You represent your content is accurate, lawful, and
+                      non-infringing.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    11. Acceptable Use
+                  </h3>
+                  <p className="mt-1">
+                    You agree not to violate law or third-party rights;
+                    interfere with or disrupt the site; bypass security
+                    measures; or scrape/harvest data except as allowed by
+                    robots.txt or our written permission.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    12. Intellectual Property
+                  </h3>
+                  <p className="mt-1">
+                    The site, products, logos, graphics, text, and other
+                    materials are owned by us or our licensors. We grant a
+                    limited, nonexclusive, nontransferable license to access and
+                    use the site for personal, noncommercial purposes—no other
+                    rights are granted.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    13. Health and Safety
+                  </h3>
+                  <p className="mt-1">
+                    Coffee contains caffeine. We do not provide medical advice.
+                    You are responsible for your own dietary and medical
+                    needs—consult a qualified professional with questions about
+                    caffeine or allergens.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    14. Third-Party Services and Links
+                  </h3>
+                  <p className="mt-1">
+                    We are not responsible for third-party websites, apps, or
+                    services that may be linked or integrated. Your use is at
+                    your own risk and subject to those terms and policies.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    15. SMS, Email, and Electronic Communications
+                  </h3>
+                  <p className="mt-1">
+                    By providing a phone number or email, you consent to receive
+                    transactional and marketing messages, subject to our Privacy
+                    Policy. Message/data rates may apply. Opt out of marketing
+                    emails via the unsubscribe link and SMS by replying STOP. We
+                    may still send transactional messages about orders or your
+                    account.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    16. Disclaimers
+                  </h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      The site and all products/services are provided “as is”
+                      and “as available.”
+                    </li>
+                    <li>
+                      To the fullest extent allowed by law, we disclaim all
+                      warranties, express or implied, including merchantability,
+                      fitness for a particular purpose, title, and
+                      non-infringement. We do not warrant uninterrupted or
+                      error-free operation.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    17. Limitation of Liability
+                  </h3>
+                  <p className="mt-1">
+                    To the fullest extent allowed by law, we and our suppliers
+                    are not liable for any indirect, incidental, special,
+                    consequential, or punitive damages, or any loss of profits,
+                    revenue, data, or use. Our total liability will not exceed
+                    the amount you paid for the product or service at issue
+                    during the six months before the claim arose.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    18. Indemnification
+                  </h3>
+                  <p className="mt-1">
+                    You agree to defend, indemnify, and hold harmless the
+                    Company and our officers, directors, employees, agents, and
+                    affiliates from and against claims, liabilities, damages,
+                    losses, and expenses (including reasonable attorneys’ fees)
+                    arising out of or related to your use of the site or
+                    products, your violation of these Terms, or your violation
+                    of any law or third-party right.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    19. Dispute Resolution, Arbitration, and Class Action Waiver
+                  </h3>
+                  <p className="mt-1">
+                    You and the Company agree to resolve any dispute arising out
+                    of or relating to these Terms or your use of our site or
+                    products through binding arbitration administered by the
+                    American Arbitration Association under its Consumer
+                    Arbitration Rules. The Federal Arbitration Act governs this
+                    agreement to arbitrate. Arbitration will take place in
+                    Suffolk County, Massachusetts, unless we agree otherwise,
+                    and may be conducted by telephone or video when appropriate.
+                    You and we each waive the right to a jury trial and to
+                    participate in a class action or class-wide arbitration;
+                    claims must be brought individually. Either party may bring
+                    an individual claim in small-claims court if eligible. You
+                    may opt out by sending written notice to{" "}
+                    <a
+                      href="mailto:hq@oldironsidescoffee.org"
+                      className="text-amber-300 hover:underline"
+                    >
+                      hq@oldironsidescoffee.org
+                    </a>{" "}
+                    within 30 days of your first use of our services. If you opt
+                    out, the exclusive venue for any non-arbitrated action will
+                    be the state and federal courts in Suffolk County,
+                    Massachusetts, and you consent to personal jurisdiction
+                    there.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    20. Governing Law
+                  </h3>
+                  <p className="mt-1">
+                    These Terms are governed by the laws of the Commonwealth of
+                    Massachusetts, without regard to conflict-of-laws rules. The
+                    Federal Arbitration Act governs the arbitration provision.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    21. Termination
+                  </h3>
+                  <p className="mt-1">
+                    We may suspend or terminate your access at any time and for
+                    any reason. You may stop using our services at any time.
+                    Sections that by their nature should survive termination
+                    will survive.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    22. Force Majeure
+                  </h3>
+                  <p className="mt-1">
+                    We are not liable for delays or failures caused by events
+                    outside our reasonable control, including natural disasters,
+                    labor disputes, acts of government, supply or transportation
+                    interruptions, or power or internet outages.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    23. Changes to the Services or Terms
+                  </h3>
+                  <p className="mt-1">
+                    We may update these Terms at any time. Changes apply when
+                    posted unless a later effective date is stated. Your
+                    continued use after changes means you accept the updated
+                    Terms.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    24. Assignment
+                  </h3>
+                  <p className="mt-1">
+                    You may not assign or transfer your rights under these Terms
+                    without our prior written consent. We may assign these Terms
+                    at any time.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    25. Severability and Waiver
+                  </h3>
+                  <p className="mt-1">
+                    If any provision is found unenforceable, the remaining
+                    provisions remain in full force. Our failure to enforce any
+                    right is not a waiver.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    26. Entire Agreement
+                  </h3>
+                  <p className="mt-1">
+                    These Terms, together with the Privacy Policy and any order
+                    or subscription details, are the entire agreement between
+                    you and us and supersede all prior or contemporaneous
+                    communications.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-amber-300 font-semibold">27. Contact</h3>
+                  <p className="mt-1">
+                    Liberty Lighthouse Supply Co., dba Old Ironsides Coffee
+                    <br />
+                    Email:{" "}
+                    <a
+                      href="mailto:hq@oldironsidescoffee.org"
+                      className="text-amber-300 hover:underline"
+                    >
+                      hq@oldironsidescoffee.org
+                    </a>
+                    <br />
+                    Address: 6 Liberty Square #2564, Boston, MA 02109
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Privacy Policy */}
+        {slug === "privacy" && (
+          <section className="mt-3 max-w-[68ch] text-neutral-100 space-y-8">
+            {/* Intro */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">Effective date</h3>
+              <div className="text-neutral-300">October 11, 2025</div>
+            </div>
+
+            <p className="text-neutral-300">
+              This Privacy Policy explains how Liberty Lighthouse Supply Co.,
+              dba Old Ironsides Coffee (“Company,” “we,” “us,” or “our”)
+              collects, uses, shares, and protects personal information when you
+              visit our websites, make a purchase, create an account, subscribe,
+              or otherwise interact with us. If you do not agree with this
+              Policy, do not use our services.
+            </p>
+
+            {/* Contact */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                Contact for privacy questions and requests
+              </h3>
+              <p className="text-neutral-300">
+                Email:{" "}
+                <a
+                  href="mailto:HQ@oldironsidescoffee.org"
+                  className="text-amber-300 hover:underline"
+                >
+                  HQ@oldironsidescoffee.org
+                </a>
+                <br />
+                Address: 6 Liberty Square #2564, Boston, MA 02109
+              </p>
+            </div>
+
+            {/* 1 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                1. Information we collect
+              </h3>
+              <p className="text-neutral-300">
+                We collect the categories of information below. The exact data
+                depends on how you interact with us.
+              </p>
+              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                <li>
+                  <span className="font-semibold">Identifiers:</span> name,
+                  email address, billing and shipping addresses, phone number,
+                  account username, IP address, device identifiers.
+                </li>
+                <li>
+                  <span className="font-semibold">Commercial information:</span>{" "}
+                  products viewed or purchased, order history, subscription
+                  selections, discount code usage, customer service
+                  interactions.
+                </li>
+                <li>
+                  <span className="font-semibold">
+                    Internet or network activity:
+                  </span>{" "}
+                  pages viewed, links clicked, timestamps, approximate location
+                  derived from IP, cookie identifiers, analytics events.
+                </li>
+                <li>
+                  <span className="font-semibold">Payment information:</span> we
+                  receive limited payment details from our payment processors
+                  such as payment method type and the last four digits of a
+                  card. We do not store full card numbers.
+                </li>
+                <li>
+                  <span className="font-semibold">User content:</span> product
+                  reviews, ratings, photos, messages you send to us.
+                </li>
+                <li>
+                  <span className="font-semibold">
+                    Inferences and preferences:
+                  </span>{" "}
+                  roast and product preferences, marketing segment membership,
+                  subscription cadence.
+                </li>
+                <li>
+                  <span className="font-semibold">Sensitive information:</span>{" "}
+                  we do not intentionally collect sensitive personal information
+                  as defined by applicable law. If you provide any such
+                  information to us, we will handle it as required by law and
+                  will delete or restrict it when appropriate.
+                </li>
+              </ul>
+              <p className="text-neutral-300">
+                We obtain personal information from you directly, from your
+                devices through cookies and similar tools, from our service
+                providers such as payment processors and shipping carriers, and
+                from marketing and analytics partners.
+              </p>
+            </div>
+
+            {/* 2 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                2. Why we use your information
+              </h3>
+              <p className="text-neutral-300">
+                For users in the EEA and UK, legal bases appear in parentheses.
+              </p>
+              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                <li>
+                  <span className="font-semibold">Provide the services:</span>{" "}
+                  process and fulfill orders, manage subscriptions, deliver
+                  products, provide customer support, operate your account (
+                  <em>contract necessity</em>).
+                </li>
+                <li>
+                  <span className="font-semibold">
+                    Payments and fraud prevention:
+                  </span>{" "}
+                  process payments, verify identity, prevent abuse and
+                  unauthorized activity (<em>contract necessity</em>,{" "}
+                  <em>legitimate interests</em>).
+                </li>
+                <li>
+                  <span className="font-semibold">
+                    Customer communications:
+                  </span>{" "}
+                  send transactional emails and SMS about orders, subscriptions,
+                  and account notices (<em>contract necessity</em>).
+                </li>
+                <li>
+                  <span className="font-semibold">Marketing:</span> send
+                  promotional emails and SMS, personalize content, and measure
+                  campaign performance where permitted (<em>consent</em> or{" "}
+                  <em>legitimate interests</em>).
+                </li>
+                <li>
+                  <span className="font-semibold">
+                    Analytics and improvement:
+                  </span>{" "}
+                  understand site performance, fix bugs, and improve our
+                  products and services (<em>legitimate interests</em>
+                  ).
+                </li>
+                <li>
+                  <span className="font-semibold">
+                    Security and compliance:
+                  </span>{" "}
+                  enforce terms, comply with legal obligations, respond to
+                  lawful requests (<em>legal obligation</em>,{" "}
+                  <em>legitimate interests</em>).
+                </li>
+                <li>
+                  <span className="font-semibold">Financial incentives:</span>{" "}
+                  operate opt-in programs like subscribe-and-save discounts and
+                  email signup offers (<em>consent</em>).
+                </li>
+              </ul>
+            </div>
+
+            {/* 3 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                3. Cookies and similar technologies
+              </h3>
+              <p className="text-neutral-300">
+                We use cookies, pixels, tags, and similar technologies to enable
+                site functionality, maintain your session, remember preferences,
+                perform analytics, and support marketing.
+              </p>
+              <h4 className="text-amber-300 font-semibold">Your choices</h4>
+              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                <li>Control cookies in your browser settings.</li>
+                <li>
+                  Opt out of certain analytics or advertising cookies through
+                  the cookie banner or device settings where available.
+                </li>
+                <li>
+                  Where required by law and technically feasible, we will treat
+                  a browser-level opt-out signal such as Global Privacy Control
+                  as a valid request to opt out of sale or sharing.
+                </li>
+              </ul>
+            </div>
+
+            {/* 4 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                4. How we share information
+              </h3>
+              <p className="text-neutral-300">
+                We do not sell personal information for money. We may share
+                limited information with advertising and analytics partners that
+                could be considered a “share” for targeted advertising under
+                some state laws.
+              </p>
+              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                <li>
+                  <span className="font-semibold">
+                    Service providers and processors:
+                  </span>{" "}
+                  ecommerce platforms, payment processors, fraud prevention
+                  tools, email and SMS platforms, analytics providers, shipping
+                  and logistics partners, customer support tools.
+                </li>
+                <li>
+                  <span className="font-semibold">Business partners:</span> for
+                  joint promotions or collaborations.
+                </li>
+                <li>
+                  <span className="font-semibold">Legal and safety:</span> to
+                  comply with law, respond to lawful requests, or protect
+                  rights, users, or the public.
+                </li>
+                <li>
+                  <span className="font-semibold">Business transfers:</span> in
+                  connection with a merger, acquisition, financing, or sale of
+                  assets.
+                </li>
+                <li>
+                  <span className="font-semibold">
+                    Aggregated or de-identified data:
+                  </span>{" "}
+                  information that cannot reasonably be linked to you. We
+                  maintain de-identified data and do not attempt to re-identify
+                  it.
+                </li>
+              </ul>
+            </div>
+
+            {/* 5 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                5. Your choices about marketing
+              </h3>
+              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                <li>
+                  <span className="font-semibold">Email:</span> use the
+                  unsubscribe link in any marketing email or email{" "}
+                  <a
+                    href="mailto:HQ@oldironsidescoffee.org"
+                    className="text-amber-300 hover:underline"
+                  >
+                    HQ@oldironsidescoffee.org
+                  </a>
+                  .
+                </li>
+                <li>
+                  <span className="font-semibold">SMS:</span> reply STOP to opt
+                  out of marketing texts. Transactional emails or texts about
+                  your orders or account will still be sent.
+                </li>
+              </ul>
+            </div>
+
+            {/* 6 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                6. Your privacy rights
+              </h3>
+              <p className="text-neutral-300">
+                Your rights depend on your location. We will honor requests as
+                required by law.
+              </p>
+              <p className="text-neutral-300">
+                U.S. state privacy laws (including CA, CO, CT, UT, VA) may
+                provide rights to:
+              </p>
+              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                <li>
+                  know and access categories and specific pieces of personal
+                  information we collected about you,
+                </li>
+                <li>correct inaccurate information,</li>
+                <li>delete information,</li>
+                <li>opt out of sale or sharing for targeted advertising,</li>
+                <li>limit use and disclosure of sensitive information,</li>
+                <li>non-discrimination for exercising these rights.</li>
+              </ul>
+              <p className="text-neutral-300">
+                <span className="font-semibold">How to submit a request:</span>{" "}
+                email{" "}
+                <a
+                  href="mailto:HQ@oldironsidescoffee.org"
+                  className="text-amber-300 hover:underline"
+                >
+                  HQ@oldironsidescoffee.org
+                </a>{" "}
+                with your name, the email used for your purchases or account,
+                your request type, and your state of residence. We will verify
+                your identity by matching to existing records and may request
+                additional information such as an order number. You may use an
+                authorized agent as permitted by law if you provide a signed
+                permission or a valid power of attorney.
+              </p>
+              <p className="text-neutral-300">
+                <span className="font-semibold">Appeals:</span> if we deny a
+                request, you may appeal by replying to our decision email within
+                30 days. If you still have concerns, you may contact your state
+                attorney general.
+              </p>
+              <p className="text-neutral-300">
+                <span className="font-semibold">Global Privacy Control:</span>{" "}
+                where required by law and technically feasible, we will treat an
+                opt-out signal such as GPC as a valid request for the associated
+                browser.
+              </p>
+            </div>
+
+            {/* 7 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                7. California disclosures
+              </h3>
+              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                <li>
+                  <span className="font-semibold">
+                    Categories collected in the last 12 months:
+                  </span>{" "}
+                  identifiers, commercial information, internet or network
+                  activity, geolocation derived from IP, user content,
+                  inferences. Payment card details are processed by our payment
+                  processor.
+                </li>
+                <li>
+                  <span className="font-semibold">Sources:</span> directly from
+                  you, your devices, service providers, analytics and marketing
+                  partners.
+                </li>
+                <li>
+                  <span className="font-semibold">Purposes:</span> as listed in
+                  Section 2.
+                </li>
+                <li>
+                  <span className="font-semibold">
+                    Disclosures for business purposes:
+                  </span>{" "}
+                  service providers and processors, shipping carriers, analytics
+                  and security vendors, customer support tools.
+                </li>
+                <li>
+                  <span className="font-semibold">Sale or sharing:</span> we do
+                  not sell personal information for money. We may “share”
+                  limited identifiers and internet activity with advertising
+                  partners for cross-context behavioral advertising. You can opt
+                  out as described in Section 6.
+                </li>
+                <li>
+                  <span className="font-semibold">
+                    Sensitive personal information:
+                  </span>{" "}
+                  we do not use or disclose sensitive personal information for
+                  purposes that require a right to limit under California law.
+                </li>
+                <li>
+                  <span className="font-semibold">Non-discrimination:</span> we
+                  will not discriminate against you for exercising your rights.
+                </li>
+              </ul>
+              <p className="text-neutral-300">
+                <span className="font-semibold">
+                  Financial incentive notice:
+                </span>{" "}
+                if you join our email list or subscribe to receive a discount
+                such as 20 percent off, we collect your email and marketing
+                preferences in exchange for the incentive. You can withdraw at
+                any time by unsubscribing or canceling the subscription. We
+                estimate the value of the incentive based on the cost of running
+                the program and expected revenue from increased engagement.
+              </p>
+            </div>
+
+            {/* 8 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                8. Children’s privacy
+              </h3>
+              <p className="text-neutral-300">
+                Our services are not intended for children under 13, and we do
+                not knowingly collect personal information from children under
+                13. If you believe a child provided information, contact us and
+                we will delete it.
+              </p>
+            </div>
+
+            {/* 9 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                9. Data retention
+              </h3>
+              <p className="text-neutral-300">
+                We keep personal information only as long as necessary for the
+                purposes described in this Policy, for legitimate business
+                needs, and as required by law. Typical retention periods
+                include:
+              </p>
+              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                <li>orders and tax records: up to 7 years,</li>
+                <li>
+                  customer support records: up to 3 years after resolution,
+                </li>
+                <li>
+                  marketing contact data: until you unsubscribe or your account
+                  becomes inactive,
+                </li>
+                <li>
+                  analytics data: per vendor defaults or a reasonable period we
+                  configure.
+                </li>
+              </ul>
+            </div>
+
+            {/* 10 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">10. Security</h3>
+              <p className="text-neutral-300">
+                We use administrative, technical, and physical safeguards
+                designed to protect personal information, including encryption
+                in transit, access controls, and vendor due diligence. No method
+                of transmission or storage is completely secure. You use the
+                services at your own risk.
+              </p>
+            </div>
+
+            {/* 11 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                11. International users
+              </h3>
+              <p className="text-neutral-300">
+                We are based in the United States. If you access the services
+                from outside the United States, your information may be
+                transferred to, stored in, or processed in the United States or
+                other countries that may not provide the same level of data
+                protection as your home jurisdiction. We will protect your
+                information as described in this Policy and as required by
+                applicable law.
+              </p>
+              <p className="text-neutral-300">
+                For EEA and UK users, our legal bases appear in Section 2. You
+                may contact your data protection authority if you believe your
+                rights have been infringed.
+              </p>
+            </div>
+
+            {/* 12 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                12. Third party sites and services
+              </h3>
+              <p className="text-neutral-300">
+                Our site may link to or integrate with third party websites,
+                apps, or services. Their privacy practices are governed by their
+                own policies. We are not responsible for third party privacy
+                practices.
+              </p>
+            </div>
+
+            {/* 13 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">13. Do Not Track</h3>
+              <p className="text-neutral-300">
+                Some browsers transmit Do Not Track signals. Our services do not
+                respond to Do Not Track. We will treat a legally required
+                browser-level opt-out signal such as Global Privacy Control as
+                described in Section 6.
+              </p>
+            </div>
+
+            {/* 14 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                14. Changes to this Policy
+              </h3>
+              <p className="text-neutral-300">
+                We may update this Policy from time to time. If we make material
+                changes, we will post the updated Policy and change the
+                effective date. Your continued use of the services after an
+                update means you accept the changes.
+              </p>
+            </div>
+
+            {/* 15 */}
+            <div className="space-y-2">
+              <h3 className="text-amber-300 font-semibold">
+                15. How to contact us
+              </h3>
+              <p className="text-neutral-300">
+                Liberty Lighthouse Supply Co., dba Old Ironsides Coffee
+                <br />
+                Email:{" "}
+                <a
+                  href="mailto:HQ@oldironsidescoffee.org"
+                  className="text-amber-300 hover:underline"
+                >
+                  HQ@oldironsidescoffee.org
+                </a>
+                <br />
+                Address: 6 Liberty Square #2564, Boston, MA 02109
+              </p>
+            </div>
+          </section>
+        )}
       </Container>
     </main>
   );
@@ -2607,38 +4249,24 @@ function CartPage() {
           <div>
             {/* Message centered, nudged upward toward banner */}
             <div className="mb-6 text-center relative">
-              <p className="text-sm md:text-base text-blue-300 relative -top-[50px]">
-                {(() => {
-                  const now = new Date();
-                  const day = now.getDay(); // 0=Sunday, 1=Monday...
-                  const nextMonday = new Date(now);
-                  nextMonday.setDate(now.getDate() + ((1 - day + 7) % 7 || 7));
+            <p className="text-sm md:text-base text-blue-300 relative -top-[50px]">
+  <>
+    All of our coffees are roasted fresh every Monday and ship
+    Tuesday/Wednesday. <br />
+    Your next eligible roast date is{" "}
+    <span className="font-semibold text-amber-300">
+      {nextRoastLabel()}
+    </span>
+    . <br />
+    Orders placed before 5 p.m. EST on Sunday make that week’s
+    roast; after that, they roll to the following week. <br />
+    Because we roast to order, your coffee won’t arrive
+    overnight like Amazon, but it will arrive fresh. <br />
+    Need it sooner? Leave a note at checkout or reply to your
+    confirmation email — we’ll do our best to accommodate.
+  </>
+</p>
 
-                  const roastDate = nextMonday.toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "short",
-                    day: "numeric",
-                  });
-
-                  return (
-                    <>
-                      All of our coffees are roasted fresh every Monday and ship
-                      Tuesday/Wednesday. <br />
-                      Your next eligible roast date is{" "}
-                      <span className="font-semibold text-amber-300">
-                        {roastDate}
-                      </span>
-                      . <br />
-                      Orders placed before 5 p.m. EST on Sunday make that week’s
-                      roast; after that, they roll to the following week. <br />
-                      Because we roast to order, your coffee won’t arrive
-                      overnight like Amazon, but it will arrive fresh. <br />
-                      Need it sooner? Leave a note at checkout or reply to your
-                      confirmation email — we’ll do our best to accommodate.
-                    </>
-                  );
-                })()}
-              </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -3291,16 +4919,17 @@ function ScrollToTop() {
 
   return null;
 }
-/* ================= Promo Subscribe Modal (global) ================= */
+// Drop-in replacement: removes the "X" and adds a centered bottom closer
+// styled like your buy box. Clicking it closes the banner.
+
 function PromoSubscribeModal() {
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState("");
-  const [done, setDone] = React.useState(false);
 
   React.useEffect(() => {
     const onOpen = () => {
+      if (localStorage.getItem("promo_subscribed") === "1") return;
       setOpen(true);
-      setDone(false);
       setEmail("");
     };
     window.addEventListener("promo-subscribe", onOpen as any);
@@ -3318,13 +4947,18 @@ function PromoSubscribeModal() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailOk(email)) return alert("Enter a valid email.");
-    setDone(true);
-    window.dispatchEvent(
-      new CustomEvent("flash", {
-        detail: "Welcome aboard — your 20% code is on the way.",
-      })
-    );
-    // TODO: integrate with your ESP endpoint
+
+    // mark as subscribed so the banner will not show again
+    localStorage.setItem("promo_subscribed", "1");
+
+    setOpen(false);
+    setTimeout(() => {
+      window.dispatchEvent(
+        new CustomEvent("flash", {
+          detail: "Welcome aboard - your 20% code is on the way.",
+        })
+      );
+    }, 75);
   };
 
   if (!open) return null;
@@ -3336,7 +4970,6 @@ function PromoSubscribeModal() {
       aria-modal="true"
       aria-label="Get 20% off your first order"
       onClick={(e) => {
-        // click backdrop to close
         if (e.target === e.currentTarget) setOpen(false);
       }}
     >
@@ -3344,64 +4977,98 @@ function PromoSubscribeModal() {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
       {/* Modal */}
-      <div className="relative z-10 w-[92vw] max-w-md">
-        <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-8 text-center">
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <Bell className="h-7 w-7 text-amber-300" />
-            <h3 className="text-2xl font-extrabold text-amber-300">
-              Ring That Bell
-            </h3>
+      <div className="relative z-10 w-[98vw] max-w-6xl">
+        <div className="relative rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 overflow-hidden">
+          {/* Body: LEFT hero, RIGHT content */}
+          <div className="grid md:grid-cols-[auto,1fr] items-center gap-0">
+            {/* LEFT: hero image in a bordered card (no crop) */}
+            <div className="hidden md:flex items-center justify-start pl-6 pr-0 py-6">
+              <div className="rounded-2xl ring-1 ring-amber-400 bg-neutral-900/60 p-2 shadow-2xl shadow-black/40">
+                <div className="w-[18rem] lg:w-[20rem] aspect-[4/5]">
+                  <img
+                    src="/captain-deck.png"
+                    alt="Hero"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT: centered content, snug to hero */}
+            <div className="py-8 md:py-10 pl-3 md:pl-4 pr-8 md:pr-10 md:-ml-8">
+              <div className="h-full w-full flex flex-col items-center justify-center text-center">
+                <div className="flex items-center justify-center gap-3 mb-3">
+                  {/* 50% larger icon and title */}
+                  <Bell className="h-12 w-12 text-amber-300" />
+                  <h3 className="font-extrabold text-amber-300 text-[2.5875rem] leading-tight">
+                    Ring That Bell
+                  </h3>
+                </div>
+
+                {/* Keep on one line on md+ */}
+                <p className="text-neutral-300 mb-5 text-lg md:text-xl md:whitespace-nowrap">
+                  Join the Fleet and save 20% on your first order
+                </p>
+
+                <div className="w-full max-w-lg mx-auto">
+                  <form
+                    onSubmit={onSubmit}
+                    className="flex gap-3 justify-center"
+                  >
+                    <input
+                      type="email"
+                      name="email"
+                      autoComplete="email"
+                      inputMode="email"
+                      autoCapitalize="off"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@domain.com"
+                      className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    />
+                    <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+                      Get Code
+                    </button>
+                  </form>
+
+                  {/* 25% larger + centered; cancel line below */}
+                  <div className="mt-3 text-[0.9375rem] text-neutral-400 text-center">
+                    Already a member?{" "}
+                    <Link
+                      to="/account/login"
+                      className="text-amber-300 hover:underline"
+                      onClick={() => {
+                        localStorage.setItem("promo_subscribed", "1");
+                        setOpen(false);
+                      }}
+                    >
+                      Sign in
+                    </Link>
+                  </div>
+
+                  <div className="mt-1 text-xs text-neutral-400 text-center">
+                    Cancel anytime
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="text-neutral-300 mb-5 text-lg md:text-xl">
-            Join the Fleet and save 20% on your first order
-          </p>
 
-          <form
-            onSubmit={onSubmit}
-            className="flex justify-center gap-3 max-w-md mx-auto"
-          >
-            <input
-              type="email"
-              name="email"
-              autoComplete="email"
-              inputMode="email"
-              autoCapitalize="off"
-              autoCorrect="off"
-              spellCheck={false}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@domain.com"
-              className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
-            />
-            <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
-              Get Code
-            </button>
-          </form>
-
-          <div className="mt-3 text-xs text-neutral-400">
-            Already a member?{" "}
-            <Link
-              to="/account/login"
-              className="text-amber-300 hover:underline"
+          {/* FOOTER: centered “closer” buy-box button */}
+          <div className="border-t border-neutral-800 p-4 md:p-5 flex justify-center bg-neutral-900/40">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="inline-flex items-center justify-center px-5 py-2 rounded-xl ring-1 ring-amber-400/60 
+                         text-amber-400 font-semibold text-base md:text-lg
+                         hover:bg-amber-400 hover:text-neutral-900 transition-all"
+              aria-label="Close banner"
             >
-              Sign in
-            </Link>
+              Tax me like it&apos;s 1773. Give my 20% to the Redcoats.
+            </button>
           </div>
-
-          {done && (
-            <p className="mt-3 text-sm text-emerald-400">
-              Welcome aboard — your discount is on the way.
-            </p>
-          )}
-
-          {/* Close button */}
-          <button
-            onClick={() => setOpen(false)}
-            className="absolute top-2 right-2 px-2 py-1 rounded-md text-neutral-300 hover:text-amber-300"
-            aria-label="Close modal"
-          >
-            ✕
-          </button>
         </div>
       </div>
     </div>
@@ -3415,6 +5082,9 @@ function Layout() {
   const isFleet = location.pathname.startsWith("/coffee");
   const isRoast = location.pathname.startsWith("/roast");
   const isOrigins = location.pathname.startsWith("/origins");
+  const isSupport =
+    location.pathname.startsWith("/legal") ||
+    location.pathname.startsWith("/contact");
   const panelRef = React.useRef<HTMLDivElement | null>(null);
 
   const [shrunk, setShrunk] = useState(true);
@@ -3424,6 +5094,11 @@ function Layout() {
   const [openMega, setOpenMega] = useState<
     null | "coffee" | "merch" | "origins"
   >(null);
+  // Close the mega panel whenever the route changes
+  useEffect(() => {
+    setOpenMega(null);
+  }, [location.pathname, location.search, location.hash]);
+
   // Inline subscribe state for Origins mega panel
   const [mmEmail, setMmEmail] = useState("");
   const [mmDone, setMmDone] = useState(false);
@@ -3731,6 +5406,7 @@ function Layout() {
                                 <Link
                                   key={`mega-roast-${card.id}`}
                                   to={`/roast/${card.slug}`}
+                                  onClick={() => setOpenMega(null)}
                                   className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
                                 >
                                   <img
@@ -3813,6 +5489,7 @@ function Layout() {
                           <div className="grid md:grid-cols-[auto,1fr,auto] gap-8 items-start">
                             <Link
                               to="/coffee"
+                              onClick={() => setOpenMega(null)}
                               className="group block rounded-2xl overflow-hidden ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition text-center justify-self-center md:justify-self-start w-40 sm:w-48 md:w-56"
                             >
                               <div className="aspect-[4/3] w-full overflow-hidden">
@@ -3834,6 +5511,7 @@ function Layout() {
                                 <li>
                                   <Link
                                     to="/origins#origins-roasting"
+                                    onClick={() => setOpenMega(null)}
                                     className="hover:text-amber-300"
                                   >
                                     Roasting Process
@@ -3918,7 +5596,9 @@ function Layout() {
             : isRoast
             ? "h-[160px] md:h-[190px]" // ROAST
             : isOrigins
-            ? "h-[180px] md:h-[210px]" // ORIGINS (new)
+            ? "h-[180px] md:h-[210px]" // ORIGINS
+            : isSupport
+            ? "h-[170px] md:h-[200px]" // SUPPORT (legal/contact)
             : "h-[140px] md:h-[160px]" // Default
         }
       />
@@ -3988,22 +5668,53 @@ function Layout() {
 
             {/* Contact */}
             <div>
-              <div className="text-neutral-400 font-semibold mb-2">Contact</div>
-              <ul className="space-y-1 text-neutral-300">
-                <li>HQ@oldironsidescoffee.org</li>
-                <li>6 Liberty Square #2564, Boston, MA 02109</li>
-              </ul>
-            </div>
+  <div className="text-neutral-400 font-semibold mb-2">Contact</div>
+  <ul className="space-y-1 text-neutral-300">
+    <li>
+      <a
+        href="mailto:HQ@oldironsidescoffee.org"
+        className="hover:text-amber-300"
+      >
+        HQ@oldironsidescoffee.org
+      </a>
+    </li>
+    <li>6 Liberty Square #2564, Boston, MA 02109</li>
+  </ul>
+</div>
+
+
 
             {/* Follow */}
             <div>
-              <div className="text-neutral-400 font-semibold mb-2">Follow</div>
-              <div className="flex gap-4 text-neutral-300">
-                <span>Instagram</span>
-                <span>YouTube</span>
-                <span>Facebook</span>
-              </div>
-            </div>
+  <div className="text-neutral-400 font-semibold mb-2">Follow</div>
+  <div className="flex gap-4 text-neutral-300">
+    <a
+      href="https://instagram.com/oldironsidescoffee"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="hover:text-amber-300"
+    >
+      Instagram
+    </a>
+    <a
+      href="https://youtube.com/@oldironsidescoffee"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="hover:text-amber-300"
+    >
+      YouTube
+    </a>
+    <a
+      href="https://facebook.com/oldironsidescoffee"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="hover:text-amber-300"
+    >
+      Facebook
+    </a>
+  </div>
+</div>
+
           </div>
 
           <div className="mt-8 text-xs text-neutral-500">

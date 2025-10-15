@@ -15,6 +15,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import { DateTime } from "luxon";
 
 /* ================= Flash Toast (global 2s banner) ================= */
 function FlashToast() {
@@ -318,7 +319,7 @@ const roastCards = [
     id: "oak-copper-coming-soon",
     slug: "oak-and-copper",
     title: "Oak & Copper",
-    subTitle: "Coming Soon",
+    subTitle: "Medium Roast",
     note: "Bourbon barrel-aged seasonal.",
     img: "oak-copper-deck.png",
     price: 0,
@@ -948,6 +949,7 @@ function HomePage() {
                         <span aria-hidden>⚓</span>
                         SHOP COFFEE NOW
                       </Link>
+                      <RoastCTAInfo />
                     </div>
                   </div>
                 </div>
@@ -1172,8 +1174,21 @@ function FleetStoryPage() {
 /* ================== ROAST DETAIL PAGE (CLEAN) ================== */
 function RoastDetailPage() {
   const { slug } = useParams();
+
+  // Roast-level anchors mapping
+  const roastLevelBySlug: Partial<Record<string, 1 | 2 | 3 | 4 | 5>> = {
+    flagship: 3,
+    "java-action": 3,
+    "oak-and-copper": 3,
+    "baptism-by-fire": 4,
+  };
+  
+  const anchorLevel = roastLevelBySlug[String(slug)];
+
   const card = roastCards.find((c) => c.slug === slug);
+
   if (!card) return <NotFoundPage />;
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -1808,17 +1823,79 @@ function RoastDetailPage() {
                   </div>
                 )}
 
-                {/* Java & Oak: keep amber desc below story area */}
-                {!isFlagship && !isBaptism && AMBER_DESC && (
-                  <>
+                            {/* Java story */}
+                            {isJava && (
+                  <div className="space-y-6">
+                    <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
+                      <p className="text-amber-300">
+                        USS Constitution vs HMS Java - December 29, 1812
+                      </p>
+                      <p>
+                        In the wake of HMS Guerriere’s defeat, the Royal Navy
+                        cast its hope upon the formidable HMS Java to restore British
+                        honor. Swift, heavily armed, and set upon the hunt for the
+                        USS Constitution, she was expected to sink the American
+                        frigate once and for all.
+                      </p>
+                      <p>
+                        Off Brazil’s sunlit coast, the sea became the battlefield.
+                        Broadsides clashed, cannons roared, masts splintered, and
+                        the resolve of a young nation was tested once again. Out
+                        from the smoke and chaos, scarred but victorious, Old
+                        Ironsides watched as the Java burned in fiery defeat.
+                      </p>
+                      <p>
+                        This medium roast carries that victory forward in every cup,
+                        with a smooth, full-bodied flavor and a finish as enduring
+                        as Old Ironsides herself.
+                      </p>
+                      <p>
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
+                      </p>
+                    </div>
+
+                    {/* AMBER DESCRIPTION (kept consistent with other roasts) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
                       {AMBER_DESC}
                     </div>
-                    <div className="h-4 md:h-6" />
-                  </>
+                    <div className="h-1 md:h-2" />
+                  </div>
+                )}
+                {/* Oak & Copper story */}
+                {isOak && (
+                  <div className="space-y-6">
+                    <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
+                      <p className="text-amber-300">
+                        Wrapped in Oak Above, Clad in Copper Below
+                      </p>
+                      <p>Her copper hull kissed the waves beneath,</p>
+                      <p>
+                        above, her timbers stood firm against the British cannon’s plea,
+                      </p>
+                      <p>
+                        her heart of oak and copper forged for battle on the open sea.
+                      </p>
+                      <p>Born for speed, for maneuver, and for glory,</p>
+                      <p>
+                        she cut the waves, mastered the cannons, and sailed her name into history.
+                      </p>
+                      <p>
+                        Aged in bourbon barrels, this roast honors the shipwrights that built her,
+                        with notes of smooth caramel, warm vanilla, and toasted oak.
+                      </p>
+                      <p>
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
+                      </p>
+                    </div>
+
+                    {/* AMBER DESCRIPTION (kept consistent with other roasts) */}
+                    <div className="mt-2 text-amber-300/90 text-base md:text-lg">
+                      {AMBER_DESC}
+                    </div>
+                    <div className="h-1 md:h-2" />
+                  </div>
                 )}
               </div>
-
               {/* Purchase mode selector */}
               <div className="mt-6 w-full max-w-[36rem]">
                 <div className="rounded-full border border-amber-400/60 bg-black/60 p-1 inline-flex shadow-md shadow-amber-400/10">
@@ -1970,11 +2047,13 @@ function RoastDetailPage() {
 
       {/* ===== PER-ROAST "THE CRAFT IN THE CUP" SECTION ===== */}
       <RoastCoffeeSection
-        slug={card.slug}
-        craftSubtitle={craftSubtitle}
-        reviewData={reviewData}
-        reviews={reviews}
-      />
+  slug={card.slug}
+  craftSubtitle={craftSubtitle}
+  reviewData={reviewData}
+  reviews={reviews}
+  anchorLevel={anchorLevel}
+/>
+
     </main>
   );
 }
@@ -1985,44 +2064,55 @@ function RoastCoffeeSection({
   craftSubtitle,
   reviewData,
   reviews,
+  anchorLevel,
 }: {
   slug: string;
   craftSubtitle: React.ReactNode | null;
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
+  anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
+
   switch (slug) {
     case "flagship":
       return (
         <TheCoffeeFlagship
-          craftSubtitle={craftSubtitle}
-          reviewData={reviewData}
-          reviews={reviews}
-        />
+        craftSubtitle={craftSubtitle}
+        reviewData={reviewData}
+        reviews={reviews}
+        anchorLevel={anchorLevel}
+      />
+      
       );
     case "baptism-by-fire":
       return (
         <TheCoffeeBaptism
-          craftSubtitle={craftSubtitle}
-          reviewData={reviewData}
-          reviews={reviews}
-        />
+        craftSubtitle={craftSubtitle}
+        reviewData={reviewData}
+        reviews={reviews}
+        anchorLevel={anchorLevel}
+      />
+      
       );
     case "java-action":
       return (
         <TheCoffeeJava
-          craftSubtitle={craftSubtitle}
-          reviewData={reviewData}
-          reviews={reviews}
-        />
+        craftSubtitle={craftSubtitle}
+        reviewData={reviewData}
+        reviews={reviews}
+        anchorLevel={anchorLevel}
+      />
+      
       );
     case "oak-and-copper":
       return (
         <TheCoffeeOak
-          craftSubtitle={craftSubtitle}
-          reviewData={reviewData}
-          reviews={reviews}
-        />
+        craftSubtitle={craftSubtitle}
+        reviewData={reviewData}
+        reviews={reviews}
+        anchorLevel={anchorLevel}
+      />
+      
       );
     default:
       return null;
@@ -2233,11 +2323,14 @@ function TheCoffeeFlagship({
   craftSubtitle,
   reviewData,
   reviews,
+  anchorLevel,
 }: {
   craftSubtitle: React.ReactNode | null;
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
+  anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
+
   const notes = ["Hazelnut", "Spice", "Cream"];
   const origins = ["El Salvador", "Indonesia"];
   const level: 1 | 2 | 3 | 4 | 5 = 3;
@@ -2245,6 +2338,8 @@ function TheCoffeeFlagship({
     origins.length === 2
       ? "grid-cols-[auto_auto]"
       : "grid-cols-[auto_auto_auto]";
+      const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
+
 
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
@@ -2272,6 +2367,7 @@ function TheCoffeeFlagship({
             </div>
 
             <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+            
 
             <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
               Bean Origins
@@ -2285,6 +2381,53 @@ function TheCoffeeFlagship({
             </div>
 
             <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+            {/* Roast Level — between Bean Origins divider and Reviews */}
+{typeof anchors === "number" && (
+  <div className="mt-4 flex items-center justify-start">
+   <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+  Roast Level
+</span>
+
+
+    <div className="relative flex items-center gap-3">
+      <div
+        className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+        bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
+        aria-hidden
+      />
+      {[1, 2, 3, 4, 5].map((n) => (
+        <div key={n} className="relative">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={
+              "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+              (n <= anchors
+                ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                : "text-neutral-600")
+            }
+            aria-hidden
+          >
+            <rect x="11" y="0" width="2" height="24" fill="currentColor" className="text-neutral-950" />
+            <circle cx="12" cy="4" r="1.6" fill="currentColor" className="text-neutral-950" />
+            <circle cx="12" cy="4" r="2" />
+            <path d="M12 6v11" />
+            <path d="M8 10h8" />
+            <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+            <path d="M7 17l-2 2" />
+            <path d="M17 17l2 2" />
+          </svg>
+          <span className="sr-only">{`Roast level ${n} of 5`}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
           </div>{" "}
           {/* end .max-w-[80ch] */}
         </Container>
@@ -2320,6 +2463,8 @@ function TheCoffeeBaptism({
     origins.length === 2
       ? "grid-cols-[auto_auto]"
       : "grid-cols-[auto_auto_auto]";
+      const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
+
 
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
@@ -2360,6 +2505,52 @@ function TheCoffeeBaptism({
             </div>
 
             <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+                  {/* Roast Level — between Bean Origins divider and Reviews */}
+{typeof anchors === "number" && (
+  <div className="mt-4 flex items-center justify-start">
+   <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+  Roast Level
+</span>
+
+
+    <div className="relative flex items-center gap-3">
+      <div
+        className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+        bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
+        aria-hidden
+      />
+      {[1, 2, 3, 4, 5].map((n) => (
+        <div key={n} className="relative">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={
+              "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+              (n <= anchors
+                ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                : "text-neutral-600")
+            }
+            aria-hidden
+          >
+            <rect x="11" y="0" width="2" height="24" fill="currentColor" className="text-neutral-950" />
+            <circle cx="12" cy="4" r="1.6" fill="currentColor" className="text-neutral-950" />
+            <circle cx="12" cy="4" r="2" />
+            <path d="M12 6v11" />
+            <path d="M8 10h8" />
+            <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+            <path d="M7 17l-2 2" />
+            <path d="M17 17l2 2" />
+          </svg>
+          <span className="sr-only">{`Roast level ${n} of 5`}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
           </div>{" "}
           {/* end .max-w-[80ch] */}
         </Container>
@@ -2388,13 +2579,15 @@ function TheCoffeeJava({
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
 }) {
-  const notes = ["Hazelnut", "Carmel", "Apple"];
+  const notes = ["Hazelnut", "Caramel", "Apple"];
   const origins = ["Guatemala", "Ethiopia", "Colombia"];
   const level: 1 | 2 | 3 | 4 | 5 = 3;
   const GRID =
     origins.length === 2
       ? "grid-cols-[auto_auto]"
       : "grid-cols-[auto_auto_auto]";
+      const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
+ 
 
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
@@ -2434,6 +2627,52 @@ function TheCoffeeJava({
               ))}
             </div>
             <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+                  {/* Roast Level — between Bean Origins divider and Reviews */}
+{typeof anchors === "number" && (
+  <div className="mt-4 flex items-center justify-start">
+   <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+  Roast Level
+</span>
+
+
+    <div className="relative flex items-center gap-3">
+      <div
+        className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+        bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
+        aria-hidden
+      />
+      {[1, 2, 3, 4, 5].map((n) => (
+        <div key={n} className="relative">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={
+              "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+              (n <= anchors
+                ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                : "text-neutral-600")
+            }
+            aria-hidden
+          >
+            <rect x="11" y="0" width="2" height="24" fill="currentColor" className="text-neutral-950" />
+            <circle cx="12" cy="4" r="1.6" fill="currentColor" className="text-neutral-950" />
+            <circle cx="12" cy="4" r="2" />
+            <path d="M12 6v11" />
+            <path d="M8 10h8" />
+            <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+            <path d="M7 17l-2 2" />
+            <path d="M17 17l2 2" />
+          </svg>
+          <span className="sr-only">{`Roast level ${n} of 5`}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
           </div>{" "}
           {/* end .max-w-[80ch] */}
         </Container>
@@ -2463,13 +2702,15 @@ function TheCoffeeOak({
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
 }) {
-  const notes = ["Dark Chocolate", "Caramel", "Toasted Oak"];
+  const notes = ["Warm Vanilla", "Caramel", "Toasted Oak"];
   const origins = ["Colombia", "Indonesia"];
   const level: 1 | 2 | 3 | 4 | 5 = 3;
   const GRID =
     origins.length === 2
       ? "grid-cols-[auto_auto]"
       : "grid-cols-[auto_auto_auto]";
+      const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
+
 
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
@@ -2510,6 +2751,52 @@ function TheCoffeeOak({
             </div>
 
             <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+                  {/* Roast Level — between Bean Origins divider and Reviews */}
+{typeof anchors === "number" && (
+  <div className="mt-4 flex items-center justify-start">
+   <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+  Roast Level
+</span>
+
+
+    <div className="relative flex items-center gap-3">
+      <div
+        className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+        bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
+        aria-hidden
+      />
+      {[1, 2, 3, 4, 5].map((n) => (
+        <div key={n} className="relative">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={
+              "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+              (n <= anchors
+                ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                : "text-neutral-600")
+            }
+            aria-hidden
+          >
+            <rect x="11" y="0" width="2" height="24" fill="currentColor" className="text-neutral-950" />
+            <circle cx="12" cy="4" r="1.6" fill="currentColor" className="text-neutral-950" />
+            <circle cx="12" cy="4" r="2" />
+            <path d="M12 6v11" />
+            <path d="M8 10h8" />
+            <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+            <path d="M7 17l-2 2" />
+            <path d="M17 17l2 2" />
+          </svg>
+          <span className="sr-only">{`Roast level ${n} of 5`}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
           </div>{" "}
           {/* end .max-w-[80ch] */}
         </Container>
@@ -2888,8 +3175,7 @@ function OriginsPage() {
                 <p className="text-neutral-300 leading-relaxed tracking-[0.02em] text-[1.4375rem] md:text-[1.725rem]">
                   Coffee is at its best in the first days after roasting when
                   the oils are alive, the aroma is full, and the flavor is at
-                  its peak. That is why we roast to order every Monday and
-                  Tuesday and ship Wednesday. <br /> <br />
+                  its peak. That is why we roast to order every Monday and ship Tuesday/Wednesday. <br /> <br />
                   No months-old roasted beans sitting on supermarket shelves or
                   in an Amazon warehouse. Our coffee is battle fresh, hitting
                   your cup at its prime exactly the way it was meant to be
@@ -4748,9 +5034,9 @@ function CartPage() {
         ) : (
           <div className="mt-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-10 text-center">
             <p className="text-neutral-400">
-              No items yet. Return to the{" "}
+              No items yet. Sail back to the{" "}
               <Link to="/store" className="text-amber-300 hover:underline">
-                Ship’s Store
+                Harbor
               </Link>
               .
             </p>
@@ -5377,9 +5663,10 @@ function PromoSubscribeModal() {
                       placeholder="you@domain.com"
                       className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
                     />
-                    <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
-                      Get Code
-                    </button>
+                   <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+  Join
+</button>
+
                   </form>
 
                   {/* 25% larger + centered; cancel line below */}
@@ -5418,6 +5705,48 @@ function PromoSubscribeModal() {
               Tax me like it&apos;s 1773. Give my 20% to the Redcoats.
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+function RoastAnchorsInline({ level = 3 }: { level?: 1|2|3|4|5 }) {
+  return (
+    <div className="mt-2">
+      <div className="relative flex items-center gap-3">
+        <div
+          className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+          bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
+          aria-hidden
+        />
+        <div className="relative flex items-center gap-2">
+          {[1,2,3,4,5].map((n) => (
+            <svg
+              key={n}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={
+                "h-6 w-6 align-middle select-none " +
+                (n <= level
+                  ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
+                  : "text-neutral-600")
+              }
+              aria-hidden
+            >
+              <rect x="11" y="0" width="2" height="24" fill="currentColor" className="text-neutral-950" />
+              <circle cx="12" cy="4" r="1.6" fill="currentColor" className="text-neutral-950" />
+              <circle cx="12" cy="4" r="2" />
+              <path d="M12 6v11" />
+              <path d="M8 10h8" />
+              <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+              <path d="M7 17l-2 2" />
+              <path d="M17 17l2 2" />
+            </svg>
+          ))}
         </div>
       </div>
     </div>
@@ -6076,6 +6405,133 @@ function Layout() {
       </footer>
     </div>
   );
+}
+// === Roast CTA helper (ET-aware) ===
+<RoastCTAInfo />;
+const ET_ZONE = "America/New_York";
+
+function formatEtDate(d: DateTime) {
+  return d.setZone(ET_ZONE).toFormat("EEEE, LLLL d"); // e.g., Monday, October 21
+}
+
+function useEtNow(tickMs = 45000) {
+  const [now, setNow] = React.useState(() => DateTime.now().setZone(ET_ZONE));
+  React.useEffect(() => {
+    const id = setInterval(
+      () => setNow(DateTime.now().setZone(ET_ZONE)),
+      tickMs
+    );
+    return () => clearInterval(id);
+  }, [tickMs]);
+  return now;
+}
+
+/**
+ * Decides which message to show and which Monday date to display.
+ * States:
+ * - countdown: Thu → Sun 4:59 PM ET (shows time to Sunday 5 PM ET)
+ * - closed: Sun 5:00 PM ET → Wed (roll Monday forward a week)
+ * - normal: everything else (Mon–Wed before countdown)
+ */
+function getRoastState(nowET: DateTime) {
+  const wd = nowET.weekday; // 1=Mon ... 7=Sun
+  const hour = nowET.hour;
+
+  // Candidate Monday that is >= today’s Monday if wd=Mon, otherwise the next Monday.
+  let candidateMonday = nowET.startOf("week");
+  // Monday of this ISO week (week starts Sunday in en-US)
+  if (wd > 1) candidateMonday = candidateMonday.plus({ weeks: 1 }); // Tue–Sun -> next Monday
+
+  const isCountdown =
+    wd === 4 || wd === 5 || wd === 6 || (wd === 7 && hour < 17); // Thu, Fri, Sat, Sun before 5pm
+
+  const isClosed = (wd === 7 && hour >= 17) || (wd >= 1 && wd <= 3); // Sun >= 5pm, Mon–Wed
+
+  // Cutoff for the *immediate* Monday is the prior Sunday 5pm ET
+  const cutoffForCandidate = candidateMonday.startOf("day").minus({ hours: 7 });
+
+  if (isClosed) {
+    // On Sun after 5pm or on Monday, push one more week so it reads the *next* Monday date.
+    const roastMonday =
+      wd === 7 || wd === 1
+        ? candidateMonday.plus({ weeks: 1 })
+        : candidateMonday; // Tue/Wed already points to next Monday
+    return {
+      state: "closed" as const,
+      roastMonday,
+      cutoff: null,
+    };
+  }
+
+  if (isCountdown) {
+    return {
+      state: "countdown" as const,
+      roastMonday: candidateMonday,
+      cutoff: cutoffForCandidate,
+    };
+  }
+
+  // Fallback: normal (Mon–Wed before countdown window)
+  return {
+    state: "normal" as const,
+    roastMonday: candidateMonday,
+    cutoff: null,
+  };
+}
+
+function RoastCTAInfo() {
+  const nowET = useEtNow(45000); // update every ~45s
+  const { state, roastMonday, cutoff } = getRoastState(nowET);
+
+  // For countdown, compute remaining to Sunday 5:00 PM ET (cutoff)
+  let left = "";
+  if (state === "countdown" && cutoff) {
+    const diff = cutoff.diff(nowET, ["days", "hours", "minutes"]).toObject();
+    const d = Math.max(0, Math.floor(diff.days ?? 0));
+    const h = Math.max(0, Math.floor(diff.hours ?? 0));
+    const m = Math.max(0, Math.floor(diff.minutes ?? 0));
+    left = `${d}d ${h}h ${m}m`;
+  }
+
+  const dateLabel = formatEtDate(roastMonday);
+
+  return (
+    <div className="mt-3 text-center leading-tight">
+      {state === "countdown" ? (
+        <div className="space-y-1">
+          <div className="text-xs md:text-sm text-neutral-300 font-medium">
+            Next batch roasts:{" "}
+            <span className="text-amber-300">{dateLabel}</span>{" "}
+            <span className="text-neutral-400">(ET)</span>
+          </div>
+          <div className="text-xs md:text-sm text-neutral-400">
+            Time left to make the next roast:{" "}
+            <span className="text-amber-300">{left}</span> — Secure your fresh order now.
+          </div>
+        </div>
+      ) : state === "closed" ? (
+        <div className="space-y-1">
+          <div className="text-xs md:text-sm text-neutral-300 font-medium">
+            Next batch roasts:{" "}
+            <span className="text-amber-300">{dateLabel}</span>{" "}
+            <span className="text-neutral-400"></span>
+          </div>
+          <div className="text-xs md:text-sm text-neutral-400">
+            Reserve your bag today.
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-1">
+         <div className="text-xs md:text-sm text-neutral-300">
+  <span className="font-medium">Next batch roasts:</span>{" "}
+  <span className="text-amber-300">{dateLabel}</span>{" "}
+  <span className="text-neutral-400">(ET)</span>
+</div>
+
+        </div>
+      )}
+    </div>
+  );  
 }
 
 /* ================= App Entrypoint ================= */

@@ -4,6 +4,7 @@ import React, {
   useContext,
   createContext,
   useEffect,
+  useRef,
 } from "react";
 import {
   MemoryRouter,
@@ -16,6 +17,15 @@ import {
   useParams,
 } from "react-router-dom";
 import { DateTime } from "luxon";
+// ---------- TESTIMONIAL REVIEWS (8 per page UI) ----------
+type Review = {
+  id: string;
+  name: string;
+  date: string; // "October 3, 2025"
+  rating: number; // 1..5
+  title?: string;
+  body: string;
+};
 
 /* ================= Flash Toast (global 2s banner) ================= */
 function FlashToast() {
@@ -378,16 +388,47 @@ function CartProvider({ children }: any) {
     [cart]
   );
   const add = (item: any, qty = 1) => {
+    // Make variants unique in the cart by encoding beanType into the stored id
+    const variantLabel =
+      item?.beanType === "whole"
+        ? "Whole Bean"
+        : item?.beanType === "ground"
+        ? "Ground"
+        : null;
+
+    const storedId = variantLabel
+      ? `${String(item.id)}__${item.beanType}`
+      : String(item.id);
+
+    // Ensure the title shows the bean type in the cart/checkout
+    const displayTitle =
+      variantLabel &&
+      typeof item.title === "string" &&
+      !item.title.includes("(")
+        ? `${item.title} (${variantLabel})`
+        : item.title;
+
+    const normalized = {
+      ...item,
+      id: storedId, // unique per bean type
+      sku: item.sku || storedId, // fallback SKU
+      title: displayTitle, // include bean type in title
+    };
+
     persist(
       (() => {
         const copy = [...cart];
-        const idx = copy.findIndex((x) => x.id === item.id);
-        if (idx >= 0) copy[idx] = { ...copy[idx], qty: copy[idx].qty + qty };
-        else copy.push({ ...item, qty });
+        const idx = copy.findIndex((x) => x.id === normalized.id);
+        if (idx >= 0) {
+          copy[idx] = { ...copy[idx], qty: copy[idx].qty + qty };
+        } else {
+          copy.push({ ...normalized, qty });
+        }
         return copy;
       })()
     );
   };
+
   const inc = (id: string) =>
     persist(cart.map((x: any) => (x.id === id ? { ...x, qty: x.qty + 1 } : x)));
   const dec = (id: string) =>
@@ -692,23 +733,6 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const isStore = location.pathname.startsWith("/store");
-  const { add } = useCart();
-  const [qtyById, setQtyById] = useState<Record<string, number>>({});
-  const getQty = (id: string) => Math.max(1, qtyById[id] ?? 1);
-  const setQty = (id: string, next: number) =>
-    setQtyById((q) => ({
-      ...q,
-      [id]: Math.max(1, Math.min(99, Math.trunc(next || 1))),
-    }));
-  const handleAdd = (card: any) => {
-    const qty = getQty(card.id);
-    add(card, qty);
-    window.dispatchEvent(
-      new CustomEvent("flash", {
-        detail: `${qty} × ${card.title} added to Chest`,
-      })
-    );
-  };
   return (
     <section
       id="fleet"
@@ -756,92 +780,45 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
 
         <div className="mt-2 grid md:grid-cols-4 gap-6">
           {roastCards.map((card) => (
-            <div
+            <Link
               key={card.id}
-              className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
+              to={`/roast/${card.slug}`}
+              aria-label={`${card.title} details`}
+              className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col"
             >
-              <Link to={`/roast/${card.slug}`}>
-                <img
-                  src={card.img}
-                  alt={card.title}
-                  className="h-72 sm:h-80 md:h-96 w-full object-cover"
-                />
-              </Link>
+              <img
+                src={card.img}
+                alt={card.title}
+                className="h-80 sm:h-96 md:h-[28rem] w-full object-cover"
+              />
 
               <div className="p-5 flex flex-col flex-1">
-                <div className="flex items-center justify-between">
-                  <h3
-                    className="text-3xl md:text-4xl font-extrabold text-amber-300"
-                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
-                  >
-                    {card.title}
-                  </h3>
-                </div>
-                <p className="text-base italic text-neutral-500">
+                <h3
+                  className="text-3xl md:text-4xl font-extrabold text-amber-300"
+                  style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                >
+                  {card.title}
+                </h3>
+                <p className="text-[1.15rem] italic text-neutral-500">
                   {card.subTitle}
                 </p>
-                <p className="text-sm text-neutral-400">{card.variant}</p>
-                <p className="text-sm text-neutral-400 flex-1">{card.note}</p>
+
+                <p className="text-lg text-neutral-400 flex-1">{card.note}</p>
+
                 <div className="mt-4 flex items-center gap-3">
-                  <div className="mt-4 flex items-center gap-3">
-                    <div className="text-sm text-neutral-300">
-                      {card.slug === "oak-and-copper" ? (
-                        <span className="text-neutral-500">—</span>
-                      ) : (
-                        fmt(card.price)
-                      )}
-                    </div>
-
-                    {card.canBuy ? (
-                      <>
-                        <div className="ml-auto inline-flex items-center rounded-lg border border-neutral-700">
-                          <button
-                            type="button"
-                            onClick={() => setQty(card.id, getQty(card.id) - 1)}
-                            className="px-2 py-1 hover:bg-neutral-800 rounded-l-lg"
-                            aria-label="Decrease quantity"
-                          >
-                            <Minus className="h-4 w-4" />
-                          </button>
-                          <input
-                            value={getQty(card.id)}
-                            onChange={(e) =>
-                              setQty(card.id, Number(e.target.value))
-                            }
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            className="w-12 text-center bg-neutral-900/70 py-1 text-sm outline-none"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setQty(card.id, getQty(card.id) + 1)}
-                            className="px-2 py-1 hover:bg-neutral-800 rounded-r-lg"
-                            aria-label="Increase quantity"
-                          >
-                            <Plus className="h-4 w-4" />
-                          </button>
-                        </div>
-
-                        <button
-                          onClick={() => handleAdd(card)}
-                          className="px-3 py-2 rounded-lg font-semibold bg-amber-400 text-neutral-900 hover:bg-amber-300"
-                          aria-label={`Add ${card.title} to Chest`}
-                        >
-                          Add to Chest
-                        </button>
-                      </>
-                    ) : (
-                      <Link
-                        to={`/roast/${card.slug}`}
-                        className="ml-auto px-3 py-2 rounded-lg font-semibold border border-neutral-700 hover:border-amber-400/50 hover:text-amber-300"
-                      >
-                        Reserve / Learn
-                      </Link>
+                  <div className="text-m font-semibold text-amber-400">
+                    From{" "}
+                    {fmt(
+                      card.slug === "oak-and-copper" ? 25 : card.price ?? 22
                     )}
+                  </div>
+
+                  <div className="text-m text-neutral-300">
+                    12 oz. Ground/Whole Bean
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </Container>
@@ -1182,13 +1159,12 @@ function RoastDetailPage() {
     "oak-and-copper": 3,
     "baptism-by-fire": 4,
   };
-  
+
   const anchorLevel = roastLevelBySlug[String(slug)];
 
   const card = roastCards.find((c) => c.slug === slug);
 
   if (!card) return <NotFoundPage />;
-
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -1237,11 +1213,10 @@ function RoastDetailPage() {
     ? "Our everyday staple, Flagship is a breakfast-style medium roast that is smooth, reliable, and never bitter. A roast you can reach for day after day."
     : isBaptism
     ? "Our darkest and most intense roast in the fleet — full-bodied and unyielding, with a finish so smooth you have to taste it to believe it."
-    : isJava
-    ? "Medium roast description placeholder — balanced, decisive finish. (Update copy)"
     : isOak
-    ? "Barrel-aged description placeholder — oak, vanilla, caramel notes. (Update copy)"
+    ? "Oak & Copper pours a steady bourbon barrel aged cup of caramel, warm vanilla, and toasted oak with a calm finish you’ll want every morning."
     : "";
+  
 
   // review data used for stars + counts beside the subtitle and in the histogram
   const reviewDataBySlug: Record<
@@ -1274,16 +1249,6 @@ function RoastDetailPage() {
     avg: 0,
     count: 0,
     breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
-  };
-
-  // ---------- TESTIMONIAL REVIEWS (8 per page UI) ----------
-  type Review = {
-    id: string;
-    name: string;
-    date: string; // "October 3, 2025"
-    rating: number; // 1..5
-    title?: string;
-    body: string;
   };
 
   const reviewListBySlug: Record<string, Review[]> = {
@@ -1640,18 +1605,71 @@ function RoastDetailPage() {
   const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("one");
   const [subEvery, setSubEvery] = useState<14 | 30 | 60>(30);
   const [qty, setQty] = useState(1);
-  const discounted = Number((card.price * 0.85).toFixed(2));
+  const [beanType, setBeanType] = useState<"" | "whole" | "ground">("");
+  const [showBeanError, setShowBeanError] = useState(false);
+
+  // Reset Bean Type selector whenever you navigate to a different roast page
+  useEffect(() => {
+    setBeanType(""); // back to "Choose..."
+    setShowBeanError(false);
+  }, [slug]);
+
+  // Mirror BUY BOX width/height so Bean Type box matches exactly
+  const buyBoxRef = useRef<HTMLDivElement>(null);
+  const [buyBoxDims, setBuyBoxDims] = useState<{ w: number; h: number }>({
+    w: 0,
+    h: 0,
+  });
+  const BEAN_BOX_RATIO = 0.83; // width = 83% of buy box
+
+  useEffect(() => {
+    const measure = () => {
+      if (!buyBoxRef.current) return;
+      const r = buyBoxRef.current.getBoundingClientRect();
+      setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
+    };
+    measure();
+    requestAnimationFrame(measure);
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+  const basePrice = isOak ? 25 : card.price; // Oak & Copper single price
+  const discounted = Number((basePrice * 0.85).toFixed(2));
 
   const addToChest = () => {
     const n = Math.max(1, Math.min(99, Math.trunc(qty || 1)));
     setQty(n);
-    add(
-      { ...card, price: purchaseMode === "sub" ? discounted : card.price },
-      n
-    );
+
+    if (!beanType) {
+      setShowBeanError(true);
+      window.dispatchEvent(
+        new CustomEvent("flash", { detail: "Please choose bean type." })
+      );
+      return;
+    }
+    setShowBeanError(false);
+
+    const variantLabel = beanType === "whole" ? "Whole Bean" : "Ground";
+    const variantId = `${card.slug}-12oz-${beanType}`;
+    const variantSku = `${card.slug}-12oz-${beanType}`;
+
+    // Build a variant-specific item so it does not merge with the other bean type
+    const itemToAdd = {
+      ...card,
+      id: variantId, // unique per variant so the cart keeps separate lines
+      sku: variantSku, // useful if your checkout uses SKU
+      title: `${card.title} (${variantLabel})`, // shows the type in cart/checkout
+      price: purchaseMode === "sub" ? discounted : basePrice,
+      beanType, // keep explicit for rendering
+      purchaseMode, // keep subscription state with the line item
+      subEvery: purchaseMode === "sub" ? subEvery : undefined,
+    };
+
+    add(itemToAdd, n);
+
     window.dispatchEvent(
       new CustomEvent("flash", {
-        detail: `${n} × ${card.title} added to Chest`,
+        detail: `${n} × ${card.title} (${variantLabel}) added to Chest`,
       })
     );
   };
@@ -1724,19 +1742,37 @@ function RoastDetailPage() {
 
                       {/* stars + count aligned to the right edge (REVIEWS ends at line end) */}
                       <div className="flex items-center gap-2 shrink-0">
-                        <div className="flex items-center gap-1">
-                          {[...Array(5)].map((_, i) => (
-                            <svg
-                              key={i}
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                              className="h-5 w-5 text-amber-400"
-                              aria-hidden
-                            >
-                              <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                            </svg>
-                          ))}
-                        </div>
+                      <a
+  href="#reviews"
+  onClick={(e) => {
+    e.preventDefault();
+    const el = document.getElementById("reviews");
+    if (!el) return;
+    const mobileOffset = 200;   // was 80
+    const desktopOffset = 260;  // was 100
+    const offset = window.innerWidth < 768 ? mobileOffset : desktopOffset;
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: "smooth" });
+  }}
+  
+  
+  className="group inline-flex items-center gap-1 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+  aria-label="Jump to customer reviews"
+  title="Jump to customer reviews"
+>
+  {[...Array(5)].map((_, i) => (
+    <svg
+      key={i}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="h-5 w-5 text-amber-400 group-hover:text-amber-300"
+      aria-hidden
+    >
+      <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+    </svg>
+  ))}
+</a>
+
                         <span className="text-xs md:text-sm text-neutral-400/80 tracking-wide whitespace-nowrap">
                           {reviewData.count} REVIEWS
                         </span>
@@ -1823,8 +1859,8 @@ function RoastDetailPage() {
                   </div>
                 )}
 
-                            {/* Java story */}
-                            {isJava && (
+                {/* Java story */}
+                {isJava && (
                   <div className="space-y-6">
                     <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
                       <p className="text-amber-300">
@@ -1832,25 +1868,27 @@ function RoastDetailPage() {
                       </p>
                       <p>
                         In the wake of HMS Guerriere’s defeat, the Royal Navy
-                        cast its hope upon the formidable HMS Java to restore British
-                        honor. Swift, heavily armed, and set upon the hunt for the
-                        USS Constitution, she was expected to sink the American
-                        frigate once and for all.
+                        cast its hope upon the formidable HMS Java to restore
+                        British honor. Swift, heavily armed, and set upon the
+                        hunt for the USS Constitution, she was expected to sink
+                        the American frigate once and for all.
                       </p>
                       <p>
-                        Off Brazil’s sunlit coast, the sea became the battlefield.
-                        Broadsides clashed, cannons roared, masts splintered, and
-                        the resolve of a young nation was tested once again. Out
-                        from the smoke and chaos, scarred but victorious, Old
-                        Ironsides watched as the Java burned in fiery defeat.
+                        Off Brazil’s sunlit coast, the sea became the
+                        battlefield. Broadsides clashed, cannons roared, masts
+                        splintered, and the resolve of a young nation was tested
+                        once again. Out from the smoke and chaos, scarred but
+                        victorious, Old Ironsides watched as the Java burned in
+                        fiery defeat.
                       </p>
                       <p>
-                        This medium roast carries that victory forward in every cup,
-                        with a smooth, full-bodied flavor and a finish as enduring
-                        as Old Ironsides herself.
+                        This medium roast carries that victory forward in every
+                        cup, with a smooth, full-bodied flavor and a finish as
+                        enduring as Old Ironsides herself.
                       </p>
                       <p>
-                        Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the
+                        Victory!
                       </p>
                     </div>
 
@@ -1868,27 +1906,28 @@ function RoastDetailPage() {
                       <p className="text-amber-300">
                         Wrapped in Oak Above, Clad in Copper Below
                       </p>
-                      <p>Her copper hull kissed the waves beneath,</p>
                       <p>
-                        above, her timbers stood firm against the British cannon’s plea,
+                        Her copper hull kissed the waves beneath, above, her
+                        timbers stood firm against the British cannon’s plea,
+                        her heart of oak and copper forged for battle on the
+                        open sea.
                       </p>
                       <p>
-                        her heart of oak and copper forged for battle on the open sea.
-                      </p>
-                      <p>Born for speed, for maneuver, and for glory,</p>
-                      <p>
-                        she cut the waves, mastered the cannons, and sailed her name into history.
+                        Born for speed, for maneuver, and for glory, she cut the
+                        waves, mastered the cannons, and sailed her name into
+                        history.
                       </p>
                       <p>
-                        Aged in bourbon barrels, this roast honors the shipwrights that built her,
-                        with notes of smooth caramel, warm vanilla, and toasted oak.
+                        Aged in bourbon barrels, this roast honors the
+                        shipwrights that built her, with notes of smooth
+                        caramel, warm vanilla, and toasted oak.
                       </p>
                       <p>
-                        Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the
+                        Victory!
                       </p>
                     </div>
 
-                    {/* AMBER DESCRIPTION (kept consistent with other roasts) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
                       {AMBER_DESC}
                     </div>
@@ -1931,93 +1970,162 @@ function RoastDetailPage() {
               {/* Subscription frequency */}
               {purchaseMode === "sub" && (
                 <div className="mt-3 mb-4 w-full max-w-[36rem]">
-                  <div className="text-sm text-neutral-300 mb-2">
-                    Deliver every
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {[14, 30, 60].map((d) => (
-                      <button
-                        key={d}
-                        type="button"
-                        onClick={() => setSubEvery(d as 14 | 30 | 60)}
-                        className={
-                          "px-3 py-1.5 rounded-lg border text-sm transition " +
-                          (subEvery === d
-                            ? "border-amber-400/70 text-amber-300 bg-black"
-                            : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
-                        }
-                        aria-pressed={subEvery === d}
-                      >
-                        {d} days
-                      </button>
-                    ))}
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="text-[1.15rem] text-amber-300 font-medium">
+                      Deliver every:
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {[14, 30, 60].map((d) => (
+                        <button
+                          key={d}
+                          type="button"
+                          onClick={() => setSubEvery(d as 14 | 30 | 60)}
+                          className={
+                            "px-3 py-1.5 rounded-lg border text-sm transition " +
+                            (subEvery === d
+                              ? "border-amber-400/70 text-amber-300 bg-black"
+                              : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
+                          }
+                          aria-pressed={subEvery === d}
+                        >
+                          {d} days
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
 
               {/* Add to Chest */}
-              {card.canBuy ? (
-                <div className="mt-10 w-full max-w-[36rem]">
-                  <div className="inline-flex items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-3 px-4 shadow-md shadow-amber-400/10">
-                    <div className="inline-flex items-center rounded-lg border border-neutral-700">
-                      <button
-                        type="button"
-                        onClick={() => setQty((q) => Math.max(1, (q || 1) - 1))}
-                        className="px-2 py-1 hover:bg-neutral-800 rounded-l-lg"
-                        aria-label="Decrease quantity"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </button>
-                      <input
-                        value={qty}
-                        onChange={(e) => setQty(Number(e.target.value))}
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        className="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setQty((q) => Math.min(99, (q || 1) + 1))
-                        }
-                        className="px-2 py-1 hover:bg-neutral-800 rounded-r-lg"
-                        aria-label="Increase quantity"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
+              {(card.canBuy || isOak) && (
+                // allow two full-size boxes side-by-side without shrinking the original buy box
+                <div className="mt-10 w-auto">
+                  <div className="flex items-stretch gap-4">
+                    {/* === BUY BOX — UNTOUCHED, just add ref to read width/height === */}
+                    <div
+                      ref={buyBoxRef}
+                      className="inline-flex items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-3 px-4 shadow-md shadow-amber-400/10"
+                    >
+                      {/* Price on the LEFT (matches Harbor) */}
+                      <div className="text-sm text-neutral-300">
+                        {purchaseMode === "sub" ? (
+                          <>
+                            <span className="line-through text-amber-300/80 mr-1">
+                              {fmt(basePrice)}
+                            </span>
+                            <span className="font-semibold text-amber-300">
+                              {fmt(discounted)}
+                            </span>
+                            <span className="text-xs text-neutral-400 ml-1">
+                              / bag
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="font-semibold text-amber-300">
+                              {fmt(basePrice)}
+                            </span>
+                            <span className="text-xs text-neutral-400 ml-1">
+                              / bag
+                            </span>
+                          </>
+                        )}
+                      </div>
+
+                      {/* Quantity + Add grouped and right-aligned (like Harbor) */}
+                      <div className="ml-auto inline-flex items-center gap-4">
+                        <div className="inline-flex items-center rounded-lg border border-neutral-700">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setQty((q) => Math.max(1, (q || 1) - 1))
+                            }
+                            className="px-2 py-1 hover:bg-neutral-800 rounded-l-lg"
+                            aria-label="Decrease quantity"
+                          >
+                            <Minus className="h-4 w-4" />
+                          </button>
+                          <input
+                            value={qty}
+                            onChange={(e) => setQty(Number(e.target.value))}
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            className="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setQty((q) => Math.min(99, (q || 1) + 1))
+                            }
+                            className="px-2 py-1 hover:bg-neutral-800 rounded-r-lg"
+                            aria-label="Increase quantity"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </button>
+                        </div>
+
+                        <button
+                          onClick={addToChest}
+                          className="px-6 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
+                          aria-label={`Add ${card.title} to Chest`}
+                        >
+                          Add to Chest
+                        </button>
+                      </div>
                     </div>
 
-                    <button
-                      onClick={addToChest}
-                      className="px-6 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
-                      aria-label={`Add ${card.title} to Chest`}
+                    {/* === BEAN TYPE BOX — exact same height and border thickness; width = 83% of buy box === */}
+                    <div
+                      className={
+                        "group inline-flex items-center justify-between gap-4 rounded-xl p-3 px-4 shadow-md transition " +
+                        (showBeanError
+                          ? "border border-red-500 ring-2 ring-red-500 animate-pulse"
+                          : "border border-amber-400/60 bg-black/70 shadow-amber-400/10 hover:border-amber-400/80 hover:shadow-[0_0_0_2px_rgba(251,191,36,0.25)]")
+                      }
+                      style={{
+                        minHeight: buyBoxDims.h
+                          ? `${buyBoxDims.h}px`
+                          : undefined,
+                        height: buyBoxDims.h ? `${buyBoxDims.h}px` : undefined,
+                        width: buyBoxDims.w
+                          ? `${Math.round(buyBoxDims.w * 0.83)}px`
+                          : undefined,
+                      }}
                     >
-                      Add to Chest
-                    </button>
+                      <div className="text-sm text-neutral-300">
+                        <div className="font-semibold text-amber-300">
+                          Bean Type
+                        </div>
+                        <div className="text-xs text-neutral-400 mt-0.5">
+                          12oz bags
+                        </div>
+                      </div>
 
-                    <div className="ml-2 text-sm text-neutral-300">
-                      {purchaseMode === "sub" ? (
-                        <>
-                          <span className="line-through text-amber-300/80 mr-1">
-                            {fmt(card.price)}
-                          </span>
-                          <span className="font-semibold text-amber-300">
-                            {fmt(discounted)}
-                          </span>
-                          <span className="text-xs text-neutral-400 ml-1">
-                            / bag
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="font-semibold text-amber-300">
-                            {fmt(card.price)}
-                          </span>
-                          <span className="text-xs text-neutral-400 ml-1">
-                            / bag
-                          </span>
-                        </>
-                      )}
+                      <label htmlFor="beanTypeSelect" className="sr-only">
+                        Bean Type
+                      </label>
+                      <select
+                        id="beanTypeSelect"
+                        value={beanType}
+                        onChange={(e) => {
+                          setBeanType(
+                            e.target.value as "" | "whole" | "ground"
+                          );
+                          setShowBeanError(false);
+                        }}
+                        className={
+                          "min-w-[12rem] rounded-lg border px-3 py-2 text-sm outline-none bg-black/70 " +
+                          (beanType
+                            ? "border-amber-400/70 text-amber-300"
+                            : "border-neutral-700 text-neutral-400") +
+                          " focus-visible:ring-2 focus-visible:ring-amber-400"
+                        }
+                        aria-invalid={showBeanError || undefined}
+                      >
+                        <option value="">Choose...</option>
+                        <option value="whole">12oz Whole Bean</option>
+                        <option value="ground">12oz Ground</option>
+                      </select>
                     </div>
                   </div>
 
@@ -2025,16 +2133,6 @@ function RoastDetailPage() {
                     <span className="text-amber-300 font-semibold">
                       3+ bags ship free
                     </span>{" "}
-                  </div>
-                </div>
-              ) : (
-                <div className="pt-2">
-                  <div className="text-sm text-neutral-300 mb-8">
-                    {card.variant}
-                  </div>
-                  <div className="text-neutral-400">
-                    Coming soon. Join the Fleet on the Store page to get
-                    notified.
                   </div>
                 </div>
               )}
@@ -2047,13 +2145,12 @@ function RoastDetailPage() {
 
       {/* ===== PER-ROAST "THE CRAFT IN THE CUP" SECTION ===== */}
       <RoastCoffeeSection
-  slug={card.slug}
-  craftSubtitle={craftSubtitle}
-  reviewData={reviewData}
-  reviews={reviews}
-  anchorLevel={anchorLevel}
-/>
-
+        slug={card.slug}
+        craftSubtitle={craftSubtitle}
+        reviewData={reviewData}
+        reviews={reviews}
+        anchorLevel={anchorLevel}
+      />
     </main>
   );
 }
@@ -2072,47 +2169,42 @@ function RoastCoffeeSection({
   reviews: Review[];
   anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
-
   switch (slug) {
     case "flagship":
       return (
         <TheCoffeeFlagship
-        craftSubtitle={craftSubtitle}
-        reviewData={reviewData}
-        reviews={reviews}
-        anchorLevel={anchorLevel}
-      />
-      
+          craftSubtitle={craftSubtitle}
+          reviewData={reviewData}
+          reviews={reviews}
+          anchorLevel={anchorLevel}
+        />
       );
     case "baptism-by-fire":
       return (
         <TheCoffeeBaptism
-        craftSubtitle={craftSubtitle}
-        reviewData={reviewData}
-        reviews={reviews}
-        anchorLevel={anchorLevel}
-      />
-      
+          craftSubtitle={craftSubtitle}
+          reviewData={reviewData}
+          reviews={reviews}
+          anchorLevel={anchorLevel}
+        />
       );
     case "java-action":
       return (
         <TheCoffeeJava
-        craftSubtitle={craftSubtitle}
-        reviewData={reviewData}
-        reviews={reviews}
-        anchorLevel={anchorLevel}
-      />
-      
+          craftSubtitle={craftSubtitle}
+          reviewData={reviewData}
+          reviews={reviews}
+          anchorLevel={anchorLevel}
+        />
       );
     case "oak-and-copper":
       return (
         <TheCoffeeOak
-        craftSubtitle={craftSubtitle}
-        reviewData={reviewData}
-        reviews={reviews}
-        anchorLevel={anchorLevel}
-      />
-      
+          craftSubtitle={craftSubtitle}
+          reviewData={reviewData}
+          reviews={reviews}
+          anchorLevel={anchorLevel}
+        />
       );
     default:
       return null;
@@ -2165,10 +2257,12 @@ function RoastLevelAnchors({
   level,
   reviewData,
   reviews,
+  roastTitle,
 }: {
   level: 1 | 2 | 3 | 4 | 5;
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
+  roastTitle: string;
 }) {
   const total = reviewData?.count || 0;
   const b = reviewData?.breakdown || { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
@@ -2180,14 +2274,65 @@ function RoastLevelAnchors({
   const start = (page - 1) * pageSize;
   const pageItems = (reviews || []).slice(start, start + pageSize);
 
+  // NEW: expandable tiles + write modal
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const toggleExpand = (id: string) =>
+    setExpandedId((prev) => (prev === id ? null : id));
+  
+  
+  const [showModal, setShowModal] = useState(false);
+  const [rating, setRating] = useState<number>(0);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const submitReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (rating < 1) {
+      window.dispatchEvent(
+        new CustomEvent("flash", { detail: "Please select a star rating." })
+      );
+      return;
+    }
+    // TODO: wire to your backend/provider
+    window.dispatchEvent(
+      new CustomEvent("flash", { detail: "Thanks for your review!" })
+    );
+    setShowModal(false);
+    setRating(0);
+    setTitle("");
+    setBody("");
+    setName("");
+    setEmail("");
+  };
+  
+  
+
   return (
-    <section className="text-center max-w-[980px] mx-auto px-4">
-      <h2 className="text-xl md:text-2xl font-bold text-amber-300 mb-3">
-        CUSTOMER REVIEWS
-      </h2>
+    <section id="reviews" className="text-center max-w-[980px] mx-auto px-4">
+
+
+
+      {/* Title + Write box centered over histogram width */}
+      <div className="relative mx-auto max-w-[780px] mb-4">
+  <h2 className="text-xl md:text-2xl font-bold text-amber-300 text-center m-0">
+    CUSTOMER REVIEWS
+  </h2>
+  <button
+    type="button"
+    onClick={() => setShowModal(true)}
+    className="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-2 rounded-lg text-sm md:text-base font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
+    aria-label="Write a review"
+  >
+    Write a Review
+  </button>
+</div>
+
 
       {/* Overall stars + count */}
-      <div className="flex items-center justify-center gap-2 mb-2">
+      <div className="mt-2 md:mt-3 flex items-center justify-center gap-2 mb-2">
+
         <div className="flex items-center gap-1">
           {[...Array(5)].map((_, i) => (
             <svg
@@ -2222,44 +2367,118 @@ function RoastLevelAnchors({
         ))}
       </div>
 
-      {/* Testimonials grid (8 per page) */}
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {pageItems.map((r) => (
-          <article
+      {/* Testimonials grid (8 per page) — tiles clickable to expand */}
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-visible">
+
+        {pageItems.map((r) => {
+          const isOpen = expandedId === r.id;
+          return (
+            <article
             key={r.id}
-            className="text-left rounded-lg border border-amber-400/30 bg-black/50 p-4 shadow-sm shadow-amber-400/10"
+            role="button"
+            tabIndex={0}
+            onClick={() => { if (!isOpen) toggleExpand(r.id); }}
+            onKeyDown={(e) => { if (!isOpen && (e.key === "Enter" || e.key === " ")) toggleExpand(r.id); }}
+            
+            aria-expanded={isOpen}
+            className={
+              "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-4 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
+              (isOpen ? "z-[70]" : "")
+            }
           >
+          
+            {/* Compact tile content (preview) */}
             <div className="flex items-center justify-between">
               <div className="font-semibold text-amber-300">{r.name}</div>
               <div className="text-xs text-neutral-400">{r.date}</div>
             </div>
+          
             <div className="mt-1 flex items-center gap-1">
               {[...Array(5)].map((_, i) => (
                 <svg
                   key={i}
                   viewBox="0 0 24 24"
                   fill={i < r.rating ? "currentColor" : "none"}
-                  className={
-                    "h-4 w-4 " +
-                    (i < r.rating ? "text-amber-400" : "text-neutral-700")
-                  }
+                  className={"h-4 w-4 " + (i < r.rating ? "text-amber-400" : "text-neutral-700")}
                   stroke="currentColor"
                 >
                   <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
                 </svg>
               ))}
             </div>
+          
             {r.title && (
               <div className="mt-2 text-sm font-semibold text-neutral-200">
                 {r.title}
               </div>
             )}
-            <p className="mt-1 text-sm text-neutral-300 leading-relaxed">
+          
+            <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
               {r.body}
             </p>
+          
+            {/* Verified badge at bottom */}
+            <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
+              Verified Buyer
+            </div>
+          
+            {/* Pop-out banner overlay on top of this tile */}
+            {isOpen && (
+              <div
+                className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
+                style={{ minHeight: 280 }} /* ~2x the tile height */
+                onClick={() => toggleExpand(r.id)}
+              >
+               
+          
+                {/* Full review content */}
+                <div className="flex items-center justify-between">
+                  <div className="font-semibold text-amber-300">{r.name}</div>
+                  <div className="text-xs text-neutral-400">{r.date}</div>
+                </div>
+          
+                <div className="mt-1 flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      viewBox="0 0 24 24"
+                      fill={i < r.rating ? "currentColor" : "none"}
+                      className={"h-4 w-4 " + (i < r.rating ? "text-amber-400" : "text-neutral-700")}
+                      stroke="currentColor"
+                    >
+                      <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                    </svg>
+                  ))}
+                </div>
+          
+                {r.title && (
+                  <div className="mt-2 text-sm font-semibold text-neutral-200">
+                    {r.title}
+                  </div>
+                )}
+          
+                <div className="mt-2 text-sm text-neutral-300 leading-relaxed overflow-auto max-h-40">
+                  {r.body}
+                </div>
+          
+                <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
+                  Verified Buyer
+                </div>
+              </div>
+            )}
           </article>
-        ))}
+
+     
+          );
+        })}
       </div>
+      {expandedId && (
+  <div
+    className="fixed inset-0 z-40 bg-black/40"
+    onClick={() => toggleExpand(expandedId)}
+    aria-hidden
+  />
+)}
 
       {/* Pager */}
       {pageCount > 1 && (
@@ -2314,9 +2533,145 @@ function RoastLevelAnchors({
           </button>
         </div>
       )}
+
+      {/* WRITE A REVIEW MODAL */}
+      {showModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="absolute inset-0 bg-black/70"
+            onClick={() => setShowModal(false)}
+            aria-hidden
+          />
+          <div className="relative z-10 w-[92vw] max-w-[720px] rounded-xl border border-amber-400/60 bg-neutral-950 p-5 md:p-6 shadow-2xl shadow-amber-500/20 text-left">
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-lg md:text-xl font-bold text-amber-300">
+                WRITE A REVIEW
+              </div>
+              <button
+                className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-neutral-700 hover:border-amber-400/60"
+                onClick={() => setShowModal(false)}
+                aria-label="Close write a review"
+              >
+                ×
+              </button>
+            </div>
+
+            <form onSubmit={submitReview} className="space-y-3">
+              {/* SCORE */}
+              <div className="space-y-1">
+              <div className="text-sm text-neutral-300">
+  SCORE* {rating < 1 && <span className="text-red-400 text-xs ml-1">required</span>}
+</div>
+
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setRating(n)}
+                      className="p-1"
+                      aria-label={`Rate ${n} star${n > 1 ? "s" : ""}`}
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill={n <= rating ? "currentColor" : "none"}
+                        className={
+                          "h-6 w-6 " +
+                          (n <= rating ? "text-amber-400" : "text-neutral-600")
+                        }
+                        stroke="currentColor"
+                      >
+                        <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* TITLE */}
+              <div>
+                <div className="text-sm text-neutral-300 mb-1">TITLE*</div>
+                <input
+                  className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                  placeholder="Give your review a title"
+                />
+              </div>
+
+              {/* CONTENT */}
+              <div>
+                <div className="text-sm text-neutral-300 mb-1">
+                  What did you think of {roastTitle}?*
+                </div>
+                <textarea
+                  className="w-full min-h-[120px] rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  required
+                  placeholder="Write your comments here"
+                />
+              </div>
+
+              {/* NAME / EMAIL */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <div className="text-sm text-neutral-300 mb-1">NAME*</div>
+                  <input
+                    className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    placeholder="Enter your name"
+                  />
+                </div>
+                <div>
+                  <div className="text-sm text-neutral-300 mb-1">EMAIL*</div>
+                  <input
+                    type="email"
+                    className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="Enter your email"
+                  />
+                </div>
+              </div>
+
+              {/* POST */}
+              <div className="pt-2">
+              <button
+  type="submit"
+  disabled={rating < 1 || !title || !body || !name || !email}
+  className={
+    "w-full px-4 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
+    (rating < 1 || !title || !body || !name || !email
+      ? "opacity-60 cursor-not-allowed"
+      : "hover:bg-amber-400 hover:text-neutral-900")
+  }
+>
+  POST
+</button>
+
+              </div>
+
+              {/* Verified badge on modal too */}
+              <div className="text-center text-[11px] uppercase tracking-wide text-amber-300/90 mt-2">
+                Verified Buyer
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
+
 
 /* ================== PER-ROAST SECTIONS ================== */
 function TheCoffeeFlagship({
@@ -2330,7 +2685,6 @@ function TheCoffeeFlagship({
   reviews: Review[];
   anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
-
   const notes = ["Hazelnut", "Spice", "Cream"];
   const origins = ["El Salvador", "Indonesia"];
   const level: 1 | 2 | 3 | 4 | 5 = 3;
@@ -2338,8 +2692,7 @@ function TheCoffeeFlagship({
     origins.length === 2
       ? "grid-cols-[auto_auto]"
       : "grid-cols-[auto_auto_auto]";
-      const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
-
+  const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
 
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
@@ -2355,9 +2708,9 @@ function TheCoffeeFlagship({
                 {craftSubtitle}
               </div>
             )}
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
 
-            <div className="mt-3">
+            <div className="mt-1">
               <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
                 Signature Notes
               </h3>
@@ -2366,8 +2719,7 @@ function TheCoffeeFlagship({
               </div>
             </div>
 
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
-            
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
 
             <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
               Bean Origins
@@ -2380,54 +2732,65 @@ function TheCoffeeFlagship({
               ))}
             </div>
 
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
             {/* Roast Level — between Bean Origins divider and Reviews */}
-{typeof anchors === "number" && (
-  <div className="mt-4 flex items-center justify-start">
-   <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
-  Roast Level
-</span>
+            {typeof anchors === "number" && (
+              <div className="mt-4 flex items-center justify-start">
+                <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+                  Roast Level
+                </span>
 
-
-    <div className="relative flex items-center gap-3">
-      <div
-        className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+                <div className="relative flex items-center gap-3">
+                  <div
+                    className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
         bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
-        aria-hidden
-      />
-      {[1, 2, 3, 4, 5].map((n) => (
-        <div key={n} className="relative">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={
-              "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
-              (n <= anchors
-                ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                : "text-neutral-600")
-            }
-            aria-hidden
-          >
-            <rect x="11" y="0" width="2" height="24" fill="currentColor" className="text-neutral-950" />
-            <circle cx="12" cy="4" r="1.6" fill="currentColor" className="text-neutral-950" />
-            <circle cx="12" cy="4" r="2" />
-            <path d="M12 6v11" />
-            <path d="M8 10h8" />
-            <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-            <path d="M7 17l-2 2" />
-            <path d="M17 17l2 2" />
-          </svg>
-          <span className="sr-only">{`Roast level ${n} of 5`}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
-
+                    aria-hidden
+                  />
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <div key={n} className="relative">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={
+                          "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+                          (n <= anchors
+                            ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                            : "text-neutral-600")
+                        }
+                        aria-hidden
+                      >
+                        <rect
+                          x="11"
+                          y="0"
+                          width="2"
+                          height="24"
+                          fill="currentColor"
+                          className="text-neutral-950"
+                        />
+                        <circle
+                          cx="12"
+                          cy="4"
+                          r="1.6"
+                          fill="currentColor"
+                          className="text-neutral-950"
+                        />
+                        <circle cx="12" cy="4" r="2" />
+                        <path d="M12 6v11" />
+                        <path d="M8 10h8" />
+                        <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+                        <path d="M7 17l-2 2" />
+                        <path d="M17 17l2 2" />
+                      </svg>
+                      <span className="sr-only">{`Roast level ${n} of 5`}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>{" "}
           {/* end .max-w-[80ch] */}
         </Container>
@@ -2436,11 +2799,13 @@ function TheCoffeeFlagship({
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-            <RoastLevelAnchors
-              level={level}
-              reviewData={reviewData}
-              reviews={reviews}
-            />
+          <RoastLevelAnchors
+  level={level}
+  reviewData={reviewData}
+  reviews={reviews}
+  roastTitle="Flagship"
+/>
+
           </Container>
         </div>
       </div>
@@ -2451,10 +2816,12 @@ function TheCoffeeBaptism({
   craftSubtitle,
   reviewData,
   reviews,
+  anchorLevel,
 }: {
   craftSubtitle: React.ReactNode | null;
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
+  anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
   const notes = ["Dark chocolate", "Molasses", "Smoke"];
   const origins = ["Indonesia", "Colombia"];
@@ -2463,8 +2830,7 @@ function TheCoffeeBaptism({
     origins.length === 2
       ? "grid-cols-[auto_auto]"
       : "grid-cols-[auto_auto_auto]";
-      const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
-
+  const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
 
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
@@ -2480,9 +2846,9 @@ function TheCoffeeBaptism({
                 {craftSubtitle}
               </div>
             )}
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
 
-            <div className="mt-3">
+            <div className="mt-1">
               <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
                 Signature Notes
               </h3>
@@ -2491,7 +2857,7 @@ function TheCoffeeBaptism({
               </div>
             </div>
 
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
 
             <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
               Bean Origins
@@ -2504,53 +2870,65 @@ function TheCoffeeBaptism({
               ))}
             </div>
 
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
-                  {/* Roast Level — between Bean Origins divider and Reviews */}
-{typeof anchors === "number" && (
-  <div className="mt-4 flex items-center justify-start">
-   <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
-  Roast Level
-</span>
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
+            {/* Roast Level — between Bean Origins divider and Reviews */}
+            {typeof anchors === "number" && (
+              <div className="mt-4 flex items-center justify-start">
+                <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+                  Roast Level
+                </span>
 
-
-    <div className="relative flex items-center gap-3">
-      <div
-        className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+                <div className="relative flex items-center gap-3">
+                  <div
+                    className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
         bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
-        aria-hidden
-      />
-      {[1, 2, 3, 4, 5].map((n) => (
-        <div key={n} className="relative">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={
-              "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
-              (n <= anchors
-                ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                : "text-neutral-600")
-            }
-            aria-hidden
-          >
-            <rect x="11" y="0" width="2" height="24" fill="currentColor" className="text-neutral-950" />
-            <circle cx="12" cy="4" r="1.6" fill="currentColor" className="text-neutral-950" />
-            <circle cx="12" cy="4" r="2" />
-            <path d="M12 6v11" />
-            <path d="M8 10h8" />
-            <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-            <path d="M7 17l-2 2" />
-            <path d="M17 17l2 2" />
-          </svg>
-          <span className="sr-only">{`Roast level ${n} of 5`}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
+                    aria-hidden
+                  />
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <div key={n} className="relative">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={
+                          "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+                          (n <= anchors
+                            ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                            : "text-neutral-600")
+                        }
+                        aria-hidden
+                      >
+                        <rect
+                          x="11"
+                          y="0"
+                          width="2"
+                          height="24"
+                          fill="currentColor"
+                          className="text-neutral-950"
+                        />
+                        <circle
+                          cx="12"
+                          cy="4"
+                          r="1.6"
+                          fill="currentColor"
+                          className="text-neutral-950"
+                        />
+                        <circle cx="12" cy="4" r="2" />
+                        <path d="M12 6v11" />
+                        <path d="M8 10h8" />
+                        <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+                        <path d="M7 17l-2 2" />
+                        <path d="M17 17l2 2" />
+                      </svg>
+                      <span className="sr-only">{`Roast level ${n} of 5`}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>{" "}
           {/* end .max-w-[80ch] */}
         </Container>
@@ -2559,11 +2937,13 @@ function TheCoffeeBaptism({
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-            <RoastLevelAnchors
-              level={level}
-              reviewData={reviewData}
-              reviews={reviews}
-            />
+          <RoastLevelAnchors
+  level={level}
+  reviewData={reviewData}
+  reviews={reviews}
+  roastTitle="Baptism by Fire"
+/>
+
           </Container>
         </div>
       </div>
@@ -2574,10 +2954,12 @@ function TheCoffeeJava({
   craftSubtitle,
   reviewData,
   reviews,
+  anchorLevel,
 }: {
   craftSubtitle: React.ReactNode | null;
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
+  anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
   const notes = ["Hazelnut", "Caramel", "Apple"];
   const origins = ["Guatemala", "Ethiopia", "Colombia"];
@@ -2586,8 +2968,7 @@ function TheCoffeeJava({
     origins.length === 2
       ? "grid-cols-[auto_auto]"
       : "grid-cols-[auto_auto_auto]";
-      const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
- 
+  const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
 
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
@@ -2603,9 +2984,9 @@ function TheCoffeeJava({
                 {craftSubtitle}
               </div>
             )}
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
 
-            <div className="mt-3">
+            <div className="mt-1">
               <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
                 Signature Notes
               </h3>
@@ -2614,7 +2995,7 @@ function TheCoffeeJava({
               </div>
             </div>
 
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
 
             <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
               Bean Origins
@@ -2626,53 +3007,65 @@ function TheCoffeeJava({
                 <OriginImg key={name} name={name} />
               ))}
             </div>
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
-                  {/* Roast Level — between Bean Origins divider and Reviews */}
-{typeof anchors === "number" && (
-  <div className="mt-4 flex items-center justify-start">
-   <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
-  Roast Level
-</span>
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
+            {/* Roast Level — between Bean Origins divider and Reviews */}
+            {typeof anchors === "number" && (
+              <div className="mt-4 flex items-center justify-start">
+                <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+                  Roast Level
+                </span>
 
-
-    <div className="relative flex items-center gap-3">
-      <div
-        className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+                <div className="relative flex items-center gap-3">
+                  <div
+                    className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
         bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
-        aria-hidden
-      />
-      {[1, 2, 3, 4, 5].map((n) => (
-        <div key={n} className="relative">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={
-              "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
-              (n <= anchors
-                ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                : "text-neutral-600")
-            }
-            aria-hidden
-          >
-            <rect x="11" y="0" width="2" height="24" fill="currentColor" className="text-neutral-950" />
-            <circle cx="12" cy="4" r="1.6" fill="currentColor" className="text-neutral-950" />
-            <circle cx="12" cy="4" r="2" />
-            <path d="M12 6v11" />
-            <path d="M8 10h8" />
-            <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-            <path d="M7 17l-2 2" />
-            <path d="M17 17l2 2" />
-          </svg>
-          <span className="sr-only">{`Roast level ${n} of 5`}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
+                    aria-hidden
+                  />
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <div key={n} className="relative">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={
+                          "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+                          (n <= anchors
+                            ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                            : "text-neutral-600")
+                        }
+                        aria-hidden
+                      >
+                        <rect
+                          x="11"
+                          y="0"
+                          width="2"
+                          height="24"
+                          fill="currentColor"
+                          className="text-neutral-950"
+                        />
+                        <circle
+                          cx="12"
+                          cy="4"
+                          r="1.6"
+                          fill="currentColor"
+                          className="text-neutral-950"
+                        />
+                        <circle cx="12" cy="4" r="2" />
+                        <path d="M12 6v11" />
+                        <path d="M8 10h8" />
+                        <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+                        <path d="M7 17l-2 2" />
+                        <path d="M17 17l2 2" />
+                      </svg>
+                      <span className="sr-only">{`Roast level ${n} of 5`}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>{" "}
           {/* end .max-w-[80ch] */}
         </Container>
@@ -2681,11 +3074,13 @@ function TheCoffeeJava({
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-            <RoastLevelAnchors
-              level={level}
-              reviewData={reviewData}
-              reviews={reviews}
-            />
+          <RoastLevelAnchors
+  level={level}
+  reviewData={reviewData}
+  reviews={reviews}
+  roastTitle="The Java Action"
+/>
+
           </Container>
         </div>
       </div>
@@ -2697,10 +3092,12 @@ function TheCoffeeOak({
   craftSubtitle,
   reviewData,
   reviews,
+  anchorLevel,
 }: {
   craftSubtitle: React.ReactNode | null;
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
+  anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
   const notes = ["Warm Vanilla", "Caramel", "Toasted Oak"];
   const origins = ["Colombia", "Indonesia"];
@@ -2709,8 +3106,7 @@ function TheCoffeeOak({
     origins.length === 2
       ? "grid-cols-[auto_auto]"
       : "grid-cols-[auto_auto_auto]";
-      const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
-
+  const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
 
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
@@ -2726,9 +3122,9 @@ function TheCoffeeOak({
                 {craftSubtitle}
               </div>
             )}
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
 
-            <div className="mt-3">
+            <div className="mt-1">
               <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
                 Signature Notes
               </h3>
@@ -2737,7 +3133,7 @@ function TheCoffeeOak({
               </div>
             </div>
 
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
 
             <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
               Bean Origins
@@ -2750,53 +3146,65 @@ function TheCoffeeOak({
               ))}
             </div>
 
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-5" />
-                  {/* Roast Level — between Bean Origins divider and Reviews */}
-{typeof anchors === "number" && (
-  <div className="mt-4 flex items-center justify-start">
-   <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
-  Roast Level
-</span>
+            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
+            {/* Roast Level — between Bean Origins divider and Reviews */}
+            {typeof anchors === "number" && (
+              <div className="mt-4 flex items-center justify-start">
+                <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+                  Roast Level
+                </span>
 
-
-    <div className="relative flex items-center gap-3">
-      <div
-        className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+                <div className="relative flex items-center gap-3">
+                  <div
+                    className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
         bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
-        aria-hidden
-      />
-      {[1, 2, 3, 4, 5].map((n) => (
-        <div key={n} className="relative">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={
-              "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
-              (n <= anchors
-                ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                : "text-neutral-600")
-            }
-            aria-hidden
-          >
-            <rect x="11" y="0" width="2" height="24" fill="currentColor" className="text-neutral-950" />
-            <circle cx="12" cy="4" r="1.6" fill="currentColor" className="text-neutral-950" />
-            <circle cx="12" cy="4" r="2" />
-            <path d="M12 6v11" />
-            <path d="M8 10h8" />
-            <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-            <path d="M7 17l-2 2" />
-            <path d="M17 17l2 2" />
-          </svg>
-          <span className="sr-only">{`Roast level ${n} of 5`}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
+                    aria-hidden
+                  />
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <div key={n} className="relative">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={
+                          "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+                          (n <= anchors
+                            ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                            : "text-neutral-600")
+                        }
+                        aria-hidden
+                      >
+                        <rect
+                          x="11"
+                          y="0"
+                          width="2"
+                          height="24"
+                          fill="currentColor"
+                          className="text-neutral-950"
+                        />
+                        <circle
+                          cx="12"
+                          cy="4"
+                          r="1.6"
+                          fill="currentColor"
+                          className="text-neutral-950"
+                        />
+                        <circle cx="12" cy="4" r="2" />
+                        <path d="M12 6v11" />
+                        <path d="M8 10h8" />
+                        <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+                        <path d="M7 17l-2 2" />
+                        <path d="M17 17l2 2" />
+                      </svg>
+                      <span className="sr-only">{`Roast level ${n} of 5`}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>{" "}
           {/* end .max-w-[80ch] */}
         </Container>
@@ -2805,11 +3213,13 @@ function TheCoffeeOak({
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-            <RoastLevelAnchors
-              level={level}
-              reviewData={reviewData}
-              reviews={reviews}
-            />
+          <RoastLevelAnchors
+  level={level}
+  reviewData={reviewData}
+  reviews={reviews}
+  roastTitle="Oak & Copper"
+/>
+
           </Container>
         </div>
       </div>
@@ -2896,20 +3306,18 @@ function StorePage() {
 
 function StoreCategoryPage() {
   const { slug } = useParams();
-  const titleMap: any = {
-    tees: "Tees",
-    mugs: "Mugs",
-    shot: "Shot Glasses",
-    accessories: "Coffee Accessories",
-  };
-  const title = titleMap[slug as string] || "Store";
+  const cat = STORE_CATEGORIES.find((c) => c.slug === slug);
+  const title = cat?.label ?? "Store";
+
   return (
     <main className="py-16 md:py-24">
       <Container>
         <BackButton to="/store" size="sm" />
         <SectionTitle
           title={
-            <span className="text-3xl md:text-5xl font-extrabold text-amber-300">{`${title} — Coming Soon`}</span>
+            <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
+              {title} — Coming Soon
+            </span>
           }
           subtitle="Preview product shots and specs soon. Join the Fleet for notifications."
         />
@@ -3175,7 +3583,8 @@ function OriginsPage() {
                 <p className="text-neutral-300 leading-relaxed tracking-[0.02em] text-[1.4375rem] md:text-[1.725rem]">
                   Coffee is at its best in the first days after roasting when
                   the oils are alive, the aroma is full, and the flavor is at
-                  its peak. That is why we roast to order every Monday and ship Tuesday/Wednesday. <br /> <br />
+                  its peak. That is why we roast to order every Monday and ship
+                  Tuesday/Wednesday. <br /> <br />
                   No months-old roasted beans sitting on supermarket shelves or
                   in an Amazon warehouse. Our coffee is battle fresh, hitting
                   your cup at its prime exactly the way it was meant to be
@@ -3865,7 +4274,7 @@ function LegalPage() {
                   <h3 className="text-amber-300 font-semibold">Contact</h3>
                   <p className="mt-1">
                     <a
-                      href="mailto:HQ@oldironsides.org"
+                      href="mailto:HQ@oldironsidescoffee.org"
                       className="text-amber-300 hover:underline"
                     >
                       HQ@oldironsidescoffee.org
@@ -5663,10 +6072,9 @@ function PromoSubscribeModal() {
                       placeholder="you@domain.com"
                       className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
                     />
-                   <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
-  Join
-</button>
-
+                    <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+                      Join
+                    </button>
                   </form>
 
                   {/* 25% larger + centered; cancel line below */}
@@ -5710,7 +6118,7 @@ function PromoSubscribeModal() {
     </div>
   );
 }
-function RoastAnchorsInline({ level = 3 }: { level?: 1|2|3|4|5 }) {
+function RoastAnchorsInline({ level = 3 }: { level?: 1 | 2 | 3 | 4 | 5 }) {
   return (
     <div className="mt-2">
       <div className="relative flex items-center gap-3">
@@ -5720,7 +6128,7 @@ function RoastAnchorsInline({ level = 3 }: { level?: 1|2|3|4|5 }) {
           aria-hidden
         />
         <div className="relative flex items-center gap-2">
-          {[1,2,3,4,5].map((n) => (
+          {[1, 2, 3, 4, 5].map((n) => (
             <svg
               key={n}
               viewBox="0 0 24 24"
@@ -5737,8 +6145,21 @@ function RoastAnchorsInline({ level = 3 }: { level?: 1|2|3|4|5 }) {
               }
               aria-hidden
             >
-              <rect x="11" y="0" width="2" height="24" fill="currentColor" className="text-neutral-950" />
-              <circle cx="12" cy="4" r="1.6" fill="currentColor" className="text-neutral-950" />
+              <rect
+                x="11"
+                y="0"
+                width="2"
+                height="24"
+                fill="currentColor"
+                className="text-neutral-950"
+              />
+              <circle
+                cx="12"
+                cy="4"
+                r="1.6"
+                fill="currentColor"
+                className="text-neutral-950"
+              />
               <circle cx="12" cy="4" r="2" />
               <path d="M12 6v11" />
               <path d="M8 10h8" />
@@ -6502,11 +6923,12 @@ function RoastCTAInfo() {
           <div className="text-xs md:text-sm text-neutral-300 font-medium">
             Next batch roasts:{" "}
             <span className="text-amber-300">{dateLabel}</span>{" "}
-            <span className="text-neutral-400">(ET)</span>
+            <span className="text-neutral-400"></span>
           </div>
           <div className="text-xs md:text-sm text-neutral-400">
             Time left to make the next roast:{" "}
-            <span className="text-amber-300">{left}</span> — Secure your fresh order now.
+            <span className="text-amber-300">{left}</span> <br /> Secure your
+            fresh order now.
           </div>
         </div>
       ) : state === "closed" ? (
@@ -6522,16 +6944,15 @@ function RoastCTAInfo() {
         </div>
       ) : (
         <div className="space-y-1">
-         <div className="text-xs md:text-sm text-neutral-300">
-  <span className="font-medium">Next batch roasts:</span>{" "}
-  <span className="text-amber-300">{dateLabel}</span>{" "}
-  <span className="text-neutral-400">(ET)</span>
-</div>
-
+          <div className="text-xs md:text-sm text-neutral-300">
+            <span className="font-medium">Next batch roasts:</span>{" "}
+            <span className="text-amber-300">{dateLabel}</span>{" "}
+            <span className="text-neutral-400">(ET)</span>
+          </div>
         </div>
       )}
     </div>
-  );  
+  );
 }
 
 /* ================= App Entrypoint ================= */

@@ -1216,7 +1216,6 @@ function RoastDetailPage() {
     : isOak
     ? "Oak & Copper pours a steady bourbon barrel aged cup of caramel, warm vanilla, and toasted oak with a calm finish you’ll want every morning."
     : "";
-  
 
   // review data used for stars + counts beside the subtitle and in the histogram
   const reviewDataBySlug: Record<
@@ -1742,36 +1741,40 @@ function RoastDetailPage() {
 
                       {/* stars + count aligned to the right edge (REVIEWS ends at line end) */}
                       <div className="flex items-center gap-2 shrink-0">
-                      <a
-  href="#reviews"
-  onClick={(e) => {
-    e.preventDefault();
-    const el = document.getElementById("reviews");
-    if (!el) return;
-    const mobileOffset = 200;   // was 80
-    const desktopOffset = 260;  // was 100
-    const offset = window.innerWidth < 768 ? mobileOffset : desktopOffset;
-    const top = el.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top, behavior: "smooth" });
-  }}
-  
-  
-  className="group inline-flex items-center gap-1 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-  aria-label="Jump to customer reviews"
-  title="Jump to customer reviews"
->
-  {[...Array(5)].map((_, i) => (
-    <svg
-      key={i}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="h-5 w-5 text-amber-400 group-hover:text-amber-300"
-      aria-hidden
-    >
-      <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-    </svg>
-  ))}
-</a>
+                        <a
+                          href="#reviews"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const el = document.getElementById("reviews");
+                            if (!el) return;
+                            const mobileOffset = 200; // was 80
+                            const desktopOffset = 260; // was 100
+                            const offset =
+                              window.innerWidth < 768
+                                ? mobileOffset
+                                : desktopOffset;
+                            const top =
+                              el.getBoundingClientRect().top +
+                              window.scrollY -
+                              offset;
+                            window.scrollTo({ top, behavior: "smooth" });
+                          }}
+                          className="group inline-flex items-center gap-1 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                          aria-label="Jump to customer reviews"
+                          title="Jump to customer reviews"
+                        >
+                          {[...Array(5)].map((_, i) => (
+                            <svg
+                              key={i}
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                              className="h-5 w-5 text-amber-400 group-hover:text-amber-300"
+                              aria-hidden
+                            >
+                              <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                            </svg>
+                          ))}
+                        </a>
 
                         <span className="text-xs md:text-sm text-neutral-400/80 tracking-wide whitespace-nowrap">
                           {reviewData.count} REVIEWS
@@ -2278,8 +2281,7 @@ function RoastLevelAnchors({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const toggleExpand = (id: string) =>
     setExpandedId((prev) => (prev === id ? null : id));
-  
-  
+
   const [showModal, setShowModal] = useState(false);
   const [rating, setRating] = useState<number>(0);
   const [title, setTitle] = useState("");
@@ -2306,33 +2308,26 @@ function RoastLevelAnchors({
     setName("");
     setEmail("");
   };
-  
-  
 
   return (
     <section id="reviews" className="text-center max-w-[980px] mx-auto px-4">
-
-
-
       {/* Title + Write box centered over histogram width */}
       <div className="relative mx-auto max-w-[780px] mb-4">
-  <h2 className="text-xl md:text-2xl font-bold text-amber-300 text-center m-0">
-    CUSTOMER REVIEWS
-  </h2>
-  <button
-    type="button"
-    onClick={() => setShowModal(true)}
-    className="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-2 rounded-lg text-sm md:text-base font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
-    aria-label="Write a review"
-  >
-    Write a Review
-  </button>
-</div>
-
+        <h2 className="text-xl md:text-2xl font-bold text-amber-300 text-center m-0">
+          CUSTOMER REVIEWS
+        </h2>
+        <button
+          type="button"
+          onClick={() => setShowModal(true)}
+          className="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-2 rounded-lg text-sm md:text-base font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
+          aria-label="Write a review"
+        >
+          Write a Review
+        </button>
+      </div>
 
       {/* Overall stars + count */}
       <div className="mt-2 md:mt-3 flex items-center justify-center gap-2 mb-2">
-
         <div className="flex items-center gap-1">
           {[...Array(5)].map((_, i) => (
             <svg
@@ -2369,116 +2364,120 @@ function RoastLevelAnchors({
 
       {/* Testimonials grid (8 per page) — tiles clickable to expand */}
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-visible">
-
         {pageItems.map((r) => {
           const isOpen = expandedId === r.id;
           return (
             <article
-            key={r.id}
-            role="button"
-            tabIndex={0}
-            onClick={() => { if (!isOpen) toggleExpand(r.id); }}
-            onKeyDown={(e) => { if (!isOpen && (e.key === "Enter" || e.key === " ")) toggleExpand(r.id); }}
-            
-            aria-expanded={isOpen}
-            className={
-              "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-4 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
-              (isOpen ? "z-[70]" : "")
-            }
-          >
-          
-            {/* Compact tile content (preview) */}
-            <div className="flex items-center justify-between">
-              <div className="font-semibold text-amber-300">{r.name}</div>
-              <div className="text-xs text-neutral-400">{r.date}</div>
-            </div>
-          
-            <div className="mt-1 flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <svg
-                  key={i}
-                  viewBox="0 0 24 24"
-                  fill={i < r.rating ? "currentColor" : "none"}
-                  className={"h-4 w-4 " + (i < r.rating ? "text-amber-400" : "text-neutral-700")}
-                  stroke="currentColor"
-                >
-                  <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                </svg>
-              ))}
-            </div>
-          
-            {r.title && (
-              <div className="mt-2 text-sm font-semibold text-neutral-200">
-                {r.title}
+              key={r.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => {
+                if (!isOpen) toggleExpand(r.id);
+              }}
+              onKeyDown={(e) => {
+                if (!isOpen && (e.key === "Enter" || e.key === " "))
+                  toggleExpand(r.id);
+              }}
+              aria-expanded={isOpen}
+              className={
+                "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-4 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
+                (isOpen ? "z-[70]" : "")
+              }
+            >
+              {/* Compact tile content (preview) */}
+              <div className="flex items-center justify-between">
+                <div className="font-semibold text-amber-300">{r.name}</div>
+                <div className="text-xs text-neutral-400">{r.date}</div>
               </div>
-            )}
-          
-            <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
-              {r.body}
-            </p>
-          
-            {/* Verified badge at bottom */}
-            <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
-              Verified Buyer
-            </div>
-          
-            {/* Pop-out banner overlay on top of this tile */}
-            {isOpen && (
-              <div
-                className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
-                style={{ minHeight: 280 }} /* ~2x the tile height */
-                onClick={() => toggleExpand(r.id)}
-              >
-               
-          
-                {/* Full review content */}
-                <div className="flex items-center justify-between">
-                  <div className="font-semibold text-amber-300">{r.name}</div>
-                  <div className="text-xs text-neutral-400">{r.date}</div>
-                </div>
-          
-                <div className="mt-1 flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      viewBox="0 0 24 24"
-                      fill={i < r.rating ? "currentColor" : "none"}
-                      className={"h-4 w-4 " + (i < r.rating ? "text-amber-400" : "text-neutral-700")}
-                      stroke="currentColor"
-                    >
-                      <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                    </svg>
-                  ))}
-                </div>
-          
-                {r.title && (
-                  <div className="mt-2 text-sm font-semibold text-neutral-200">
-                    {r.title}
-                  </div>
-                )}
-          
-                <div className="mt-2 text-sm text-neutral-300 leading-relaxed overflow-auto max-h-40">
-                  {r.body}
-                </div>
-          
-                <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
-                  Verified Buyer
-                </div>
-              </div>
-            )}
-          </article>
 
-     
+              <div className="mt-1 flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <svg
+                    key={i}
+                    viewBox="0 0 24 24"
+                    fill={i < r.rating ? "currentColor" : "none"}
+                    className={
+                      "h-4 w-4 " +
+                      (i < r.rating ? "text-amber-400" : "text-neutral-700")
+                    }
+                    stroke="currentColor"
+                  >
+                    <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                  </svg>
+                ))}
+              </div>
+
+              {r.title && (
+                <div className="mt-2 text-sm font-semibold text-neutral-200">
+                  {r.title}
+                </div>
+              )}
+
+              <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
+                {r.body}
+              </p>
+
+              {/* Verified badge at bottom */}
+              <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
+                Verified Buyer
+              </div>
+
+              {/* Pop-out banner overlay on top of this tile */}
+              {isOpen && (
+                <div
+                  className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
+                  style={{ minHeight: 280 }} /* ~2x the tile height */
+                  onClick={() => toggleExpand(r.id)}
+                >
+                  {/* Full review content */}
+                  <div className="flex items-center justify-between">
+                    <div className="font-semibold text-amber-300">{r.name}</div>
+                    <div className="text-xs text-neutral-400">{r.date}</div>
+                  </div>
+
+                  <div className="mt-1 flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        viewBox="0 0 24 24"
+                        fill={i < r.rating ? "currentColor" : "none"}
+                        className={
+                          "h-4 w-4 " +
+                          (i < r.rating ? "text-amber-400" : "text-neutral-700")
+                        }
+                        stroke="currentColor"
+                      >
+                        <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                      </svg>
+                    ))}
+                  </div>
+
+                  {r.title && (
+                    <div className="mt-2 text-sm font-semibold text-neutral-200">
+                      {r.title}
+                    </div>
+                  )}
+
+                  <div className="mt-2 text-sm text-neutral-300 leading-relaxed overflow-auto max-h-40">
+                    {r.body}
+                  </div>
+
+                  <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
+                    Verified Buyer
+                  </div>
+                </div>
+              )}
+            </article>
           );
         })}
       </div>
       {expandedId && (
-  <div
-    className="fixed inset-0 z-40 bg-black/40"
-    onClick={() => toggleExpand(expandedId)}
-    aria-hidden
-  />
-)}
+        <div
+          className="fixed inset-0 z-40 bg-black/40"
+          onClick={() => toggleExpand(expandedId)}
+          aria-hidden
+        />
+      )}
 
       {/* Pager */}
       {pageCount > 1 && (
@@ -2563,9 +2562,12 @@ function RoastLevelAnchors({
             <form onSubmit={submitReview} className="space-y-3">
               {/* SCORE */}
               <div className="space-y-1">
-              <div className="text-sm text-neutral-300">
-  SCORE* {rating < 1 && <span className="text-red-400 text-xs ml-1">required</span>}
-</div>
+                <div className="text-sm text-neutral-300">
+                  SCORE*{" "}
+                  {rating < 1 && (
+                    <span className="text-red-400 text-xs ml-1">required</span>
+                  )}
+                </div>
 
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4, 5].map((n) => (
@@ -2645,19 +2647,18 @@ function RoastLevelAnchors({
 
               {/* POST */}
               <div className="pt-2">
-              <button
-  type="submit"
-  disabled={rating < 1 || !title || !body || !name || !email}
-  className={
-    "w-full px-4 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
-    (rating < 1 || !title || !body || !name || !email
-      ? "opacity-60 cursor-not-allowed"
-      : "hover:bg-amber-400 hover:text-neutral-900")
-  }
->
-  POST
-</button>
-
+                <button
+                  type="submit"
+                  disabled={rating < 1 || !title || !body || !name || !email}
+                  className={
+                    "w-full px-4 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
+                    (rating < 1 || !title || !body || !name || !email
+                      ? "opacity-60 cursor-not-allowed"
+                      : "hover:bg-amber-400 hover:text-neutral-900")
+                  }
+                >
+                  POST
+                </button>
               </div>
 
               {/* Verified badge on modal too */}
@@ -2671,7 +2672,6 @@ function RoastLevelAnchors({
     </section>
   );
 }
-
 
 /* ================== PER-ROAST SECTIONS ================== */
 function TheCoffeeFlagship({
@@ -2799,13 +2799,12 @@ function TheCoffeeFlagship({
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <RoastLevelAnchors
-  level={level}
-  reviewData={reviewData}
-  reviews={reviews}
-  roastTitle="Flagship"
-/>
-
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+              roastTitle="Flagship"
+            />
           </Container>
         </div>
       </div>
@@ -2937,13 +2936,12 @@ function TheCoffeeBaptism({
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <RoastLevelAnchors
-  level={level}
-  reviewData={reviewData}
-  reviews={reviews}
-  roastTitle="Baptism by Fire"
-/>
-
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+              roastTitle="Baptism by Fire"
+            />
           </Container>
         </div>
       </div>
@@ -3074,13 +3072,12 @@ function TheCoffeeJava({
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <RoastLevelAnchors
-  level={level}
-  reviewData={reviewData}
-  reviews={reviews}
-  roastTitle="The Java Action"
-/>
-
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+              roastTitle="The Java Action"
+            />
           </Container>
         </div>
       </div>
@@ -3213,13 +3210,12 @@ function TheCoffeeOak({
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <RoastLevelAnchors
-  level={level}
-  reviewData={reviewData}
-  reviews={reviews}
-  roastTitle="Oak & Copper"
-/>
-
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+              roastTitle="Oak & Copper"
+            />
           </Container>
         </div>
       </div>
@@ -3303,6 +3299,16 @@ function StorePage() {
     </main>
   );
 }
+// Store categories used by /store/:slug
+type StoreCategory = { slug: string; label: string };
+
+const STORE_CATEGORIES: ReadonlyArray<StoreCategory> = [
+  { slug: "coffee", label: "Coffee" },
+  { slug: "gear", label: "Gear" },
+  { slug: "apparel", label: "Apparel" },
+  { slug: "bundles", label: "Bundles" },
+  { slug: "gifts", label: "Gifts" },
+];
 
 function StoreCategoryPage() {
   const { slug } = useParams();

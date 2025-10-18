@@ -5,7 +5,9 @@ import React, {
   createContext,
   useEffect,
   useRef,
+  useCallback,
 } from "react";
+
 import {
   MemoryRouter,
   Routes,
@@ -26,29 +28,57 @@ type Review = {
   title?: string;
   body: string;
 };
+// Back target for story pages
+const STORIES_HOME = "/origins#origins-history";
+function ShopButton({ slug, title }: { slug: string; title: string }) {
+  return (
+    <Link
+      to={`/roast/${slug}`}
+      className="group inline-flex items-center gap-2 rounded-xl px-5 py-3 font-semibold ring-1 ring-amber-400 text-amber-300 bg-transparent hover:bg-amber-400 hover:text-neutral-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+      aria-label={`Shop ${title}`}
+      title={`Shop ${title}`}
+    >
+      Shop {title}
+      <svg
+        viewBox="0 0 24 24"
+        className="h-5 w-5 transition group-hover:translate-x-0.5"
+        fill="currentColor"
+        aria-hidden
+      >
+        <path d="M13 5l7 7-7 7M5 12h14" />
+      </svg>
+    </Link>
+  );
+}
 
 /* ================= Flash Toast (global 2s banner) ================= */
 function FlashToast() {
   const [msg, setMsg] = React.useState("");
   const [show, setShow] = React.useState(false);
+  const timeoutRef = React.useRef<number | null>(null);
 
   React.useEffect(() => {
     const onFlash = (e: any) => {
       setMsg(String((e as CustomEvent).detail || ""));
       setShow(true);
-      const t = setTimeout(() => setShow(false), 2000);
-      return () => clearTimeout(t);
+
+      // clear any existing hide timer, then start a fresh 2s timer
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = window.setTimeout(() => setShow(false), 2000);
     };
+
     window.addEventListener("flash", onFlash as any);
-    return () => window.removeEventListener("flash", onFlash as any);
-  }, []);
+
+    return () => {
+      window.removeEventListener("flash", onFlash as any);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []); // run once
 
   return (
     <div
       className={`fixed top-6 left-1/2 -translate-x-1/2 z-[100] transition-all duration-200 ${
-        show
-          ? "opacity-100 scale-100"
-          : "opacity-0 scale-95 pointer-events-none"
+        show ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
       }`}
     >
       <div
@@ -61,6 +91,7 @@ function FlashToast() {
     </div>
   );
 }
+
 
 /* ================= Inline Icon Fallbacks (no external deps) ================= */
 type IconProps = React.SVGProps<SVGSVGElement>;
@@ -214,7 +245,9 @@ const BackButton = ({
   const iconCls = size === "sm" ? "h-5 w-5" : "h-7 w-7";
   return (
     <button
-      onClick={() => {
+    type="button"
+    onClick={() => {
+  
         try {
           if (to) return navigate(to);
           if (
@@ -258,6 +291,17 @@ const fmt = (n: number) =>
   n.toLocaleString("en-US", { style: "currency", currency: "USD" });
 const emailOk = (s: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || "").trim());
+
+// kill em/en dashes so no “—” slips onto the site
+const cleanCopy = (s: string) => s.replace(/[–—]/g, "-");
+
+// unified non-blocking toast
+const flash = (message: string) => {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("flash", { detail: String(message) }));
+  }
+};
+
 
 /* ================= Data ================= */
 const roastCards = [
@@ -348,22 +392,16 @@ const roastCards = [
 ];
 
 /* ================= Cart Context ================= */
-const CartCtx = createContext<any>(null);
+const CartCtx = createContext<any | null>(null);
+
 function useCart() {
   const ctx = useContext(CartCtx);
-  return (
-    ctx ?? {
-      cart: [],
-      add: () => {},
-      inc: () => {},
-      dec: () => {},
-      remove: () => {},
-      clear: () => {},
-      count: 0,
-      subtotal: 0,
-    }
-  );
+  if (!ctx) {
+    throw new Error("useCart must be used within <CartProvider>");
+  }
+  return ctx;
 }
+
 function CartProvider({ children }: any) {
   const [cart, setCart] = useState(() => {
     if (typeof window === "undefined") return [];
@@ -373,76 +411,190 @@ function CartProvider({ children }: any) {
       return [];
     }
   });
-  const persist = (next: any[]) => {
-    setCart(next);
-    try {
-      localStorage.setItem("oi_cart", JSON.stringify(next));
-    } catch {}
-  };
+  
+  // cross-tab sync: update this tab if oi_cart changes in another tab
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== "oi_cart") return;
+      try {
+        const next = JSON.parse(e.newValue || "[]");
+        setCart(Array.isArray(next) ? next : []);
+      } catch {
+        // ignore parse errors
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+  
+  const persist = useCallback((updater: (prev: any[]) => any[]) => {
+    setCart(prev => {
+      const next = updater(prev);
+      try {
+        localStorage.setItem("oi_cart", JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  }, []);
+  
+  
   const count = useMemo(
-    () => cart.reduce((s: number, i: any) => s + i.qty, 0),
+    () => cart.reduce((s: number, i: any) => s + Number(i.qty || 0), 0),
     [cart]
   );
+
   const subtotal = useMemo(
-    () => cart.reduce((s: number, i: any) => s + i.price * i.qty, 0),
+    () =>
+      cart.reduce(
+        (s: number, i: any) => s + Number(i.price || 0) * Number(i.qty || 0),
+        0
+      ),
     [cart]
   );
-  const add = (item: any, qty = 1) => {
-    // Make variants unique in the cart by encoding beanType into the stored id
+
+  // === Free shipping logic ===
+  const FREE_SHIPPING_THRESHOLD = 3;
+
+  const coffeeBagCount = useMemo(() => {
+    return cart.reduce((sum: number, it: any) => {
+      const isCoffee =
+        it?.isCoffee === true ||
+        it?.type === "coffee" ||
+        it?.category === "coffee";
+      const qty = Number(it?.qty ?? 0);
+      return isCoffee ? sum + qty : sum;
+    }, 0);
+  }, [cart]);
+
+  const freeShippingQualified = coffeeBagCount >= FREE_SHIPPING_THRESHOLD;
+
+  // If you have a base shipping rate, set it here. Leaving 0 by default.
+  const baseShipping = 0;
+
+  const shipping = useMemo(
+    () => (freeShippingQualified ? 0 : baseShipping),
+    [freeShippingQualified]
+  );
+
+  const shippingLabel = useMemo(
+    () =>
+      freeShippingQualified ? "Free Shipping Applied" : "UPS Standard Ground",
+    [freeShippingQualified]
+  );
+
+  const total = useMemo(() => subtotal + shipping, [subtotal, shipping]);
+
+  const add = useCallback((item: any, qty = 1) => {
     const variantLabel =
       item?.beanType === "whole"
         ? "Whole Bean"
         : item?.beanType === "ground"
         ? "Ground"
         : null;
-
-    const storedId = variantLabel
-      ? `${String(item.id)}__${item.beanType}`
-      : String(item.id);
-
-    // Ensure the title shows the bean type in the cart/checkout
+  
+    const rawId = String(item?.id ?? "");
+    const beanKey = item?.beanType === "whole" || item?.beanType === "ground" ? item.beanType : null;
+  
+    // Make a single, canonical id. If the id already contains the bean type
+    // (e.g., "...-ground" or "...__ground"), don't append it again.
+    let canonicalId = rawId;
+    if (beanKey) {
+      const hasBeanSuffix = new RegExp(`(__|-)${beanKey}$`).test(rawId);
+      if (!hasBeanSuffix) {
+        canonicalId = `${rawId}__${beanKey}`;
+      }
+    }
+  
+    // Only add the label if it's not already there
     const displayTitle =
       variantLabel &&
       typeof item.title === "string" &&
-      !item.title.includes("(")
+      !new RegExp(`\\(${variantLabel}\\)$`).test(item.title)
         ? `${item.title} (${variantLabel})`
         : item.title;
-
+  
     const normalized = {
       ...item,
-      id: storedId, // unique per bean type
-      sku: item.sku || storedId, // fallback SKU
-      title: displayTitle, // include bean type in title
+      id: canonicalId,
+      sku: item.sku || canonicalId,
+      title: displayTitle,
+      isCoffee: typeof item.isCoffee === "boolean" ? item.isCoffee : true,
     };
-
-    persist(
-      (() => {
-        const copy = [...cart];
-        const idx = copy.findIndex((x) => x.id === normalized.id);
-        if (idx >= 0) {
-          copy[idx] = { ...copy[idx], qty: copy[idx].qty + qty };
-        } else {
-          copy.push({ ...normalized, qty });
-        }
-        return copy;
-      })()
-    );
-  };
-
-  const inc = (id: string) =>
-    persist(cart.map((x: any) => (x.id === id ? { ...x, qty: x.qty + 1 } : x)));
-  const dec = (id: string) =>
-    persist(
-      cart
-        .map((x: any) =>
-          x.id === id ? { ...x, qty: Math.max(0, x.qty - 1) } : x
-        )
+  
+    persist(prev => {
+      const copy = [...prev];
+      const idx = copy.findIndex(x => x.id === normalized.id);
+      if (idx >= 0) {
+        copy[idx] = { ...copy[idx], qty: copy[idx].qty + qty };
+      } else {
+        copy.push({ ...normalized, qty });
+      }
+      return copy;
+    });
+  }, [persist]);
+  
+  
+  
+  const inc = useCallback((id: string) => {
+    persist(prev => prev.map((x: any) => (x.id === id ? { ...x, qty: x.qty + 1 } : x)));
+  }, [persist]);
+  
+  const dec = useCallback((id: string) => {
+    persist(prev =>
+      prev
+        .map((x: any) => (x.id === id ? { ...x, qty: Math.max(0, x.qty - 1) } : x))
         .filter((x: any) => x.qty > 0)
     );
-  const remove = (id: string) => persist(cart.filter((x: any) => x.id !== id));
-  const clear = () => persist([]);
-  const value = { cart, add, inc, dec, remove, clear, count, subtotal };
+  }, [persist]);
+  
+  
+  const remove = useCallback((id: string) => {
+    persist(prev => prev.filter((x: any) => x.id !== id));
+  }, [persist]);
+  
+  
+  const clear = useCallback(() => {
+    persist(() => []);
+  }, [persist]);
+  
+  const value = useMemo(
+    () => ({
+      cart,
+      add,
+      inc,
+      dec,
+      remove,
+      clear,
+      count,
+      subtotal,
+      shipping,
+      shippingLabel,
+      total,
+      coffeeBagCount,
+      freeShippingQualified,
+      freeShippingThreshold: FREE_SHIPPING_THRESHOLD,
+    }),
+    [
+      cart,
+      add,
+      inc,
+      dec,
+      remove,
+      clear,
+      count,
+      subtotal,
+      shipping,
+      shippingLabel,
+      total,
+      coffeeBagCount,
+      freeShippingQualified,
+      // FREE_SHIPPING_THRESHOLD is a constant; no need to include as a dep
+    ]
+  );
+  
+
   return <CartCtx.Provider value={value}>{children}</CartCtx.Provider>;
+
 }
 
 /* ================= Components ================= */
@@ -491,7 +643,8 @@ function RingThatBellBox() {
   const [submitted, setSubmitted] = useState(false);
   const submit = (e: any) => {
     e.preventDefault();
-    if (!emailOk(email)) return alert("Enter a valid email.");
+    if (!emailOk(email)) return flash("Enter a valid email.");
+
     setSubmitted(true);
   };
   return (
@@ -618,7 +771,8 @@ function CompactSubscribeBox() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!emailOk(email)) return alert("Enter a valid email.");
+    if (!emailOk(email)) return flash("Enter a valid email.");
+
     setDone(true);
     // TODO: integrate with your ESP/signup endpoint
   };
@@ -677,13 +831,15 @@ function GovXLoginBox() {
         is donated to trusted organizations that help veterans.
       </p>
       <button
-        // TODO: point this to your GovX verification route or modal
-        onClick={() => window.location.assign("/account?govx=1")}
-        className="mt-3 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
-        aria-label="Verify with GovX"
-      >
-        Verify with GovX
-      </button>
+  type="button"
+  // TODO: point this to your GovX verification route or modal
+  onClick={() => window.location.assign("/account?govx=1")}
+  className="mt-3 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+  aria-label="Verify with GovX"
+>
+  Verify with GovX
+</button>
+
       <div className="mt-2 text-[11px] text-neutral-400">
         Need help?{" "}
         <Link to="/contact" className="text-amber-300 hover:underline">
@@ -700,9 +856,10 @@ function NotifyForm({ onSubmit }: any) {
   const submit = (e: any) => {
     e.preventDefault();
     if (!emailOk(email)) {
-      alert("Enter a valid email.");
+      flash("Enter a valid email.");
       return;
     }
+    
     setDone(true);
     onSubmit && onSubmit(email);
   };
@@ -787,10 +944,19 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
               className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col"
             >
               <img
-                src={card.img}
-                alt={card.title}
-                className="h-80 sm:h-96 md:h-[28rem] w-full object-cover"
-              />
+  src={card.img}
+  alt={card.title}
+  className="h-80 sm:h-96 md:h-[28rem] w-full object-cover"
+  loading="lazy"
+  decoding="async"
+  onError={(e) => {
+    const el = e.currentTarget as HTMLImageElement;
+    if (!el.src.includes("/placeholder.png")) {
+      el.src = "/placeholder.png"; // add a neutral fallback image in /public
+    }
+  }}
+/>
+
 
               <div className="p-5 flex flex-col flex-1">
                 <h3
@@ -1098,56 +1264,239 @@ function FleetStoryPage() {
   const { slug } = useParams();
   const card = roastCards.find((c) => c.slug === slug);
   if (!card) return <NotFoundPage />;
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Title casing to match roast detail convention
+  const isFlagship = card.slug === "flagship";
+  const isBaptism = card.slug === "baptism-by-fire";
+  const displayTitle = isFlagship
+    ? "FLAGSHIP"
+    : isBaptism
+    ? "BAPTISM BY FIRE"
+    : card.title;
+  const battleLineMap: Record<string, string> = {
+    "java-action": "USS Constitution vs HMS Java",
+    "baptism-by-fire": "USS Constitution vs HMS Guerriere",
+    "oak-and-copper": "Wrapped in Oak Above, Clad in Copper Below",
+    flagship: "",
+  };
+  const battleLine =
+    battleLineMap[card.slug] ||
+    (card as any).battleLine ||
+    (card as any).storyTitle ||
+    "";
+
+  // Back target from your earlier setup
+  const storiesHome = React.useMemo(() => {
+    try {
+      return sessionStorage.getItem("storiesReturnTo") || STORIES_HOME; // STORIES_HOME defined at top of file
+    } catch {
+      return STORIES_HOME;
+    }
+  }, [slug]);
+
+  // Captions and optional left/right images (fallback to card.img)
+  const captionsBySlug: Record<string, { left: string; right: string }> = {
+    "java-action": {
+      left: "Capt. William Bainbridge",
+      right: "Capt. Henry Lambert",
+    },
+    "baptism-by-fire": {
+      left: "Capt. Isaac Hull",
+      right: "Capt. James Dacres",
+    },
+    flagship: { left: "USS Constitution", right: "Royal Navy" },
+    "oak-and-copper": { left: "USS Constitution", right: "Copper Sheathing" },
+  };
+  const caps = captionsBySlug[card.slug] ?? {
+    left: "USS Constitution",
+    right: "Royal Navy",
+  };
+  const imgLeft = (card as any).imgLeft || card.img;
+  const imgRight = (card as any).imgRight || card.img;
+
+  // Consistent card frame (matches fleet card sizing/feel)
+  const cardFrame =
+    "w-full max-w-[24rem] md:max-w-[26rem] aspect-[3/4] overflow-hidden rounded-2xl ring-1 ring-amber-400/60 shadow-2xl shadow-amber-500/20 bg-neutral-900/40";
+
+  // Reusable Shop button classes (outline -> amber on hover)
+  const shopBtn =
+    "group inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold ring-1 ring-amber-400 text-amber-300 bg-transparent hover:bg-amber-400 hover:text-neutral-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400";
+
   return (
-    <main className="relative py-12 md:py-20 overflow-hidden">
+    <main className="relative overflow-hidden py-12 md:py-20">
+      {/* Backdrop */}
+      {/* Backdrop */}
       <img
         src="/maps-books.png"
-        alt="Fleet story backdrop"
-        className="absolute inset-0 w-full h-full object-cover opacity-40 z-0"
+        alt=""
+        className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover opacity-35 z-0"
       />
+
       <Container className="relative z-10">
-        <div className="flex items-start justify-between">
-          <SectionTitle
-            title={card.storyTitle}
-            subtitle={
-              <span className="text-amber-300 font-semibold">
-                {card.battleDate}
-              </span>
-            }
-          />
-          <BackButton size="sm" />
+        {/* Back (keeps your stories section return) */}
+        <div className="flex justify-end">
+          <Link
+            to={storiesHome}
+            className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm ring-1 ring-amber-400/70 text-amber-300 hover:bg-amber-400 hover:text-neutral-900 transition"
+            onClick={() => {
+              try {
+                sessionStorage.setItem("storiesReturnTo", STORIES_HOME);
+              } catch {}
+            }}
+          >
+            ← Back
+          </Link>
         </div>
-        <div className="mt-6 grid md:grid-cols-2 gap-8 items-start">
-          <img
-            src={card.img}
-            alt={card.title}
-            className="w-full h-[420px] object-cover rounded-2xl ring-1 ring-neutral-800"
-          />
-          <div className="space-y-4">
-            <p className="text-neutral-300 text-lg leading-relaxed">
-              {card.story}
-            </p>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="h-40 rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 grid place-content-center text-neutral-500 text-sm">
-                Add Image
+
+        {/* TOP FOLD: hero LEFT, title+story RIGHT (like roast detail) */}
+        <div className="mt-4 grid md:grid-cols-[auto,1fr] gap-6 items-start mb-16 md:mb-24 lg:mb-28">
+          {/* Hero card */}
+          <figure className={cardFrame}>
+            <img
+              src={card.img}
+              alt={card.title}
+              className="h-full w-full object-cover"
+              loading="eager"
+              decoding="async"
+            />
+          </figure>
+
+          {/* Title + meta + story */}
+          <div className="self-start">
+            {/* Title row with Shop button next to it */}
+            <h1
+              className="m-0 text-3xl md:text-4xl font-extrabold tracking-tight text-amber-300"
+              style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+            >
+              {displayTitle}
+            </h1>
+
+            {/* Battle line and date */}
+            {battleLine &&
+              battleLine !== card.title &&
+              battleLine !== displayTitle && (
+                <div className="mt-1 text-neutral-300 text-base md:text-lg">
+                  {battleLine}
+                </div>
+              )}
+            {card.battleDate && (
+              <div className="text-amber-300 font-semibold text-sm md:text-base">
+                {card.battleDate}
               </div>
-              <div className="h-40 rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 grid place-content-center text-neutral-500 text-sm">
-                Add Image
+            )}
+
+            {/* Divider */}
+            <div className="mt-2 h-px w-full bg-amber-400/30" />
+
+            {/* Story text only */}
+            <div
+              className="mt-4 max-w-[68ch] md:max-w-[72ch] text-pretty text-neutral-300 text-lg leading-[1.85]"
+              lang="en"
+              style={{ hyphens: "auto", textWrap: "balance" as any }}
+            >
+              {typeof card.story === "string"
+  ? card.story.split(/\n{2,}/).map((para, i) => (
+      <p key={i} className="mb-4 last:mb-0">
+        {cleanCopy(para)}
+      </p>
+    ))
+  : card.story}
+
+
+              {/* Shop button at end of story */}
+              <div className="mt-6">
+                <Link
+                  to={`/roast/${card.slug}`}
+                  className="group inline-flex items-center gap-2 rounded-xl px-5 py-3 font-semibold ring-1 ring-amber-400 text-amber-300 bg-transparent hover:bg-amber-400 hover:text-neutral-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                  aria-label={`Shop ${card.title}`}
+                  title={`Shop ${card.title}`}
+                >
+                  Shop {card.title}
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-5 w-5 transition group-hover:translate-x-0.5"
+                    fill="currentColor"
+                    aria-hidden
+                  >
+                    <path d="M13 5l7 7-7 7M5 12h14" />
+                  </svg>
+                </Link>
               </div>
             </div>
-            <div className="mt-2 text-sm text-neutral-400">
-              Variant: {card.variant}
+          </div>
+        </div>
+
+        {/* BOTTOM STRIP: two hero cards with center header and captions */}
+        {/* Section separator */}
+        <div
+          role="separator"
+          aria-hidden="true"
+          className="my-0 h-px w-full bg-amber-400/30"
+        />
+
+        {/* BOTTOM STRIP: two hero cards with center header and captions */}
+        <div className="mt-16 md:mt-24 lg:mt-28">
+          <div className="grid gap-6 md:grid-cols-[auto,1fr,auto] items-start">
+            {/* Left image + caption */}
+            <figure className="justify-self-start">
+              <div className={cardFrame}>
+                <img
+                  src={imgLeft}
+                  alt={caps.left}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <figcaption className="mt-2 text-xs md:text-sm text-amber-300">
+                {caps.left}
+              </figcaption>
+            </figure>
+
+            {/* Center header + text + second Shop button */}
+            <div className="text-center px-2 md:px-6">
+              <h2
+                className="text-xl md:text-2xl font-bold text-amber-300 tracking-tight"
+                style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+              >
+                Duel Between Two Captains
+              </h2>
+              <p className="mt-2 text-neutral-300 text-base md:text-lg leading-relaxed">
+                A meeting of resolve and seamanship on open water. Two ships
+                closed the distance as orders rang across the decks and the sea
+                carried the thunder of their guns.
+              </p>
+              <div className="mt-4">
+                <ShopButton slug={card.slug} title={card.title} />
+              </div>
             </div>
+
+            {/* Right image + caption */}
+            <figure className="justify-self-end">
+              <div className={cardFrame}>
+                <img
+                  src={imgRight}
+                  alt={caps.right}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <figcaption className="mt-2 text-xs md:text-sm text-amber-300 text-right">
+                {caps.right}
+              </figcaption>
+            </figure>
           </div>
         </div>
       </Container>
     </main>
   );
 }
+
 /* ================== ROAST DETAIL PAGE (CLEAN) ================== */
 function RoastDetailPage() {
   const { slug } = useParams();
@@ -1202,11 +1551,12 @@ function RoastDetailPage() {
   };
   const craftSubtitle = craftSubtitleMap[card.slug] ?? null;
 
-  // Roast flags
-  const isFlagship = card.slug === "flagship";
-  const isBaptism = card.title === "Baptism by Fire";
-  const isJava = card.slug === "java-action";
-  const isOak = card.slug === "oak-and-copper";
+// Roast flags (slug-based so copy changes don't break logic)
+const isFlagship = card.slug === "flagship";
+const isBaptism = card.slug === "baptism-by-fire";
+const isJava = card.slug === "java-action";
+const isOak = card.slug === "oak-and-copper";
+
 
   // ⬇️ INSERT THIS BLOCK RIGHT HERE ⬇️
   const AMBER_DESC = isFlagship
@@ -1218,387 +1568,107 @@ function RoastDetailPage() {
     : "";
 
   // review data used for stars + counts beside the subtitle and in the histogram
-  const reviewDataBySlug: Record<
-    string,
-    { avg: number; count: number; breakdown: Record<number, number> }
-  > = {
-    flagship: {
-      avg: 4.9,
-      count: 128,
-      breakdown: { 5: 110, 4: 12, 3: 4, 2: 1, 1: 1 },
-    },
-    "baptism-by-fire": {
-      avg: 4.8,
-      count: 96,
-      breakdown: { 5: 80, 4: 10, 3: 4, 2: 1, 1: 1 },
-    },
-    "java-action": {
-      avg: 4.7,
-      count: 64,
-      breakdown: { 5: 50, 4: 9, 3: 3, 2: 1, 1: 1 },
-    },
-    "oak-and-copper": {
-      avg: 4.9,
-      count: 72,
-      breakdown: { 5: 62, 4: 7, 3: 2, 2: 1, 1: 0 },
-    },
-  };
+ // review data used for stars + counts beside the subtitle and in the histogram
+const reviewDataMap = useMemo<Record<
+string,
+{ avg: number; count: number; breakdown: Record<number, number> }
+>>(
+() => ({
+  flagship: {
+    avg: 4.9,
+    count: 128,
+    breakdown: { 5: 110, 4: 12, 3: 4, 2: 1, 1: 1 },
+  },
+  "baptism-by-fire": {
+    avg: 4.8,
+    count: 96,
+    breakdown: { 5: 80, 4: 10, 3: 4, 2: 1, 1: 1 },
+  },
+  "java-action": {
+    avg: 4.7,
+    count: 64,
+    breakdown: { 5: 50, 4: 9, 3: 3, 2: 1, 1: 1 },
+  },
+  "oak-and-copper": {
+    avg: 4.9,
+    count: 72,
+    breakdown: { 5: 62, 4: 7, 3: 2, 2: 1, 1: 0 },
+  },
+}),
+[]
+);
 
-  const reviewData = reviewDataBySlug[card.slug] ?? {
-    avg: 0,
-    count: 0,
-    breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
-  };
+const reviewData = reviewDataMap[card.slug] ?? {
+avg: 0,
+count: 0,
+breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+};
 
-  const reviewListBySlug: Record<string, Review[]> = {
+
+const reviewListMap = useMemo<Record<string, Review[]>>(
+  () => ({
     flagship: [
-      {
-        id: "f1",
-        name: "Jacob S.",
-        date: "October 12, 2025",
-        rating: 5,
-        title: "Best flavor",
-        body: "Smooth, balanced, never bitter. This is my daily cup.",
-      },
-      {
-        id: "f2",
-        name: "Megan T.",
-        date: "October 9, 2025",
-        rating: 5,
-        body: "Great with cream or black. Reliable roast.",
-      },
-      {
-        id: "f3",
-        name: "Paul R.",
-        date: "October 7, 2025",
-        rating: 4,
-        body: "Nice balance. Would buy again.",
-      },
-      {
-        id: "f4",
-        name: "Nate D.",
-        date: "October 5, 2025",
-        rating: 5,
-        body: "Fresh and clean finish. Ships fast.",
-      },
-      {
-        id: "f5",
-        name: "Erika L.",
-        date: "October 4, 2025",
-        rating: 5,
-        body: "Crowd pleaser at our office.",
-      },
-      {
-        id: "f6",
-        name: "Kate W.",
-        date: "October 2, 2025",
-        rating: 5,
-        body: "Balanced and smooth. Hits the mark.",
-      },
-      {
-        id: "f7",
-        name: "Victor H.",
-        date: "September 30, 2025",
-        rating: 5,
-        body: "Exactly what I want in a medium roast.",
-      },
-      {
-        id: "f8",
-        name: "Ryan C.",
-        date: "September 28, 2025",
-        rating: 5,
-        body: "Rich aroma and consistent flavor.",
-      },
-      {
-        id: "f9",
-        name: "Amanda G.",
-        date: "September 27, 2025",
-        rating: 4,
-        body: "Very good daily drinker.",
-      },
-      {
-        id: "f10",
-        name: "Chris P.",
-        date: "September 25, 2025",
-        rating: 5,
-        body: "Smooth from first sip to last.",
-      },
-      {
-        id: "f11",
-        name: "Lindsay K.",
-        date: "September 23, 2025",
-        rating: 5,
-        body: "My new go to.",
-      },
-      {
-        id: "f12",
-        name: "Derek B.",
-        date: "September 20, 2025",
-        rating: 5,
-        body: "Balanced and flavorful.",
-      },
+      { id: "f1", name: "Jacob S.", date: "October 12, 2025", rating: 5, title: "Best flavor", body: "Smooth, balanced, never bitter. This is my daily cup." },
+      { id: "f2", name: "Megan T.", date: "October 9, 2025", rating: 5, body: "Great with cream or black. Reliable roast." },
+      { id: "f3", name: "Paul R.", date: "October 7, 2025", rating: 4, body: "Nice balance. Would buy again." },
+      { id: "f4", name: "Nate D.", date: "October 5, 2025", rating: 5, body: "Fresh and clean finish. Ships fast." },
+      { id: "f5", name: "Erika L.", date: "October 4, 2025", rating: 5, body: "Crowd pleaser at our office." },
+      { id: "f6", name: "Kate W.", date: "October 2, 2025", rating: 5, body: "Balanced and smooth. Hits the mark." },
+      { id: "f7", name: "Victor H.", date: "September 30, 2025", rating: 5, body: "Exactly what I want in a medium roast." },
+      { id: "f8", name: "Ryan C.", date: "September 28, 2025", rating: 5, body: "Rich aroma and consistent flavor." },
+      { id: "f9", name: "Amanda G.", date: "September 27, 2025", rating: 4, body: "Very good daily drinker." },
+      { id: "f10", name: "Chris P.", date: "September 25, 2025", rating: 5, body: "Smooth from first sip to last." },
+      { id: "f11", name: "Lindsay K.", date: "September 23, 2025", rating: 5, body: "My new go to." },
+      { id: "f12", name: "Derek B.", date: "September 20, 2025", rating: 5, body: "Balanced and flavorful." },
     ],
     "baptism-by-fire": [
-      {
-        id: "b1",
-        name: "Tom O.",
-        date: "October 10, 2025",
-        rating: 5,
-        body: "Bold and smooth without harsh bite.",
-      },
-      {
-        id: "b2",
-        name: "Sarah V.",
-        date: "October 8, 2025",
-        rating: 5,
-        body: "Dark chocolate notes. Excellent.",
-      },
-      {
-        id: "b3",
-        name: "Nick F.",
-        date: "October 6, 2025",
-        rating: 4,
-        body: "Great dark roast for mornings.",
-      },
-      {
-        id: "b4",
-        name: "Jose M.",
-        date: "October 4, 2025",
-        rating: 5,
-        body: "Deep flavor with a clean finish.",
-      },
-      {
-        id: "b5",
-        name: "Evan J.",
-        date: "October 3, 2025",
-        rating: 5,
-        body: "Powerful and smooth.",
-      },
-      {
-        id: "b6",
-        name: "Cara S.",
-        date: "October 1, 2025",
-        rating: 5,
-        body: "Perfect dark cup.",
-      },
-      {
-        id: "b7",
-        name: "Walt A.",
-        date: "September 29, 2025",
-        rating: 4,
-        body: "Rich and satisfying.",
-      },
-      {
-        id: "b8",
-        name: "Helen D.",
-        date: "September 27, 2025",
-        rating: 5,
-        body: "My favorite of the lineup.",
-      },
-      {
-        id: "b9",
-        name: "Ivy N.",
-        date: "September 26, 2025",
-        rating: 5,
-        body: "Smooth for a dark roast.",
-      },
-      {
-        id: "b10",
-        name: "Zack T.",
-        date: "September 24, 2025",
-        rating: 5,
-        body: "Lives up to the name.",
-      },
-      {
-        id: "b11",
-        name: "Anna R.",
-        date: "September 22, 2025",
-        rating: 5,
-        body: "Fantastic body and aroma.",
-      },
-      {
-        id: "b12",
-        name: "Peter Q.",
-        date: "September 20, 2025",
-        rating: 4,
-        body: "Solid dark roast.",
-      },
+      { id: "b1", name: "Tom O.", date: "October 10, 2025", rating: 5, body: "Bold and smooth without harsh bite." },
+      { id: "b2", name: "Sarah V.", date: "October 8, 2025", rating: 5, body: "Dark chocolate notes. Excellent." },
+      { id: "b3", name: "Nick F.", date: "October 6, 2025", rating: 4, body: "Great dark roast for mornings." },
+      { id: "b4", name: "Jose M.", date: "October 4, 2025", rating: 5, body: "Deep flavor with a clean finish." },
+      { id: "b5", name: "Evan J.", date: "October 3, 2025", rating: 5, body: "Powerful and smooth." },
+      { id: "b6", name: "Cara S.", date: "October 1, 2025", rating: 5, body: "Perfect dark cup." },
+      { id: "b7", name: "Walt A.", date: "September 29, 2025", rating: 4, body: "Rich and satisfying." },
+      { id: "b8", name: "Helen D.", date: "September 27, 2025", rating: 5, body: "My favorite of the lineup." },
+      { id: "b9", name: "Ivy N.", date: "September 26, 2025", rating: 5, body: "Smooth for a dark roast." },
+      { id: "b10", name: "Zack T.", date: "September 24, 2025", rating: 5, body: "Lives up to the name." },
+      { id: "b11", name: "Anna R.", date: "September 22, 2025", rating: 5, body: "Fantastic body and aroma." },
+      { id: "b12", name: "Peter Q.", date: "September 20, 2025", rating: 4, body: "Solid dark roast." },
     ],
     "java-action": [
-      {
-        id: "j1",
-        name: "Mark S.",
-        date: "October 9, 2025",
-        rating: 5,
-        body: "Full bodied and smooth. Great mornings.",
-      },
-      {
-        id: "j2",
-        name: "Jen L.",
-        date: "October 7, 2025",
-        rating: 5,
-        body: "Hazelnut and caramel pop.",
-      },
-      {
-        id: "j3",
-        name: "Omar H.",
-        date: "October 6, 2025",
-        rating: 4,
-        body: "Nice daily medium.",
-      },
-      {
-        id: "j4",
-        name: "Theo B.",
-        date: "October 5, 2025",
-        rating: 5,
-        body: "Balanced and rich.",
-      },
-      {
-        id: "j5",
-        name: "Gina P.",
-        date: "October 3, 2025",
-        rating: 5,
-        body: "Smooth and consistent.",
-      },
-      {
-        id: "j6",
-        name: "Sam W.",
-        date: "October 1, 2025",
-        rating: 4,
-        body: "Reliable cup.",
-      },
-      {
-        id: "j7",
-        name: "Iris K.",
-        date: "September 29, 2025",
-        rating: 5,
-        body: "Lovely finish.",
-      },
-      {
-        id: "j8",
-        name: "Caleb D.",
-        date: "September 28, 2025",
-        rating: 5,
-        body: "Goes great with breakfast.",
-      },
-      {
-        id: "j9",
-        name: "Noah M.",
-        date: "September 26, 2025",
-        rating: 4,
-        body: "Smooth ride.",
-      },
-      {
-        id: "j10",
-        name: "Rae C.",
-        date: "September 25, 2025",
-        rating: 5,
-        body: "Buying again.",
-      },
-      {
-        id: "j11",
-        name: "Luis V.",
-        date: "September 23, 2025",
-        rating: 5,
-        body: "Great flavor.",
-      },
-      {
-        id: "j12",
-        name: "Becca Y.",
-        date: "September 21, 2025",
-        rating: 5,
-        body: "Solid medium roast.",
-      },
+      { id: "j1", name: "Mark S.", date: "October 9, 2025", rating: 5, body: "Full bodied and smooth. Great mornings." },
+      { id: "j2", name: "Jen L.", date: "October 7, 2025", rating: 5, body: "Hazelnut and caramel pop." },
+      { id: "j3", name: "Omar H.", date: "October 6, 2025", rating: 4, body: "Nice daily medium." },
+      { id: "j4", name: "Theo B.", date: "October 5, 2025", rating: 5, body: "Balanced and rich." },
+      { id: "j5", name: "Gina P.", date: "October 3, 2025", rating: 5, body: "Smooth and consistent." },
+      { id: "j6", name: "Sam W.", date: "October 1, 2025", rating: 4, body: "Reliable cup." },
+      { id: "j7", name: "Iris K.", date: "September 29, 2025", rating: 5, body: "Lovely finish." },
+      { id: "j8", name: "Caleb D.", date: "September 28, 2025", rating: 5, body: "Goes great with breakfast." },
+      { id: "j9", name: "Noah M.", date: "September 26, 2025", rating: 4, body: "Smooth ride." },
+      { id: "j10", name: "Rae C.", date: "September 25, 2025", rating: 5, body: "Buying again." },
+      { id: "j11", name: "Luis V.", date: "September 23, 2025", rating: 5, body: "Great flavor." },
+      { id: "j12", name: "Becca Y.", date: "September 21, 2025", rating: 5, body: "Solid medium roast." },
     ],
     "oak-and-copper": [
-      {
-        id: "o1",
-        name: "Quinn P.",
-        date: "October 11, 2025",
-        rating: 5,
-        body: "Oak and caramel show up nicely.",
-      },
-      {
-        id: "o2",
-        name: "Dana S.",
-        date: "October 9, 2025",
-        rating: 5,
-        body: "Smooth bourbon kissed finish.",
-      },
-      {
-        id: "o3",
-        name: "Harper G.",
-        date: "October 8, 2025",
-        rating: 4,
-        body: "Unique and rich.",
-      },
-      {
-        id: "o4",
-        name: "Kurt E.",
-        date: "October 7, 2025",
-        rating: 5,
-        body: "New favorite special roast.",
-      },
-      {
-        id: "o5",
-        name: "Elle F.",
-        date: "October 6, 2025",
-        rating: 5,
-        body: "Deep oak notes without bitterness.",
-      },
-      {
-        id: "o6",
-        name: "Sean R.",
-        date: "October 4, 2025",
-        rating: 5,
-        body: "Great weekend treat.",
-      },
-      {
-        id: "o7",
-        name: "Yara T.",
-        date: "October 3, 2025",
-        rating: 5,
-        body: "Delicious and smooth.",
-      },
-      {
-        id: "o8",
-        name: "Vlad K.",
-        date: "October 2, 2025",
-        rating: 5,
-        body: "Awesome barrel character.",
-      },
-      {
-        id: "o9",
-        name: "Mia C.",
-        date: "September 30, 2025",
-        rating: 4,
-        body: "Nice twist on medium roast.",
-      },
-      {
-        id: "o10",
-        name: "Iain D.",
-        date: "September 28, 2025",
-        rating: 5,
-        body: "Rich and balanced.",
-      },
-      {
-        id: "o11",
-        name: "Nora H.",
-        date: "September 26, 2025",
-        rating: 5,
-        body: "Love the finish.",
-      },
-      {
-        id: "o12",
-        name: "Zoe N.",
-        date: "September 24, 2025",
-        rating: 5,
-        body: "Fantastic flavor.",
-      },
+      { id: "o1", name: "Quinn P.", date: "October 11, 2025", rating: 5, body: "Oak and caramel show up nicely." },
+      { id: "o2", name: "Dana S.", date: "October 9, 2025", rating: 5, body: "Smooth bourbon kissed finish." },
+      { id: "o3", name: "Harper G.", date: "October 8, 2025", rating: 4, body: "Unique and rich." },
+      { id: "o4", name: "Kurt E.", date: "October 7, 2025", rating: 5, body: "New favorite special roast." },
+      { id: "o5", name: "Elle F.", date: "October 6, 2025", rating: 5, body: "Deep oak notes without bitterness." },
+      { id: "o6", name: "Sean R.", date: "October 4, 2025", rating: 5, body: "Great weekend treat." },
+      { id: "o7", name: "Yara T.", date: "October 3, 2025", rating: 5, body: "Delicious and smooth." },
+      { id: "o8", name: "Vlad K.", date: "October 2, 2025", rating: 5, body: "Awesome barrel character." },
+      { id: "o9", name: "Mia C.", date: "September 30, 2025", rating: 4, body: "Nice twist on medium roast." },
+      { id: "o10", name: "Iain D.", date: "September 28, 2025", rating: 5, body: "Rich and balanced." },
+      { id: "o11", name: "Nora H.", date: "September 26, 2025", rating: 5, body: "Love the finish." },
+      { id: "o12", name: "Zoe N.", date: "September 24, 2025", rating: 5, body: "Fantastic flavor." },
     ],
-  };
+  }),
+  []
+);
 
-  const reviews: Review[] = reviewListBySlug[card.slug] ?? [];
+const reviews: Review[] = reviewListMap[card.slug] ?? [];
+
 
   const { add } = useCart();
   const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("one");
@@ -1614,24 +1684,48 @@ function RoastDetailPage() {
   }, [slug]);
 
   // Mirror BUY BOX width/height so Bean Type box matches exactly
-  const buyBoxRef = useRef<HTMLDivElement>(null);
-  const [buyBoxDims, setBuyBoxDims] = useState<{ w: number; h: number }>({
-    w: 0,
-    h: 0,
-  });
-  const BEAN_BOX_RATIO = 0.83; // width = 83% of buy box
+// Mirror BUY BOX width/height so Bean Type box matches exactly
+const buyBoxRef = useRef<HTMLDivElement>(null);
+const [buyBoxDims, setBuyBoxDims] = useState<{ w: number; h: number }>({
+  w: 0,
+  h: 0,
+});
+const BEAN_BOX_RATIO = 0.83; // width = 83% of buy box
 
-  useEffect(() => {
+useEffect(() => {
+  const el = buyBoxRef.current;
+
+  // If ResizeObserver is unavailable, fall back to a light resize listener
+  if (!el || typeof ResizeObserver === "undefined") {
     const measure = () => {
       if (!buyBoxRef.current) return;
       const r = buyBoxRef.current.getBoundingClientRect();
       setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
     };
     measure();
-    requestAnimationFrame(measure);
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, []);
+    const onResize = () => requestAnimationFrame(measure);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }
+
+  // Prefer ResizeObserver for precise, low-overhead size tracking
+  const ro = new ResizeObserver(() => {
+    if (!buyBoxRef.current) return;
+    const r = buyBoxRef.current.getBoundingClientRect();
+    setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
+  });
+
+  ro.observe(el);
+
+  // initial measure
+  const r = el.getBoundingClientRect();
+  setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
+
+  return () => {
+    ro.disconnect();
+  };
+}, []);
+
   const basePrice = isOak ? 25 : card.price; // Oak & Copper single price
   const discounted = Number((basePrice * 0.85).toFixed(2));
 
@@ -1822,8 +1916,9 @@ function RoastDetailPage() {
 
                     {/* AMBER DESCRIPTION (kept as-is) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-                      {AMBER_DESC}
-                    </div>
+  {cleanCopy(AMBER_DESC)}
+</div>
+
                     <div className="h-1 md:h-2" />
                   </div>
                 )}
@@ -1856,8 +1951,9 @@ function RoastDetailPage() {
 
                     {/* AMBER DESCRIPTION (kept as-is) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-                      {AMBER_DESC}
-                    </div>
+  {cleanCopy(AMBER_DESC)}
+</div>
+
                     <div className="h-1 md:h-2" />
                   </div>
                 )}
@@ -1897,8 +1993,9 @@ function RoastDetailPage() {
 
                     {/* AMBER DESCRIPTION (kept consistent with other roasts) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-                      {AMBER_DESC}
-                    </div>
+  {cleanCopy(AMBER_DESC)}
+</div>
+
                     <div className="h-1 md:h-2" />
                   </div>
                 )}
@@ -1932,8 +2029,9 @@ function RoastDetailPage() {
                     </div>
 
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-                      {AMBER_DESC}
-                    </div>
+  {cleanCopy(AMBER_DESC)}
+</div>
+
                     <div className="h-1 md:h-2" />
                   </div>
                 )}
@@ -2049,12 +2147,25 @@ function RoastDetailPage() {
                             <Minus className="h-4 w-4" />
                           </button>
                           <input
-                            value={qty}
-                            onChange={(e) => setQty(Number(e.target.value))}
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            className="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
-                          />
+  value={String(qty)}
+  onChange={(e) => {
+    const digits = e.target.value.replace(/\D/g, "");
+    const next = digits === "" ? 1 : Math.min(99, Number(digits));
+    setQty(next);
+  }}
+  inputMode="numeric"
+  pattern="[0-9]*"
+  aria-label="Quantity"
+  className="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
+  onBlur={() => {
+    // normalize after editing
+    setQty((q) => {
+      const n = Number.isFinite(q) ? q : 1;
+      return Math.min(99, Math.max(1, n));
+    });
+  }}
+/>
+
                           <button
                             type="button"
                             onClick={() =>
@@ -2068,12 +2179,14 @@ function RoastDetailPage() {
                         </div>
 
                         <button
-                          onClick={addToChest}
-                          className="px-6 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
-                          aria-label={`Add ${card.title} to Chest`}
-                        >
-                          Add to Chest
-                        </button>
+  type="button"
+  onClick={addToChest}
+  className="px-6 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
+  aria-label={`Add ${card.title} to Chest`}
+>
+  Add to Chest
+</button>
+
                       </div>
                     </div>
 
@@ -3097,7 +3210,7 @@ function TheCoffeeOak({
   anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
   const notes = ["Warm Vanilla", "Caramel", "Toasted Oak"];
-  const origins = ["Colombia", "Indonesia"];
+  const origins = ["Colombia"];
   const level: 1 | 2 | 3 | 4 | 5 = 3;
   const GRID =
     origins.length === 2
@@ -3340,7 +3453,7 @@ function StoreCategoryPage() {
         <div className="mt-8 max-w-xl">
           <div className="rounded-2xl ring-1 ring-amber-400/50 bg-neutral-900/60 p-5">
             <div className="text-sm text-neutral-200">
-              Get an alert when {title.toLowerCase()} drop.
+              Get an alert when {title.toLowerCase()} drops.
             </div>
             <NotifyForm onSubmit={() => {}} />
           </div>
@@ -3748,9 +3861,9 @@ function OriginsPage() {
           />
           <div className="mt-10 grid md:grid-cols-4 gap-6">
             {[
-              "java-action",
-              "baptism-by-fire",
               "flagship",
+              "baptism-by-fire",
+              "java-action",
               "oak-and-copper",
             ].map((slug) => {
               const card = roastCards.find((c) => c.slug === slug);
@@ -3758,7 +3871,12 @@ function OriginsPage() {
               return (
                 <Link
                   key={`story-${card.slug}`}
-                  to={`/roast/${card.slug}`}
+                  to={`/stories/${card.slug}`}
+                  onClick={() => {
+                    try {
+                      sessionStorage.setItem("storiesReturnTo", STORIES_HOME);
+                    } catch {}
+                  }}
                   className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
                 >
                   <img
@@ -3962,7 +4080,7 @@ function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const submit = (e: any) => {
     e.preventDefault();
-    if (!emailOk(email)) return alert("Enter a valid email.");
+    
     setSubmitted(true);
   };
   return (
@@ -4151,32 +4269,56 @@ function LegalPage() {
 
         {/* Live roast schedule notice only on Roast & Shipping */}
         {slug === "shipping" && (
-          <>
-            <div className="mt-6 mb-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-              <p className="text-sm md:text-base text-neutral-200">
-                <>
-                  All of our coffees are roasted fresh every Monday and ship
-                  Tuesday/Wednesday. <br />
-                  <br />
-                  Your next eligible roast date is{" "}
-                  <span className="font-semibold text-amber-300">
-                    {nextRoastLabel()}
-                  </span>
-                  . <br />
-                  <br />
-                  Orders placed before 5 p.m. EST on Sunday make that week’s
-                  roast; after that, they roll to the following week. <br />
-                  Because we roast to order, your coffee won’t arrive overnight
-                  like Amazon, but it will arrive fresh. <br />
-                  Need it sooner? Leave a note at checkout or reply to your
-                  confirmation email — we’ll do our best to accommodate.
-                  <br />
-                  <br />
-                  We use UPS standard shipping for all orders.
-                </>
+          <div className="mt-6 mb-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+            <div className="text-sm md:text-base text-neutral-200">
+              <p>We roast on Monday and Tuesday and ship Wednesday.</p>
+
+              <p className="mt-2">
+                Your next eligible roast date is{" "}
+                <span className="font-semibold text-amber-300">
+                  {nextRoastLabel()}
+                </span>
+                .
+              </p>
+
+              <p className="mt-2">
+                Orders placed before <strong>Sunday 5 p.m. ET</strong> are
+                roasted that week. Orders placed after roll to the following
+                week.
+              </p>
+
+              <p className="mt-2">
+                We roast to order. It will not arrive overnight like Amazon. It
+                will arrive fresh.
+              </p>
+
+              <div className="mt-4">
+                <p className="font-semibold text-amber-300">Free Shipping</p>
+                <ul className="list-disc pl-5 mt-1 space-y-1">
+                  <li>
+                    Mix and match any roasts or choose <em>The Fleet</em>{" "}
+                    bundle.
+                  </li>
+                  <li>
+                    <strong>3 or more bags</strong> ship free.
+                  </li>
+                  <li>
+                    All free shipping is via{" "}
+                    <strong>UPS Standard Ground</strong>.
+                  </li>
+                </ul>
+                <p className="mt-2">
+                  Orders of 1 or 2 bags ship at the carrier rates shown at
+                  checkout.
+                </p>
+              </div>
+
+              <p className="mt-4 text-amber-300">
+                Missed the cutoff time? Leave a note at checkout or reply to
+                your confirmation email. We will do our best to accommodate.
               </p>
             </div>
-          </>
+          </div>
         )}
 
         {/* Returns & Freshness Policy */}
@@ -5266,7 +5408,19 @@ function LegalPage() {
 }
 
 function CartPage() {
-  const { cart, inc, dec, remove, subtotal } = useCart();
+  const {
+    cart,
+    inc,
+    dec,
+    remove,
+    subtotal,
+    shipping,
+    shippingLabel,
+    total,
+    freeShippingQualified,
+    coffeeBagCount,
+  } = useCart();
+
   // Sidebar "Ring That Bell" state/submit (mimics MegaSubscribeBox)
   const [sbEmail, setSbEmail] = useState("");
   const [sbDone, setSbDone] = useState(false);
@@ -5381,19 +5535,43 @@ function CartPage() {
               </div>
 
               {/* Checkout sidebar */}
+              {/* Checkout sidebar */}
               <aside className="space-y-6">
                 {/* Checkout box */}
                 <div className="rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 h-max">
+                  {/* Subtotal */}
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-neutral-400">Subtotal</span>
                     <span className="font-semibold">{fmt(subtotal)}</span>
                   </div>
+
+                  {/* Shipping */}
+                  <div className="mt-2 flex items-center justify-between text-sm">
+                    <span className="text-neutral-400">Shipping</span>
+                    {shipping === 0 ? (
+                      <span className="font-semibold text-amber-300">
+                        {shippingLabel}
+                      </span>
+                    ) : (
+                      <span className="font-semibold">{fmt(shipping)}</span>
+                    )}
+                  </div>
+                  <div className="mt-1 text-xs text-neutral-500">
+                    UPS Standard Ground
+                  </div>
+
+                  {/* Total */}
+                  <div className="mt-3 border-t border-neutral-800 pt-3 flex items-center justify-between text-sm">
+                    <span className="text-neutral-400">Total</span>
+                    <span className="font-semibold">{fmt(total)}</span>
+                  </div>
+
                   <button className="mt-4 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
                     Checkout
                   </button>
                 </div>
 
-                {/* Ring That Bell subscribe box — EXACT mimic of MegaSubscribeBox visual */}
+                {/* Ring That Bell subscribe box */}
                 <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-8 text-center">
                   <div className="flex items-center justify-center gap-3 mb-3">
                     <Bell className="h-7 w-7 text-amber-300" />
@@ -5419,7 +5597,7 @@ function CartPage() {
                       spellCheck={false}
                       value={sbEmail}
                       onChange={(e) => setSbEmail(e.target.value)}
-                      placeholder="you@domain.com"
+                      placeholder="Enter your email to join the fleet"
                       className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
                     />
                     <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
@@ -5439,7 +5617,7 @@ function CartPage() {
 
                   {sbDone && (
                     <p className="mt-3 text-sm text-emerald-400">
-                      Welcome aboard — your discount is on the way.
+                      Welcome aboard. Your discount is on the way.
                     </p>
                   )}
                 </div>
@@ -5967,45 +6145,213 @@ function ScrollToTop() {
 // styled like your buy box. Clicking it closes the banner.
 
 function PromoSubscribeModal() {
+  // ===== LIVE CONFIG =====
+  const TEST_FORCE_OPEN = false; // keep false in production
+  const OPEN_DELAY_MS = 5000; // open ~5s AFTER window 'load'
+  const COOLDOWN_MINUTES = 1440; // 24 hours
+
+  // ===== STATE =====
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState("");
 
-  React.useEffect(() => {
-    const onOpen = () => {
-      setOpen(true);
-      setEmail("");
-    };
+  // ===== KEYS =====
+  const KEY_SUB = "promo_subscribed";
+  const KEY_CD = "promo_cooldown_until";
+  const COOKIE_SUB = "promo_subscribed";
+  const COOKIE_CD = "promo_cooldown_until";
 
-    // Listen on BOTH window and document for maximum reliability
+  // ===== GLOBAL GUARDS (singleton + timers + gating) =====
+  const g = globalThis as any;
+  g.__promo = g.__promo || {
+    leaderId: null as string | null,
+    entryTimer: null as any,
+    pendingTimer: null as any,
+    readyAt: Number.POSITIVE_INFINITY as number,
+    isLockedOpen: false,
+  };
+
+  // unique id for this instance
+  const instanceId = React.useMemo(
+    () => Math.random().toString(36).slice(2),
+    []
+  );
+  const [isLeader, setIsLeader] = React.useState(false);
+
+  // elect a single leader instance
+  React.useEffect(() => {
+    if (!g.__promo.leaderId) g.__promo.leaderId = instanceId;
+    setIsLeader(g.__promo.leaderId === instanceId);
+    return () => {
+      if (g.__promo.leaderId === instanceId) g.__promo.leaderId = null;
+    };
+  }, [g, instanceId]);
+
+  // ===== HELPERS =====
+  const emailOk = (val: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
+  const nowMs = () => Date.now();
+
+  // Cookie helpers (regex-free)
+  const setCookieDays = (name: string, value: string, days: number) => {
+    const maxAge = Math.max(0, Math.floor(days * 86400));
+    const secure = location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `${name}=${encodeURIComponent(
+      value
+    )}; Path=/; SameSite=Lax; Max-Age=${maxAge}${secure}`;
+  };
+  const setCookieSeconds = (name: string, value: string, seconds: number) => {
+    const maxAge = Math.max(0, Math.floor(seconds));
+    const secure = location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `${name}=${encodeURIComponent(
+      value
+    )}; Path=/; SameSite=Lax; Max-Age=${maxAge}${secure}`;
+  };
+  const getCookie = (name: string): string | null => {
+    if (!document.cookie) return null;
+    const parts = document.cookie.split("; ");
+    for (const part of parts) {
+      const eq = part.indexOf("=");
+      const key = eq >= 0 ? part.slice(0, eq) : part;
+      if (key === name) {
+        const val = eq >= 0 ? part.slice(eq + 1) : "";
+        return decodeURIComponent(val);
+      }
+    }
+    return null;
+  };
+
+  const isSubscribed = () =>
+    localStorage.getItem(KEY_SUB) === "1" || getCookie(COOKIE_SUB) === "1";
+
+  const getCooldownUntil = () => {
+    const cdLocal = parseInt(localStorage.getItem(KEY_CD) || "0", 10);
+    const cdCookie = parseInt(getCookie(COOKIE_CD) || "0", 10);
+    return Math.max(
+      Number.isFinite(cdLocal) ? cdLocal : 0,
+      Number.isFinite(cdCookie) ? cdCookie : 0
+    );
+  };
+
+  const startCooldown = () => {
+    if (COOLDOWN_MINUTES > 0) {
+      const until = nowMs() + COOLDOWN_MINUTES * 60 * 1000;
+      localStorage.setItem(KEY_CD, String(until));
+      setCookieSeconds(COOKIE_CD, String(until), COOLDOWN_MINUTES * 60);
+    }
+  };
+
+  // force=true bypasses delay gate for user clicks; auto-open respects gate
+  const safeOpen = (force = false) => {
+    if (g.__promo.isLockedOpen) return;
+
+    const readyAt = g.__promo.readyAt || 0;
+    const now = nowMs();
+
+    if (!force && now < readyAt) {
+      if (!g.__promo.pendingTimer) {
+        g.__promo.pendingTimer = window.setTimeout(() => {
+          g.__promo.pendingTimer = null;
+          safeOpen(false);
+        }, Math.max(0, readyAt - now + 10));
+      }
+      return;
+    }
+
+    g.__promo.isLockedOpen = true;
+    setEmail("");
+    setOpen(true);
+  };
+
+  const safeClose = () => {
+    setOpen(false);
+    startCooldown();
+    setTimeout(() => {
+      g.__promo.isLockedOpen = false;
+    }, 200);
+  };
+
+  // ===== EVENT: open from anywhere (respects gate) =====
+  React.useEffect(() => {
+    if (!isLeader) return;
+    const onOpen = () => safeOpen(false);
     window.addEventListener("promo-subscribe", onOpen as any);
     document.addEventListener("promo-subscribe", onOpen as any);
-
     return () => {
       window.removeEventListener("promo-subscribe", onOpen as any);
       document.removeEventListener("promo-subscribe", onOpen as any);
     };
-  }, []);
+  }, [isLeader]);
 
+  // ===== CLICK TRIGGER: [data-open-promo] — opens immediately for user action =====
+  React.useEffect(() => {
+    if (!isLeader) return;
+    const handleClickCapture = (e: Event) => {
+      const t = e.target as HTMLElement | null;
+      if (!t) return;
+      const trigger = t.closest("[data-open-promo]");
+      if (!trigger) return;
+      e.preventDefault();
+      safeOpen(true); // user clicked, bypass delay
+    };
+    document.addEventListener("click", handleClickCapture, true);
+    return () =>
+      document.removeEventListener("click", handleClickCapture, true);
+  }, [isLeader]);
+
+  // ===== ESC to close =====
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") safeClose();
     };
     if (open) window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // ===== SET READY TIME AFTER FULL WINDOW LOAD, THEN SCHEDULE AUTO-OPEN =====
+  React.useEffect(() => {
+    if (!isLeader) return;
+
+    const setReady = () => {
+      g.__promo.readyAt = nowMs() + OPEN_DELAY_MS;
+
+      const cooldownUntil = getCooldownUntil();
+      const canAuto = TEST_FORCE_OPEN
+        ? true
+        : !isSubscribed() && nowMs() >= cooldownUntil;
+      if (!canAuto) return;
+
+      if (!g.__promo.entryTimer) {
+        const delay = Math.max(0, g.__promo.readyAt - nowMs());
+        g.__promo.entryTimer = window.setTimeout(() => {
+          g.__promo.entryTimer = null;
+          safeOpen(false);
+        }, delay);
+      }
+    };
+
+    if (document.readyState === "complete") {
+      setReady();
+    } else {
+      const onLoad = () => setReady();
+      window.addEventListener("load", onLoad, { once: true });
+      return () => window.removeEventListener("load", onLoad);
+    }
+  }, [isLeader]);
+
+  // ===== SUBMIT =====
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!emailOk(email)) return alert("Enter a valid email.");
+    if (!emailOk(email)) return flash("Enter a valid email.");
 
-    // mark as subscribed so the banner will not show again
-    localStorage.setItem("promo_subscribed", "1");
 
-    setOpen(false);
+    localStorage.setItem(KEY_SUB, "1");
+    setCookieDays(COOKIE_SUB, "1", 365);
+
+    safeClose();
     setTimeout(() => {
       window.dispatchEvent(
         new CustomEvent("flash", {
-          detail: "Welcome aboard - your 20% code is on the way.",
+          detail: "Welcome aboard. Your 20% code is on the way.",
         })
       );
     }, 75);
@@ -6020,7 +6366,7 @@ function PromoSubscribeModal() {
       aria-modal="true"
       aria-label="Get 20% off your first order"
       onClick={(e) => {
-        if (e.target === e.currentTarget) setOpen(false);
+        if (e.target === e.currentTarget) safeClose();
       }}
     >
       {/* Backdrop */}
@@ -6031,33 +6377,32 @@ function PromoSubscribeModal() {
         <div className="relative rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 overflow-hidden">
           {/* Body: LEFT hero, RIGHT content */}
           <div className="grid md:grid-cols-[auto,1fr] items-center gap-0">
-            {/* LEFT: hero image in a bordered card (no crop) */}
+            {/* LEFT: hero — fill edge to edge */}
             <div className="hidden md:flex items-center justify-start pl-6 pr-0 py-6">
-              <div className="rounded-2xl ring-1 ring-amber-400 bg-neutral-900/60 p-2 shadow-2xl shadow-black/40">
-                <div className="w-[18rem] lg:w-[20rem] aspect-[4/5]">
+              <div className="rounded-2xl ring-1 ring-amber-400 bg-neutral-900/60 overflow-hidden shadow-2xl shadow-black/40">
+                <div className="w-[19rem] lg:w-[21rem] aspect-[4/5]">
                   <img
                     src="/captain-deck.png"
                     alt="Hero"
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>
             </div>
 
-            {/* RIGHT: centered content, snug to hero */}
+            {/* RIGHT: content */}
             <div className="py-8 md:py-10 pl-3 md:pl-4 pr-8 md:pr-10 md:-ml-8">
               <div className="h-full w-full flex flex-col items-center justify-center text-center">
                 <div className="flex items-center justify-center gap-3 mb-3">
-                  {/* 50% larger icon and title */}
                   <Bell className="h-12 w-12 text-amber-300" />
                   <h3 className="font-extrabold text-amber-300 text-[2.5875rem] leading-tight">
                     Ring That Bell
                   </h3>
                 </div>
 
-                {/* Keep on one line on md+ */}
                 <p className="text-neutral-300 mb-5 text-lg md:text-xl md:whitespace-nowrap">
-                  Join the Fleet and save 20% on your first order
+                  Join the Fleet and save 20% on your first order. <br /> Save
+                  15% on all recurring orders.
                 </p>
 
                 <div className="w-full max-w-lg mx-auto">
@@ -6075,23 +6420,26 @@ function PromoSubscribeModal() {
                       spellCheck={false}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@domain.com"
+                      placeholder="Enter your email to join the Fleet"
                       className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
                     />
-                    <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+                    <button
+                      className="px-6 py-3 rounded-xl ring-1 ring-amber-400/70 text-amber-300 font-semibold bg-transparent
+                                 hover:bg-amber-400 hover:text-neutral-900 transition-all"
+                    >
                       Join
                     </button>
                   </form>
 
-                  {/* 25% larger + centered; cancel line below */}
                   <div className="mt-3 text-[0.9375rem] text-neutral-400 text-center">
                     Already a member?{" "}
                     <Link
                       to="/account/login"
                       className="text-amber-300 hover:underline"
                       onClick={() => {
-                        localStorage.setItem("promo_subscribed", "1");
-                        setOpen(false);
+                        localStorage.setItem(KEY_SUB, "1");
+                        setCookieDays(COOKIE_SUB, "1", 365);
+                        safeClose();
                       }}
                     >
                       Sign in
@@ -6106,17 +6454,17 @@ function PromoSubscribeModal() {
             </div>
           </div>
 
-          {/* FOOTER: centered “closer” buy-box button */}
+          {/* FOOTER: close button */}
           <div className="border-t border-neutral-800 p-4 md:p-5 flex justify-center bg-neutral-900/40">
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={safeClose}
               className="inline-flex items-center justify-center px-5 py-2 rounded-xl ring-1 ring-amber-400/60 
                          text-amber-400 font-semibold text-base md:text-lg
                          hover:bg-amber-400 hover:text-neutral-900 transition-all"
               aria-label="Close banner"
             >
-              Tax me like it&apos;s 1773. Give my 20% to the Redcoats.
+              Nah. Tax me like it&apos;s 1773. Give my 20% to the Redcoats.
             </button>
           </div>
         </div>
@@ -6124,6 +6472,7 @@ function PromoSubscribeModal() {
     </div>
   );
 }
+
 function RoastAnchorsInline({ level = 3 }: { level?: 1 | 2 | 3 | 4 | 5 }) {
   return (
     <div className="mt-2">
@@ -6971,7 +7320,9 @@ function AppShell() {
         <Route path="roast/:slug" element={<RoastDetailPage />} />
         <Route path="store" element={<StorePage />} />
         <Route path="store/:slug" element={<StoreCategoryPage />} />
-        {/* mission removed; merged into Origins */}
+        // ADD this line
+        {/* History Story pages */}
+        <Route path="stories/:slug" element={<FleetStoryPage />} />
         <Route path="origins" element={<OriginsPage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="sdvosb" element={<SDVOSBPage />} />

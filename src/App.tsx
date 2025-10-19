@@ -78,7 +78,9 @@ function FlashToast() {
   return (
     <div
       className={`fixed top-6 left-1/2 -translate-x-1/2 z-[100] transition-all duration-200 ${
-        show ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+        show
+          ? "opacity-100 scale-100"
+          : "opacity-0 scale-95 pointer-events-none"
       }`}
     >
       <div
@@ -91,7 +93,6 @@ function FlashToast() {
     </div>
   );
 }
-
 
 /* ================= Inline Icon Fallbacks (no external deps) ================= */
 type IconProps = React.SVGProps<SVGSVGElement>;
@@ -245,9 +246,8 @@ const BackButton = ({
   const iconCls = size === "sm" ? "h-5 w-5" : "h-7 w-7";
   return (
     <button
-    type="button"
-    onClick={() => {
-  
+      type="button"
+      onClick={() => {
         try {
           if (to) return navigate(to);
           if (
@@ -301,9 +301,6 @@ const flash = (message: string) => {
     window.dispatchEvent(new CustomEvent("flash", { detail: String(message) }));
   }
 };
-
-
-/* ================= Data ================= */
 const roastCards = [
   {
     id: "flagship-12oz-ground",
@@ -311,7 +308,10 @@ const roastCards = [
     title: "Flagship",
     subTitle: "Medium Roast",
     note: "Balanced, Enduring, Everyday",
-    img: "Flagship-web.png",
+    img: "Flagship-web.png", // Main image for hero section
+    imgLeft: "washington-cannon.jpg", // New property for left image in duel
+    imgRight: "barry-ship.jpg", // New property for right image in duel
+    heroImg: "Flagship-web.png", // New property for hero section image
     price: 22.0,
     canBuy: true,
     variant: "12oz • Ground",
@@ -325,7 +325,8 @@ const roastCards = [
       </>
     ),
     story:
-      "Launched in 1797, the heavy frigate earned the nickname ‘Old Ironsides’ in the War of 1812 after enemy cannonballs allegedly bounced off her tough live-oak hull.",
+      "The flagship of the U.S. Navy, USS Constitution, built to withstand the fiercest battles. Her commissioning in 1797 is the foundation of American naval history.", // Blurb (short version)
+    mainStory: "", // Full story
   },
   {
     id: "baptism-dark-12oz-ground",
@@ -333,7 +334,10 @@ const roastCards = [
     title: "Baptism by Fire",
     subTitle: "Dark Roast",
     note: "Bold, Smooth, Unyielding",
-    img: "baptism-web.png",
+    img: "baptism-web.png", // Main image for hero section
+    imgLeft: "capt-hull.jpg", // New property for left image in duel
+    imgRight: "james-surrender.jpg", // New property for right image in duel
+    heroImg: "baptism-web.png", // New property for hero section image
     price: 22.0,
     canBuy: true,
     variant: "12oz • Ground",
@@ -347,7 +351,8 @@ const roastCards = [
       </>
     ),
     story:
-      "In August 1812, Constitution fought HMS Guerriere. The British frigate was reduced to a dismasted wreck in thirty minutes — America’s first great frigate victory.",
+      "In 1812, the USS Constitution defeated HMS Guerriere in one of America’s first great naval victories. This battle established the Constitution’s legendary status as ‘Old Ironsides.’", // Blurb (short version)
+    mainStory: "", // Full story
   },
   {
     id: "java-action-12oz-ground",
@@ -355,7 +360,10 @@ const roastCards = [
     title: "The Java Action",
     subTitle: "Medium Roast",
     note: "Captivating, Decisive Finish.",
-    img: "java-web.png",
+    img: "java-web.png", // Main image for hero section
+    imgLeft: "bainbridge-java.jpg", // New property for left image in duel
+    imgRight: "lambert-pic.png", // New property for right image in duel
+    heroImg: "java-web.png", // New property for hero section image
     price: 22.0,
     canBuy: true,
     variant: "12oz • Ground",
@@ -367,7 +375,8 @@ const roastCards = [
       </>
     ),
     story:
-      "In December 1812, Constitution met HMS Java off Brazil. After a fierce duel, Constitution dismasted and captured Java — a defining American naval victory.",
+      "In 1812, Constitution faced off against HMS Java in a fierce sea battle. The American frigate’s victory proved her might and resilience, further cementing her legendary status.", // Blurb (short version)
+    mainStory: "", // Full story
   },
   {
     id: "oak-copper-coming-soon",
@@ -375,11 +384,14 @@ const roastCards = [
     title: "Oak & Copper",
     subTitle: "Medium Roast",
     note: "Bourbon barrel-aged seasonal.",
-    img: "oak-copper-deck.png",
+    img: "oak-copper-deck.png", // Main image for hero section
+    imgLeft: "ship-hull.avif", // New property for left image in duel
+    imgRight: "ship-restore.jpg", // New property for right image in duel
+    heroImg: "ironship.png", // New property for hero section image
     price: 0,
     canBuy: false,
     variant: "Limited Release",
-    battleDate: "Design Era 1790s",
+    battleDate: "",
     storyTitle: (
       <>
         <div className="text-2xl font-bold text-amber-300">Oak & Copper</div>
@@ -387,7 +399,8 @@ const roastCards = [
       </>
     ),
     story:
-      "A nod to live-oak planking and copper sheathing that made American frigates rugged, fast, and seaworthy across unforgiving oceans. Barrel beans aging now. Limited batch. Join the Fleet to secure your share.",
+      "Inspired by the rugged oak and copper that defined the USS Constitution, Oak & Copper is a bourbon barrel-aged seasonal roast that celebrates American craftsmanship.", // Blurb (short version)
+    mainStory: "", // Full story
   },
 ];
 
@@ -411,7 +424,7 @@ function CartProvider({ children }: any) {
       return [];
     }
   });
-  
+
   // cross-tab sync: update this tab if oi_cart changes in another tab
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
@@ -426,9 +439,9 @@ function CartProvider({ children }: any) {
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
   }, []);
-  
+
   const persist = useCallback((updater: (prev: any[]) => any[]) => {
-    setCart(prev => {
+    setCart((prev) => {
       const next = updater(prev);
       try {
         localStorage.setItem("oi_cart", JSON.stringify(next));
@@ -436,8 +449,7 @@ function CartProvider({ children }: any) {
       return next;
     });
   }, []);
-  
-  
+
   const count = useMemo(
     () => cart.reduce((s: number, i: any) => s + Number(i.qty || 0), 0),
     [cart]
@@ -484,79 +496,94 @@ function CartProvider({ children }: any) {
 
   const total = useMemo(() => subtotal + shipping, [subtotal, shipping]);
 
-  const add = useCallback((item: any, qty = 1) => {
-    const variantLabel =
-      item?.beanType === "whole"
-        ? "Whole Bean"
-        : item?.beanType === "ground"
-        ? "Ground"
-        : null;
-  
-    const rawId = String(item?.id ?? "");
-    const beanKey = item?.beanType === "whole" || item?.beanType === "ground" ? item.beanType : null;
-  
-    // Make a single, canonical id. If the id already contains the bean type
-    // (e.g., "...-ground" or "...__ground"), don't append it again.
-    let canonicalId = rawId;
-    if (beanKey) {
-      const hasBeanSuffix = new RegExp(`(__|-)${beanKey}$`).test(rawId);
-      if (!hasBeanSuffix) {
-        canonicalId = `${rawId}__${beanKey}`;
+  const add = useCallback(
+    (item: any, qty = 1) => {
+      const variantLabel =
+        item?.beanType === "whole"
+          ? "Whole Bean"
+          : item?.beanType === "ground"
+          ? "Ground"
+          : null;
+
+      const rawId = String(item?.id ?? "");
+      const beanKey =
+        item?.beanType === "whole" || item?.beanType === "ground"
+          ? item.beanType
+          : null;
+
+      // Make a single, canonical id. If the id already contains the bean type
+      // (e.g., "...-ground" or "...__ground"), don't append it again.
+      let canonicalId = rawId;
+      if (beanKey) {
+        const hasBeanSuffix = new RegExp(`(__|-)${beanKey}$`).test(rawId);
+        if (!hasBeanSuffix) {
+          canonicalId = `${rawId}__${beanKey}`;
+        }
       }
-    }
-  
-    // Only add the label if it's not already there
-    const displayTitle =
-      variantLabel &&
-      typeof item.title === "string" &&
-      !new RegExp(`\\(${variantLabel}\\)$`).test(item.title)
-        ? `${item.title} (${variantLabel})`
-        : item.title;
-  
-    const normalized = {
-      ...item,
-      id: canonicalId,
-      sku: item.sku || canonicalId,
-      title: displayTitle,
-      isCoffee: typeof item.isCoffee === "boolean" ? item.isCoffee : true,
-    };
-  
-    persist(prev => {
-      const copy = [...prev];
-      const idx = copy.findIndex(x => x.id === normalized.id);
-      if (idx >= 0) {
-        copy[idx] = { ...copy[idx], qty: copy[idx].qty + qty };
-      } else {
-        copy.push({ ...normalized, qty });
-      }
-      return copy;
-    });
-  }, [persist]);
-  
-  
-  
-  const inc = useCallback((id: string) => {
-    persist(prev => prev.map((x: any) => (x.id === id ? { ...x, qty: x.qty + 1 } : x)));
-  }, [persist]);
-  
-  const dec = useCallback((id: string) => {
-    persist(prev =>
-      prev
-        .map((x: any) => (x.id === id ? { ...x, qty: Math.max(0, x.qty - 1) } : x))
-        .filter((x: any) => x.qty > 0)
-    );
-  }, [persist]);
-  
-  
-  const remove = useCallback((id: string) => {
-    persist(prev => prev.filter((x: any) => x.id !== id));
-  }, [persist]);
-  
-  
+
+      // Only add the label if it's not already there
+      const displayTitle =
+        variantLabel &&
+        typeof item.title === "string" &&
+        !new RegExp(`\\(${variantLabel}\\)$`).test(item.title)
+          ? `${item.title} (${variantLabel})`
+          : item.title;
+
+      const normalized = {
+        ...item,
+        id: canonicalId,
+        sku: item.sku || canonicalId,
+        title: displayTitle,
+        isCoffee: typeof item.isCoffee === "boolean" ? item.isCoffee : true,
+      };
+
+      persist((prev) => {
+        const copy = [...prev];
+        const idx = copy.findIndex((x) => x.id === normalized.id);
+        if (idx >= 0) {
+          copy[idx] = { ...copy[idx], qty: copy[idx].qty + qty };
+        } else {
+          copy.push({ ...normalized, qty });
+        }
+        return copy;
+      });
+    },
+    [persist]
+  );
+
+  const inc = useCallback(
+    (id: string) => {
+      persist((prev) =>
+        prev.map((x: any) => (x.id === id ? { ...x, qty: x.qty + 1 } : x))
+      );
+    },
+    [persist]
+  );
+
+  const dec = useCallback(
+    (id: string) => {
+      persist((prev) =>
+        prev
+          .map((x: any) =>
+            x.id === id ? { ...x, qty: Math.max(0, x.qty - 1) } : x
+          )
+          .filter((x: any) => x.qty > 0)
+      );
+    },
+    [persist]
+  );
+
+  const remove = useCallback(
+    (id: string) => {
+      persist((prev) => prev.filter((x: any) => x.id !== id));
+    },
+    [persist]
+  );
+
   const clear = useCallback(() => {
     persist(() => []);
   }, [persist]);
-  
+
   const value = useMemo(
     () => ({
       cart,
@@ -591,10 +618,8 @@ function CartProvider({ children }: any) {
       // FREE_SHIPPING_THRESHOLD is a constant; no need to include as a dep
     ]
   );
-  
 
   return <CartCtx.Provider value={value}>{children}</CartCtx.Provider>;
-
 }
 
 /* ================= Components ================= */
@@ -831,14 +856,14 @@ function GovXLoginBox() {
         is donated to trusted organizations that help veterans.
       </p>
       <button
-  type="button"
-  // TODO: point this to your GovX verification route or modal
-  onClick={() => window.location.assign("/account?govx=1")}
-  className="mt-3 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
-  aria-label="Verify with GovX"
->
-  Verify with GovX
-</button>
+        type="button"
+        // TODO: point this to your GovX verification route or modal
+        onClick={() => window.location.assign("/account?govx=1")}
+        className="mt-3 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+        aria-label="Verify with GovX"
+      >
+        Verify with GovX
+      </button>
 
       <div className="mt-2 text-[11px] text-neutral-400">
         Need help?{" "}
@@ -859,7 +884,7 @@ function NotifyForm({ onSubmit }: any) {
       flash("Enter a valid email.");
       return;
     }
-    
+
     setDone(true);
     onSubmit && onSubmit(email);
   };
@@ -944,19 +969,18 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
               className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col"
             >
               <img
-  src={card.img}
-  alt={card.title}
-  className="h-80 sm:h-96 md:h-[28rem] w-full object-cover"
-  loading="lazy"
-  decoding="async"
-  onError={(e) => {
-    const el = e.currentTarget as HTMLImageElement;
-    if (!el.src.includes("/placeholder.png")) {
-      el.src = "/placeholder.png"; // add a neutral fallback image in /public
-    }
-  }}
-/>
-
+                src={card.img}
+                alt={card.title}
+                className="h-80 sm:h-96 md:h-[28rem] w-full object-cover"
+                loading="lazy"
+                decoding="async"
+                onError={(e) => {
+                  const el = e.currentTarget as HTMLImageElement;
+                  if (!el.src.includes("/placeholder.png")) {
+                    el.src = "/placeholder.png"; // add a neutral fallback image in /public
+                  }
+                }}
+              />
 
               <div className="p-5 flex flex-col flex-1">
                 <h3
@@ -1251,7 +1275,6 @@ function ShopCoffeeCard({ className = "" }: { className?: string }) {
     </Link>
   );
 }
-
 function FleetPage() {
   return (
     <main className="py-6 md:py-8">
@@ -1260,6 +1283,8 @@ function FleetPage() {
   );
 }
 
+const cardFrame =
+  "w-full max-w-[24rem] md:max-w-[26rem] aspect-[3/4] overflow-hidden rounded-2xl ring-1 ring-amber-400/60 shadow-2xl shadow-amber-500/20 bg-neutral-900/40";
 function FleetStoryPage() {
   const { slug } = useParams();
   const card = roastCards.find((c) => c.slug === slug);
@@ -1269,67 +1294,108 @@ function FleetStoryPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  // Title casing to match roast detail convention
   const isFlagship = card.slug === "flagship";
   const isBaptism = card.slug === "baptism-by-fire";
+  const isJavaAction = card.slug === "java-action";
+  const isOakAndCopper = card.slug === "oak-and-copper";
   const displayTitle = isFlagship
     ? "FLAGSHIP"
     : isBaptism
     ? "BAPTISM BY FIRE"
+    : isJavaAction
+    ? "THE JAVA ACTION"
+    : isOakAndCopper
+    ? "OAK & COPPER"
     : card.title;
+
   const battleLineMap: Record<string, string> = {
     "java-action": "USS Constitution vs HMS Java",
     "baptism-by-fire": "USS Constitution vs HMS Guerriere",
     "oak-and-copper": "Wrapped in Oak Above, Clad in Copper Below",
     flagship: "",
   };
+
   const battleLine =
     battleLineMap[card.slug] ||
     (card as any).battleLine ||
     (card as any).storyTitle ||
     "";
 
-  // Back target from your earlier setup
-  const storiesHome = React.useMemo(() => {
-    try {
-      return sessionStorage.getItem("storiesReturnTo") || STORIES_HOME; // STORIES_HOME defined at top of file
-    } catch {
-      return STORIES_HOME;
-    }
-  }, [slug]);
-
-  // Captions and optional left/right images (fallback to card.img)
   const captionsBySlug: Record<string, { left: string; right: string }> = {
     "java-action": {
       left: "Capt. William Bainbridge",
-      right: "Capt. Henry Lambert",
+      right: "Capt. Henry Lambert, Representation only",
     },
     "baptism-by-fire": {
       left: "Capt. Isaac Hull",
-      right: "Capt. James Dacres",
+      right: "Capt. James Dacres Surrenders to Capt. Hull",
     },
-    flagship: { left: "USS Constitution", right: "Royal Navy" },
-    "oak-and-copper": { left: "USS Constitution", right: "Copper Sheathing" },
+    flagship: {
+      left: "President George Washington",
+      right: "Commodore John Barry",
+    },
+    "oak-and-copper": {
+      left: "USS Constitution at Philadelphia Navy Yard, c. 1875",
+      right: "USS Constitution Restoration, Boston Navy Yard c. 1930",
+    },
   };
   const caps = captionsBySlug[card.slug] ?? {
-    left: "USS Constitution",
-    right: "Royal Navy",
+    left: "President George Washington",
+    right: "Commodore John Barry",
   };
-  const imgLeft = (card as any).imgLeft || card.img;
-  const imgRight = (card as any).imgRight || card.img;
+  // Use conditional fallback for undefined properties
+  const imgLeft = card.imgLeft || "/path/to/default-left-image.jpg"; // Default image for the left side
+  const imgRight = card.imgRight || "/path/to/default-right-image.jpg"; // Default image for the right side
+  const heroImg = card.heroImg || "/path/to/default-hero-image.jpg"; // Default image for the hero section
 
-  // Consistent card frame (matches fleet card sizing/feel)
-  const cardFrame =
-    "w-full max-w-[24rem] md:max-w-[26rem] aspect-[3/4] overflow-hidden rounded-2xl ring-1 ring-amber-400/60 shadow-2xl shadow-amber-500/20 bg-neutral-900/40";
+  const duelStoryMap: Record<string, { title: string; story: string[] }> = {
+    "java-action": {
+      title: "Duel Between Two Captains",
+      story: [
+        "Captain William Bainbridge of the USS Constitution was a seasoned and resolute leader, whose calm under pressure and tactical brilliance turned the tide in the fierce battle against the HMS Java. Despite being wounded twice during the engagement, Bainbridge maintained control, directing his crew with precision. His unwavering resolve and the Constitution’s superior strength secured a decisive victory, further solidifying his place in naval history. The triumph proved invaluable to the young nation, boosting morale and solidifying Bainbridge’s reputation as one of the finest commanders of the U.S. Navy.",
+        "On the opposing side, Captain Henry Lambert of the HMS Java faced an overwhelming challenge. The British frigate, despite its armament, struggled against the Constitution’s superior firepower and maneuverability. Lambert, gravely wounded during the battle, was unable to lead his crew effectively as the situation deteriorated. Tragically, he succumbed to his injuries on January 4, 1813, in Salvador, Brazil. His death marked a somber end to a promising career, and he was buried with full military honors.",
+        "In the aftermath, the victory of the Constitution was not just a naval success, it was a defining moment for both captains. Bainbridge’s victory became a cornerstone of his career, while Lambert’s life was cut short, forever tying his legacy to the defeat of the Java. Their fates, shaped by that battle, would be forever linked to the USS Constitution’s engagement with the HMS Java.",
+      ],
+    },
+    "baptism-by-fire": {
+      title: "Duel Between Two Captains",
+      story: [
+        "Captain Isaac Hull, commanding the USS Constitution, was a master tactician. His calm under fire and expert maneuvering turned the tide of battle against the HMS Guerriere. In just 30 minutes, Hull’s decisive actions crippled the British ship, earning him praise and hero status. The victory not only secured his place in history but also gave the young United States a powerful boost in morale during the War of 1812.",
+        "On the other side, Captain James Richard Dacres of the Guerriere faced harsh consequences. Despite struggling with poor weather and his ship’s slower maneuvering, Dacres was held responsible for the loss. The British Navy ordered a court-martial, not for incompetence but for the disgrace of losing a royal vessel. Though Dacres was exonerated, his reputation was forever tarnished. The battle’s aftermath cast a long shadow over his career, marking the start of his decline in naval service.",
+        "In the end, the Constitution’s victory was more than just a military win. It was a statement of American strength and a defining moment for both captains—one that would shape their legacies for years to come.",
+      ],
+    },
 
-  // Reusable Shop button classes (outline -> amber on hover)
-  const shopBtn =
-    "group inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold ring-1 ring-amber-400 text-amber-300 bg-transparent hover:bg-amber-400 hover:text-neutral-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400";
+    "oak-and-copper": {
+      title: "Saving Old Ironsides",
+      story: [
+        "By the middle of the 1800s, time had not been kind to the USS Constitution. Her victories had faded into memory, her hull weathered by decades of service. Stripped of her guns and glory, she lay in quiet neglect, her timbers worn and her decks nearly bare. To many, she was a relic of another age — a ship whose time had passed.",
+        "When word spread that the Navy planned to scrap her, the nation reacted with outrage. From classrooms to city halls, citizens spoke out. Poet Oliver Wendell Holmes captured the nation’s voice with his stirring poem “Old Ironsides,” calling for her to be spared. His words struck deep, and Congress took notice.",
+        "Repairs began, but it would take another century for a true restoration to bring her back to life. In the 1930s, shipwrights once again worked the oak and copper that had made her a legend. Piece by piece, they returned her to her former strength.",
+        "Today, the Constitution still sails because a nation remembered. Saved by its people, restored by its craftsmen, she remains a living symbol of endurance — proof that history, like her hull, was built to last.",
+      ],
+    },
+    flagship: {
+      title: "The Founding Fathers Of The Navy",
+      story: [
+        "As tensions with Britain grew, the young United States needed more than a standing army. The nation’s very survival depended on securing its maritime borders and asserting control over its own waters. President George Washington recognized this and understood that to defend its sovereignty, America required a powerful navy.",
+        "In 1794, with British ships still harassing American merchants and impressing sailors, Washington took a historic step. He signed the Naval Act, which authorized the construction of six frigates, including the USS Constitution. This decision was more than just military strategy; it was a statement of American resolve, an acknowledgment that the U.S. would no longer be at the mercy of foreign powers on the seas.",
+        "Leading the way was Commodore John Barry, the first commissioned officer of the United States Navy, known as the Father of the Navy.  A seasoned veteran of the Revolutionary War, Barry’s leadership and deep naval expertise would prove essential. His commitment to building a formidable naval force ensured that the Constitution would be a ship capable of standing up to the British and defending the nation’s interests.",
+        "Together, Washington’s foresight and Barry’s experience laid the foundation for the Navy. The USS Constitution was not just a ship, it was a symbol of the nation's growing strength and independence, forged from the vision of two men determined to ensure America's place on the world stage.",
+      ],
+    },
+  };
+
+  const duelStory = duelStoryMap[card.slug] || {
+    title: "Duel Between Two Captains",
+    story:
+      "A historic clash at sea between two mighty ships, each a symbol of national pride.",
+  };
+
+  const storiesHome = "/origins#origins-history"; // Add this line right here
 
   return (
     <main className="relative overflow-hidden py-12 md:py-20">
-      {/* Backdrop */}
-      {/* Backdrop */}
       <img
         src="/maps-books.png"
         alt=""
@@ -1337,14 +1403,13 @@ function FleetStoryPage() {
       />
 
       <Container className="relative z-10">
-        {/* Back (keeps your stories section return) */}
         <div className="flex justify-end">
           <Link
-            to={storiesHome}
+            to={storiesHome} // Use the constant STORIES_HOME here
             className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm ring-1 ring-amber-400/70 text-amber-300 hover:bg-amber-400 hover:text-neutral-900 transition"
             onClick={() => {
               try {
-                sessionStorage.setItem("storiesReturnTo", STORIES_HOME);
+                sessionStorage.setItem("storiesReturnTo", storiesHome);
               } catch {}
             }}
           >
@@ -1352,12 +1417,13 @@ function FleetStoryPage() {
           </Link>
         </div>
 
-        {/* TOP FOLD: hero LEFT, title+story RIGHT (like roast detail) */}
-        <div className="mt-4 grid md:grid-cols-[auto,1fr] gap-6 items-start mb-16 md:mb-24 lg:mb-28">
-          {/* Hero card */}
-          <figure className={cardFrame}>
+        <div className="mt-4 flex items-start mb-16 md:mb-24 lg:mb-28">
+          <figure
+            className={`${cardFrame} h-[720px]`}
+            style={{ maxWidth: "1000px", width: "130%" }}
+          >
             <img
-              src={card.img}
+              src={heroImg}
               alt={card.title}
               className="h-full w-full object-cover"
               loading="eager"
@@ -1365,132 +1431,280 @@ function FleetStoryPage() {
             />
           </figure>
 
-          {/* Title + meta + story */}
-          <div className="self-start">
-            {/* Title row with Shop button next to it */}
+          <div className="ml-4 self-start">
+            {" "}
+            {/* Adjusted spacing between image and text */}
             <h1
               className="m-0 text-3xl md:text-4xl font-extrabold tracking-tight text-amber-300"
               style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
             >
               {displayTitle}
             </h1>
-
-            {/* Battle line and date */}
-            {battleLine &&
-              battleLine !== card.title &&
-              battleLine !== displayTitle && (
+            {/* Only show USS Constitution for Flagship, remove subtitle for Flagship */}
+            {isFlagship && displayTitle === "FLAGSHIP" ? (
+              <div className="mt-1 text-neutral-300 text-base md:text-lg">
+                USS Constitution
+              </div>
+            ) : (
+              battleLine && (
                 <div className="mt-1 text-neutral-300 text-base md:text-lg">
                   {battleLine}
                 </div>
-              )}
+              )
+            )}
             {card.battleDate && (
               <div className="text-amber-300 font-semibold text-sm md:text-base">
                 {card.battleDate}
               </div>
             )}
-
-            {/* Divider */}
+            {/* Amber border line */}
             <div className="mt-2 h-px w-full bg-amber-400/30" />
-
-            {/* Story text only */}
-            <div
-              className="mt-4 max-w-[68ch] md:max-w-[72ch] text-pretty text-neutral-300 text-lg leading-[1.85]"
-              lang="en"
-              style={{ hyphens: "auto", textWrap: "balance" as any }}
-            >
-              {typeof card.story === "string"
-  ? card.story.split(/\n{2,}/).map((para, i) => (
-      <p key={i} className="mb-4 last:mb-0">
-        {cleanCopy(para)}
-      </p>
-    ))
-  : card.story}
-
-
-              {/* Shop button at end of story */}
+            {/* Main Story Block */}
+            {isFlagship && displayTitle === "FLAGSHIP" && (
               <div className="mt-6">
-                <Link
-                  to={`/roast/${card.slug}`}
-                  className="group inline-flex items-center gap-2 rounded-xl px-5 py-3 font-semibold ring-1 ring-amber-400 text-amber-300 bg-transparent hover:bg-amber-400 hover:text-neutral-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-                  aria-label={`Shop ${card.title}`}
-                  title={`Shop ${card.title}`}
-                >
-                  Shop {card.title}
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="h-5 w-5 transition group-hover:translate-x-0.5"
-                    fill="currentColor"
-                    aria-hidden
-                  >
-                    <path d="M13 5l7 7-7 7M5 12h14" />
-                  </svg>
-                </Link>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  As a young nation, America found itself facing the might of
+                  European powers, particularly Britain, whose navy dominated
+                  the seas. The British, still wounded from their defeat in the
+                  Revolutionary War, sought to reassert their control over
+                  American trade routes and maritime freedom.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  Meanwhile, the United States, though growing in strength and
+                  influence, lacked the naval power to defend its sovereignty.
+                  British ships frequently seized American merchant vessels,
+                  impressed American sailors into service, and imposed tariffs
+                  that threatened the nation's economy. The young republic
+                  needed a solution, and quickly.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  In this clash between two nations, one seeking to dominate the
+                  seas and the other determined to protect its rights, the USS
+                  Constitution was born. Congress understood that to safeguard
+                  its shores, ships, and people, the U.S. needed a navy capable
+                  of standing up to British power. The Constitution would be
+                  more than just a warship; she would be a symbol of America's
+                  resolve, a weapon forged for both defense and national pride.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  With the Constitution's commissioning, the stage was set for a
+                  battle of maritime strength and national identity. As tensions
+                  continued to rise, the frigate would soon face the ultimate
+                  test on the open sea.
+                </p>
               </div>
+            )}
+            {/* Main Story Block for Baptism by Fire */}
+            {isBaptism && displayTitle === "BAPTISM BY FIRE" && (
+              <div className="mt-6">
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  On August 19, 1812, off the coast of Nova Scotia, the USS
+                  Constitution met the HMS Guerriere in one of the most pivotal
+                  naval engagements of the War of 1812. The Constitution,
+                  commanded by Captain Isaac Hull, was an American frigate,
+                  heavily armed and known for her strength and resilience. The
+                  HMS Guerriere, a British ship of similar size, was tasked with
+                  stopping American trade and defending British interests at
+                  sea.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  As the two ships closed in on each other, the Constitution
+                  proved to be a master of maneuvering, a key advantage that
+                  would set the stage for the battle. Captain Hull skillfully
+                  positioned his ship to bring her broadside guns to bear while
+                  avoiding the Guerriere's fire. The British ship struggled with
+                  the winds, which left it vulnerable to the American frigate's
+                  superior handling. As the battle raged, the Constitution fired
+                  deadly broadsides, with her crew unloading devastating cannon
+                  fire on the Guerriere.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  The decisive blow came when a well-aimed shot from the
+                  Constitution’s main guns struck the Guerriere's mizzenmast,
+                  causing it to collapse. This crippled the British ship’s
+                  ability to maneuver, giving the Constitution a clear
+                  advantage. Hull took advantage of the situation and closed in,
+                  delivering fatal blows that left the Guerriere disabled.
+                  Within 30 minutes of fierce fighting, the Guerriere was forced
+                  to surrender, her crew battered and broken.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  The American victory was a powerful statement, not only
+                  because of the Constitution’s ability to withstand British
+                  cannonfire, leading to her nickname "Old Ironsides," but also
+                  because it gave the United States its first significant naval
+                  victory of the war, boosting morale and proving that the U.S.
+                  Navy could stand against the world’s most formidable naval
+                  force.
+                </p>
+              </div>
+            )}
+            {/* Add main story for Java Action and Oak & Copper as needed */}
+            {isJavaAction && (
+              <div className="mt-6">
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  On December 29, 1812, off the coast of Brazil, the USS
+                  Constitution squared off against the HMS Java in a battle that
+                  would further cement the Constitution’s legendary reputation.
+                  Commanded by Captain William Bainbridge, the Constitution
+                  faced a formidable foe in the HMS Java, a British 38-gun
+                  frigate under the command of Captain Henry Lambert. Though
+                  heavily armed, the Java lacked the seasoned crew that
+                  Bainbridge's Constitution brought to the fight.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  The battle began when the Constitution spotted the Java on the
+                  horizon. As the two ships closed in, the Java fired the first
+                  shot, damaging the Constitution’s rigging. The Constitution
+                  quickly returned fire, and a fierce exchange of broadsides
+                  ensued, with both ships unloading cannon fire at close range.
+                  During the battle, a shot from the Java destroyed the
+                  Constitution's helm, and the crew was forced to steer manually
+                  using the tiller, maintaining control despite the chaos.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  As the fight continued, the Constitution’s superior firepower
+                  and sturdier construction began to turn the tide. A well-aimed
+                  shot from the Constitution’s guns brought down the Java's
+                  foremast, causing it to crash down through two decks, further
+                  crippling the British frigate. With her rigging and crew in
+                  disarray, the Java’s ability to fight back diminished rapidly.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  In the final moments of the battle, the Constitution unleashed
+                  a devastating broadside that left the Java dismasted and
+                  helpless. With her sails in tatters and her crew
+                  incapacitated, the Java had no choice but to surrender. The
+                  Constitution, having secured victory, ordered the Java to be
+                  destroyed to prevent her from falling into enemy hands.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  The victory was a powerful morale boost for the United States
+                  during the War of 1812. Not only was it the second triumph for
+                  the Constitution, but it also demonstrated the effectiveness
+                  of the U.S. Navy against the world’s most formidable naval
+                  power. The Constitution’s nickname, "Old Ironsides," was
+                  further solidified, as she proved her ability to withstand
+                  brutal cannon fire and emerge victorious.
+                </p>
+              </div>
+            )}
+            {isOakAndCopper && (
+              <div className="mt-6">
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  After the Revolution, the new United States faced the open
+                  seas with little to defend its trade or its honor. Foreign
+                  powers tested its resolve, and pirates hunted its merchant
+                  ships without fear. President George Washington and Secretary
+                  of War Henry Knox turned to a man who understood both war and
+                  water, naval architect Joshua Humphreys. What he designed
+                  would not just defend a nation, but define it.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  Humphreys imagined a new kind of frigate, one unlike any built
+                  before. She would be larger, stronger, and faster, able to
+                  face the guns of the great powers yet light enough to slip
+                  away when outnumbered. In 1794, her keel was laid in Edmund
+                  Hartt’s shipyard in Boston, and from that moment, the work
+                  became a calling.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  The shipwrights chose live oak from the southern coast, wood
+                  so dense it could turn back cannon fire. Each beam was shaped
+                  by hand, each curve measured by experience more than rule. The
+                  men who built her worked through heat and storm, carving
+                  strength into every joint.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  Over her oak frame they fastened plates of copper rolled at
+                  Paul Revere’s foundry. It was a bold idea, one that gave her a
+                  smooth, gleaming armor against the sea. The copper kept her
+                  hull free from decay and let her glide faster than any ship of
+                  her size. Where others dragged through the water, the
+                  Constitution sliced cleanly through the waves.
+                </p>
+                <p className="mt-4 text-neutral-300 text-lg leading-relaxed">
+                  On her launch day in 1797, the people of Boston filled the
+                  shore to watch her slip into the harbor. Her name, chosen by
+                  Washington himself, spoke to the strength of the nation she
+                  would serve. Constitution. The men who built her could not
+                  have known she would sail for centuries, but their work
+                  endures. In every plank, every plate of copper, and every
+                  ripple she cuts across the water, their skill still speaks.
+                </p>
+              </div>
+            )}
+            <div className="mt-4 text-neutral-300 text-lg leading-relaxed">
+              {card.mainStory} {/* Only display the full story */}
             </div>
           </div>
         </div>
 
-        {/* BOTTOM STRIP: two hero cards with center header and captions */}
-        {/* Section separator */}
         <div
           role="separator"
           aria-hidden="true"
           className="my-0 h-px w-full bg-amber-400/30"
         />
+        <div className="mt-16 md:mt-24 lg:mt-28 flex items-start gap-6">
+          {/* Left Image */}
+          <figure className="flex-shrink-0">
+            <div className={cardFrame}>
+              <img
+                src={imgLeft}
+                alt={caps.left}
+                className="h-full w-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <figcaption className="mt-2 text-xs md:text-sm text-amber-300 text-center">
+              {caps.left}
+            </figcaption>
+          </figure>
 
-        {/* BOTTOM STRIP: two hero cards with center header and captions */}
-        <div className="mt-16 md:mt-24 lg:mt-28">
-          <div className="grid gap-6 md:grid-cols-[auto,1fr,auto] items-start">
-            {/* Left image + caption */}
-            <figure className="justify-self-start">
-              <div className={cardFrame}>
-                <img
-                  src={imgLeft}
-                  alt={caps.left}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <figcaption className="mt-2 text-xs md:text-sm text-amber-300">
-                {caps.left}
-              </figcaption>
-            </figure>
+          {/* Text Block - Left Aligned */}
+          <div className="flex-grow text-left px-2 md:px-6">
+            <h2
+              className="text-xl md:text-2xl font-bold text-amber-300 tracking-tight"
+              style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+            >
+              {duelStory.title}
+            </h2>
 
-            {/* Center header + text + second Shop button */}
-            <div className="text-center px-2 md:px-6">
-              <h2
-                className="text-xl md:text-2xl font-bold text-amber-300 tracking-tight"
-                style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
-              >
-                Duel Between Two Captains
-              </h2>
-              <p className="mt-2 text-neutral-300 text-base md:text-lg leading-relaxed">
-                A meeting of resolve and seamanship on open water. Two ships
-                closed the distance as orders rang across the decks and the sea
-                carried the thunder of their guns.
-              </p>
-              <div className="mt-4">
-                <ShopButton slug={card.slug} title={card.title} />
-              </div>
+            <div className="mt-4 text-neutral-300 text-lg leading-relaxed">
+              {typeof duelStory.story === "string"
+                ? duelStory.story.split("\n").map((paragraph, i) => (
+                    <p key={i} className="mb-4 last:mb-0">
+                      {paragraph}
+                    </p>
+                  ))
+                : duelStory.story.map((paragraph, i) => (
+                    <p key={i} className="mb-1 last:mb-0">
+                      {paragraph}
+                    </p>
+                  ))}
             </div>
 
-            {/* Right image + caption */}
-            <figure className="justify-self-end">
-              <div className={cardFrame}>
-                <img
-                  src={imgRight}
-                  alt={caps.right}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <figcaption className="mt-2 text-xs md:text-sm text-amber-300 text-right">
-                {caps.right}
-              </figcaption>
-            </figure>
+            <div className="mt-4">
+              <ShopButton slug={card.slug} title={card.title} />
+            </div>
           </div>
+
+          {/* Right Image */}
+          <figure className="flex-shrink-0">
+            <div className={cardFrame}>
+              <img
+                src={imgRight}
+                alt={caps.right}
+                className="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+            <figcaption className="mt-2 text-xs md:text-sm text-amber-300 text-center">
+              {caps.right}
+            </figcaption>
+          </figure>
         </div>
       </Container>
     </main>
@@ -1551,12 +1765,11 @@ function RoastDetailPage() {
   };
   const craftSubtitle = craftSubtitleMap[card.slug] ?? null;
 
-// Roast flags (slug-based so copy changes don't break logic)
-const isFlagship = card.slug === "flagship";
-const isBaptism = card.slug === "baptism-by-fire";
-const isJava = card.slug === "java-action";
-const isOak = card.slug === "oak-and-copper";
-
+  // Roast flags (slug-based so copy changes don't break logic)
+  const isFlagship = card.slug === "flagship";
+  const isBaptism = card.slug === "baptism-by-fire";
+  const isJava = card.slug === "java-action";
+  const isOak = card.slug === "oak-and-copper";
 
   // ⬇️ INSERT THIS BLOCK RIGHT HERE ⬇️
   const AMBER_DESC = isFlagship
@@ -1568,107 +1781,396 @@ const isOak = card.slug === "oak-and-copper";
     : "";
 
   // review data used for stars + counts beside the subtitle and in the histogram
- // review data used for stars + counts beside the subtitle and in the histogram
-const reviewDataMap = useMemo<Record<
-string,
-{ avg: number; count: number; breakdown: Record<number, number> }
->>(
-() => ({
-  flagship: {
-    avg: 4.9,
-    count: 128,
-    breakdown: { 5: 110, 4: 12, 3: 4, 2: 1, 1: 1 },
-  },
-  "baptism-by-fire": {
-    avg: 4.8,
-    count: 96,
-    breakdown: { 5: 80, 4: 10, 3: 4, 2: 1, 1: 1 },
-  },
-  "java-action": {
-    avg: 4.7,
-    count: 64,
-    breakdown: { 5: 50, 4: 9, 3: 3, 2: 1, 1: 1 },
-  },
-  "oak-and-copper": {
-    avg: 4.9,
-    count: 72,
-    breakdown: { 5: 62, 4: 7, 3: 2, 2: 1, 1: 0 },
-  },
-}),
-[]
-);
+  // review data used for stars + counts beside the subtitle and in the histogram
+  const reviewDataMap = useMemo<
+    Record<
+      string,
+      { avg: number; count: number; breakdown: Record<number, number> }
+    >
+  >(
+    () => ({
+      flagship: {
+        avg: 4.9,
+        count: 128,
+        breakdown: { 5: 110, 4: 12, 3: 4, 2: 1, 1: 1 },
+      },
+      "baptism-by-fire": {
+        avg: 4.8,
+        count: 96,
+        breakdown: { 5: 80, 4: 10, 3: 4, 2: 1, 1: 1 },
+      },
+      "java-action": {
+        avg: 4.7,
+        count: 64,
+        breakdown: { 5: 50, 4: 9, 3: 3, 2: 1, 1: 1 },
+      },
+      "oak-and-copper": {
+        avg: 4.9,
+        count: 72,
+        breakdown: { 5: 62, 4: 7, 3: 2, 2: 1, 1: 0 },
+      },
+    }),
+    []
+  );
 
-const reviewData = reviewDataMap[card.slug] ?? {
-avg: 0,
-count: 0,
-breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
-};
+  const reviewData = reviewDataMap[card.slug] ?? {
+    avg: 0,
+    count: 0,
+    breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+  };
 
+  const reviewListMap = useMemo<Record<string, Review[]>>(
+    () => ({
+      flagship: [
+        {
+          id: "f1",
+          name: "Jacob S.",
+          date: "October 12, 2025",
+          rating: 5,
+          title: "Best flavor",
+          body: "Smooth, balanced, never bitter. This is my daily cup.",
+        },
+        {
+          id: "f2",
+          name: "Megan T.",
+          date: "October 9, 2025",
+          rating: 5,
+          body: "Great with cream or black. Reliable roast.",
+        },
+        {
+          id: "f3",
+          name: "Paul R.",
+          date: "October 7, 2025",
+          rating: 4,
+          body: "Nice balance. Would buy again.",
+        },
+        {
+          id: "f4",
+          name: "Nate D.",
+          date: "October 5, 2025",
+          rating: 5,
+          body: "Fresh and clean finish. Ships fast.",
+        },
+        {
+          id: "f5",
+          name: "Erika L.",
+          date: "October 4, 2025",
+          rating: 5,
+          body: "Crowd pleaser at our office.",
+        },
+        {
+          id: "f6",
+          name: "Kate W.",
+          date: "October 2, 2025",
+          rating: 5,
+          body: "Balanced and smooth. Hits the mark.",
+        },
+        {
+          id: "f7",
+          name: "Victor H.",
+          date: "September 30, 2025",
+          rating: 5,
+          body: "Exactly what I want in a medium roast.",
+        },
+        {
+          id: "f8",
+          name: "Ryan C.",
+          date: "September 28, 2025",
+          rating: 5,
+          body: "Rich aroma and consistent flavor.",
+        },
+        {
+          id: "f9",
+          name: "Amanda G.",
+          date: "September 27, 2025",
+          rating: 4,
+          body: "Very good daily drinker.",
+        },
+        {
+          id: "f10",
+          name: "Chris P.",
+          date: "September 25, 2025",
+          rating: 5,
+          body: "Smooth from first sip to last.",
+        },
+        {
+          id: "f11",
+          name: "Lindsay K.",
+          date: "September 23, 2025",
+          rating: 5,
+          body: "My new go to.",
+        },
+        {
+          id: "f12",
+          name: "Derek B.",
+          date: "September 20, 2025",
+          rating: 5,
+          body: "Balanced and flavorful.",
+        },
+      ],
+      "baptism-by-fire": [
+        {
+          id: "b1",
+          name: "Tom O.",
+          date: "October 10, 2025",
+          rating: 5,
+          body: "Bold and smooth without harsh bite.",
+        },
+        {
+          id: "b2",
+          name: "Sarah V.",
+          date: "October 8, 2025",
+          rating: 5,
+          body: "Dark chocolate notes. Excellent.",
+        },
+        {
+          id: "b3",
+          name: "Nick F.",
+          date: "October 6, 2025",
+          rating: 4,
+          body: "Great dark roast for mornings.",
+        },
+        {
+          id: "b4",
+          name: "Jose M.",
+          date: "October 4, 2025",
+          rating: 5,
+          body: "Deep flavor with a clean finish.",
+        },
+        {
+          id: "b5",
+          name: "Evan J.",
+          date: "October 3, 2025",
+          rating: 5,
+          body: "Powerful and smooth.",
+        },
+        {
+          id: "b6",
+          name: "Cara S.",
+          date: "October 1, 2025",
+          rating: 5,
+          body: "Perfect dark cup.",
+        },
+        {
+          id: "b7",
+          name: "Walt A.",
+          date: "September 29, 2025",
+          rating: 4,
+          body: "Rich and satisfying.",
+        },
+        {
+          id: "b8",
+          name: "Helen D.",
+          date: "September 27, 2025",
+          rating: 5,
+          body: "My favorite of the lineup.",
+        },
+        {
+          id: "b9",
+          name: "Ivy N.",
+          date: "September 26, 2025",
+          rating: 5,
+          body: "Smooth for a dark roast.",
+        },
+        {
+          id: "b10",
+          name: "Zack T.",
+          date: "September 24, 2025",
+          rating: 5,
+          body: "Lives up to the name.",
+        },
+        {
+          id: "b11",
+          name: "Anna R.",
+          date: "September 22, 2025",
+          rating: 5,
+          body: "Fantastic body and aroma.",
+        },
+        {
+          id: "b12",
+          name: "Peter Q.",
+          date: "September 20, 2025",
+          rating: 4,
+          body: "Solid dark roast.",
+        },
+      ],
+      "java-action": [
+        {
+          id: "j1",
+          name: "Mark S.",
+          date: "October 9, 2025",
+          rating: 5,
+          body: "Full bodied and smooth. Great mornings.",
+        },
+        {
+          id: "j2",
+          name: "Jen L.",
+          date: "October 7, 2025",
+          rating: 5,
+          body: "Hazelnut and caramel pop.",
+        },
+        {
+          id: "j3",
+          name: "Omar H.",
+          date: "October 6, 2025",
+          rating: 4,
+          body: "Nice daily medium.",
+        },
+        {
+          id: "j4",
+          name: "Theo B.",
+          date: "October 5, 2025",
+          rating: 5,
+          body: "Balanced and rich.",
+        },
+        {
+          id: "j5",
+          name: "Gina P.",
+          date: "October 3, 2025",
+          rating: 5,
+          body: "Smooth and consistent.",
+        },
+        {
+          id: "j6",
+          name: "Sam W.",
+          date: "October 1, 2025",
+          rating: 4,
+          body: "Reliable cup.",
+        },
+        {
+          id: "j7",
+          name: "Iris K.",
+          date: "September 29, 2025",
+          rating: 5,
+          body: "Lovely finish.",
+        },
+        {
+          id: "j8",
+          name: "Caleb D.",
+          date: "September 28, 2025",
+          rating: 5,
+          body: "Goes great with breakfast.",
+        },
+        {
+          id: "j9",
+          name: "Noah M.",
+          date: "September 26, 2025",
+          rating: 4,
+          body: "Smooth ride.",
+        },
+        {
+          id: "j10",
+          name: "Rae C.",
+          date: "September 25, 2025",
+          rating: 5,
+          body: "Buying again.",
+        },
+        {
+          id: "j11",
+          name: "Luis V.",
+          date: "September 23, 2025",
+          rating: 5,
+          body: "Great flavor.",
+        },
+        {
+          id: "j12",
+          name: "Becca Y.",
+          date: "September 21, 2025",
+          rating: 5,
+          body: "Solid medium roast.",
+        },
+      ],
+      "oak-and-copper": [
+        {
+          id: "o1",
+          name: "Quinn P.",
+          date: "October 11, 2025",
+          rating: 5,
+          body: "Oak and caramel show up nicely.",
+        },
+        {
+          id: "o2",
+          name: "Dana S.",
+          date: "October 9, 2025",
+          rating: 5,
+          body: "Smooth bourbon kissed finish.",
+        },
+        {
+          id: "o3",
+          name: "Harper G.",
+          date: "October 8, 2025",
+          rating: 4,
+          body: "Unique and rich.",
+        },
+        {
+          id: "o4",
+          name: "Kurt E.",
+          date: "October 7, 2025",
+          rating: 5,
+          body: "New favorite special roast.",
+        },
+        {
+          id: "o5",
+          name: "Elle F.",
+          date: "October 6, 2025",
+          rating: 5,
+          body: "Deep oak notes without bitterness.",
+        },
+        {
+          id: "o6",
+          name: "Sean R.",
+          date: "October 4, 2025",
+          rating: 5,
+          body: "Great weekend treat.",
+        },
+        {
+          id: "o7",
+          name: "Yara T.",
+          date: "October 3, 2025",
+          rating: 5,
+          body: "Delicious and smooth.",
+        },
+        {
+          id: "o8",
+          name: "Vlad K.",
+          date: "October 2, 2025",
+          rating: 5,
+          body: "Awesome barrel character.",
+        },
+        {
+          id: "o9",
+          name: "Mia C.",
+          date: "September 30, 2025",
+          rating: 4,
+          body: "Nice twist on medium roast.",
+        },
+        {
+          id: "o10",
+          name: "Iain D.",
+          date: "September 28, 2025",
+          rating: 5,
+          body: "Rich and balanced.",
+        },
+        {
+          id: "o11",
+          name: "Nora H.",
+          date: "September 26, 2025",
+          rating: 5,
+          body: "Love the finish.",
+        },
+        {
+          id: "o12",
+          name: "Zoe N.",
+          date: "September 24, 2025",
+          rating: 5,
+          body: "Fantastic flavor.",
+        },
+      ],
+    }),
+    []
+  );
 
-const reviewListMap = useMemo<Record<string, Review[]>>(
-  () => ({
-    flagship: [
-      { id: "f1", name: "Jacob S.", date: "October 12, 2025", rating: 5, title: "Best flavor", body: "Smooth, balanced, never bitter. This is my daily cup." },
-      { id: "f2", name: "Megan T.", date: "October 9, 2025", rating: 5, body: "Great with cream or black. Reliable roast." },
-      { id: "f3", name: "Paul R.", date: "October 7, 2025", rating: 4, body: "Nice balance. Would buy again." },
-      { id: "f4", name: "Nate D.", date: "October 5, 2025", rating: 5, body: "Fresh and clean finish. Ships fast." },
-      { id: "f5", name: "Erika L.", date: "October 4, 2025", rating: 5, body: "Crowd pleaser at our office." },
-      { id: "f6", name: "Kate W.", date: "October 2, 2025", rating: 5, body: "Balanced and smooth. Hits the mark." },
-      { id: "f7", name: "Victor H.", date: "September 30, 2025", rating: 5, body: "Exactly what I want in a medium roast." },
-      { id: "f8", name: "Ryan C.", date: "September 28, 2025", rating: 5, body: "Rich aroma and consistent flavor." },
-      { id: "f9", name: "Amanda G.", date: "September 27, 2025", rating: 4, body: "Very good daily drinker." },
-      { id: "f10", name: "Chris P.", date: "September 25, 2025", rating: 5, body: "Smooth from first sip to last." },
-      { id: "f11", name: "Lindsay K.", date: "September 23, 2025", rating: 5, body: "My new go to." },
-      { id: "f12", name: "Derek B.", date: "September 20, 2025", rating: 5, body: "Balanced and flavorful." },
-    ],
-    "baptism-by-fire": [
-      { id: "b1", name: "Tom O.", date: "October 10, 2025", rating: 5, body: "Bold and smooth without harsh bite." },
-      { id: "b2", name: "Sarah V.", date: "October 8, 2025", rating: 5, body: "Dark chocolate notes. Excellent." },
-      { id: "b3", name: "Nick F.", date: "October 6, 2025", rating: 4, body: "Great dark roast for mornings." },
-      { id: "b4", name: "Jose M.", date: "October 4, 2025", rating: 5, body: "Deep flavor with a clean finish." },
-      { id: "b5", name: "Evan J.", date: "October 3, 2025", rating: 5, body: "Powerful and smooth." },
-      { id: "b6", name: "Cara S.", date: "October 1, 2025", rating: 5, body: "Perfect dark cup." },
-      { id: "b7", name: "Walt A.", date: "September 29, 2025", rating: 4, body: "Rich and satisfying." },
-      { id: "b8", name: "Helen D.", date: "September 27, 2025", rating: 5, body: "My favorite of the lineup." },
-      { id: "b9", name: "Ivy N.", date: "September 26, 2025", rating: 5, body: "Smooth for a dark roast." },
-      { id: "b10", name: "Zack T.", date: "September 24, 2025", rating: 5, body: "Lives up to the name." },
-      { id: "b11", name: "Anna R.", date: "September 22, 2025", rating: 5, body: "Fantastic body and aroma." },
-      { id: "b12", name: "Peter Q.", date: "September 20, 2025", rating: 4, body: "Solid dark roast." },
-    ],
-    "java-action": [
-      { id: "j1", name: "Mark S.", date: "October 9, 2025", rating: 5, body: "Full bodied and smooth. Great mornings." },
-      { id: "j2", name: "Jen L.", date: "October 7, 2025", rating: 5, body: "Hazelnut and caramel pop." },
-      { id: "j3", name: "Omar H.", date: "October 6, 2025", rating: 4, body: "Nice daily medium." },
-      { id: "j4", name: "Theo B.", date: "October 5, 2025", rating: 5, body: "Balanced and rich." },
-      { id: "j5", name: "Gina P.", date: "October 3, 2025", rating: 5, body: "Smooth and consistent." },
-      { id: "j6", name: "Sam W.", date: "October 1, 2025", rating: 4, body: "Reliable cup." },
-      { id: "j7", name: "Iris K.", date: "September 29, 2025", rating: 5, body: "Lovely finish." },
-      { id: "j8", name: "Caleb D.", date: "September 28, 2025", rating: 5, body: "Goes great with breakfast." },
-      { id: "j9", name: "Noah M.", date: "September 26, 2025", rating: 4, body: "Smooth ride." },
-      { id: "j10", name: "Rae C.", date: "September 25, 2025", rating: 5, body: "Buying again." },
-      { id: "j11", name: "Luis V.", date: "September 23, 2025", rating: 5, body: "Great flavor." },
-      { id: "j12", name: "Becca Y.", date: "September 21, 2025", rating: 5, body: "Solid medium roast." },
-    ],
-    "oak-and-copper": [
-      { id: "o1", name: "Quinn P.", date: "October 11, 2025", rating: 5, body: "Oak and caramel show up nicely." },
-      { id: "o2", name: "Dana S.", date: "October 9, 2025", rating: 5, body: "Smooth bourbon kissed finish." },
-      { id: "o3", name: "Harper G.", date: "October 8, 2025", rating: 4, body: "Unique and rich." },
-      { id: "o4", name: "Kurt E.", date: "October 7, 2025", rating: 5, body: "New favorite special roast." },
-      { id: "o5", name: "Elle F.", date: "October 6, 2025", rating: 5, body: "Deep oak notes without bitterness." },
-      { id: "o6", name: "Sean R.", date: "October 4, 2025", rating: 5, body: "Great weekend treat." },
-      { id: "o7", name: "Yara T.", date: "October 3, 2025", rating: 5, body: "Delicious and smooth." },
-      { id: "o8", name: "Vlad K.", date: "October 2, 2025", rating: 5, body: "Awesome barrel character." },
-      { id: "o9", name: "Mia C.", date: "September 30, 2025", rating: 4, body: "Nice twist on medium roast." },
-      { id: "o10", name: "Iain D.", date: "September 28, 2025", rating: 5, body: "Rich and balanced." },
-      { id: "o11", name: "Nora H.", date: "September 26, 2025", rating: 5, body: "Love the finish." },
-      { id: "o12", name: "Zoe N.", date: "September 24, 2025", rating: 5, body: "Fantastic flavor." },
-    ],
-  }),
-  []
-);
-
-const reviews: Review[] = reviewListMap[card.slug] ?? [];
-
+  const reviews: Review[] = reviewListMap[card.slug] ?? [];
 
   const { add } = useCart();
   const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("one");
@@ -1684,47 +2186,47 @@ const reviews: Review[] = reviewListMap[card.slug] ?? [];
   }, [slug]);
 
   // Mirror BUY BOX width/height so Bean Type box matches exactly
-// Mirror BUY BOX width/height so Bean Type box matches exactly
-const buyBoxRef = useRef<HTMLDivElement>(null);
-const [buyBoxDims, setBuyBoxDims] = useState<{ w: number; h: number }>({
-  w: 0,
-  h: 0,
-});
-const BEAN_BOX_RATIO = 0.83; // width = 83% of buy box
+  // Mirror BUY BOX width/height so Bean Type box matches exactly
+  const buyBoxRef = useRef<HTMLDivElement>(null);
+  const [buyBoxDims, setBuyBoxDims] = useState<{ w: number; h: number }>({
+    w: 0,
+    h: 0,
+  });
+  const BEAN_BOX_RATIO = 0.83; // width = 83% of buy box
 
-useEffect(() => {
-  const el = buyBoxRef.current;
+  useEffect(() => {
+    const el = buyBoxRef.current;
 
-  // If ResizeObserver is unavailable, fall back to a light resize listener
-  if (!el || typeof ResizeObserver === "undefined") {
-    const measure = () => {
+    // If ResizeObserver is unavailable, fall back to a light resize listener
+    if (!el || typeof ResizeObserver === "undefined") {
+      const measure = () => {
+        if (!buyBoxRef.current) return;
+        const r = buyBoxRef.current.getBoundingClientRect();
+        setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
+      };
+      measure();
+      const onResize = () => requestAnimationFrame(measure);
+      window.addEventListener("resize", onResize);
+      return () => window.removeEventListener("resize", onResize);
+    }
+
+    // Prefer ResizeObserver for precise, low-overhead size tracking
+    const ro = new ResizeObserver(() => {
       if (!buyBoxRef.current) return;
       const r = buyBoxRef.current.getBoundingClientRect();
       setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
-    };
-    measure();
-    const onResize = () => requestAnimationFrame(measure);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }
+    });
 
-  // Prefer ResizeObserver for precise, low-overhead size tracking
-  const ro = new ResizeObserver(() => {
-    if (!buyBoxRef.current) return;
-    const r = buyBoxRef.current.getBoundingClientRect();
+    ro.observe(el);
+
+    // initial measure
+    const r = el.getBoundingClientRect();
     setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
-  });
 
-  ro.observe(el);
-
-  // initial measure
-  const r = el.getBoundingClientRect();
-  setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
-
-  return () => {
-    ro.disconnect();
-  };
-}, []);
+    return () => {
+      ro.disconnect();
+    };
+  }, []);
 
   const basePrice = isOak ? 25 : card.price; // Oak & Copper single price
   const discounted = Number((basePrice * 0.85).toFixed(2));
@@ -1916,8 +2418,8 @@ useEffect(() => {
 
                     {/* AMBER DESCRIPTION (kept as-is) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-  {cleanCopy(AMBER_DESC)}
-</div>
+                      {cleanCopy(AMBER_DESC)}
+                    </div>
 
                     <div className="h-1 md:h-2" />
                   </div>
@@ -1951,8 +2453,8 @@ useEffect(() => {
 
                     {/* AMBER DESCRIPTION (kept as-is) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-  {cleanCopy(AMBER_DESC)}
-</div>
+                      {cleanCopy(AMBER_DESC)}
+                    </div>
 
                     <div className="h-1 md:h-2" />
                   </div>
@@ -1993,8 +2495,8 @@ useEffect(() => {
 
                     {/* AMBER DESCRIPTION (kept consistent with other roasts) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-  {cleanCopy(AMBER_DESC)}
-</div>
+                      {cleanCopy(AMBER_DESC)}
+                    </div>
 
                     <div className="h-1 md:h-2" />
                   </div>
@@ -2029,8 +2531,8 @@ useEffect(() => {
                     </div>
 
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-  {cleanCopy(AMBER_DESC)}
-</div>
+                      {cleanCopy(AMBER_DESC)}
+                    </div>
 
                     <div className="h-1 md:h-2" />
                   </div>
@@ -2147,24 +2649,27 @@ useEffect(() => {
                             <Minus className="h-4 w-4" />
                           </button>
                           <input
-  value={String(qty)}
-  onChange={(e) => {
-    const digits = e.target.value.replace(/\D/g, "");
-    const next = digits === "" ? 1 : Math.min(99, Number(digits));
-    setQty(next);
-  }}
-  inputMode="numeric"
-  pattern="[0-9]*"
-  aria-label="Quantity"
-  className="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
-  onBlur={() => {
-    // normalize after editing
-    setQty((q) => {
-      const n = Number.isFinite(q) ? q : 1;
-      return Math.min(99, Math.max(1, n));
-    });
-  }}
-/>
+                            value={String(qty)}
+                            onChange={(e) => {
+                              const digits = e.target.value.replace(/\D/g, "");
+                              const next =
+                                digits === ""
+                                  ? 1
+                                  : Math.min(99, Number(digits));
+                              setQty(next);
+                            }}
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            aria-label="Quantity"
+                            className="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
+                            onBlur={() => {
+                              // normalize after editing
+                              setQty((q) => {
+                                const n = Number.isFinite(q) ? q : 1;
+                                return Math.min(99, Math.max(1, n));
+                              });
+                            }}
+                          />
 
                           <button
                             type="button"
@@ -2179,14 +2684,13 @@ useEffect(() => {
                         </div>
 
                         <button
-  type="button"
-  onClick={addToChest}
-  className="px-6 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
-  aria-label={`Add ${card.title} to Chest`}
->
-  Add to Chest
-</button>
-
+                          type="button"
+                          onClick={addToChest}
+                          className="px-6 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
+                          aria-label={`Add ${card.title} to Chest`}
+                        >
+                          Add to Chest
+                        </button>
                       </div>
                     </div>
 
@@ -3696,10 +4200,10 @@ function OriginsPage() {
 
               {/* Text RIGHT (fonts bumped ~15%) */}
               <div className="space-y-3">
-                <h3 className="font-bold text-amber-300 text-[1.7rem] md:text-[2.6rem]">
+                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                   ROASTING PROCESS
                 </h3>
-                <p className="text-neutral-300 leading-relaxed tracking-[0.02em] text-[1.4375rem] md:text-[1.725rem]">
+                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
                   Coffee is at its best in the first days after roasting when
                   the oils are alive, the aroma is full, and the flavor is at
                   its peak. That is why we roast to order every Monday and ship
@@ -3841,7 +4345,6 @@ function OriginsPage() {
           </div>
         </Container>
       </section>
-
       {/* ===== THE HISTORY BEHIND THE FLEET ===== */}
       <section
         id="origins-history"
@@ -3893,7 +4396,7 @@ function OriginsPage() {
                       {card.battleDate}
                     </div>
                     <p className="mt-1 text-sm text-neutral-300 flex-1">
-                      {card.story}
+                      {card.story} {/* Display the blurb (short version) */}
                     </p>
                     <span className="mt-4 inline-block text-sm text-amber-300">
                       Learn more
@@ -4080,7 +4583,7 @@ function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const submit = (e: any) => {
     e.preventDefault();
-    
+
     setSubmitted(true);
   };
   return (
@@ -6342,7 +6845,6 @@ function PromoSubscribeModal() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailOk(email)) return flash("Enter a valid email.");
-
 
     localStorage.setItem(KEY_SUB, "1");
     setCookieDays(COOKIE_SUB, "1", 365);

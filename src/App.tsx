@@ -860,7 +860,7 @@ function GovXLoginBox() {
         type="button"
         // TODO: point this to your GovX verification route or modal
         onClick={() => window.location.assign("/account?govx=1")}
-        className="mt-3 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+        className="mt-3 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300 underline-offset-2 hover:underline"
         aria-label="Verify with GovX"
       >
         Verify with GovX
@@ -1095,16 +1095,15 @@ function HomePage() {
                       <span className="mx-1.5 text-amber-400/70" aria-hidden>
                         •
                       </span>
-                     {/* GovX Partner (temporary info link) */}
-<a
-  href="https://www.govx.com/govx-id/"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="hover:text-amber-200"
->
-  GovX Partner
-</a>
-
+                      {/* GovX Partner (temporary info link) */}
+                      <a
+                        href="https://www.govx.com/govx-id/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-amber-200 underline-offset-2 hover:underline"
+                      >
+                        GovX Partner
+                      </a>
                     </div>
 
                     <div aria-hidden className="h-5 md:h-6" />
@@ -1160,56 +1159,56 @@ function HomePage() {
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
         <Container>
-  <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex flex-col justify-center">
-    <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-      <div className="justify-self-center md:justify-self-start self-center">
-        <div className="w-64 md:w-[32rem] mx-auto md:mx-0 aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
-          <img
-            src="/veteran-chair.jpg"
-            alt="Giving back"
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </div>
+          <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex flex-col justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
+              <div className="justify-self-center md:justify-self-start self-center">
+                <div className="w-64 md:w-[32rem] mx-auto md:mx-0 aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                  <img
+                    src="/veteran-chair.jpg"
+                    alt="Giving back"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
 
-      {/* text: center on mobile, left on md+ */}
-      <div className="space-y-3 text-center md:text-left">
-        <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
-          Giving Back To Those Who Served
-        </h3>
-        <br />
+              {/* text: center on mobile, left on md+ */}
+              <div className="space-y-3 text-center md:text-left">
+                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                  Giving Back To Those Who Served
+                </h3>
+                <br />
 
-        <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-          Even as a startup with thin profits, giving back is at the core of Old
-          Ironsides Coffee. As a combat veteran, I believe supporting organizations
-          that focus on veterans’ health and well-being is not optional, it is who
-          we are.
-        </p>
+                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  Even as a startup with thin profits, giving back is at the
+                  core of Old Ironsides Coffee. As a combat veteran, I believe
+                  supporting organizations that focus on veterans’ health and
+                  well-being is not optional, it is who we are.
+                </p>
 
-        <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-          With every bag sold, we donate a portion of profits to trusted organizations
-          that provide real help to the veterans who need it most.
-        </p>
+                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  With every bag sold, we donate a portion of profits to trusted
+                  organizations that provide real help to the veterans who need
+                  it most.
+                </p>
 
-        <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-          Active duty, veterans, and first responders earn an additional $1 off each
-          bag of fresh roasted coffee, our small way of saying thank you to the men and women in uniform.
-        </p>
-        <br />
-        <a
-  href="https://www.govx.com/govx-id/"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="hover:text-amber-300 text-xl "
->
-  GovX Login
-</a>
-
-      </div>
-    </div>
-  </div>
-</Container>
-
+                <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  Active duty, veterans, and first responders earn an additional
+                  $1 off each bag of fresh roasted coffee, our small way of
+                  saying thank you to the men and women in uniform.
+                </p>
+                <br />
+                <a
+                  href="https://www.govx.com/govx-id/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-300 text-xl underline-offset-2 hover:underline "
+                >
+                  GovX Login
+                </a>
+              </div>
+            </div>
+          </div>
+        </Container>
       </section>
 
       <section
@@ -2563,30 +2562,31 @@ function RoastDetailPage() {
                   </div>
                 )}
               </div>
-              {/* Purchase mode selector */}
-              <div className="mt-6 w-full max-w-[36rem]">
-                <div className="rounded-full border border-amber-400/60 bg-black/60 p-1 inline-flex shadow-md shadow-amber-400/10">
+              {/* Purchase mode selector — styled like the Buy Box */}
+              <div className="mt-6 w-auto">
+                <div className="inline-flex items-center gap-2 rounded-xl border border-amber-400/60 bg-black/70 p-4 px-5 shadow-md shadow-amber-400/10 w-fit whitespace-nowrap">
                   <button
                     type="button"
                     onClick={() => setPurchaseMode("one")}
                     className={
-                      "px-6 py-3 rounded-full text-sm md:text-base font-semibold transition " +
+                      "px-3 py-1.5 rounded-lg border text-xs md:text-sm leading-none tracking-tight font-semibold transition " +
                       (purchaseMode === "one"
-                        ? "bg-amber-400 text-neutral-900"
-                        : "text-amber-300 hover:text-amber-200")
+                        ? "bg-amber-400 text-neutral-900 border-amber-400"
+                        : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
                     }
                     aria-pressed={purchaseMode === "one"}
                   >
                     Single Purchase
                   </button>
+
                   <button
                     type="button"
                     onClick={() => setPurchaseMode("sub")}
                     className={
-                      "px-6 py-3 rounded-full text-sm md:text-base font-semibold transition " +
+                      "px-4 py-2 rounded-lg border text-sm md:text-base font-semibold transition " +
                       (purchaseMode === "sub"
-                        ? "bg-amber-400 text-neutral-900"
-                        : "text-amber-300 hover:text-amber-200")
+                        ? "bg-amber-400 text-neutral-900 border-amber-400"
+                        : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
                     }
                     aria-pressed={purchaseMode === "sub"}
                   >
@@ -4521,38 +4521,40 @@ function OriginsPage() {
           <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex items-center">
             <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] gap-4 md:gap-6 items-center w-full">
               {/* Text LEFT */}
-               {/* text: center on mobile, left on md+ */}
-      <div className="space-y-3 text-center md:text-left">
-        <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
-          Giving Back To Those Who Served
-        </h3>
-        <br />
+              {/* text: center on mobile, left on md+ */}
+              <div className="space-y-3 text-center md:text-left">
+                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                  Giving Back To Those Who Served
+                </h3>
+                <br />
 
-        <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-          Even as a startup with thin profits, giving back is at the core of Old
-          Ironsides Coffee. As a combat veteran, I believe supporting organizations
-          that focus on veterans’ health and well-being is not optional, it is who
-          we are.
-        </p>
+                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  Even as a startup with thin profits, giving back is at the
+                  core of Old Ironsides Coffee. As a combat veteran, I believe
+                  supporting organizations that focus on veterans’ health and
+                  well-being is not optional, it is who we are.
+                </p>
 
-        <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-          With every bag sold, we donate a portion of profits to trusted organizations
-          that provide real help to the veterans who need it most.
-        </p>
+                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  With every bag sold, we donate a portion of profits to trusted
+                  organizations that provide real help to the veterans who need
+                  it most.
+                </p>
 
-        <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-          Active duty, veterans, and first responders earn an additional $1 off each
-          bag of fresh roasted coffee, our small way of saying thank you to the men and women in uniform.
-        </p>
-        <br />
-        <a
-  href="https://www.govx.com/govx-id/"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="hover:text-amber-300 text-xl "
->
-  GovX Login
-</a>
+                <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  Active duty, veterans, and first responders earn an additional
+                  $1 off each bag of fresh roasted coffee, our small way of
+                  saying thank you to the men and women in uniform.
+                </p>
+                <br />
+                <a
+                  href="https://www.govx.com/govx-id/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-300 text-xl underline-offset-2 hover:underline"
+                >
+                  GovX Login
+                </a>
               </div>
 
               {/* Hero RIGHT */}
@@ -7304,29 +7306,34 @@ function Layout() {
                 <span>|</span>
 
                 {/* Subscribe & Save link */}
-                <Link to="/account/login" className="hover:text-amber-200">
+                <Link
+                  to="/account/login"
+                  className="hover:text-amber-200 underline-offset-2 hover:underline"
+                >
                   15% OFF Subscribe &amp; Save
                 </Link>
 
                 <span>|</span>
 
                 {/* Free Shipping link */}
-                <Link to="/legal/shipping" className="hover:text-amber-200">
+                <Link
+                  to="/legal/shipping"
+                  className="hover:text-amber-200 underline-offset-2 hover:underline"
+                >
                   Free Shipping on 3+ Bags
                 </Link>
 
                 <span>|</span>
-              {/* GovX Partner */}
+                {/* GovX Partner */}
                 {/* GovX Partner (temporary info link) */}
-<a
-  href="https://www.govx.com/govx-id/"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="hover:text-amber-200"
->
-  GovX Partner
-</a>
-
+                <a
+                  href="https://www.govx.com/govx-id/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-200 underline-offset-2 hover:underline"
+                >
+                  GovX Partner
+                </a>
               </div>
 
               {/* Right-aligned My Fleet login */}
@@ -7970,7 +7977,7 @@ function RoastCTAInfo() {
             <span className="text-neutral-400"></span>
           </div>
           <div className="text-xs md:text-sm text-neutral-400">
-            Reserve your bag today.
+            Reserve your bag today
           </div>
         </div>
       ) : (

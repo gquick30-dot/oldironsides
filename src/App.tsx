@@ -1,3 +1,4 @@
+import AccountGate from "./Components/AccountGate";
 import React, {
   useState,
   useMemo,
@@ -314,7 +315,7 @@ const roastCards = [
     heroImg: "Flagship-web.png", // New property for hero section image
     price: 22.0,
     canBuy: true,
-    variant: "12oz • Ground",
+    variant: "12oz Bag",
     battleDate: "Commissioned October 21, 1797",
     storyTitle: (
       <>
@@ -340,7 +341,7 @@ const roastCards = [
     heroImg: "baptism-web.png", // New property for hero section image
     price: 22.0,
     canBuy: true,
-    variant: "12oz • Ground",
+    variant: "12oz Bag",
     battleDate: "August 19, 1812",
     storyTitle: (
       <>
@@ -366,7 +367,7 @@ const roastCards = [
     heroImg: "java-web.png", // New property for hero section image
     price: 22.0,
     canBuy: true,
-    variant: "12oz • Ground",
+    variant: "12oz Bag",
     battleDate: "December 29, 1812",
     storyTitle: (
       <>
@@ -390,7 +391,7 @@ const roastCards = [
     heroImg: "ironship.png", // New property for hero section image
     price: 0,
     canBuy: false,
-    variant: "Limited Release",
+    variant: "12oz Bag",
     battleDate: "",
     storyTitle: (
       <>
@@ -509,17 +510,16 @@ function CartProvider({ children }: any) {
       const beanKey =
         item?.beanType === "whole" || item?.beanType === "ground"
           ? item.beanType
-          : null;
+          : "nobean";
 
-      // Make a single, canonical id. If the id already contains the bean type
-      // (e.g., "...-ground" or "...__ground"), don't append it again.
-      let canonicalId = rawId;
-      if (beanKey) {
-        const hasBeanSuffix = new RegExp(`(__|-)${beanKey}$`).test(rawId);
-        if (!hasBeanSuffix) {
-          canonicalId = `${rawId}__${beanKey}`;
-        }
-      }
+      // include purchase mode and frequency in the ID so Single and Subscribe never merge
+      const purchaseKey = item?.purchaseMode === "sub" ? "sub" : "one";
+      const freqKey =
+        item?.purchaseMode === "sub" ? `_${String(item?.subEvery ?? 30)}d` : "";
+
+      // strip any prior suffix and rebuild a canonical id
+      const base = rawId.replace(/(__.*)$/, "");
+      const canonicalId = `${base}__${beanKey}__${purchaseKey}${freqKey}`;
 
       // Only add the label if it's not already there
       const displayTitle =
@@ -535,6 +535,7 @@ function CartProvider({ children }: any) {
         sku: item.sku || canonicalId,
         title: displayTitle,
         isCoffee: typeof item.isCoffee === "boolean" ? item.isCoffee : true,
+        isSubscription: item?.purchaseMode === "sub",
       };
 
       persist((prev) => {
@@ -1094,14 +1095,16 @@ function HomePage() {
                       <span className="mx-1.5 text-amber-400/70" aria-hidden>
                         •
                       </span>
-                      <a
-                        href="/govx" /* swap to your real GovX URL if needed */
-                        className="text-amber-200/90 hover:text-amber-300 hover:underline underline-offset-2"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        GovX Partner
-                      </a>
+                     {/* GovX Partner (temporary info link) */}
+<a
+  href="https://www.govx.com/govx-id/"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-amber-200"
+>
+  GovX Partner
+</a>
+
                     </div>
 
                     <div aria-hidden className="h-5 md:h-6" />
@@ -1157,34 +1160,56 @@ function HomePage() {
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
         <Container>
-          <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex flex-col items-center justify-center text-center">
-            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
-                  <img
-                    src="/veteran-chair.jpg"
-                    alt="Giving back"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
-                  Giving Back To Those Who Served
-                </h3>
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Even as a startup with thin profits, giving back is at the
-                  core of Old Ironsides Coffee. As a combat veteran, I believe
-                  supporting organizations that focus on veterans’ health and
-                  well-being is not optional, it is who we are. <br /> <br />{" "}
-                  With every bag sold, we donate a portion of profits to trusted
-                  organizations that provide real help to the veterans who need
-                  it most.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Container>
+  <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex flex-col justify-center">
+    <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
+      <div className="justify-self-center md:justify-self-start self-center">
+        <div className="w-64 md:w-[32rem] mx-auto md:mx-0 aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+          <img
+            src="/veteran-chair.jpg"
+            alt="Giving back"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+
+      {/* text: center on mobile, left on md+ */}
+      <div className="space-y-3 text-center md:text-left">
+        <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+          Giving Back To Those Who Served
+        </h3>
+        <br />
+
+        <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+          Even as a startup with thin profits, giving back is at the core of Old
+          Ironsides Coffee. As a combat veteran, I believe supporting organizations
+          that focus on veterans’ health and well-being is not optional, it is who
+          we are.
+        </p>
+
+        <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+          With every bag sold, we donate a portion of profits to trusted organizations
+          that provide real help to the veterans who need it most.
+        </p>
+
+        <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+          Active duty, veterans, and first responders earn an additional $1 off each
+          bag of fresh roasted coffee, our small way of saying thank you to the men and women in uniform.
+        </p>
+        <br />
+        <a
+  href="https://www.govx.com/govx-id/"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-amber-300 text-xl "
+>
+  GovX Login
+</a>
+
+      </div>
+    </div>
+  </div>
+</Container>
+
       </section>
 
       <section
@@ -4496,19 +4521,38 @@ function OriginsPage() {
           <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex items-center">
             <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] gap-4 md:gap-6 items-center w-full">
               {/* Text LEFT */}
-              <div className="space-y-3 md:text-left text-center">
-                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
-                  Giving Back To Those Who Served
-                </h3>
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Even as a startup with thin profits, giving back is at the
-                  core of Old Ironsides Coffee. As a combat veteran, I believe
-                  supporting organizations that focus on veterans’ health and
-                  well-being is not optional, it is who we are. <br /> <br />
-                  With every bag sold, we donate a portion of profits to trusted
-                  organizations that provide real help to the veterans who need
-                  it most.
-                </p>
+               {/* text: center on mobile, left on md+ */}
+      <div className="space-y-3 text-center md:text-left">
+        <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+          Giving Back To Those Who Served
+        </h3>
+        <br />
+
+        <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+          Even as a startup with thin profits, giving back is at the core of Old
+          Ironsides Coffee. As a combat veteran, I believe supporting organizations
+          that focus on veterans’ health and well-being is not optional, it is who
+          we are.
+        </p>
+
+        <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+          With every bag sold, we donate a portion of profits to trusted organizations
+          that provide real help to the veterans who need it most.
+        </p>
+
+        <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+          Active duty, veterans, and first responders earn an additional $1 off each
+          bag of fresh roasted coffee, our small way of saying thank you to the men and women in uniform.
+        </p>
+        <br />
+        <a
+  href="https://www.govx.com/govx-id/"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-amber-300 text-xl "
+>
+  GovX Login
+</a>
               </div>
 
               {/* Hero RIGHT */}
@@ -5922,11 +5966,49 @@ function CartPage() {
     total,
     freeShippingQualified,
     coffeeBagCount,
+    freeShippingThreshold,
   } = useCart();
 
   // Sidebar "Ring That Bell" state/submit (mimics MegaSubscribeBox)
   const [sbEmail, setSbEmail] = useState("");
   const [sbDone, setSbDone] = useState(false);
+  // Free shipping helpers
+  const missingForFree = Math.max(0, freeShippingThreshold - coffeeBagCount);
+  const freeShipProgress = Math.min(1, coffeeBagCount / freeShippingThreshold);
+
+  // Account gate
+  const [showAccountGate, setShowAccountGate] = useState(false);
+
+  // Detect subscription items in cart
+  const hasSubInCart = useMemo(
+    () => cart.some((i: any) => i?.purchaseMode === "sub"),
+    [cart]
+  );
+
+  // Simple logged-in check using your local storage key
+  const isLoggedIn = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return !!localStorage.getItem("oi_user");
+    } catch {
+      return false;
+    }
+  }, []);
+
+  // Checkout click handler with gate
+  const onCheckoutClick = () => {
+    if (hasSubInCart && !isLoggedIn) {
+      setShowAccountGate(true);
+      return;
+    }
+    // Proceed to your normal checkout flow
+    window.dispatchEvent(
+      new CustomEvent("flash", { detail: "Proceeding to checkout..." })
+    );
+    // TODO: when ready, redirect to Shopify checkout here
+    // e.g., navigate(checkoutUrl) or window.location.href = checkoutUrl
+  };
+
   const onSbSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailOk(sbEmail)) return alert("Enter a valid email.");
@@ -5944,14 +6026,14 @@ function CartPage() {
       <Container>
         <div className="flex items-start justify-between">
           <SectionTitle title="Chest" />
-          <BackButton size="sm" />
+          <BackButton to="/store" size="sm" />
         </div>
 
         {cart.length ? (
           <div>
             {/* Message centered, nudged upward toward banner */}
             <div className="mb-6 text-center relative">
-              <p className="text-sm md:text-base text-blue-300 relative -top-[50px]">
+              <p className="text-sm md:text-base text-blue-300 relative -top-[50px] pointer-events-none select-none">
                 <>
                   All of our coffees are roasted fresh every Monday and ship
                   Tuesday/Wednesday. <br />
@@ -5989,10 +6071,31 @@ function CartPage() {
                       <div className="font-semibold text-amber-300">
                         {item.title}
                       </div>
-                      <div className="text-xs text-neutral-400">
-                        {item.variant}
-                      </div>
+
+                      {/* Variant line (only if present) */}
+                      {item?.variant ? (
+                        <div className="text-xs text-neutral-400">
+                          {item.variant}
+                        </div>
+                      ) : null}
+
+                      {/* Price */}
                       <div className="mt-1 text-sm">{fmt(item.price)}</div>
+
+                      {/* Purchase type copy */}
+                      {item?.purchaseMode === "sub" ? (
+                        <div className="mt-1 text-m text-amber-400">
+                          Fresh Roasted, Ships every {item?.subEvery ?? 30}{" "}
+                          days. 15% off applied.
+                        </div>
+                      ) : (
+                        <div className="mt-1 text-m text-neutral-400">
+                          Priced as if the Crown won the war.{" "}
+                          <span className="text-amber-300">
+                            Subscribe and save 15% off this item.
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Right-side controls (qty + remove) */}
@@ -6035,9 +6138,58 @@ function CartPage() {
                     </div>
                   </div>
                 ))}
+
+                {/* Free shipping indicator (half width, amber count) */}
+                <div className="w-full md:w-1/3">
+                  <div className="rounded-xl ring-1 ring-neutral-800 bg-neutral-900/50 p-4">
+                    {!freeShippingQualified ? (
+                      <>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-neutral-300">
+                            Add{" "}
+                            <span className="text-amber-300 font-semibold">
+                              {Math.max(
+                                0,
+                                freeShippingThreshold - coffeeBagCount
+                              )}{" "}
+                              {Math.max(
+                                0,
+                                freeShippingThreshold - coffeeBagCount
+                              ) === 1
+                                ? "more bag"
+                                : "more bags"}
+                            </span>{" "}
+                            for free shipping.
+                          </span>
+                          <span className="text-amber-300 font-semibold">
+                            {coffeeBagCount}/{freeShippingThreshold}
+                          </span>
+                        </div>
+                        <div className="mt-2 h-2 rounded-full bg-neutral-800">
+                          <div
+                            className="h-2 rounded-full bg-amber-400 transition-all"
+                            style={{
+                              width: `${Math.round(
+                                Math.min(
+                                  1,
+                                  (coffeeBagCount || 0) /
+                                    (freeShippingThreshold || 1)
+                                ) * 100
+                              )}%`,
+                            }}
+                            aria-hidden
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-emerald-400 text-sm font-semibold">
+                        Free Shipping Applied
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
-              {/* Checkout sidebar */}
               {/* Checkout sidebar */}
               <aside className="space-y-6">
                 {/* Checkout box */}
@@ -6064,12 +6216,16 @@ function CartPage() {
                   </div>
 
                   {/* Total */}
-                  <div className="mt-3 border-t border-neutral-800 pt-3 flex items-center justify-between text-sm">
-                    <span className="text-neutral-400">Total</span>
+                  <div className="mt-3 border-t border-neutral-800 pt-3 flex items-center justify-between text-lg">
+                    <span className="text-amber-400">Total</span>
                     <span className="font-semibold">{fmt(total)}</span>
                   </div>
 
-                  <button className="mt-4 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+                  <button
+                    onClick={onCheckoutClick}
+                    className="mt-4 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
+                    aria-label="Proceed to checkout"
+                  >
                     Checkout
                   </button>
                 </div>
@@ -6138,6 +6294,11 @@ function CartPage() {
             </p>
           </div>
         )}
+        {/* Account gate modal */}
+        <AccountGate
+          open={showAccountGate}
+          onClose={() => setShowAccountGate(false)}
+        />
       </Container>
     </main>
   );
@@ -7153,6 +7314,19 @@ function Layout() {
                 <Link to="/legal/shipping" className="hover:text-amber-200">
                   Free Shipping on 3+ Bags
                 </Link>
+
+                <span>|</span>
+              {/* GovX Partner */}
+                {/* GovX Partner (temporary info link) */}
+<a
+  href="https://www.govx.com/govx-id/"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-amber-200"
+>
+  GovX Partner
+</a>
+
               </div>
 
               {/* Right-aligned My Fleet login */}

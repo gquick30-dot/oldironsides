@@ -4795,7 +4795,48 @@ function LegalPage() {
     privacy: "Privacy Policy",
   };
   const title = titles[slug as string] || "Roast & Shipping";
+  const [dateLabel, setDateLabel] = useState("");
+  const [left, setLeft] = useState("");
 
+  useEffect(() => {
+    const STORE_TZ = "America/New_York"; // Sunday 5:00 PM ET cutoff
+
+    const compute = () => {
+      const now = DateTime.now().setZone(STORE_TZ);
+
+      // Cutoff: Sunday 5:00 PM ET (this Sunday if not passed, else next Sunday)
+      const cutoffThisSunday = now.set({
+        weekday: 7,
+        hour: 17,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      });
+      const cutoff =
+        now <= cutoffThisSunday
+          ? cutoffThisSunday
+          : cutoffThisSunday.plus({ weeks: 1 });
+
+      // Roast: Monday immediately after the cutoff
+      const nextRoast = cutoff.plus({ days: 1 }).startOf("day");
+      setDateLabel(nextRoast.toFormat("EEEE, LLL d"));
+
+      // Countdown to cutoff → "Xd Yh Zm"
+      const diff = cutoff
+        .diff(now, ["days", "hours", "minutes"])
+        .shiftTo("days", "hours", "minutes");
+      const dd = Math.max(0, Math.floor(diff.days));
+      const hh = Math.max(0, Math.floor(diff.hours));
+      const mm = Math.max(0, Math.floor(diff.minutes));
+      setLeft(
+        dd > 0 ? `${dd}d ${hh}h ${mm}m` : hh > 0 ? `${hh}h ${mm}m` : `${mm}m`
+      );
+    };
+
+    compute();
+    const id = setInterval(compute, 1000);
+    return () => clearInterval(id);
+  }, []);
   return (
     <main className="py-16">
       <Container>
@@ -4825,7 +4866,7 @@ function LegalPage() {
               <p className="mt-2">
                 Your next eligible roast date is{" "}
                 <span className="font-semibold text-amber-300">
-                  {nextRoastLabel()}
+                  {dateLabel}
                 </span>
                 .
               </p>
@@ -5974,6 +6015,48 @@ function CartPage() {
   // Sidebar "Ring That Bell" state/submit (mimics MegaSubscribeBox)
   const [sbEmail, setSbEmail] = useState("");
   const [sbDone, setSbDone] = useState(false);
+  const [dateLabel, setDateLabel] = useState("");
+  const [left, setLeft] = useState("");
+
+  useEffect(() => {
+    const STORE_TZ = "America/New_York"; // Sunday 5:00 PM ET cutoff
+
+    const compute = () => {
+      const now = DateTime.now().setZone(STORE_TZ);
+
+      // Cutoff: Sunday 5:00 PM ET (this Sunday if not passed, else next Sunday)
+      const cutoffThisSunday = now.set({
+        weekday: 7,
+        hour: 17,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      });
+      const cutoff =
+        now <= cutoffThisSunday
+          ? cutoffThisSunday
+          : cutoffThisSunday.plus({ weeks: 1 });
+
+      // Roast: Monday immediately after the cutoff
+      const nextRoast = cutoff.plus({ days: 1 }).startOf("day");
+      setDateLabel(nextRoast.toFormat("EEEE, LLL d"));
+
+      // Countdown to cutoff → "Xd Yh Zm"
+      const diff = cutoff
+        .diff(now, ["days", "hours", "minutes"])
+        .shiftTo("days", "hours", "minutes");
+      const dd = Math.max(0, Math.floor(diff.days));
+      const hh = Math.max(0, Math.floor(diff.hours));
+      const mm = Math.max(0, Math.floor(diff.minutes));
+      setLeft(
+        dd > 0 ? `${dd}d ${hh}h ${mm}m` : hh > 0 ? `${hh}h ${mm}m` : `${mm}m`
+      );
+    };
+
+    compute();
+    const id = setInterval(compute, 1000);
+    return () => clearInterval(id);
+  }, []);
   // Free shipping helpers
   const missingForFree = Math.max(0, freeShippingThreshold - coffeeBagCount);
   const freeShipProgress = Math.min(1, coffeeBagCount / freeShippingThreshold);
@@ -6041,7 +6124,10 @@ function CartPage() {
                   Tuesday/Wednesday. <br />
                   Your next eligible roast date is{" "}
                   <span className="font-semibold text-amber-300">
-                    {nextRoastLabel()}
+                    {dateLabel}
+                    <br />
+                    Time left to make the next roast:{" "}
+                    <span className="text-amber-300">{left}</span>
                   </span>
                   . <br />
                   Orders placed before 5 p.m. EST on Sunday make that week’s

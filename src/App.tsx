@@ -680,11 +680,12 @@ function RingThatBellBox() {
           <div className="flex items-center justify-center gap-3 mb-3">
             <Bell className="h-11 w-11 text-amber-300" />
             <h3 className="text-4xl font-extrabold text-amber-300">
-              Ring That Bell
+              RING THAT BELL
             </h3>
           </div>
           <p className="text-neutral-300 mb-5 text-lg md:text-xl">
-            Join the Fleet and save 15%
+            Get 20% off your first freshly roasted coffee order. <br /> Join the
+            fleet later and save 15% off every order.
           </p>
 
           <form
@@ -697,11 +698,11 @@ function RingThatBellBox() {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@domain.com"
+              placeholder="Enter your email"
               className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
             />
             <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
-              Join
+              GET 20% OFF
             </button>
           </form>
           <div className="mt-8 text-s text-neutral-400">
@@ -716,7 +717,7 @@ function RingThatBellBox() {
 
           {submitted && (
             <p className="mt-3 text-sm text-emerald-400">
-              Welcome aboard — your discount is on the way.
+              Welcome aboard! Your discount code is on it's way!
             </p>
           )}
         </div>
@@ -741,9 +742,13 @@ function MegaSubscribeBox({
   subtitle?: string;
   buttonText?: string;
 }) {
-  const heading = title ?? "Ring That Bell";
-  const sub = subtitle ?? "Join the Fleet and save 15%";
-  const btn = buttonText ?? "Join";
+  const heading = title ?? "RING THAT BELL";
+  const sub =
+    subtitle ??
+    `Get 20% off your first order
+  Join the fleet for 15% off recurring orders`;
+
+  const btn = buttonText ?? "GET 20% OFF";
 
   return (
     <div className="w-full lg:w-[36rem]">
@@ -752,7 +757,9 @@ function MegaSubscribeBox({
           <Bell className="h-7 w-7 text-amber-300" />
           <h3 className="text-2xl font-extrabold text-amber-300">{heading}</h3>
         </div>
-        <p className="text-neutral-300 mb-5 text-lg md:text-xl">{sub}</p>
+        <p className="text-neutral-300 mb-5 text-lg md:text-xl whitespace-pre-line">
+          {sub}
+        </p>
 
         <form
           onSubmit={onSubmit}
@@ -768,7 +775,7 @@ function MegaSubscribeBox({
             spellCheck={false}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@domain.com"
+            placeholder="Enter your email"
             className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
           />
           <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
@@ -784,7 +791,7 @@ function MegaSubscribeBox({
 
         {done && (
           <p className="mt-3 text-sm text-emerald-400">
-            Welcome aboard — your discount is on the way.
+            Welcome aboard! Your discount is on the way!
           </p>
         )}
       </div>
@@ -808,11 +815,12 @@ function CompactSubscribeBox() {
       <div className="flex items-center justify-center gap-2 mb-2">
         <Bell className="h-5 w-5 text-amber-300" />
         <h4 className="text-lg font-extrabold text-amber-300">
-          Ring That Bell
+          RING THAT BELL
         </h4>
       </div>
       <p className="text-neutral-300 text-sm mb-3">
-        Join the Fleet and save 15%
+        Get 20% off your first order. <br /> Join the fleet and save 15% off
+        every order.
       </p>
       <form onSubmit={onSubmit} className="flex gap-2">
         <input
@@ -820,11 +828,11 @@ function CompactSubscribeBox() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@domain.com"
+          placeholder="Enter your email"
           className="flex-1 rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
         />
         <button className="px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300">
-          Join
+          GET 20% OFF
         </button>
       </form>
       <div className="mt-2 text-[11px] text-neutral-400">
@@ -835,7 +843,7 @@ function CompactSubscribeBox() {
       </div>
       {done && (
         <p className="mt-2 text-xs text-emerald-400">
-          Welcome aboard — your discount is on the way.
+          Welcome aboard! Your discount is on the way!
         </p>
       )}
     </div>
@@ -854,7 +862,7 @@ function GovXLoginBox() {
         Enjoy <span className="font-semibold text-amber-300">15% off</span> both
         coffee and merch — plus{" "}
         <span className="font-semibold text-amber-300">$1 extra per bag</span>{" "}
-        is donated to trusted organizations that help veterans.
+        off for veterans and first responders.
       </p>
       <button
         type="button"
@@ -903,7 +911,7 @@ function NotifyForm({ onSubmit }: any) {
       <input
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="you@domain.com"
+        placeholder="Enter your email"
         className="w-full sm:flex-1 min-w-0 rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400"
       />
       <button className="w-full sm:w-auto px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-xs font-semibold hover:bg-amber-300">
@@ -916,6 +924,22 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const isStore = location.pathname.startsWith("/store");
+
+  // Inline timer data (uses your existing helpers)
+  const nowET = useEtNow(45000); // update ~45s
+  const { state, roastMonday, cutoff } = getRoastState(nowET);
+
+  let left = "";
+  if (state === "countdown" && cutoff) {
+    const diff = cutoff.diff(nowET, ["days", "hours", "minutes"]).toObject();
+    const d = Math.max(0, Math.floor(diff.days ?? 0));
+    const h = Math.max(0, Math.floor(diff.hours ?? 0));
+    const m = Math.max(0, Math.floor(diff.minutes ?? 0));
+    left = `${d}d ${h}h ${m}m`;
+  }
+  const dateLabel = formatEtDate(roastMonday);
+  const nextInfo = state === "countdown" && left ? left : dateLabel;
+
   return (
     <section
       id="fleet"
@@ -935,6 +959,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
           className="absolute inset-0 w-full h-full object-cover opacity-40 -z-0"
         />
       )}
+
       <Container className={`relative z-10 ${isStore ? "pt-10 md:pt-16" : ""}`}>
         <div className="flex items-start justify-between">
           <SectionTitle
@@ -951,8 +976,19 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                 <div className="text-neutral-300 font-normal mb-4 text-lg md:text-xl tracking-tight">
                   Our premium roasts, crafted for modern legends.
                 </div>
-                <div className="text-amber-300 font-normal text-lg md:text-xl tracking-tight">
-                  Choose your roast from the fleet.
+
+                {/* Match font and dot style/position to your reference */}
+                <div className="mt-1 text-neutral-300 text-lg md:text-lg">
+                  <span>Roasted to order</span>
+                  <span className="mx-1.5 text-amber-400/70" aria-hidden>
+                    •
+                  </span>
+                  <span>Reserve your fresh coffee today</span>
+                  <span className="mx-1.5 text-amber-400/70" aria-hidden>
+                    •
+                  </span>
+                  <span>Next roast date: </span>
+                  <span className="text-amber-400">{nextInfo}</span>
                 </div>
               </>
             }
@@ -962,55 +998,74 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         </div>
 
         <div className="mt-2 grid md:grid-cols-4 gap-6">
-          {roastCards.map((card) => (
-            <Link
-              key={card.id}
-              to={`/roast/${card.slug}`}
-              aria-label={`${card.title} details`}
-              className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col"
-            >
-              <img
-                src={card.img}
-                alt={card.title}
-                className="h-80 sm:h-96 md:h-[28rem] w-full object-cover"
-                loading="lazy"
-                decoding="async"
-                onError={(e) => {
-                  const el = e.currentTarget as HTMLImageElement;
-                  if (!el.src.includes("/placeholder.png")) {
-                    el.src = "/placeholder.png"; // add a neutral fallback image in /public
-                  }
-                }}
-              />
+          {roastCards.map((card) => {
+            const base = card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
+            const sub = Math.round(base * 0.85 * 100) / 100; // 15% off
 
-              <div className="p-5 flex flex-col flex-1">
-                <h3
-                  className="text-3xl md:text-4xl font-extrabold text-amber-300"
-                  style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
-                >
-                  {card.title}
-                </h3>
-                <p className="text-[1.15rem] italic text-neutral-500">
-                  {card.subTitle}
-                </p>
+            return (
+              <Link
+                key={card.id}
+                to={`/roast/${card.slug}`}
+                aria-label={`${card.title} details`}
+                className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col"
+              >
+                <img
+                  src={card.img}
+                  alt={card.title}
+                  className="h-80 sm:h-96 md:h-[28rem] w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => {
+                    const el = e.currentTarget as HTMLImageElement;
+                    if (!el.src.includes("/placeholder.png")) {
+                      el.src = "/placeholder.png";
+                    }
+                  }}
+                />
 
-                <p className="text-lg text-neutral-400 flex-1">{card.note}</p>
+                <div className="p-5 flex flex-col flex-1">
+                  <h3
+                    className="text-3xl md:text-4xl font-extrabold text-amber-300"
+                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                  >
+                    {card.title}
+                  </h3>
 
-                <div className="mt-4 flex items-center gap-3">
-                  <div className="text-m font-semibold text-amber-400">
-                    From{" "}
-                    {fmt(
-                      card.slug === "oak-and-copper" ? 25 : card.price ?? 22
-                    )}
-                  </div>
+                  {/* Roast type + 12 oz */}
+                  <p className="text-[1.15rem] italic text-neutral-500">
+                    {card.subTitle}
+                    <span className="mx-1.5 text-amber-300/80" aria-hidden>
+                      -
+                    </span>
+                    <span className="not-italic">12 oz</span>
+                  </p>
 
-                  <div className="text-m text-neutral-300">
-                    12 oz. Ground/Whole Bean
+                  {/* Short note/descriptor */}
+                  <p className="text-lg text-neutral-400 flex-1">{card.note}</p>
+
+                  {/* Price row: neutral base, amber sub, spaced + no wrap */}
+                  {/* Price row: base neutral, compact sub badge with slight air */}
+                  {/* Price row: base neutral, sub in a compact pill (price hidden on xs) */}
+                  <div className="mt-4 text-sm md:text-base flex items-center gap-2 md:gap-3">
+                    <span className="text-neutral-200">From {fmt(base)}</span>
+
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
+                      Subscribe & Save 15%
+                      <span
+                        className="hidden sm:inline mx-1.5 opacity-60"
+                        aria-hidden
+                      >
+                        •
+                      </span>
+                      <span className="hidden sm:inline font-semibold">
+                        {fmt(sub)}
+                      </span>
+                    </span>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </Container>
     </section>
@@ -1052,7 +1107,7 @@ function HomePage() {
         <img
           src="emblem-black.png"
           alt="Stormy sea"
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[900px] object-contain opacity-10 pointer-events-none select-none"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[900px] object-contain opacity-30 pointer-events-none select-none"
         />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,193,7,0.10),transparent_60%)]" />
         <div className="absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
@@ -1064,12 +1119,18 @@ function HomePage() {
               <div className="space-y-0">
                 <div className="relative z-0 transform scale-110 origin-center">
                   <div className="inline-flex flex-col items-start">
-                    {/* INTRO PHOTO — lower it slightly for breathing room from banner */}
-                    <img
-                      src="bean-smell.png"
-                      alt="Smelling beans"
-                      className="self-start w-[15.125rem] h-[18.975rem] md:w-[16.6375rem] md:h-[20.55625rem] translate-y-6 md:translate-y-8 rounded-xl object-cover ring-1 ring-amber-500 shadow-2xl shadow-black/30"
-                    />
+                    {/* Wrapper controls size. Image scales inside it. */}
+                    <div
+                      className="self-start translate-y-6 md:translate-y-8 w-[16rem] h-[20.5rem] md:w-[21.5rem] md:h-[27rem]
+ rounded-xl ring-1 ring-amber-500 shadow-2xl shadow-black/30 overflow-hidden"
+                    >
+                      {" "}
+                      <img
+                        src="bean-smell.png"
+                        alt="Smelling beans"
+                        className="w-full h-full object-cover origin-center"
+                      />{" "}
+                    </div>
 
                     {/* bring photo down tighter to headline */}
                     <div aria-hidden className="h-8 md:h-10" />
@@ -1082,7 +1143,7 @@ function HomePage() {
                       PREMIUM, SMALL-BATCH COFFEE
                     </h2>
 
-                    <div className="mt-1 text-neutral-300 text-sm md:text-lg">
+                    <div className="mt-0 text-neutral-300 text-sm md:text-lg">
                       <span>Ethically Sourced</span>
                       <span className="mx-1.5 text-amber-400/70" aria-hidden>
                         •
@@ -1106,7 +1167,7 @@ function HomePage() {
                       </a>
                     </div>
 
-                    <div aria-hidden className="h-5 md:h-6" />
+                    <div aria-hidden className="h-1 md:h-2" />
                     <div className="w-full max-w-[24rem]">
                       <Link
                         to="/coffee"
@@ -1127,7 +1188,7 @@ function HomePage() {
 
             {/* RIGHT COLUMN — officer image (unchanged) */}
             <div className="md:col-span-5 self-start">
-              <div className="inline-block ml-0 md:ml-[12%] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
+              <div className="inline-block ml-0 md:ml-[12%] w-full max-w-[620px] md:max-w-[700px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
                   src="officer-window.png"
                   alt="Old Ironsides hero"
@@ -1150,24 +1211,43 @@ function HomePage() {
       <LaunchedFromHarbor noBg />
       <RingThatBellBox />
       {/* ===== GIVING BACK (copied from Origins) ===== */}
-      <section className="relative overflow-hidden border-t border-neutral-800">
+      <section
+        id="origins-giving-back"
+        className="relative overflow-hidden border-t border-neutral-800 scroll-mt-28 md:scroll-mt-36"
+      >
+        {/* Background image, cooled and desaturated */}
         <img
-          src="/flags-ground.jpg"
-          alt="Giving back backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-30 z-0 pointer-events-none"
+          src="/flag-close.jpg"
+          alt=""
+          role="presentation"
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover object-center z-0 pointer-events-none brightness-70 saturate-70 hue-rotate-[-10deg]"
         />
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+
+        <div className="pointer-events-none absolute inset-0 z-0">
+          {/* global darken */}
+          <div className="absolute inset-0 bg-black/45" />
+          {/* left shield over copy only */}
+          <div className="absolute inset-y-0 left-0 w-full md:w-[62%] lg:w-[55%] bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
+          {/* mild texture blur */}
+          <div className="absolute inset-0 md:backdrop-blur-[2px]" />
+          {/* top/bottom vignette to kill remaining glare */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/35" />
+        </div>
 
         <Container>
           <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex flex-col justify-center">
             <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
               <div className="justify-self-center md:justify-self-start self-center">
-                <div className="w-64 md:w-[32rem] mx-auto md:mx-0 aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
                   <img
-                    src="/veteran-chair.jpg"
+                    src="/soliders-sunset.png"
                     alt="Giving back"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover hue-rotate-[-10deg] saturate-70"
                   />
+                  {/* top and bottom vignettes reduce perceived warmth */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10" />
                 </div>
               </div>
 
@@ -1178,32 +1258,35 @@ function HomePage() {
                 </h3>
                 <br />
 
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Even as a startup with thin profits, giving back is at the
-                  core of Old Ironsides Coffee. As a combat veteran, I believe
-                  supporting organizations that focus on veterans’ health and
-                  well-being is not optional, it is who we are.
+                <p className="text-neutral-100 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  Even as a young company where every dollar counts, giving back
+                  is a big part of who we are and what Old Ironsides Coffee
+                  stands for. As a veteran, I believe service is a promise kept
+                  when no one is watching. It is standards held high, teamwork
+                  under pressure, and loyalty to the people beside you. <br />
+                  <br />
+                  This brand exists to honor that code, to stand with those who
+                  protect our freedoms, and to keep their legacy present in the
+                  work we do every day.
                 </p>
-
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  With every bag sold, we donate a portion of profits to trusted
-                  organizations that provide real help to the veterans who need
-                  it most.
-                </p>
-
+                <br />
                 <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Active duty, veterans, and first responders earn an additional
-                  $1 off each bag of fresh roasted coffee, our small way of
-                  saying thank you to the men and women in uniform.
+                  Active duty, veterans, and first responders including fire,
+                  law enforcement, and EMTs receive $1 off every bag of fresh
+                  roasted coffee, every day. The discount stacks with
+                  subscriptions.
                 </p>
                 <br />
                 <a
                   href="https://www.govx.com/govx-id/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-amber-300 text-xl underline-offset-2 hover:underline "
+                  className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
+                   text-amber-400 font-semibold text-[1rem]
+                   px-[1.1rem] py-[0.45rem]
+                   hover:bg-amber-400 hover:text-neutral-900 transition-all"
                 >
-                  GovX Login
+                  Verify with GovX
                 </a>
               </div>
             </div>
@@ -3928,8 +4011,8 @@ function StorePage() {
                 </div>
                 <div className="px-6 pb-6">
                   <div className="mt-2 text-sm text-neutral-400">
-                    Join the Fleet to get first access on gear — plus save 15%
-                    on coffee.
+                    Join the Fleet to get first access on gear. <br />
+                    Plus 20% off on first order of coffee.
                   </div>
                   <NotifyForm onSubmit={() => {}} />
                 </div>
@@ -3991,203 +4074,6 @@ function StoreCategoryPage() {
     </main>
   );
 }
-
-// ===== PASTE THIS NEW VERSION OF MissionPage =====
-function MissionPage() {
-  // Match the Origins page frame/sizing
-  const SECTION_FRAME = "relative overflow-hidden border-t border-neutral-800";
-  const SECTION_INNER =
-    "relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16";
-
-  return (
-    <main className="pt-0">
-      {/* ===== SECTION 1: Title + intro alternating (photo LEFT, text RIGHT) ===== */}
-      <section className={SECTION_FRAME}>
-        {/* Backdrop emblem centered */}
-        <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
-          <img
-            src="/emblem-black.png"
-            alt="Mission backdrop"
-            className="max-w-[90%] max-h-[90%] object-contain opacity-20"
-          />
-        </div>
-
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
-
-        <Container>
-          <div className="relative z-10 min-h-[720px] md:min-h-[820px] py-12 md:py-16">
-            <div className="flex items-start justify-between mt-4 md:mt-6 mb-8 md:mb-10">
-              <SectionTitle
-                title={
-                  <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
-                    Mission Log
-                  </span>
-                }
-                subtitle={
-                  <span className="block text-lg md:text-2xl font-semibold text-amber-300">
-                    Revive our history. Strengthen our spirit. Honor those who
-                    served.
-                  </span>
-                }
-              />
-              <BackButton size="sm" />
-            </div>
-
-            {/* PHOTO LEFT / TEXT RIGHT */}
-            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
-                  <img
-                    src="/flag-close.jpg" // swap later
-                    alt="Mission intro"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
-                  THE HEART OF OLD IRONSIDES COFFEE
-                </h3>
-
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  At Old Ironsides Coffee, our mission is to do more than serve
-                  an amazing cup of coffee. We aim to strengthen American pride
-                  and spirit while preserving our history, all of which are in
-                  danger of being lost. We carry forward the legacy of
-                  resilience and courage to overcome adversity. This is the
-                  heart of Old Ironsides Coffee.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-      {/* ===== SECTION 2: Hero (LEFT) + Text (CENTER) + Alternating half-offset stack (RIGHT) ===== */}
-      <section className={SECTION_FRAME}>
-        {/* Backdrop */}
-        <img
-          src="/iraq-moon.JPG"
-          alt="Craft backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-90 z-0 pointer-events-none"
-        />
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
-
-        <Container>
-          {/* Make this section taller so the top/bottom cards can hug the edges */}
-          <div className="relative z-10 min-h-[900px] md:min-h-[960px] py-12 md:py-16">
-            {/* Three columns: hero | text | photo stack */}
-            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr,auto] items-center gap-8">
-              {/* LEFT: HERO (vertically centered with text & middle-right photo) */}
-              <div className="justify-self-center md:justify-self-start self-center">
-                <div className="w-56 sm:w-64 md:w-[19.5rem] lg:w-[22rem] aspect-[4/5] rounded-2xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50 shadow-2xl shadow-black/40">
-                  <img
-                    src="/officer-window.png"
-                    alt="Hero"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-
-              {/* CENTER: TEXT */}
-              <div className="text-center md:text-left self-center">
-                <h3 className="font-cinzel text-2xl md:text-3xl font-extrabold text-amber-300 tracking-wide uppercase">
-                  FROM THE SAND TO THE SEA
-                </h3>
-
-                <p className="mt-3 text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Although my boots were in the sand, not on the deck, the
-                  spirit of Old Ironsides has always inspired me. She is a
-                  reminder that grit, sacrifice, and courage win the day. Those
-                  same values carried me through my service and are now at the
-                  heart of Old Ironsides Coffee. Building this company is my way
-                  of honoring that spirit and sharing it with others.
-                </p>
-              </div>
-
-              {/* RIGHT: ALTERNATING STACK (Top Left / Middle Right / Bottom Left) */}
-              <div className="justify-self-center md:justify-self-end">
-                {/* The stack canvas is exactly 2× the card width so half-offsets are exact.
-              Top and bottom cards are pinned to edges for separation. */}
-                <div className="relative w-[36rem] h-[48rem]">
-                  {/* Shared card size: 18rem wide (Tailwind w-72) with 4:3 ratio */}
-
-                  {/* TOP (LEFT): right edge on centerline, pinned to top */}
-                  <div className="absolute left-1/2 top-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
-                    <img
-                      src="/humvee-turret.jpg"
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  {/* MIDDLE (RIGHT): left edge on centerline, centered vertically */}
-                  <div className="absolute left-1/2 top-1/2 -translate-y-1/2 w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-2xl">
-                    <img
-                      src="/iraq-self1.JPG"
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  {/* BOTTOM (LEFT): right edge on centerline, pinned to bottom */}
-                  <div className="absolute left-1/2 bottom-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
-                    <img
-                      src="/iraq-kids.JPG"
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* ===== SECTION 3: Standard alternating (photo LEFT, text RIGHT) ===== */}
-      <section className={SECTION_FRAME}>
-        <img
-          src="/flags-ground.jpg" // swap later
-          alt="Service backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-40 z-0 pointer-events-none"
-        />
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
-
-        <Container>
-          <div className={SECTION_INNER}>
-            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
-                  <img
-                    src="/veteran-chair.jpg"
-                    alt="Roaster"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
-                  Giving Back To Those Who Served
-                </h3>
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Even as a startup with thin profits, giving back is at the
-                  core of Old Ironsides Coffee. As a combat veteran, I believe
-                  supporting organizations that focus on veterans’ health and
-                  well-being is not optional, it is who we are. <br /> <br />{" "}
-                  With every bag sold, we donate a portion of profits to trusted
-                  organizations that provide real help to the veterans who need
-                  it most.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-    </main>
-  );
-}
-// ===== END NEW VERSION =====
 
 function OriginsPage() {
   // Shared frame for all sections
@@ -4448,21 +4334,11 @@ function OriginsPage() {
 
         <Container>
           <div className="relative z-10 flex items-center min-h-[900px] md:min-h-[960px] py-12 md:py-16">
-            <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr,auto] items-center gap-8">
-              {/* LEFT HERO */}
-              <div className="justify-self-center md:justify-self-start self-center">
-                <div className="w-56 sm:w-64 md:w-[19.5rem] lg:w-[22rem] aspect-[4/5] rounded-2xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50 shadow-2xl shadow-black/40">
-                  <img
-                    src="/officer-window.png"
-                    alt="Founder portrait"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-
-              {/* CENTER TEXT */}
+            {/* Collapsed to two columns: text + right stack */}
+            <div className="grid w-full grid-cols-1 md:grid-cols-[1fr,auto] items-center gap-8">
+              {/* CENTER TEXT (now left column on desktop) */}
               <div className="text-center md:text-left self-center">
-                <h3 className="font-cinzel text-2xl md:text-3xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                   From The Sand To The Sea
                 </h3>
                 <p className="mt-3 text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
@@ -4474,7 +4350,7 @@ function OriginsPage() {
                 </p>
               </div>
 
-              {/* RIGHT STACK */}
+              {/* RIGHT STACK (unchanged) */}
               <div className="justify-self-center md:justify-self-end">
                 <div className="relative w-[36rem] h-[48rem]">
                   <div className="absolute left-1/2 top-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
@@ -4510,17 +4386,42 @@ function OriginsPage() {
         id="origins-giving-back"
         className="relative overflow-hidden border-t border-neutral-800 scroll-mt-28 md:scroll-mt-36"
       >
+        {/* Background image, cooled and desaturated */}
         <img
-          src="/flags-ground.jpg"
-          alt="Giving back backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-30 z-0 pointer-events-none"
+          src="/flag-close.jpg"
+          alt=""
+          role="presentation"
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover object-center z-0 pointer-events-none brightness-70 saturate-70 hue-rotate-[-10deg]"
         />
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+
+        <div className="pointer-events-none absolute inset-0 z-0">
+          {/* global darken */}
+          <div className="absolute inset-0 bg-black/45" />
+          {/* left shield over copy only */}
+          <div className="absolute inset-y-0 left-0 w-full md:w-[62%] lg:w-[55%] bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
+          {/* mild texture blur */}
+          <div className="absolute inset-0 md:backdrop-blur-[2px]" />
+          {/* top/bottom vignette to kill remaining glare */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/35" />
+        </div>
 
         <Container>
-          <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex items-center">
-            <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] gap-4 md:gap-6 items-center w-full">
-              {/* Text LEFT */}
+          <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex flex-col justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
+              <div className="justify-self-center md:justify-self-start self-center">
+                <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
+                  <img
+                    src="/soliders-sunset.png"
+                    alt="Giving back"
+                    className="w-full h-full object-cover hue-rotate-[-10deg] saturate-70"
+                  />
+                  {/* top and bottom vignettes reduce perceived warmth */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10" />
+                </div>
+              </div>
+
               {/* text: center on mobile, left on md+ */}
               <div className="space-y-3 text-center md:text-left">
                 <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
@@ -4528,44 +4429,36 @@ function OriginsPage() {
                 </h3>
                 <br />
 
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Even as a startup with thin profits, giving back is at the
-                  core of Old Ironsides Coffee. As a combat veteran, I believe
-                  supporting organizations that focus on veterans’ health and
-                  well-being is not optional, it is who we are.
+                <p className="text-neutral-100 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  Even as a young company where every dollar counts, giving back
+                  is a big part of who we are and what Old Ironsides Coffee
+                  stands for. As a veteran, I believe service is a promise kept
+                  when no one is watching. It is standards held high, teamwork
+                  under pressure, and loyalty to the people beside you. <br />
+                  <br />
+                  This brand exists to honor that code, to stand with those who
+                  protect our freedoms, and to keep their legacy present in the
+                  work we do every day.
                 </p>
-
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  With every bag sold, we donate a portion of profits to trusted
-                  organizations that provide real help to the veterans who need
-                  it most.
-                </p>
-
+                <br />
                 <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Active duty, veterans, and first responders earn an additional
-                  $1 off each bag of fresh roasted coffee, our small way of
-                  saying thank you to the men and women in uniform.
+                  Active duty, veterans, and first responders including fire,
+                  law enforcement, and EMTs receive $1 off every bag of fresh
+                  roasted coffee, every day. The discount stacks with
+                  subscriptions.
                 </p>
                 <br />
                 <a
                   href="https://www.govx.com/govx-id/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-amber-300 text-xl underline-offset-2 hover:underline"
+                  className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
+                   text-amber-400 font-semibold text-[1rem]
+                   px-[1.1rem] py-[0.45rem]
+                   hover:bg-amber-400 hover:text-neutral-900 transition-all"
                 >
-                  GovX Login
+                  Verify with GovX
                 </a>
-              </div>
-
-              {/* Hero RIGHT */}
-              <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
-                  <img
-                    src="/veteran-chair.jpg"
-                    alt="Giving back"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -4579,9 +4472,9 @@ function OriginsPage() {
       >
         {/* Backdrop image full-bleed */}
         <img
-          src="/flag-close.jpg"
+          src="/sunrise-deck.png"
           alt="About backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-30 z-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-40 z-0 pointer-events-none"
         />
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
@@ -4664,22 +4557,26 @@ function ContactPage() {
             </div>
           </div>
           <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
-            <h4 className="font-semibold text-amber-300">Ring That Bell</h4>
-            <p className="mt-1 text-neutral-400">Join the Fleet and save 10%</p>
+            <h4 className="font-semibold text-amber-300">RING THAT BELL</h4>
+            <p className="mt-1 text-neutral-400">
+              {" "}
+              Get 20% off your first order. <br /> Join the fleet and save 15%
+              off recurring orders.
+            </p>
             <form onSubmit={submit} className="mt-3 flex gap-3">
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@domain.com"
+                placeholder="Enter your email"
                 className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
               <button className="px-5 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
-                Join
+                GET 20% OFF
               </button>
             </form>
             {submitted && (
               <p className="mt-3 text-sm text-emerald-400">
-                Welcome aboard — your discount is on the way.
+                Welcome aboard! Your discount is on the way!
               </p>
             )}
           </div>
@@ -6100,7 +5997,7 @@ function CartPage() {
     setSbDone(true);
     window.dispatchEvent(
       new CustomEvent("flash", {
-        detail: "Welcome aboard — your discount is on the way.",
+        detail: "Welcome aboard!  Your discount is on the way!",
       })
     );
     setSbEmail("");
@@ -6180,7 +6077,7 @@ function CartPage() {
                         <div className="mt-1 text-m text-neutral-400">
                           Priced as if the Crown won the war.{" "}
                           <span className="text-amber-300">
-                            Subscribe and save 15% off this item.
+                            Join the fleet and save 15% off this item.
                           </span>
                         </div>
                       )}
@@ -6323,11 +6220,12 @@ function CartPage() {
                   <div className="flex items-center justify-center gap-3 mb-3">
                     <Bell className="h-7 w-7 text-amber-300" />
                     <h3 className="text-2xl font-extrabold text-amber-300">
-                      Ring That Bell
+                      RING THAT BELL
                     </h3>
                   </div>
                   <p className="text-neutral-300 mb-5 text-lg md:text-xl">
-                    Join the Fleet and save 15%
+                    Get 20% off your first order. <br /> Join the fleet and save
+                    15% off every order.
                   </p>
 
                   <form
@@ -6344,11 +6242,11 @@ function CartPage() {
                       spellCheck={false}
                       value={sbEmail}
                       onChange={(e) => setSbEmail(e.target.value)}
-                      placeholder="Enter your email to join the fleet"
+                      placeholder="Enter your email"
                       className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
                     />
                     <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
-                      Join
+                      GET 20% OFF
                     </button>
                   </form>
 
@@ -6364,7 +6262,7 @@ function CartPage() {
 
                   {sbDone && (
                     <p className="mt-3 text-sm text-emerald-400">
-                      Welcome aboard. Your discount is on the way.
+                      Welcome aboard! Your discount is on the way!
                     </p>
                   )}
                 </div>
@@ -6562,7 +6460,7 @@ function SubscribeManagePage({
                 <input
                   name="email"
                   type="email"
-                  placeholder="you@domain.com"
+                  placeholder="Enter your email"
                   className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
                 />
                 <input
@@ -6598,7 +6496,7 @@ function SubscribeManagePage({
                 <input
                   name="email"
                   type="email"
-                  placeholder="you@domain.com"
+                  placeholder="Enter your email"
                   className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
                 />
                 <input
@@ -7102,7 +7000,7 @@ function PromoSubscribeModal() {
     setTimeout(() => {
       window.dispatchEvent(
         new CustomEvent("flash", {
-          detail: "Welcome aboard. Your 20% code is on the way.",
+          detail: "Welcome aboard! Your 20% code is on the way!",
         })
       );
     }, 75);
@@ -7147,13 +7045,13 @@ function PromoSubscribeModal() {
                 <div className="flex items-center justify-center gap-3 mb-3">
                   <Bell className="h-12 w-12 text-amber-300" />
                   <h3 className="font-extrabold text-amber-300 text-[2.5875rem] leading-tight">
-                    Ring That Bell
+                    RING THAT BELL
                   </h3>
                 </div>
 
                 <p className="text-neutral-300 mb-5 text-lg md:text-xl md:whitespace-nowrap">
-                  Join the Fleet and save 20% on your first order. <br /> Save
-                  15% on all recurring orders.
+                  Get 20% off your first freshly roasted coffee order. <br />{" "}
+                  Join the fleet later and save 15% off every order.
                 </p>
 
                 <div className="w-full max-w-lg mx-auto">
@@ -7171,14 +7069,14 @@ function PromoSubscribeModal() {
                       spellCheck={false}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email to join the Fleet"
+                      placeholder="Enter your email"
                       className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
                     />
                     <button
                       className="px-6 py-3 rounded-xl ring-1 ring-amber-400/70 text-amber-300 font-semibold bg-transparent
                                  hover:bg-amber-400 hover:text-neutral-900 transition-all"
                     >
-                      Join
+                      GET 20% OFF
                     </button>
                   </form>
 
@@ -7396,7 +7294,7 @@ function Layout() {
                   to="/account/login"
                   className="hover:text-amber-200 underline-offset-2 hover:underline"
                 >
-                  15% OFF Subscribe &amp; Save
+                  Join The Fleet &amp; Save 15%
                 </Link>
 
                 <span>|</span>
@@ -7705,9 +7603,10 @@ function Layout() {
                               setEmail={setMmEmail}
                               done={mmDone}
                               onSubmit={submitMegaSubscribe}
-                              title="Ring That Bell"
-                              subtitle="Get first access to gear — plus 15% off your coffee."
-                              buttonText="Join"
+                              title="RING THAT BELL"
+                              subtitle={`Get first access to gear.
+                              Plus 20% off your first coffee order.`}
+                              buttonText="GET 20% OFF"
                             />
                           </div>
                         )}
@@ -8044,7 +7943,7 @@ function RoastCTAInfo() {
     <div className="mt-3 text-center leading-tight">
       {state === "countdown" ? (
         <div className="space-y-1">
-          <div className="text-xs md:text-sm text-neutral-300 font-medium">
+          <div className="text-lg md:text-lg text-neutral-300 font-medium">
             Next batch roasts:{" "}
             <span className="text-amber-300">{dateLabel}</span>{" "}
             <span className="text-neutral-400"></span>
@@ -8057,12 +7956,12 @@ function RoastCTAInfo() {
         </div>
       ) : state === "closed" ? (
         <div className="space-y-1">
-          <div className="text-xs md:text-sm text-neutral-300 font-medium">
+          <div className="text-lg md:text-lg text-neutral-300 font-medium">
             Next batch roasts:{" "}
             <span className="text-amber-300">{dateLabel}</span>{" "}
             <span className="text-neutral-400"></span>
           </div>
-          <div className="text-xs md:text-sm text-neutral-400">
+          <div className="text-m md:text-m text-neutral-400">
             Reserve your bag today
           </div>
         </div>

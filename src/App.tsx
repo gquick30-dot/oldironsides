@@ -1,5 +1,15 @@
 import AccountGate from "./Components/AccountGate";
 import CookieConsent from "./Components/CookieConsent";
+import {
+  getProductByHandle,
+  ensureCart,
+  cartLinesAdd,
+  cartLinesUpdate,
+  cartLinesRemove,
+  getCart,
+  cartCreate,
+} from "./lib/shopify";
+
 import React, {
   useState,
   useMemo,
@@ -2286,12 +2296,57 @@ function RoastDetailPage() {
   const [qty, setQty] = useState(1);
   const [beanType, setBeanType] = useState<"" | "whole" | "ground">("");
   const [showBeanError, setShowBeanError] = useState(false);
+  // Shopify product + chosen variant
+  const [shopifyProduct, setShopifyProduct] = useState<any>(null);
+  const [merchandiseId, setMerchandiseId] = useState<string | null>(null);
+  const [adding, setAdding] = useState(false);
+  const handleMap: Record<string, string> = {
+    flagship: "flagship-test", // use the exact handle shown
+    "baptism-by-fire": "flagship-test",
+    "java-action": "flagship-test",
+    "oak-and-copper": "flagship-test",
+  };
 
   // Reset Bean Type selector whenever you navigate to a different roast page
   useEffect(() => {
     setBeanType(""); // back to "Choose..."
     setShowBeanError(false);
   }, [slug]);
+  // Load Shopify product by handle = slug
+  useEffect(() => {
+    let cancelled = false;
+    async function run() {
+      try {
+        const handle = handleMap[String(slug)] ?? String(slug);
+        const p = await getProductByHandle(handle);
+
+        if (!cancelled) setShopifyProduct(p || null);
+      } catch (e) {
+        console.warn("[Shopify] getProductByHandle failed", e);
+        if (!cancelled) setShopifyProduct(null);
+      }
+    }
+    if (slug) run();
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
+  useEffect(() => {
+    // If we don't have the Shopify product yet, clear and wait
+    if (!shopifyProduct) {
+      setMerchandiseId(null);
+      return;
+    }
+
+    // If beanType hasn't been chosen yet (it's ""), don't call the helper
+    if (beanType !== "whole" && beanType !== "ground") {
+      setMerchandiseId(null);
+      return;
+    }
+
+    // We have product + a valid bean type → set the variant id
+    setMerchandiseId(pickVariantIdByBean(shopifyProduct, beanType));
+  }, [shopifyProduct, beanType]);
 
   // Mirror BUY BOX width/height so Bean Type box matches exactly
   // Mirror BUY BOX width/height so Bean Type box matches exactly
@@ -2339,7 +2394,7 @@ function RoastDetailPage() {
   const basePrice = isOak ? 25 : card.price; // Oak & Copper single price
   const discounted = Number((basePrice * 0.85).toFixed(2));
 
-  const addToChest = () => {
+  const addToChest = async () => {
     const n = Math.max(1, Math.min(99, Math.trunc(qty || 1)));
     setQty(n);
 
@@ -2352,29 +2407,73 @@ function RoastDetailPage() {
     }
     setShowBeanError(false);
 
+    if (!shopifyProduct) {
+      window.dispatchEvent(
+        new CustomEvent("flash", {
+          detail: "Product not loaded yet. Try again.",
+        })
+      );
+      return;
+    }
+
     const variantLabel = beanType === "whole" ? "Whole Bean" : "Ground";
-    const variantId = `${card.slug}-12oz-${beanType}`;
-    const variantSku = `${card.slug}-12oz-${beanType}`;
+    const merchId = merchandiseId;
+    if (!merchId) {
+      window.dispatchEvent(
+        new CustomEvent("flash", { detail: "Variant not found in Shopify." })
+      );
+      return;
+    }
 
-    // Build a variant-specific item so it does not merge with the other bean type
-    const itemToAdd = {
-      ...card,
-      id: variantId, // unique per variant so the cart keeps separate lines
-      sku: variantSku, // useful if your checkout uses SKU
-      title: `${card.title} (${variantLabel})`, // shows the type in cart/checkout
-      price: purchaseMode === "sub" ? discounted : basePrice,
-      beanType, // keep explicit for rendering
-      purchaseMode, // keep subscription state with the line item
-      subEvery: purchaseMode === "sub" ? subEvery : undefined,
-    };
+    try {
+      setAdding(true);
 
-    add(itemToAdd, n);
+      // 1) ensure Shopify cart
+      const cart = await ensureCart();
 
-    window.dispatchEvent(
-      new CustomEvent("flash", {
-        detail: `${n} × ${card.title} (${variantLabel}) added to Chest`,
-      })
-    );
+      // 2) add to Shopify cart
+      await cartLinesAdd({
+        cartId: cart.id,
+        merchandiseId: merchId,
+        quantity: n,
+        attributes: {
+          beanType: variantLabel,
+          purchaseMode,
+          subEvery: purchaseMode === "sub" ? String(subEvery) : "",
+        },
+      });
+
+      // 3) mirror to your local cart UI (keeps your drawer working today)
+      const itemToAdd = {
+        ...card,
+        id: `${card.slug}-12oz-${beanType}`,
+        sku: `${card.slug}-12oz-${beanType}`,
+        title: `${card.title} (${variantLabel})`,
+        price: purchaseMode === "sub" ? discounted : basePrice,
+        beanType,
+        purchaseMode,
+        subEvery: purchaseMode === "sub" ? subEvery : undefined,
+        // critical for checkout sync:
+        merchandiseId: merchId,
+      };
+
+      add(itemToAdd, n);
+
+      window.dispatchEvent(
+        new CustomEvent("flash", {
+          detail: `${n} × ${card.title} (${variantLabel}) added to Chest`,
+        })
+      );
+    } catch (e) {
+      console.error(e);
+      window.dispatchEvent(
+        new CustomEvent("flash", {
+          detail: "Could not add to cart. Check console.",
+        })
+      );
+    } finally {
+      setAdding(false);
+    }
   };
 
   return (
@@ -2795,10 +2894,16 @@ function RoastDetailPage() {
                         <button
                           type="button"
                           onClick={addToChest}
-                          className="px-6 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
+                          disabled={adding}
+                          className={
+                            "px-6 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
+                            (adding
+                              ? "opacity-60 cursor-not-allowed"
+                              : "hover:bg-amber-400 hover:text-neutral-900")
+                          }
                           aria-label={`Add ${card.title} to Chest`}
                         >
-                          Add to Chest
+                          {adding ? "Adding..." : "Add to Chest"}
                         </button>
                       </div>
                     </div>
@@ -5894,6 +5999,31 @@ function LegalPage() {
     </main>
   );
 }
+const handleMap: Record<string, string> = {
+  flagship: "flagship-test",
+  "baptism-by-fire": "flagship-test",
+  "java-action": "flagship-test",
+  "oak-and-copper": "flagship-test",
+};
+
+function pickVariantIdByBean(product: any, beanType: "whole" | "ground") {
+  if (!product?.variants?.edges?.length) return null;
+  const want = beanType === "whole" ? "whole" : "ground";
+  for (const { node } of product.variants.edges) {
+    const opts = node.selectedOptions || [];
+    const match = opts.some(
+      (o: any) =>
+        String(o.name).toLowerCase().includes("grind") &&
+        String(o.value).toLowerCase().includes(want)
+    );
+    if (match) return node.id;
+  }
+  // fallback: title contains Whole/Ground
+  for (const { node } of product.variants.edges) {
+    if (String(node.title).toLowerCase().includes(want)) return node.id;
+  }
+  return product.variants.edges[0]?.node?.id ?? null;
+}
 
 function CartPage() {
   const {
@@ -5901,6 +6031,7 @@ function CartPage() {
     inc,
     dec,
     remove,
+    clear, // <-- add this
     subtotal,
     shipping,
     shippingLabel,
@@ -5955,6 +6086,37 @@ function CartPage() {
     const id = setInterval(compute, 1000);
     return () => clearInterval(id);
   }, []);
+  // After checkout, if Shopify cart is empty, clear local Chest
+  useEffect(() => {
+    let cancelled = false;
+
+    const reconcile = async () => {
+      try {
+        const { id } = await ensureCart();
+        const sf = await getCart(id);
+        const qty = Number(sf?.totalQuantity ?? 0);
+
+        if (!cancelled && qty === 0 && cart.length > 0) {
+          clear();
+        }
+      } catch {
+        // ignore
+      }
+    };
+
+    // Run on load and on tab return (common after checkout)
+    reconcile();
+    const onVis = () => {
+      if (document.visibilityState === "visible") reconcile();
+    };
+    document.addEventListener("visibilitychange", onVis);
+
+    return () => {
+      cancelled = true;
+      document.removeEventListener("visibilitychange", onVis);
+    };
+  }, [clear, cart.length]);
+
   // Free shipping helpers
   const missingForFree = Math.max(0, freeShippingThreshold - coffeeBagCount);
   const freeShipProgress = Math.min(1, coffeeBagCount / freeShippingThreshold);
@@ -5978,18 +6140,84 @@ function CartPage() {
     }
   }, []);
 
-  // Checkout click handler with gate
-  const onCheckoutClick = () => {
-    if (hasSubInCart && !isLoggedIn) {
-      setShowAccountGate(true);
-      return;
+  // Checkout: hard reset Shopify cart to match local cart, then go
+  // Checkout: gate subs → hard reset Shopify cart to match local → go
+  const onCheckoutClick = async (): Promise<void> => {
+    try {
+      // ⛔ Gate: require sign-in if any subscription items are in the Chest
+      if (hasSubInCart && !isLoggedIn) {
+        setShowAccountGate(true);
+        window.dispatchEvent(
+          new CustomEvent("flash", {
+            detail: "Sign in to unlock 15% subscription pricing.",
+          })
+        );
+        return;
+      }
+
+      // 1) Same persisted Shopify cart
+      const { id: cartId } = await ensureCart();
+
+      // 2) Desired state from YOUR local cart (needs merchandiseId on each item)
+      const desired: Array<{ merchandiseId: string; quantity: number }> = [];
+      for (const i of cart ?? []) {
+        const v = i?.merchandiseId;
+        const q = Math.max(0, Math.min(99, Number(i?.qty ?? 0)));
+        if (v && q > 0) desired.push({ merchandiseId: v, quantity: q });
+      }
+
+      // Clear existing Shopify lines
+      const sf = await getCart(cartId);
+      const existingLineIds =
+        sf?.lines?.edges
+          ?.map((e: any) => String(e?.node?.id))
+          .filter(Boolean) ?? [];
+      if (existingLineIds.length) {
+        await cartLinesRemove({ cartId, lineIds: existingLineIds });
+      }
+
+      if (desired.length === 0) {
+        window.dispatchEvent(
+          new CustomEvent("flash", { detail: "Your cart is empty." })
+        );
+        return;
+      }
+
+      // Add exactly what you want (merge by variant first)
+      const byVariant = new Map<string, number>();
+      for (const d of desired) {
+        byVariant.set(
+          d.merchandiseId,
+          (byVariant.get(d.merchandiseId) ?? 0) + d.quantity
+        );
+      }
+      for (const [merchandiseId, quantity] of byVariant.entries()) {
+        await cartLinesAdd({ cartId, merchandiseId, quantity });
+      }
+
+      // 4) Fresh checkout url and go
+      const fresh = await getCart(cartId);
+      const url: string | undefined = fresh?.checkoutUrl;
+      if (
+        !url ||
+        !/^https?:\/\/[^\/]+\.myshopify\.com\/(cart|checkouts)\b/i.test(url)
+      ) {
+        console.error("Invalid checkoutUrl:", url, fresh);
+        window.dispatchEvent(
+          new CustomEvent("flash", {
+            detail: "Couldn’t get a valid checkout link. Try again.",
+          })
+        );
+        return;
+      }
+
+      window.location.assign(url);
+    } catch (e) {
+      console.error(e);
+      window.dispatchEvent(
+        new CustomEvent("flash", { detail: "Checkout failed. See console." })
+      );
     }
-    // Proceed to your normal checkout flow
-    window.dispatchEvent(
-      new CustomEvent("flash", { detail: "Proceeding to checkout..." })
-    );
-    // TODO: when ready, redirect to Shopify checkout here
-    // e.g., navigate(checkoutUrl) or window.location.href = checkoutUrl
   };
 
   const onSbSubmit = (e: React.FormEvent) => {
@@ -7792,25 +8020,24 @@ function Layout() {
                   </Link>
                 </li>
                 <li>
-  <button
-    type="button"
-    onClick={() => window.showCookieBanner?.()}
-    className="text-neutral-300 hover:text-amber-300"
-  >
-    Cookie settings
-  </button>
-</li>
-<li>
-  <button
-    type="button"
-    onClick={() => window.showDoNotSell?.()}
-    className="text-neutral-300 hover:text-amber-300"
-    aria-label="Do Not Sell or Share My Personal Information"
-  >
-    Do Not Sell or Share
-  </button>
-</li>
-
+                  <button
+                    type="button"
+                    onClick={() => window.showCookieBanner?.()}
+                    className="text-neutral-300 hover:text-amber-300"
+                  >
+                    Cookie settings
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => window.showDoNotSell?.()}
+                    className="text-neutral-300 hover:text-amber-300"
+                    aria-label="Do Not Sell or Share My Personal Information"
+                  >
+                    Do Not Sell or Share
+                  </button>
+                </li>
               </ul>
             </div>
 

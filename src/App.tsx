@@ -1,4 +1,5 @@
 import AccountGate from "./Components/AccountGate";
+import CookieConsent from "./Components/CookieConsent";
 import React, {
   useState,
   useMemo,
@@ -7732,17 +7733,17 @@ function Layout() {
 
       <Outlet />
       <footer className="border-t border-neutral-800 bg-neutral-950">
-        <Container className="py-14 text-sm">
+        <Container className="py-8 text-sm">
           <div className="grid md:grid-cols-4 gap-8">
             {/* Brand + Vet-owned + Flag (centered and nudged up) */}
             <div className="relative -top-4 md:-top-5 flex flex-col items-center text-center">
               {/* Title */}
-              <div className="text-base tracking-[0.5em] text-amber-300">
+              <div className="mt-3 md:mt-4 text-base tracking-[0.5em] text-amber-300">
                 OLD IRONSIDES COFFEE
               </div>
 
               {/* Vet line (aligned with Support) */}
-              <div className="mt-0 text-base text-neutral-300 leading-tight">
+              <div className="mt-0 md:mt-0 text-base text-neutral-300 leading-tight">
                 Veteran-owned and operated.
               </div>
 
@@ -7750,7 +7751,7 @@ function Layout() {
               <img
                 src="/stars-stripes.png"
                 alt="American flag"
-                className="mt-1 w-44 h-auto rounded-sm shadow-md"
+                className="mt-3 md:mt-5 w-44 h-auto rounded-sm shadow-md"
               />
             </div>
 
@@ -7790,6 +7791,26 @@ function Layout() {
                     Privacy Policy
                   </Link>
                 </li>
+                <li>
+  <button
+    type="button"
+    onClick={() => window.showCookieBanner?.()}
+    className="text-neutral-300 hover:text-amber-300"
+  >
+    Cookie settings
+  </button>
+</li>
+<li>
+  <button
+    type="button"
+    onClick={() => window.showDoNotSell?.()}
+    className="text-neutral-300 hover:text-amber-300"
+    aria-label="Do Not Sell or Share My Personal Information"
+  >
+    Do Not Sell or Share
+  </button>
+</li>
+
               </ul>
             </div>
 
@@ -7981,29 +8002,34 @@ function RoastCTAInfo() {
 /* ================= App Entrypoint ================= */
 function AppShell() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<HomePage />} />
-        <Route path="coffee" element={<FleetPage />} />
-        <Route path="roast/:slug" element={<RoastDetailPage />} />
-        <Route path="store" element={<StorePage />} />
-        <Route path="store/:slug" element={<StoreCategoryPage />} />
-        // ADD this line
-        {/* History Story pages */}
-        <Route path="stories/:slug" element={<FleetStoryPage />} />
-        <Route path="origins" element={<OriginsPage />} />
-        <Route path="contact" element={<ContactPage />} />
-        <Route path="sdvosb" element={<SDVOSBPage />} />
-        <Route path="legal/:slug" element={<LegalPage />} />
-        <Route path="cart" element={<CartPage />} />
-        <Route path="account" element={<SubscribeManagePage />} />
-        <Route
-          path="account/login"
-          element={<SubscribeManagePage initialTab="login" />}
-        />
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-    </Routes>
+    <>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="coffee" element={<FleetPage />} />
+          <Route path="roast/:slug" element={<RoastDetailPage />} />
+          <Route path="store" element={<StorePage />} />
+          <Route path="store/:slug" element={<StoreCategoryPage />} />
+
+          {/* History Story pages */}
+          <Route path="stories/:slug" element={<FleetStoryPage />} />
+          <Route path="origins" element={<OriginsPage />} />
+          <Route path="contact" element={<ContactPage />} />
+          <Route path="sdvosb" element={<SDVOSBPage />} />
+          <Route path="legal/:slug" element={<LegalPage />} />
+          <Route path="cart" element={<CartPage />} />
+          <Route path="account" element={<SubscribeManagePage />} />
+          <Route
+            path="account/login"
+            element={<SubscribeManagePage initialTab="login" />}
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+
+      {/* Cookie banner lives outside Routes so it appears on all pages */}
+      <CookieConsent />
+    </>
   );
 }
 

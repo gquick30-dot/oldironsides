@@ -23,20 +23,21 @@ export default function AccountGate({ open, onClose }: Props) {
       />
 
       {/* Panel */}
-      <div className="relative w-full max-w-[640px] rounded-2xl ring-1 ring-amber-400/60 bg-neutral-950/95 shadow-2xl shadow-amber-500/20">
+      <div className="relative w-full max-w-[640px] mx-auto rounded-2xl ring-1 ring-amber-400/60 bg-neutral-950/95 shadow-2xl shadow-amber-500/20">
         <div className="p-6 sm:p-8">
-          <div className="flex items-start gap-4">
+          <div className="grid grid-cols-[auto,1fr] items-center gap-4">
             <img
               src="/emblem-black.png"
               alt=""
-              className="h-10 w-10 opacity-70 select-none pointer-events-none"
+              className="h-16 w-16 sm:h-20 sm:w-20 opacity-70 select-none pointer-events-none shrink-0"
+              aria-hidden="true"
             />
-            <div>
-              <h2 className="text-2xl font-extrabold tracking-tight text-amber-300 m-0">
-                Join the Fleet to unlock Subscribe & Save
+            <div className="self-center">
+              <h2 className="text-2xl sm:text-1xl font-extrabold tracking-tight text-amber-300 m-0">
+                Join the Fleet to unlock your 15% off
               </h2>
               <p className="mt-2 text-neutral-300">
-                To use the subscription price, please sign in or create an
+                To get the subscription price, please sign in or create an
                 account.
               </p>
             </div>

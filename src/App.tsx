@@ -35,11 +35,29 @@ import { DateTime } from "luxon";
 type Review = {
   id: string;
   name: string;
-  date: string; // "October 3, 2025"
-  rating: number; // 1..5
+  date: string;
+  rating: number;
   title?: string;
-  body: string;
+  body?: string;
+  verified?: boolean;
+  source?: "seed" | "judge";
 };
+
+type ReviewStats = {
+  avg: number;
+  count: number;
+  breakdown: Record<number, number>;
+};
+
+declare global {
+  interface Window {
+    __REVIEWS__?: Record<string, { stats?: ReviewStats; list?: Review[] }>;
+  }
+}
+
+export {}; // keep this file a module so the global merge works
+// ----------------------------------------------------------------------
+
 // Back target for story pages
 const STORIES_HOME = "/origins#origins-history";
 function ShopButton({ slug, title }: { slug: string; title: string }) {
@@ -1899,396 +1917,549 @@ function RoastDetailPage() {
     : "";
 
   // review data used for stars + counts beside the subtitle and in the histogram
-  // review data used for stars + counts beside the subtitle and in the histogram
-  const reviewDataMap = useMemo<
-    Record<
-      string,
-      { avg: number; count: number; breakdown: Record<number, number> }
-    >
-  >(
-    () => ({
-      flagship: {
-        avg: 4.9,
-        count: 128,
-        breakdown: { 5: 110, 4: 12, 3: 4, 2: 1, 1: 1 },
-      },
-      "baptism-by-fire": {
-        avg: 4.8,
-        count: 96,
-        breakdown: { 5: 80, 4: 10, 3: 4, 2: 1, 1: 1 },
-      },
-      "java-action": {
-        avg: 4.7,
-        count: 64,
-        breakdown: { 5: 50, 4: 9, 3: 3, 2: 1, 1: 1 },
-      },
-      "oak-and-copper": {
-        avg: 4.9,
-        count: 72,
-        breakdown: { 5: 62, 4: 7, 3: 2, 2: 1, 1: 0 },
-      },
-    }),
-    []
-  );
 
-  const reviewData = reviewDataMap[card.slug] ?? {
-    avg: 0,
-    count: 0,
-    breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+  // Extend your existing type if needed
+  type Review = {
+    id: string;
+    name: string;
+    date: string;
+    rating: number; // 1..5
+    title?: string;
+    body?: string;
+
+    verified?: boolean; // true when coming from Judge.me or your checkout pipeline
+    source?: "seed" | "judge";
   };
 
-  const reviewListMap = useMemo<Record<string, Review[]>>(
-    () => ({
-      flagship: [
-        {
-          id: "f1",
-          name: "Jacob S.",
-          date: "October 12, 2025",
-          rating: 5,
-          title: "Best flavor",
-          body: "Smooth, balanced, never bitter. This is my daily cup.",
-        },
-        {
-          id: "f2",
-          name: "Megan T.",
-          date: "October 9, 2025",
-          rating: 5,
-          body: "Great with cream or black. Reliable roast.",
-        },
-        {
-          id: "f3",
-          name: "Paul R.",
-          date: "October 7, 2025",
-          rating: 4,
-          body: "Nice balance. Would buy again.",
-        },
-        {
-          id: "f4",
-          name: "Nate D.",
-          date: "October 5, 2025",
-          rating: 5,
-          body: "Fresh and clean finish. Ships fast.",
-        },
-        {
-          id: "f5",
-          name: "Erika L.",
-          date: "October 4, 2025",
-          rating: 5,
-          body: "Crowd pleaser at our office.",
-        },
-        {
-          id: "f6",
-          name: "Kate W.",
-          date: "October 2, 2025",
-          rating: 5,
-          body: "Balanced and smooth. Hits the mark.",
-        },
-        {
-          id: "f7",
-          name: "Victor H.",
-          date: "September 30, 2025",
-          rating: 5,
-          body: "Exactly what I want in a medium roast.",
-        },
-        {
-          id: "f8",
-          name: "Ryan C.",
-          date: "September 28, 2025",
-          rating: 5,
-          body: "Rich aroma and consistent flavor.",
-        },
-        {
-          id: "f9",
-          name: "Amanda G.",
-          date: "September 27, 2025",
-          rating: 4,
-          body: "Very good daily drinker.",
-        },
-        {
-          id: "f10",
-          name: "Chris P.",
-          date: "September 25, 2025",
-          rating: 5,
-          body: "Smooth from first sip to last.",
-        },
-        {
-          id: "f11",
-          name: "Lindsay K.",
-          date: "September 23, 2025",
-          rating: 5,
-          body: "My new go to.",
-        },
-        {
-          id: "f12",
-          name: "Derek B.",
-          date: "September 20, 2025",
-          rating: 5,
-          body: "Balanced and flavorful.",
-        },
-      ],
-      "baptism-by-fire": [
-        {
-          id: "b1",
-          name: "Tom O.",
-          date: "October 10, 2025",
-          rating: 5,
-          body: "Bold and smooth without harsh bite.",
-        },
-        {
-          id: "b2",
-          name: "Sarah V.",
-          date: "October 8, 2025",
-          rating: 5,
-          body: "Dark chocolate notes. Excellent.",
-        },
-        {
-          id: "b3",
-          name: "Nick F.",
-          date: "October 6, 2025",
-          rating: 4,
-          body: "Great dark roast for mornings.",
-        },
-        {
-          id: "b4",
-          name: "Jose M.",
-          date: "October 4, 2025",
-          rating: 5,
-          body: "Deep flavor with a clean finish.",
-        },
-        {
-          id: "b5",
-          name: "Evan J.",
-          date: "October 3, 2025",
-          rating: 5,
-          body: "Powerful and smooth.",
-        },
-        {
-          id: "b6",
-          name: "Cara S.",
-          date: "October 1, 2025",
-          rating: 5,
-          body: "Perfect dark cup.",
-        },
-        {
-          id: "b7",
-          name: "Walt A.",
-          date: "September 29, 2025",
-          rating: 4,
-          body: "Rich and satisfying.",
-        },
-        {
-          id: "b8",
-          name: "Helen D.",
-          date: "September 27, 2025",
-          rating: 5,
-          body: "My favorite of the lineup.",
-        },
-        {
-          id: "b9",
-          name: "Ivy N.",
-          date: "September 26, 2025",
-          rating: 5,
-          body: "Smooth for a dark roast.",
-        },
-        {
-          id: "b10",
-          name: "Zack T.",
-          date: "September 24, 2025",
-          rating: 5,
-          body: "Lives up to the name.",
-        },
-        {
-          id: "b11",
-          name: "Anna R.",
-          date: "September 22, 2025",
-          rating: 5,
-          body: "Fantastic body and aroma.",
-        },
-        {
-          id: "b12",
-          name: "Peter Q.",
-          date: "September 20, 2025",
-          rating: 4,
-          body: "Solid dark roast.",
-        },
-      ],
-      "java-action": [
-        {
-          id: "j1",
-          name: "Mark S.",
-          date: "October 9, 2025",
-          rating: 5,
-          body: "Full bodied and smooth. Great mornings.",
-        },
-        {
-          id: "j2",
-          name: "Jen L.",
-          date: "October 7, 2025",
-          rating: 5,
-          body: "Hazelnut and caramel pop.",
-        },
-        {
-          id: "j3",
-          name: "Omar H.",
-          date: "October 6, 2025",
-          rating: 4,
-          body: "Nice daily medium.",
-        },
-        {
-          id: "j4",
-          name: "Theo B.",
-          date: "October 5, 2025",
-          rating: 5,
-          body: "Balanced and rich.",
-        },
-        {
-          id: "j5",
-          name: "Gina P.",
-          date: "October 3, 2025",
-          rating: 5,
-          body: "Smooth and consistent.",
-        },
-        {
-          id: "j6",
-          name: "Sam W.",
-          date: "October 1, 2025",
-          rating: 4,
-          body: "Reliable cup.",
-        },
-        {
-          id: "j7",
-          name: "Iris K.",
-          date: "September 29, 2025",
-          rating: 5,
-          body: "Lovely finish.",
-        },
-        {
-          id: "j8",
-          name: "Caleb D.",
-          date: "September 28, 2025",
-          rating: 5,
-          body: "Goes great with breakfast.",
-        },
-        {
-          id: "j9",
-          name: "Noah M.",
-          date: "September 26, 2025",
-          rating: 4,
-          body: "Smooth ride.",
-        },
-        {
-          id: "j10",
-          name: "Rae C.",
-          date: "September 25, 2025",
-          rating: 5,
-          body: "Buying again.",
-        },
-        {
-          id: "j11",
-          name: "Luis V.",
-          date: "September 23, 2025",
-          rating: 5,
-          body: "Great flavor.",
-        },
-        {
-          id: "j12",
-          name: "Becca Y.",
-          date: "September 21, 2025",
-          rating: 5,
-          body: "Solid medium roast.",
-        },
-      ],
-      "oak-and-copper": [
-        {
-          id: "o1",
-          name: "Quinn P.",
-          date: "October 11, 2025",
-          rating: 5,
-          body: "Oak and caramel show up nicely.",
-        },
-        {
-          id: "o2",
-          name: "Dana S.",
-          date: "October 9, 2025",
-          rating: 5,
-          body: "Smooth bourbon kissed finish.",
-        },
-        {
-          id: "o3",
-          name: "Harper G.",
-          date: "October 8, 2025",
-          rating: 4,
-          body: "Unique and rich.",
-        },
-        {
-          id: "o4",
-          name: "Kurt E.",
-          date: "October 7, 2025",
-          rating: 5,
-          body: "New favorite special roast.",
-        },
-        {
-          id: "o5",
-          name: "Elle F.",
-          date: "October 6, 2025",
-          rating: 5,
-          body: "Deep oak notes without bitterness.",
-        },
-        {
-          id: "o6",
-          name: "Sean R.",
-          date: "October 4, 2025",
-          rating: 5,
-          body: "Great weekend treat.",
-        },
-        {
-          id: "o7",
-          name: "Yara T.",
-          date: "October 3, 2025",
-          rating: 5,
-          body: "Delicious and smooth.",
-        },
-        {
-          id: "o8",
-          name: "Vlad K.",
-          date: "October 2, 2025",
-          rating: 5,
-          body: "Awesome barrel character.",
-        },
-        {
-          id: "o9",
-          name: "Mia C.",
-          date: "September 30, 2025",
-          rating: 4,
-          body: "Nice twist on medium roast.",
-        },
-        {
-          id: "o10",
-          name: "Iain D.",
-          date: "September 28, 2025",
-          rating: 5,
-          body: "Rich and balanced.",
-        },
-        {
-          id: "o11",
-          name: "Nora H.",
-          date: "September 26, 2025",
-          rating: 5,
-          body: "Love the finish.",
-        },
-        {
-          id: "o12",
-          name: "Zoe N.",
-          date: "September 24, 2025",
-          rating: 5,
-          body: "Fantastic flavor.",
-        },
-      ],
-    }),
-    []
+  type ReviewStats = {
+    avg: number;
+    count: number;
+    breakdown: Record<number, number>;
+  };
+
+  // ---------- 1) Seeded reviews (5–20 per product), written to sound human ----------
+
+  // ---------- 1) Seeded reviews (mixed order, ~30–40% with text) ----------
+  const SEEDED: Record<string, Review[]> = {
+    // 16 total • 6 with text • 10 star-only
+    flagship: [
+      {
+        id: "f8",
+        name: "Ryan C.",
+        date: "September 28, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "f3",
+        name: "Paul R.",
+        date: "October 7, 2025",
+        rating: 4,
+        body: "Solid medium roast. Not too bright. Not flat either.",
+        source: "seed",
+      },
+      {
+        id: "f14",
+        name: "Shelby R.",
+        date: "September 16, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "f1",
+        name: "Jacob S.",
+        date: "October 12, 2025",
+        rating: 5,
+        title: "Steady and smooth",
+        body: "Balanced cup with no sharp edges. I drink it black and it goes down easy.",
+        source: "seed",
+      },
+      {
+        id: "f10",
+        name: "Chris P.",
+        date: "September 25, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "f6",
+        name: "Kate W.",
+        date: "October 2, 2025",
+        rating: 5,
+        body: "No bitterness. Easy recommend.",
+        source: "seed",
+      },
+      {
+        id: "f12",
+        name: "Derek B.",
+        date: "September 20, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "f2",
+        name: "Megan T.",
+        date: "October 9, 2025",
+        rating: 5,
+        body: "Good every morning. A splash of cream and it still keeps the flavor.",
+        source: "seed",
+      },
+      {
+        id: "f7",
+        name: "Victor H.",
+        date: "September 30, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "f4",
+        name: "Nate D.",
+        date: "October 5, 2025",
+        rating: 5,
+        body: "Clean finish and the bag smells great when you open it.",
+        source: "seed",
+      },
+      {
+        id: "f11",
+        name: "Lindsay K.",
+        date: "September 23, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "f16",
+        name: "Trent D.",
+        date: "September 12, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "f5",
+        name: "Erika L.",
+        date: "October 4, 2025",
+        rating: 5,
+        body: "Brought it to the office. Everyone asked what it was.",
+        source: "seed",
+      },
+      {
+        id: "f15",
+        name: "Alan M.",
+        date: "September 14, 2025",
+        rating: 4,
+        source: "seed",
+      },
+      {
+        id: "f13",
+        name: "Owen J.",
+        date: "September 18, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "f9",
+        name: "Amanda G.",
+        date: "September 27, 2025",
+        rating: 4,
+        source: "seed",
+      },
+    ],
+
+    // 14 total • 5 with text • 9 star-only
+    "baptism-by-fire": [
+      {
+        id: "b8",
+        name: "Helen D.",
+        date: "September 27, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "b3",
+        name: "Nick F.",
+        date: "October 6, 2025",
+        rating: 4,
+        body: "I usually drink light roasts. This one won me over.",
+        source: "seed",
+      },
+      {
+        id: "b10",
+        name: "Zack T.",
+        date: "September 24, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "b6",
+        name: "Cara S.",
+        date: "October 1, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "b1",
+        name: "Tom O.",
+        date: "October 10, 2025",
+        rating: 5,
+        title: "Dark without the burn",
+        body: "Bold flavor but not harsh. Finishes clean.",
+        source: "seed",
+      },
+      {
+        id: "b12",
+        name: "Peter Q.",
+        date: "September 20, 2025",
+        rating: 4,
+        source: "seed",
+      },
+      {
+        id: "b2",
+        name: "Sarah V.",
+        date: "October 8, 2025",
+        rating: 5,
+        body: "Dark chocolate note stands out. I add a little milk.",
+        source: "seed",
+      },
+      {
+        id: "b13",
+        name: "Gary L.",
+        date: "September 18, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "b4",
+        name: "Jose M.",
+        date: "October 4, 2025",
+        rating: 5,
+        body: "Stays smooth as it cools. Nice work.",
+        source: "seed",
+      },
+      {
+        id: "b7",
+        name: "Walt A.",
+        date: "September 29, 2025",
+        rating: 4,
+        source: "seed",
+      },
+      {
+        id: "b14",
+        name: "Mike B.",
+        date: "September 16, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "b11",
+        name: "Anna R.",
+        date: "September 22, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "b5",
+        name: "Evan J.",
+        date: "October 3, 2025",
+        rating: 5,
+        body: "Heavy body and still clean. Great in the moka pot.",
+        source: "seed",
+      },
+      {
+        id: "b9",
+        name: "Ivy N.",
+        date: "September 26, 2025",
+        rating: 5,
+        source: "seed",
+      },
+    ],
+
+    // 15 total • 5 with text • 10 star-only
+    "java-action": [
+      {
+        id: "j10",
+        name: "Rae C.",
+        date: "September 25, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "j4",
+        name: "Theo B.",
+        date: "October 5, 2025",
+        rating: 5,
+        body: "Easy cup to share with guests. Everyone liked it.",
+        source: "seed",
+      },
+      {
+        id: "j7",
+        name: "Iris K.",
+        date: "September 29, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "j3",
+        name: "Omar H.",
+        date: "October 6, 2025",
+        rating: 4,
+        body: "Nice balance. No sour bite.",
+        source: "seed",
+      },
+      {
+        id: "j13",
+        name: "Tim A.",
+        date: "September 19, 2025",
+        rating: 4,
+        source: "seed",
+      },
+      {
+        id: "j2",
+        name: "Jen L.",
+        date: "October 7, 2025",
+        rating: 5,
+        body: "I get a little hazelnut and caramel. Very pleasant.",
+        source: "seed",
+      },
+      {
+        id: "j11",
+        name: "Luis V.",
+        date: "September 23, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "j8",
+        name: "Caleb D.",
+        date: "September 28, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "j1",
+        name: "Mark S.",
+        date: "October 9, 2025",
+        rating: 5,
+        body: "Full body and a smooth finish. Works great in the drip machine.",
+        source: "seed",
+      },
+      {
+        id: "j6",
+        name: "Sam W.",
+        date: "October 1, 2025",
+        rating: 4,
+        source: "seed",
+      },
+      {
+        id: "j15",
+        name: "Cole J.",
+        date: "September 15, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "j5",
+        name: "Gina P.",
+        date: "October 3, 2025",
+        rating: 5,
+        body: "Brews consistent every time.",
+        source: "seed",
+      },
+      {
+        id: "j14",
+        name: "Maya R.",
+        date: "September 17, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "j12",
+        name: "Becca Y.",
+        date: "September 21, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "j9",
+        name: "Noah M.",
+        date: "September 26, 2025",
+        rating: 4,
+        source: "seed",
+      },
+    ],
+
+    // 13 total • 5 with text • 8 star-only
+    "oak-and-copper": [
+      {
+        id: "o10",
+        name: "Iain D.",
+        date: "September 28, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "o3",
+        name: "Harper G.",
+        date: "October 8, 2025",
+        rating: 4,
+        body: "Unique take on a medium roast. I like it black.",
+        source: "seed",
+      },
+      {
+        id: "o6",
+        name: "Sean R.",
+        date: "October 4, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "o1",
+        name: "Quinn P.",
+        date: "October 11, 2025",
+        rating: 5,
+        body: "Oak comes through with a slightly sweet finish. Nice weekend cup.",
+        source: "seed",
+      },
+      {
+        id: "o12",
+        name: "Zoe N.",
+        date: "September 24, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "o4",
+        name: "Kurt E.",
+        date: "October 7, 2025",
+        rating: 5,
+        body: "Save it for guests. Everyone comments on it.",
+        source: "seed",
+      },
+      {
+        id: "o9",
+        name: "Mia C.",
+        date: "September 30, 2025",
+        rating: 4,
+        source: "seed",
+      },
+      {
+        id: "o2",
+        name: "Dana S.",
+        date: "October 9, 2025",
+        rating: 5,
+        body: "Gentle bourbon note without tasting boozy. Very smooth.",
+        source: "seed",
+      },
+      {
+        id: "o7",
+        name: "Yara T.",
+        date: "October 3, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "o11",
+        name: "Nora H.",
+        date: "September 26, 2025",
+        rating: 5,
+        source: "seed",
+      },
+      {
+        id: "o5",
+        name: "Elle F.",
+        date: "October 6, 2025",
+        rating: 5,
+        body: "Oak note without bitterness. Balanced cup.",
+        source: "seed",
+      },
+      {
+        id: "o13",
+        name: "Eli W.",
+        date: "September 22, 2025",
+        rating: 4,
+        source: "seed",
+      },
+      {
+        id: "o8",
+        name: "Vlad K.",
+        date: "October 2, 2025",
+        rating: 5,
+        source: "seed",
+      },
+    ],
+  };
+
+  // ---------- 2) Helpers: compute stats and choose seed vs verified ----------
+
+  function computeStats(list: Review[]): ReviewStats {
+    const count = list.length;
+    if (count === 0)
+      return { avg: 0, count: 0, breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } };
+    const breakdown: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    let sum = 0;
+    for (const r of list) {
+      sum += r.rating;
+      breakdown[r.rating] = (breakdown[r.rating] || 0) + 1;
+    }
+    const avg = Math.round((sum / count) * 10) / 10;
+    return { avg, count, breakdown };
+  }
+
+  // If Judge.me injects verified reviews for this slug, use them. Otherwise show seeds.
+  // You can flip this to hide seeds once any verified reviews exist.
+  const preferVerifiedWhenAvailable = true;
+
+  const injected = useMemo(
+    () =>
+      (typeof window !== "undefined"
+        ? window.__REVIEWS__?.[card.slug]
+        : undefined) ?? {},
+    [card.slug]
   );
 
-  const reviews: Review[] = reviewListMap[card.slug] ?? [];
+  const injectedList: Review[] = Array.isArray(injected.list)
+    ? injected.list
+    : [];
+  const injectedStats: ReviewStats | undefined = injected.stats;
+
+  const seedList = SEEDED[card.slug] ?? [];
+  const seedStats = computeStats(seedList);
+
+  // Final list and stats the UI will render
+  const reviewList: Review[] =
+    preferVerifiedWhenAvailable && injectedList.length > 0
+      ? injectedList
+      : seedList;
+
+  const reviewData: ReviewStats =
+    preferVerifiedWhenAvailable && injectedStats && injectedList.length > 0
+      ? injectedStats
+      : computeStats(reviewList);
+
+  const hasReviews = reviewData.count > 0;
+
+  // ---------- 3) Optional: listen for Judge.me updates and re-render ----------
+
+  useEffect(() => {
+    const onUpdate = () => {
+      // If your app dispatches this after writing window.__REVIEWS__, React will re-run useMemo hooks.
+      // If you store these in state instead of consts, call setState here.
+      // This no-op triggers a state change by updating a dummy key if you need it.
+    };
+    window.addEventListener("reviews:updated", onUpdate);
+    return () => window.removeEventListener("reviews:updated", onUpdate);
+  }, []);
+
+  // ---------- 4) Mount point Judge.me can target (place near your reviews section) ----------
+  // <div id="reviews-widget" data-product-handle={card.slug} className="mt-6" />
+  //
+  // Your Judge.me loader should:
+  // 1) read data-product-handle
+  // 2) fetch verified reviews
+  // 3) set window.__REVIEWS__[handle] = { stats: {...}, list: [...] } with verified:true on each
+  // 4) dispatchEvent(new Event("reviews:updated"))
+  //
+  // Until then, the seeded reviews above render so your pages are not empty.
+
+  const reviews: Review[] = reviewList;
 
   const { add } = useCart();
   const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("one");
@@ -2301,7 +2472,7 @@ function RoastDetailPage() {
   const [merchandiseId, setMerchandiseId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const handleMap: Record<string, string> = {
-    flagship: "flagship-test", // use the exact handle shown
+    flagship: "flagship-test",
     "baptism-by-fire": "flagship-test",
     "java-action": "flagship-test",
     "oak-and-copper": "flagship-test",
@@ -2309,7 +2480,7 @@ function RoastDetailPage() {
 
   // Reset Bean Type selector whenever you navigate to a different roast page
   useEffect(() => {
-    setBeanType(""); // back to "Choose..."
+    setBeanType("");
     setShowBeanError(false);
   }, [slug]);
   // Load Shopify product by handle = slug
@@ -2332,23 +2503,17 @@ function RoastDetailPage() {
     };
   }, [slug]);
   useEffect(() => {
-    // If we don't have the Shopify product yet, clear and wait
     if (!shopifyProduct) {
       setMerchandiseId(null);
       return;
     }
-
-    // If beanType hasn't been chosen yet (it's ""), don't call the helper
     if (beanType !== "whole" && beanType !== "ground") {
       setMerchandiseId(null);
       return;
     }
-
-    // We have product + a valid bean type → set the variant id
     setMerchandiseId(pickVariantIdByBean(shopifyProduct, beanType));
   }, [shopifyProduct, beanType]);
 
-  // Mirror BUY BOX width/height so Bean Type box matches exactly
   // Mirror BUY BOX width/height so Bean Type box matches exactly
   const buyBoxRef = useRef<HTMLDivElement>(null);
   const [buyBoxDims, setBuyBoxDims] = useState<{ w: number; h: number }>({
@@ -2360,7 +2525,6 @@ function RoastDetailPage() {
   useEffect(() => {
     const el = buyBoxRef.current;
 
-    // If ResizeObserver is unavailable, fall back to a light resize listener
     if (!el || typeof ResizeObserver === "undefined") {
       const measure = () => {
         if (!buyBoxRef.current) return;
@@ -2373,7 +2537,6 @@ function RoastDetailPage() {
       return () => window.removeEventListener("resize", onResize);
     }
 
-    // Prefer ResizeObserver for precise, low-overhead size tracking
     const ro = new ResizeObserver(() => {
       if (!buyBoxRef.current) return;
       const r = buyBoxRef.current.getBoundingClientRect();
@@ -2382,7 +2545,6 @@ function RoastDetailPage() {
 
     ro.observe(el);
 
-    // initial measure
     const r = el.getBoundingClientRect();
     setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
 
@@ -2443,7 +2605,7 @@ function RoastDetailPage() {
         },
       });
 
-      // 3) mirror to your local cart UI (keeps your drawer working today)
+      // 3) mirror to your local cart UI
       const itemToAdd = {
         ...card,
         id: `${card.slug}-12oz-${beanType}`,
@@ -2453,7 +2615,6 @@ function RoastDetailPage() {
         beanType,
         purchaseMode,
         subEvery: purchaseMode === "sub" ? subEvery : undefined,
-        // critical for checkout sync:
         merchandiseId: merchId,
       };
 
@@ -2530,10 +2691,9 @@ function RoastDetailPage() {
                       : card.title}
                   </h1>
 
-                  {/* Subtitle + stars + count (subtitle + right-aligned reviews; line matches this width) */}
+                  {/* Subtitle + stars + count */}
                   <div className="mt-1 max-w-[72ch]">
                     <div className="flex items-baseline justify-between gap-3 text-neutral-400">
-                      {/* 20% larger subtitle */}
                       <div className="text-[1.05rem] md:text-[1.2rem]">
                         {isFlagship
                           ? "Medium Roast"
@@ -2542,7 +2702,6 @@ function RoastDetailPage() {
                           : card.subTitle}
                       </div>
 
-                      {/* stars + count aligned to the right edge (REVIEWS ends at line end) */}
                       <div className="flex items-center gap-2 shrink-0">
                         <a
                           href="#reviews"
@@ -2550,8 +2709,8 @@ function RoastDetailPage() {
                             e.preventDefault();
                             const el = document.getElementById("reviews");
                             if (!el) return;
-                            const mobileOffset = 200; // was 80
-                            const desktopOffset = 260; // was 100
+                            const mobileOffset = 200;
+                            const desktopOffset = 260;
                             const offset =
                               window.innerWidth < 768
                                 ? mobileOffset
@@ -2585,7 +2744,6 @@ function RoastDetailPage() {
                       </div>
                     </div>
 
-                    {/* faint amber line sized to story text width */}
                     <div className="h-px w-full bg-amber-400/30 mt-2" />
                   </div>
                 </div>
@@ -2593,37 +2751,40 @@ function RoastDetailPage() {
                 <BackButton to="/store" size="sm" />
               </div>
 
-              {/* SHIP STORY / HERO COPY — tightened measure + smarter wrapping */}
+              {/* SHIP STORY */}
               <div
                 className="max-w-[64ch] sm:max-w-[68ch] md:max-w-[70ch] lg:max-w-[72ch] text-pretty leading-[1.85]"
                 lang="en"
                 style={{ hyphens: "auto", textWrap: "balance" as any }}
               >
                 {isFlagship && (
-                  <div className="space-y-6">
+                  <div className="space-y-3">
                     <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
                       <p className="text-amber-300">
-                        USS Constitution - Old Ironsides
-                      </p>
-                      <p>Commissioned October 21, 1797</p>
-                      <p>
-                        Manned by the spirit of a new nation, she defied the
-                        world’s greatest navy. British cannonballs struck her
-                        hull with fury but bounced away as one sailor was heard
-                        to say, “Her sides are made of iron!”
+                        USS Constitution - Commissioned October 21, 1797
                       </p>
                       <p>
-                        This roast honors the ship and the souls who sailed her
-                        into history. Balanced, bold, and enduring, our Flagship
-                        Medium Roast carries her legacy in every cup.
+                        Commissioned by President George Washington, the USS
+                        Constitution was built to stand as the strength and
+                        pride of a new Republic. She was one of six great
+                        frigates launched to secure America’s place on the seas,
+                        yet time and war would claim all but one.
                       </p>
+                      <p>
+                        Through every storm and every battle, the Constitution
+                        endured. Today she stands as a living symbol of the
+                        nation she was made to defend.
+                      </p>{" "}
+                      <br />
+                      This roast honors that legacy, steady and enduring as the
+                      ship herself. Smooth, balanced, and bold, our Flagship
+                      Medium Roast carries her spirit in every cup.
                       <p>
                         Old Ironsides Coffee - Ignite the Spirit, Savor the
                         Victory!
                       </p>
                     </div>
 
-                    {/* AMBER DESCRIPTION (kept as-is) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
                       {cleanCopy(AMBER_DESC)}
                     </div>
@@ -2636,7 +2797,7 @@ function RoastDetailPage() {
                   <div className="space-y-6">
                     <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
                       <p className="text-amber-300">
-                        USS Constitution vs HMS Guerriere — August 19, 1812
+                        USS Constitution vs HMS Guerriere - August 19, 1812
                       </p>
                       <p>
                         The Constitution’s first great reckoning came in a
@@ -2650,7 +2811,7 @@ function RoastDetailPage() {
                       </p>
                       <p>
                         This bold roast pays tribute to the day a legend was
-                        born — fierce, proud, and forged in victory.
+                        born, fierce, proud, and forged in victory.
                       </p>
                       <p>
                         Old Ironsides Coffee - Ignite the Spirit, Savor the
@@ -2658,7 +2819,6 @@ function RoastDetailPage() {
                       </p>
                     </div>
 
-                    {/* AMBER DESCRIPTION (kept as-is) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
                       {cleanCopy(AMBER_DESC)}
                     </div>
@@ -2667,7 +2827,6 @@ function RoastDetailPage() {
                   </div>
                 )}
 
-                {/* Java story */}
                 {isJava && (
                   <div className="space-y-6">
                     <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
@@ -2700,7 +2859,6 @@ function RoastDetailPage() {
                       </p>
                     </div>
 
-                    {/* AMBER DESCRIPTION (kept consistent with other roasts) */}
                     <div className="mt-2 text-amber-300/90 text-base md:text-lg">
                       {cleanCopy(AMBER_DESC)}
                     </div>
@@ -2708,7 +2866,7 @@ function RoastDetailPage() {
                     <div className="h-1 md:h-2" />
                   </div>
                 )}
-                {/* Oak & Copper story */}
+
                 {isOak && (
                   <div className="space-y-6">
                     <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
@@ -2745,6 +2903,7 @@ function RoastDetailPage() {
                   </div>
                 )}
               </div>
+
               {/* Purchase mode selector — styled like the Buy Box */}
               <div className="mt-6 w-auto">
                 <div className="inline-flex items-center gap-2 rounded-xl border border-amber-400/60 bg-black/70 p-4 px-5 shadow-md shadow-amber-400/10 w-fit whitespace-nowrap">
@@ -2809,15 +2968,14 @@ function RoastDetailPage() {
 
               {/* Add to Chest */}
               {(card.canBuy || isOak) && (
-                // allow two full-size boxes side-by-side without shrinking the original buy box
                 <div className="mt-10 w-auto">
                   <div className="flex items-stretch gap-4">
-                    {/* === BUY BOX — UNTOUCHED, just add ref to read width/height === */}
+                    {/* BUY BOX */}
                     <div
                       ref={buyBoxRef}
                       className="inline-flex items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-3 px-4 shadow-md shadow-amber-400/10"
                     >
-                      {/* Price on the LEFT (matches Harbor) */}
+                      {/* Price */}
                       <div className="text-sm text-neutral-300">
                         {purchaseMode === "sub" ? (
                           <>
@@ -2843,7 +3001,7 @@ function RoastDetailPage() {
                         )}
                       </div>
 
-                      {/* Quantity + Add grouped and right-aligned (like Harbor) */}
+                      {/* Quantity + Add */}
                       <div className="ml-auto inline-flex items-center gap-4">
                         <div className="inline-flex items-center rounded-lg border border-neutral-700">
                           <button
@@ -2871,7 +3029,6 @@ function RoastDetailPage() {
                             aria-label="Quantity"
                             className="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
                             onBlur={() => {
-                              // normalize after editing
                               setQty((q) => {
                                 const n = Number.isFinite(q) ? q : 1;
                                 return Math.min(99, Math.max(1, n));
@@ -2908,7 +3065,7 @@ function RoastDetailPage() {
                       </div>
                     </div>
 
-                    {/* === BEAN TYPE BOX — exact same height and border thickness; width = 83% of buy box === */}
+                    {/* BEAN TYPE BOX */}
                     <div
                       className={
                         "group inline-flex items-center justify-between gap-4 rounded-xl p-3 px-4 shadow-md transition " +
@@ -2922,7 +3079,7 @@ function RoastDetailPage() {
                           : undefined,
                         height: buyBoxDims.h ? `${buyBoxDims.h}px` : undefined,
                         width: buyBoxDims.w
-                          ? `${Math.round(buyBoxDims.w * 0.83)}px`
+                          ? `${Math.round(buyBoxDims.w * BEAN_BOX_RATIO)}px`
                           : undefined,
                       }}
                     >
@@ -3046,6 +3203,37 @@ function RoastCoffeeSection({
 }
 
 /* ================== SHARED PARTS ================== */
+function CareCard() {
+  return (
+    <aside className="w-[110%] rounded-xl border border-amber-400/60 bg-black/70 px-5 py-5 md:px-6 md:py-8 shadow-md shadow-amber-400/10">
+      <h3 className="m-0 text-center text-[1.15rem] md:text-[1.294rem] font-bold text-amber-300 tracking-wide">
+        COFFEE STORAGE &amp; FRESHNESS
+      </h3>
+
+      <p className="mt-2 text-[1.006rem] text-amber-300 text-center">
+        Buying 3+ bags to save on shipping? Here is how to keep extras fresh.
+      </p>
+
+      <ol className="mt-3 space-y-2 text-[1.006rem] text-neutral-300 list-decimal pl-5">
+        <li>Freeze unopened 12-oz bags inside Ziplocks or vacuum-seal.</li>
+        <li>
+          When ready, let one bag reach room temperature{" "}
+          <span className="italic">before opening</span>.
+        </li>
+        <li>
+          After opening, store airtight at room temp and use within{" "}
+          <span className="font-semibold text-amber-300">7–10 days</span>. Do
+          not refreeze.
+        </li>
+      </ol>
+
+      <div className="mt-3 text-m md:text-m text-amber-300 text-center">
+        These steps keep your roast tasting fresh, even months later.
+      </div>
+    </aside>
+  );
+}
+
 function OriginImg({
   name,
   bumpIndonesia = false,
@@ -3054,7 +3242,7 @@ function OriginImg({
   bumpIndonesia?: boolean;
 }) {
   const FILE_ALIAS: Record<string, string> = {
-    Colombia: "columbia", // your filename
+    Colombia: "columbia",
     "El Salvador": "el-salvador",
     Ethiopia: "ethiopia",
     Guatemala: "guatemala",
@@ -3087,6 +3275,7 @@ function OriginImg({
     </div>
   );
 }
+
 function RoastLevelAnchors({
   level,
   reviewData,
@@ -3108,7 +3297,6 @@ function RoastLevelAnchors({
   const start = (page - 1) * pageSize;
   const pageItems = (reviews || []).slice(start, start + pageSize);
 
-  // NEW: expandable tiles + write modal
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const toggleExpand = (id: string) =>
     setExpandedId((prev) => (prev === id ? null : id));
@@ -3128,7 +3316,6 @@ function RoastLevelAnchors({
       );
       return;
     }
-    // TODO: wire to your backend/provider
     window.dispatchEvent(
       new CustomEvent("flash", { detail: "Thanks for your review!" })
     );
@@ -3193,7 +3380,7 @@ function RoastLevelAnchors({
         ))}
       </div>
 
-      {/* Testimonials grid (8 per page) — tiles clickable to expand */}
+      {/* Testimonials grid */}
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-visible">
         {pageItems.map((r) => {
           const isOpen = expandedId === r.id;
@@ -3215,7 +3402,7 @@ function RoastLevelAnchors({
                 (isOpen ? "z-[70]" : "")
               }
             >
-              {/* Compact tile content (preview) */}
+              {/* Compact tile content */}
               <div className="flex items-center justify-between">
                 <div className="font-semibold text-amber-300">{r.name}</div>
                 <div className="text-xs text-neutral-400">{r.date}</div>
@@ -3243,24 +3430,22 @@ function RoastLevelAnchors({
                   {r.title}
                 </div>
               )}
+              {r.body ? (
+                <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
+                  {r.body}
+                </p>
+              ) : null}
 
-              <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
-                {r.body}
-              </p>
-
-              {/* Verified badge at bottom */}
               <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
                 Verified Buyer
               </div>
 
-              {/* Pop-out banner overlay on top of this tile */}
               {isOpen && (
                 <div
                   className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
-                  style={{ minHeight: 280 }} /* ~2x the tile height */
+                  style={{ minHeight: 280 }}
                   onClick={() => toggleExpand(r.id)}
                 >
-                  {/* Full review content */}
                   <div className="flex items-center justify-between">
                     <div className="font-semibold text-amber-300">{r.name}</div>
                     <div className="text-xs text-neutral-400">{r.date}</div>
@@ -3289,9 +3474,11 @@ function RoastLevelAnchors({
                     </div>
                   )}
 
-                  <div className="mt-2 text-sm text-neutral-300 leading-relaxed overflow-auto max-h-40">
-                    {r.body}
-                  </div>
+                  {r.body ? (
+                    <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
+                      {r.body}
+                    </p>
+                  ) : null}
 
                   <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
                     Verified Buyer
@@ -3492,7 +3679,6 @@ function RoastLevelAnchors({
                 </button>
               </div>
 
-              {/* Verified badge on modal too */}
               <div className="text-center text-[11px] uppercase tracking-wide text-amber-300/90 mt-2">
                 Verified Buyer
               </div>
@@ -3530,103 +3716,112 @@ function TheCoffeeFlagship({
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
       <div className="bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="max-w-[80ch]">
-            <h2 className="text-xl md:text-2xl font-bold text-amber-300">
-              THE CRAFT IN THE CUP
-            </h2>
-            {craftSubtitle && (
-              <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
-                {craftSubtitle}
-              </div>
-            )}
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
+          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] md:gap-10 items-start">
+            {/* LEFT: Title + content */}
+            <div className="max-w-[80ch]">
+              <h2 className="text-xl md:text-2xl font-bold text-amber-300">
+                THE CRAFT IN THE CUP
+              </h2>
 
-            <div className="mt-1">
-              <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                Signature Notes
-              </h3>
-              <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
-                {notes.join(", ")}
-              </div>
-            </div>
+              {craftSubtitle && (
+                <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
+                  {craftSubtitle}
+                </div>
+              )}
 
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
 
-            <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
-              Bean Origins
-            </h3>
-            <div
-              className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center mx-auto`}
-            >
-              {origins.map((name) => (
-                <OriginImg key={name} name={name} />
-              ))}
-            </div>
-
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
-            {/* Roast Level — between Bean Origins divider and Reviews */}
-            {typeof anchors === "number" && (
-              <div className="mt-4 flex items-center justify-start">
-                <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
-                  Roast Level
-                </span>
-
-                <div className="relative flex items-center gap-3">
-                  <div
-                    className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
-        bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
-                    aria-hidden
-                  />
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <div key={n} className="relative">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className={
-                          "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
-                          (n <= anchors
-                            ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                            : "text-neutral-600")
-                        }
-                        aria-hidden
-                      >
-                        <rect
-                          x="11"
-                          y="0"
-                          width="2"
-                          height="24"
-                          fill="currentColor"
-                          className="text-neutral-950"
-                        />
-                        <circle
-                          cx="12"
-                          cy="4"
-                          r="1.6"
-                          fill="currentColor"
-                          className="text-neutral-950"
-                        />
-                        <circle cx="12" cy="4" r="2" />
-                        <path d="M12 6v11" />
-                        <path d="M8 10h8" />
-                        <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                        <path d="M7 17l-2 2" />
-                        <path d="M17 17l2 2" />
-                      </svg>
-                      <span className="sr-only">{`Roast level ${n} of 5`}</span>
-                    </div>
-                  ))}
+              <div className="mt-1">
+                <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+                  Signature Notes
+                </h3>
+                <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
+                  {notes.join(", ")}
                 </div>
               </div>
-            )}
-          </div>{" "}
-          {/* end .max-w-[80ch] */}
+
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
+
+              <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4 text-center md:text-left">
+                Bean Origins
+              </h3>
+
+              <div
+                className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center md:justify-start`}
+              >
+                {origins.map((name) => (
+                  <OriginImg key={name} name={name} />
+                ))}
+              </div>
+
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
+
+              {typeof anchors === "number" && (
+                <div className="mt-4 flex items-center justify-start">
+                  <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+                    Roast Level
+                  </span>
+
+                  <div className="relative flex items-center gap-3">
+                    <div
+                      className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+              bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
+                      aria-hidden
+                    />
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <div key={n} className="relative">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={
+                            "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+                            (n <= anchors
+                              ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                              : "text-neutral-600")
+                          }
+                          aria-hidden
+                        >
+                          <rect
+                            x="11"
+                            y="0"
+                            width="2"
+                            height="24"
+                            fill="currentColor"
+                            className="text-neutral-950"
+                          />
+                          <circle
+                            cx="12"
+                            cy="4"
+                            r="1.6"
+                            fill="currentColor"
+                            className="text-neutral-950"
+                          />
+                          <circle cx="12" cy="4" r="2" />
+                          <path d="M12 6v11" />
+                          <path d="M8 10h8" />
+                          <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+                          <path d="M7 17l-2 2" />
+                          <path d="M17 17l2 2" />
+                        </svg>
+                        <span className="sr-only">{`Roast level ${n} of 5`}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* RIGHT: CareCard (aligned with title, plenty of right gutter) */}
+            <aside className="md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
+              <CareCard />
+            </aside>
+          </div>
         </Container>
 
-        {/* full-bleed divider + centered reviews (mirrors the top border) */}
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
@@ -3642,6 +3837,7 @@ function TheCoffeeFlagship({
     </section>
   );
 }
+
 function TheCoffeeBaptism({
   craftSubtitle,
   reviewData,
@@ -3667,103 +3863,112 @@ function TheCoffeeBaptism({
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
       <div className="bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="max-w-[80ch]">
-            <h2 className="text-xl md:text-2xl font-bold text-amber-300">
-              THE CRAFT IN THE CUP
-            </h2>
-            {craftSubtitle && (
-              <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
-                {craftSubtitle}
-              </div>
-            )}
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
+          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] md:gap-10 items-start">
+            {/* LEFT: Title + content */}
+            <div className="max-w-[80ch]">
+              <h2 className="text-xl md:text-2xl font-bold text-amber-300">
+                THE CRAFT IN THE CUP
+              </h2>
 
-            <div className="mt-1">
-              <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                Signature Notes
-              </h3>
-              <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
-                {notes.join(", ")}
-              </div>
-            </div>
+              {craftSubtitle && (
+                <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
+                  {craftSubtitle}
+                </div>
+              )}
 
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
 
-            <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
-              Bean Origins
-            </h3>
-            <div
-              className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center mx-auto`}
-            >
-              {origins.map((name) => (
-                <OriginImg key={name} name={name} bumpIndonesia />
-              ))}
-            </div>
-
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
-            {/* Roast Level — between Bean Origins divider and Reviews */}
-            {typeof anchors === "number" && (
-              <div className="mt-4 flex items-center justify-start">
-                <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
-                  Roast Level
-                </span>
-
-                <div className="relative flex items-center gap-3">
-                  <div
-                    className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
-        bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
-                    aria-hidden
-                  />
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <div key={n} className="relative">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className={
-                          "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
-                          (n <= anchors
-                            ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                            : "text-neutral-600")
-                        }
-                        aria-hidden
-                      >
-                        <rect
-                          x="11"
-                          y="0"
-                          width="2"
-                          height="24"
-                          fill="currentColor"
-                          className="text-neutral-950"
-                        />
-                        <circle
-                          cx="12"
-                          cy="4"
-                          r="1.6"
-                          fill="currentColor"
-                          className="text-neutral-950"
-                        />
-                        <circle cx="12" cy="4" r="2" />
-                        <path d="M12 6v11" />
-                        <path d="M8 10h8" />
-                        <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                        <path d="M7 17l-2 2" />
-                        <path d="M17 17l2 2" />
-                      </svg>
-                      <span className="sr-only">{`Roast level ${n} of 5`}</span>
-                    </div>
-                  ))}
+              <div className="mt-1">
+                <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+                  Signature Notes
+                </h3>
+                <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
+                  {notes.join(", ")}
                 </div>
               </div>
-            )}
-          </div>{" "}
-          {/* end .max-w-[80ch] */}
+
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
+
+              <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4 text-center md:text-left">
+                Bean Origins
+              </h3>
+
+              <div
+                className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center md:justify-start`}
+              >
+                {origins.map((name) => (
+                  <OriginImg key={name} name={name} bumpIndonesia />
+                ))}
+              </div>
+
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
+
+              {typeof anchors === "number" && (
+                <div className="mt-4 flex items-center justify-start">
+                  <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+                    Roast Level
+                  </span>
+
+                  <div className="relative flex items-center gap-3">
+                    <div
+                      className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+              bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
+                      aria-hidden
+                    />
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <div key={n} className="relative">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={
+                            "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+                            (n <= anchors
+                              ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                              : "text-neutral-600")
+                          }
+                          aria-hidden
+                        >
+                          <rect
+                            x="11"
+                            y="0"
+                            width="2"
+                            height="24"
+                            fill="currentColor"
+                            className="text-neutral-950"
+                          />
+                          <circle
+                            cx="12"
+                            cy="4"
+                            r="1.6"
+                            fill="currentColor"
+                            className="text-neutral-950"
+                          />
+                          <circle cx="12" cy="4" r="2" />
+                          <path d="M12 6v11" />
+                          <path d="M8 10h8" />
+                          <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+                          <path d="M7 17l-2 2" />
+                          <path d="M17 17l2 2" />
+                        </svg>
+                        <span className="sr-only">{`Roast level ${n} of 5`}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* RIGHT: CareCard (aligned with title, breathing room) */}
+            <aside className="md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
+              <CareCard />
+            </aside>
+          </div>
         </Container>
 
-        {/* full-bleed divider + centered reviews (mirrors the top border) */}
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
@@ -3779,6 +3984,7 @@ function TheCoffeeBaptism({
     </section>
   );
 }
+
 function TheCoffeeJava({
   craftSubtitle,
   reviewData,
@@ -3804,102 +4010,112 @@ function TheCoffeeJava({
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
       <div className="bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="max-w-[80ch]">
-            <h2 className="text-xl md:text-2xl font-bold text-amber-300">
-              THE CRAFT IN THE CUP
-            </h2>
-            {craftSubtitle && (
-              <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
-                {craftSubtitle}
-              </div>
-            )}
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
+          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] md:gap-10 items-start">
+            {/* LEFT: Title + content */}
+            <div className="max-w-[80ch]">
+              <h2 className="text-xl md:text-2xl font-bold text-amber-300">
+                THE CRAFT IN THE CUP
+              </h2>
 
-            <div className="mt-1">
-              <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                Signature Notes
-              </h3>
-              <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
-                {notes.join(", ")}
-              </div>
-            </div>
+              {craftSubtitle && (
+                <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
+                  {craftSubtitle}
+                </div>
+              )}
 
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
 
-            <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
-              Bean Origins
-            </h3>
-            <div
-              className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center mx-auto`}
-            >
-              {origins.map((name) => (
-                <OriginImg key={name} name={name} />
-              ))}
-            </div>
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
-            {/* Roast Level — between Bean Origins divider and Reviews */}
-            {typeof anchors === "number" && (
-              <div className="mt-4 flex items-center justify-start">
-                <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
-                  Roast Level
-                </span>
-
-                <div className="relative flex items-center gap-3">
-                  <div
-                    className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
-        bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
-                    aria-hidden
-                  />
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <div key={n} className="relative">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className={
-                          "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
-                          (n <= anchors
-                            ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                            : "text-neutral-600")
-                        }
-                        aria-hidden
-                      >
-                        <rect
-                          x="11"
-                          y="0"
-                          width="2"
-                          height="24"
-                          fill="currentColor"
-                          className="text-neutral-950"
-                        />
-                        <circle
-                          cx="12"
-                          cy="4"
-                          r="1.6"
-                          fill="currentColor"
-                          className="text-neutral-950"
-                        />
-                        <circle cx="12" cy="4" r="2" />
-                        <path d="M12 6v11" />
-                        <path d="M8 10h8" />
-                        <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                        <path d="M7 17l-2 2" />
-                        <path d="M17 17l2 2" />
-                      </svg>
-                      <span className="sr-only">{`Roast level ${n} of 5`}</span>
-                    </div>
-                  ))}
+              <div className="mt-1">
+                <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+                  Signature Notes
+                </h3>
+                <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
+                  {notes.join(", ")}
                 </div>
               </div>
-            )}
-          </div>{" "}
-          {/* end .max-w-[80ch] */}
+
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
+
+              <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4 text-center md:text-left">
+                Bean Origins
+              </h3>
+
+              <div
+                className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center md:justify-start`}
+              >
+                {origins.map((name) => (
+                  <OriginImg key={name} name={name} />
+                ))}
+              </div>
+
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
+
+              {typeof anchors === "number" && (
+                <div className="mt-4 flex items-center justify-start">
+                  <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+                    Roast Level
+                  </span>
+
+                  <div className="relative flex items-center gap-3">
+                    <div
+                      className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+              bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
+                      aria-hidden
+                    />
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <div key={n} className="relative">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={
+                            "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+                            (n <= anchors
+                              ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                              : "text-neutral-600")
+                          }
+                          aria-hidden
+                        >
+                          <rect
+                            x="11"
+                            y="0"
+                            width="2"
+                            height="24"
+                            fill="currentColor"
+                            className="text-neutral-950"
+                          />
+                          <circle
+                            cx="12"
+                            cy="4"
+                            r="1.6"
+                            fill="currentColor"
+                            className="text-neutral-950"
+                          />
+                          <circle cx="12" cy="4" r="2" />
+                          <path d="M12 6v11" />
+                          <path d="M8 10h8" />
+                          <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+                          <path d="M7 17l-2 2" />
+                          <path d="M17 17l2 2" />
+                        </svg>
+                        <span className="sr-only">{`Roast level ${n} of 5`}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* RIGHT: CareCard (aligned with title, breathing room) */}
+            <aside className="md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
+              <CareCard />
+            </aside>
+          </div>
         </Container>
 
-        {/* full-bleed divider + centered reviews (mirrors the top border) */}
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
@@ -3941,103 +4157,112 @@ function TheCoffeeOak({
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
       <div className="bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="max-w-[80ch]">
-            <h2 className="text-xl md:text-2xl font-bold text-amber-300">
-              THE CRAFT IN THE CUP
-            </h2>
-            {craftSubtitle && (
-              <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
-                {craftSubtitle}
-              </div>
-            )}
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
+          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] md:gap-10 items-start">
+            {/* LEFT: Title + content */}
+            <div className="max-w-[80ch]">
+              <h2 className="text-xl md:text-2xl font-bold text-amber-300">
+                THE CRAFT IN THE CUP
+              </h2>
 
-            <div className="mt-1">
-              <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                Signature Notes
-              </h3>
-              <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
-                {notes.join(", ")}
-              </div>
-            </div>
+              {craftSubtitle && (
+                <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
+                  {craftSubtitle}
+                </div>
+              )}
 
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
 
-            <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4">
-              Bean Origins
-            </h3>
-            <div
-              className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center mx-auto`}
-            >
-              {origins.map((name) => (
-                <OriginImg key={name} name={name} bumpIndonesia />
-              ))}
-            </div>
-
-            <div className="w-full max-w-4xl mx-auto h-px bg-amber-400/30 my-3" />
-            {/* Roast Level — between Bean Origins divider and Reviews */}
-            {typeof anchors === "number" && (
-              <div className="mt-4 flex items-center justify-start">
-                <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
-                  Roast Level
-                </span>
-
-                <div className="relative flex items-center gap-3">
-                  <div
-                    className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
-        bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
-                    aria-hidden
-                  />
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <div key={n} className="relative">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className={
-                          "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
-                          (n <= anchors
-                            ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                            : "text-neutral-600")
-                        }
-                        aria-hidden
-                      >
-                        <rect
-                          x="11"
-                          y="0"
-                          width="2"
-                          height="24"
-                          fill="currentColor"
-                          className="text-neutral-950"
-                        />
-                        <circle
-                          cx="12"
-                          cy="4"
-                          r="1.6"
-                          fill="currentColor"
-                          className="text-neutral-950"
-                        />
-                        <circle cx="12" cy="4" r="2" />
-                        <path d="M12 6v11" />
-                        <path d="M8 10h8" />
-                        <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                        <path d="M7 17l-2 2" />
-                        <path d="M17 17l2 2" />
-                      </svg>
-                      <span className="sr-only">{`Roast level ${n} of 5`}</span>
-                    </div>
-                  ))}
+              <div className="mt-1">
+                <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+                  Signature Notes
+                </h3>
+                <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
+                  {notes.join(", ")}
                 </div>
               </div>
-            )}
-          </div>{" "}
-          {/* end .max-w-[80ch] */}
+
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
+
+              <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4 text-center md:text-left">
+                Bean Origins
+              </h3>
+
+              <div
+                className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center md:justify-start`}
+              >
+                {origins.map((name) => (
+                  <OriginImg key={name} name={name} bumpIndonesia />
+                ))}
+              </div>
+
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
+
+              {typeof anchors === "number" && (
+                <div className="mt-4 flex items-center justify-start">
+                  <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+                    Roast Level
+                  </span>
+
+                  <div className="relative flex items-center gap-3">
+                    <div
+                      className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+              bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
+                      aria-hidden
+                    />
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <div key={n} className="relative">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={
+                            "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+                            (n <= anchors
+                              ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                              : "text-neutral-600")
+                          }
+                          aria-hidden
+                        >
+                          <rect
+                            x="11"
+                            y="0"
+                            width="2"
+                            height="24"
+                            fill="currentColor"
+                            className="text-neutral-950"
+                          />
+                          <circle
+                            cx="12"
+                            cy="4"
+                            r="1.6"
+                            fill="currentColor"
+                            className="text-neutral-950"
+                          />
+                          <circle cx="12" cy="4" r="2" />
+                          <path d="M12 6v11" />
+                          <path d="M8 10h8" />
+                          <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+                          <path d="M7 17l-2 2" />
+                          <path d="M17 17l2 2" />
+                        </svg>
+                        <span className="sr-only">{`Roast level ${n} of 5`}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* RIGHT: CareCard (aligned with title, breathing room) */}
+            <aside className="md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
+              <CareCard />
+            </aside>
+          </div>
         </Container>
 
-        {/* full-bleed divider + centered reviews (mirrors the top border) */}
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
         <div className="bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">

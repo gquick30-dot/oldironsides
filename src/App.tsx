@@ -673,18 +673,32 @@ function IntroRow({
   imgClassName?: string;
 }) {
   return (
-    <div className={`flex items-center gap-4 ${className ?? ""}`}>
+    <div
+      className={`
+        flex flex-col items-center text-center
+        md:flex-row md:text-left md:items-center md:gap-4
+        ${className ?? ""}
+      `}
+    >
       <img
         src={img}
         alt="row art"
-        className={`w-[12.5rem] h-[15rem] md:w-[13.75rem] md:h-[16.25rem] translate-y-4 md:translate-y-6 transform rounded-xl object-cover ring-1 ring-amber-500 shadow-2xl shadow-black/30 ${
-          imgClassName ?? ""
-        }`}
+        className={`
+          w-32 h-40
+          md:w-[13.75rem] md:h-[16.25rem]
+          translate-y-2 md:translate-y-6
+          rounded-xl object-cover ring-1 ring-amber-500 shadow-2xl shadow-black/30
+          ${imgClassName ?? ""}
+        `}
       />
       <div
-        className={`text-[1.20rem] md:text-[1.6rem] leading-snug ${
-          tone ?? ""
-        } font-bold`}
+        className={`
+          mt-4 md:mt-0
+          text-base leading-snug font-bold
+          sm:text-lg
+          md:text-[1.6rem]
+          ${tone ?? ""}
+        `}
         style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
       >
         {text}
@@ -705,21 +719,22 @@ function RingThatBellBox() {
   return (
     <section className="py-10 md:py-14 border-b border-neutral-800">
       <Container>
-        <div className="max-w-xl mx-auto rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-8 text-center">
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <Bell className="h-11 w-11 text-amber-300" />
-            <h3 className="text-4xl font-extrabold text-amber-300">
+        <div className="max-w-xl mx-auto rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
+          <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 mb-4">
+            <Bell className="h-9 w-9 sm:h-11 sm:w-11 text-amber-300" />
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-amber-300">
               RING THAT BELL
             </h3>
           </div>
-          <p className="text-neutral-300 mb-5 text-lg md:text-xl">
+
+          <p className="text-neutral-300 mb-5 text-base sm:text-lg md:text-xl">
             Get 20% off your first freshly roasted coffee order. <br /> Join the
             fleet later and save 15% off every order.
           </p>
 
           <form
             onSubmit={submit}
-            className="flex justify-center gap-3 max-w-md mx-auto"
+            className="flex flex-col sm:flex-row justify-center gap-3 max-w-md mx-auto"
           >
             <input
               type="email"
@@ -728,13 +743,14 @@ function RingThatBellBox() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+              className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
             />
-            <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+            <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
               GET 20% OFF
             </button>
           </form>
-          <div className="mt-8 text-s text-neutral-400">
+
+          <div className="mt-6 text-xs sm:text-sm text-neutral-400">
             Already a member?{" "}
             <Link
               to="/account/login"
@@ -754,6 +770,7 @@ function RingThatBellBox() {
     </section>
   );
 }
+
 function MegaSubscribeBox({
   email,
   setEmail,
@@ -781,18 +798,21 @@ function MegaSubscribeBox({
 
   return (
     <div className="w-full lg:w-[36rem]">
-      <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-8 text-center">
-        <div className="flex items-center justify-center gap-3 mb-3">
-          <Bell className="h-7 w-7 text-amber-300" />
-          <h3 className="text-2xl font-extrabold text-amber-300">{heading}</h3>
+      <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
+        <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 mb-4">
+          <Bell className="h-6 w-6 sm:h-7 sm:w-7 text-amber-300" />
+          <h3 className="text-xl sm:text-2xl font-extrabold text-amber-300">
+            {heading}
+          </h3>
         </div>
-        <p className="text-neutral-300 mb-5 text-lg md:text-xl whitespace-pre-line">
+
+        <p className="text-neutral-300 mb-5 text-base sm:text-lg md:text-xl whitespace-pre-line">
           {sub}
         </p>
 
         <form
           onSubmit={onSubmit}
-          className="flex justify-center gap-3 max-w-md mx-auto"
+          className="flex flex-col sm:flex-row justify-center gap-3 max-w-md mx-auto"
         >
           <input
             type="email"
@@ -805,13 +825,14 @@ function MegaSubscribeBox({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
-            className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+            className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
           />
-          <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+          <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
             {btn}
           </button>
         </form>
-        <div className="mt-3 text-xs text-neutral-400">
+
+        <div className="mt-3 text-[11px] sm:text-xs text-neutral-400">
           Already a member?{" "}
           <Link to="/account/login" className="text-amber-300 hover:underline">
             Sign in
@@ -827,75 +848,26 @@ function MegaSubscribeBox({
     </div>
   );
 }
-function CompactSubscribeBox() {
-  const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
-
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!emailOk(email)) return flash("Enter a valid email.");
-
-    setDone(true);
-    // TODO: integrate with your ESP/signup endpoint
-  };
-
-  return (
-    <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-5 text-center">
-      <div className="flex items-center justify-center gap-2 mb-2">
-        <Bell className="h-5 w-5 text-amber-300" />
-        <h4 className="text-lg font-extrabold text-amber-300">
-          RING THAT BELL
-        </h4>
-      </div>
-      <p className="text-neutral-300 text-sm mb-3">
-        Get 20% off your first order. <br /> Join the fleet and save 15% off
-        every order.
-      </p>
-      <form onSubmit={onSubmit} className="flex gap-2">
-        <input
-          type="email"
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          className="flex-1 rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
-        />
-        <button className="px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300">
-          GET 20% OFF
-        </button>
-      </form>
-      <div className="mt-2 text-[11px] text-neutral-400">
-        Already a member?{" "}
-        <Link to="/account/login" className="text-amber-300 hover:underline">
-          Sign in
-        </Link>
-      </div>
-      {done && (
-        <p className="mt-2 text-xs text-emerald-400">
-          Welcome aboard! Your discount is on the way!
-        </p>
-      )}
-    </div>
-  );
-}
 
 function GovXLoginBox() {
   return (
     <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-5 text-center">
-      <div className="flex items-center justify-center gap-2 mb-2">
-        {/* reuse Bell or swap to a shield icon if you add one later */}
+      <div className="flex flex-col items-center justify-center gap-2 mb-2">
         <Bell className="h-5 w-5 text-amber-300" />
-        <h4 className="text-lg font-extrabold text-amber-300">GovX Login</h4>
+        <h4 className="text-base sm:text-lg font-extrabold text-amber-300">
+          GovX Login
+        </h4>
       </div>
-      <p className="text-neutral-300 text-sm">
+
+      <p className="text-neutral-300 text-sm sm:text-[15px] leading-relaxed">
         Enjoy <span className="font-semibold text-amber-300">15% off</span> both
         coffee and merch — plus{" "}
         <span className="font-semibold text-amber-300">$1 extra per bag</span>{" "}
         off for veterans and first responders.
       </p>
+
       <button
         type="button"
-        // TODO: point this to your GovX verification route or modal
         onClick={() => window.location.assign("/account?govx=1")}
         className="mt-3 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300 underline-offset-2 hover:underline"
         aria-label="Verify with GovX"
@@ -974,10 +946,10 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
       id="fleet"
       className={`relative overflow-hidden ${
         isHome
-          ? "py-10 md:py-14 min-h-[820px]" // HOME size
+          ? "py-10 md:py-14 min-h-[auto] md:min-h-[820px]"
           : isStore
-          ? "py-10 md:py-14 min-h-[1000px]" // STORE size
-          : "py-12 md:py-20 min-h-[1100px]" // default elsewhere
+          ? "py-10 md:py-14 min-h-[auto] md:min-h-[1000px]"
+          : "py-12 md:py-20 min-h-[auto] md:min-h-[1100px]"
       }`}
     >
       {/* Background image just for this section */}
@@ -989,12 +961,15 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         />
       )}
 
-      <Container className={`relative z-10 ${isStore ? "pt-10 md:pt-16" : ""}`}>
-        <div className="flex items-start justify-between">
+      <Container
+        className={`relative z-10 ${isStore ? "pt-8 sm:pt-10 md:pt-16" : ""}`}
+      >
+        {/* header row: title + (maybe) back button */}
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between text-center md:text-left">
           <SectionTitle
             title={
               <span
-                className="text-3xl md:text-5xl font-bold text-amber-300 tracking-tight whitespace-nowrap"
+                className="block text-2xl sm:text-3xl md:text-5xl font-bold text-amber-300 tracking-tight"
                 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
               >
                 LAUNCHED FROM THE HARBOR
@@ -1002,12 +977,11 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             }
             subtitle={
               <>
-                <div className="text-neutral-300 font-normal mb-4 text-lg md:text-xl tracking-tight">
+                <div className="text-neutral-300 font-normal mb-4 text-base sm:text-lg md:text-xl tracking-tight">
                   Our premium roasts, crafted for modern legends.
                 </div>
 
-                {/* Match font and dot style/position to your reference */}
-                <div className="mt-1 text-neutral-300 text-lg md:text-lg">
+                <div className="mt-1 text-neutral-300 text-base sm:text-lg">
                   <span>Roasted to order</span>
                   <span className="mx-1.5 text-amber-400/70" aria-hidden>
                     •
@@ -1023,10 +997,16 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             }
           />
 
-          {!isHome && <BackButton size="sm" />}
+          {/* Back button drops under title on mobile, floats right on desktop */}
+          {!isHome && (
+            <div className="self-center md:self-start">
+              <BackButton size="sm" />
+            </div>
+          )}
         </div>
 
-        <div className="mt-2 grid md:grid-cols-4 gap-6">
+        {/* cards grid */}
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {roastCards.map((card) => {
             const base = card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
             const sub = Math.round(base * 0.85 * 100) / 100; // 15% off
@@ -1041,7 +1021,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                 <img
                   src={card.img}
                   alt={card.title}
-                  className="h-80 sm:h-96 md:h-[28rem] w-full object-cover"
+                  className="w-full h-64 sm:h-80 md:h-[28rem] object-cover"
                   loading="lazy"
                   decoding="async"
                   onError={(e) => {
@@ -1052,16 +1032,16 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                   }}
                 />
 
-                <div className="p-5 flex flex-col flex-1">
+                <div className="p-5 flex flex-col flex-1 text-center md:text-left">
                   <h3
-                    className="text-3xl md:text-4xl font-extrabold text-amber-300"
+                    className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-amber-300"
                     style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
                   >
                     {card.title}
                   </h3>
 
                   {/* Roast type + 12 oz */}
-                  <p className="text-[1.15rem] italic text-neutral-500">
+                  <p className="text-base sm:text-[1.05rem] md:text-[1.15rem] italic text-neutral-500">
                     {card.subTitle}
                     <span className="mx-1.5 text-amber-300/80" aria-hidden>
                       -
@@ -1070,16 +1050,16 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                   </p>
 
                   {/* Short note/descriptor */}
-                  <p className="text-lg text-neutral-400 flex-1">{card.note}</p>
+                  <p className="text-base sm:text-lg text-neutral-400 flex-1">
+                    {card.note}
+                  </p>
 
-                  {/* Price row: neutral base, amber sub, spaced + no wrap */}
-                  {/* Price row: base neutral, compact sub badge with slight air */}
-                  {/* Price row: base neutral, sub in a compact pill (price hidden on xs) */}
-                  <div className="mt-4 text-sm md:text-base flex items-center gap-2 md:gap-3">
+                  {/* price row */}
+                  <div className="mt-4 text-sm md:text-base flex flex-col items-center gap-2 md:flex-row md:items-center md:gap-3">
                     <span className="text-neutral-200">From {fmt(base)}</span>
 
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
-                      Subscribe & Save 15%
+                      Subscribe &amp; Save 15%
                       <span
                         className="hidden sm:inline mx-1.5 opacity-60"
                         aria-hidden
@@ -1105,17 +1085,19 @@ function SDVOSBHighlight() {
   return (
     <section
       id="sdvosb-highlight"
-      className="py-12 border-t border-neutral-800"
+      className="py-10 sm:py-12 border-t border-neutral-800"
     >
       <Container>
-        <div className="max-w-xl mx-auto rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-8 text-center">
-          <h3 className="text-2xl font-extrabold text-amber-300">SDVOSB</h3>
-          <p className="text-neutral-300 mt-2">
+        <div className="max-w-xl mx-auto rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
+          <h3 className="text-xl sm:text-2xl font-extrabold text-amber-300">
+            SDVOSB
+          </h3>
+          <p className="text-neutral-300 mt-2 text-sm sm:text-base">
             Government contract information.
           </p>
           <Link
             to="/sdvosb"
-            className="inline-block mt-4 px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
+            className="inline-block mt-4 px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold text-sm sm:text-base hover:bg-amber-300"
           >
             View Details
           </Link>
@@ -1133,46 +1115,73 @@ function HomePage() {
         id="top"
         className="relative overflow-hidden border-b border-neutral-800"
       >
+        {/* MOBILE full-bleed bean hero */}
+        <div className="absolute inset-0 md:hidden bg-neutral-950">
+          {/* bean image as background, less zoom */}
+          <img
+            src="officer-window.png"
+            alt=""
+            className="w-full h-full object-contain object-center"
+          />
+          {/* dark overlay for readability */}
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+
+        {/* DESKTOP original emblem + radial glow */}
         <img
           src="emblem-black.png"
           alt="Stormy sea"
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[900px] object-contain opacity-30 pointer-events-none select-none"
+          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[900px] object-contain opacity-30 pointer-events-none select-none"
         />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,193,7,0.10),transparent_60%)]" />
-        <div className="absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
+        <div className="hidden md:block absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,193,7,0.10),transparent_60%)]" />
+        <div className="hidden md:block absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
 
-        <Container className="relative py-14 md:py-18">
-          <div className="grid md:grid-cols-12 gap-8 items-start">
-            {/* LEFT COLUMN — photo, then headline/subline/CTA */}
-            <div className="md:col-span-7">
+        {/* content wrapper sits on top */}
+        <Container className="relative desktopHeroPad pt-60 pb-10 sm:pt-64 sm:pb-14">
+          <style>{`
+            @media (min-width: 768px) {
+              #top .desktopHeroPad {
+                padding-top: 4.5rem;
+                padding-bottom: 4.5rem;
+              }
+            }
+          `}</style>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start text-center md:text-left">
+            {/* LEFT COLUMN */}
+            <div className="md:col-span-7 flex flex-col items-center text-center md:items-start md:text-left">
               <div className="space-y-0">
-                <div className="relative z-0 transform scale-110 origin-center">
-                  <div className="inline-flex flex-col items-start">
-                    {/* Wrapper controls size. Image scales inside it. */}
+                <div className="relative z-0 md:transform md:scale-110 md:origin-center">
+                  <div className="inline-flex flex-col items-center md:items-start">
+                    {/* product / lifestyle photo */}
+                    {/* product / lifestyle photo (hidden on mobile because it's now the bg) */}
                     <div
-                      className="self-start translate-y-6 md:translate-y-8 w-[16rem] h-[20.5rem] md:w-[21.5rem] md:h-[27rem]
- rounded-xl ring-1 ring-amber-500 shadow-2xl shadow-black/30 overflow-hidden"
+                      className="hidden md:block self-center md:self-start translate-y-4 md:translate-y-8
+                w-[14rem] h-[18rem] sm:w-[16rem] sm:h-[20.5rem]
+                md:w-[21.5rem] md:h-[27rem]
+                rounded-xl ring-1 ring-amber-500 shadow-2xl shadow-black/30 overflow-hidden"
                     >
-                      {" "}
                       <img
                         src="bean-smell.png"
                         alt="Smelling beans"
                         className="w-full h-full object-cover origin-center"
-                      />{" "}
+                      />
                     </div>
 
-                    {/* bring photo down tighter to headline */}
-                    <div aria-hidden className="h-8 md:h-10" />
+                    {/* spacer between image + headline */}
+                    <div aria-hidden className="h-6 sm:h-8 md:h-10" />
 
-                    {/* 1) HEADLINE */}
+                    {/* HEADLINE */}
                     <h2
-                      className="text-amber-400 font-extrabold leading-snug tracking-tight text-[1.7rem] md:text-[2.1rem]"
+                      className="text-amber-400 font-extrabold leading-snug tracking-tight
+                text-[1.5rem] sm:text-[1.7rem] md:text-[2.1rem]"
                       style={{ fontFamily: "'Cinzel', serif" }}
                     >
                       PREMIUM, SMALL-BATCH COFFEE
                     </h2>
 
-                    <div className="mt-0 text-neutral-300 text-sm md:text-lg">
+                    {/* bullet line */}
+                    <div className="mt-2 text-neutral-300 text-xs sm:text-sm md:text-lg">
                       <span>Ethically Sourced</span>
                       <span className="mx-1.5 text-amber-400/70" aria-hidden>
                         •
@@ -1185,7 +1194,6 @@ function HomePage() {
                       <span className="mx-1.5 text-amber-400/70" aria-hidden>
                         •
                       </span>
-                      {/* GovX Partner (temporary info link) */}
                       <a
                         href="https://www.govx.com/govx-id/"
                         target="_blank"
@@ -1196,18 +1204,23 @@ function HomePage() {
                       </a>
                     </div>
 
-                    <div aria-hidden className="h-1 md:h-2" />
-                    <div className="w-full max-w-[24rem]">
+                    {/* CTA */}
+                    <div aria-hidden className="h-2 md:h-3" />
+                    <div className="w-full max-w-[24rem] mx-auto md:mx-0">
                       <Link
                         to="/coffee"
-                        className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 
-           rounded-xl bg-neutral-900 text-amber-400 font-extrabold text-lg md:text-2xl tracking-wide
-           border border-amber-500 shadow-xl shadow-amber-500/20 
-           hover:bg-amber-400 hover:text-neutral-900 transition-all duration-200"
+                        className="w-full inline-flex items-center justify-center gap-2
+                    px-6 py-3 sm:px-8 sm:py-4
+                    rounded-xl bg-neutral-900 text-amber-400 font-extrabold
+                    text-base sm:text-lg md:text-2xl tracking-wide
+                    border border-amber-500 shadow-xl shadow-amber-500/20
+                    hover:bg-amber-400 hover:text-neutral-900
+                    transition-all duration-200"
                       >
                         <span aria-hidden>⚓</span>
                         SHOP COFFEE NOW
                       </Link>
+
                       <RoastCTAInfo />
                     </div>
                   </div>
@@ -1215,9 +1228,9 @@ function HomePage() {
               </div>
             </div>
 
-            {/* RIGHT COLUMN — officer image (unchanged) */}
-            <div className="md:col-span-5 self-start">
-              <div className="inline-block ml-0 md:ml-[12%] w-full max-w-[620px] md:max-w-[700px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
+            {/* RIGHT COLUMN (officer art) */}
+            <div className="hidden md:block md:col-span-5 self-start">
+              <div className="inline-block ml-0 md:ml-[12%] w-full max-w-[420px] sm:max-w-[520px] md:max-w-[700px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
                   src="officer-window.png"
                   alt="Old Ironsides hero"
@@ -1226,7 +1239,8 @@ function HomePage() {
               w-auto
               h-auto
               max-w-full
-              max-h-[calc(100vh-340px)]
+              max-h-[60vh]
+              sm:max-h-[70vh]
               md:max-h-[calc(100vh-300px)]
               object-contain
             "
@@ -1390,9 +1404,8 @@ function ShopCoffeeCard({ className = "" }: { className?: string }) {
       className={[
         "group relative inline-block align-top overflow-hidden rounded-xl",
         "ring-1 ring-amber-500 shadow-2xl shadow-black/30",
-        // EXACTLY mirror the intro photo sizes
-        "w-[12.5rem] h-[15rem] md:w-[13.75rem] md:h-[16.25rem]",
-        // subtle lift to visually align with intro image’s translate-y
+        // responsive sizing
+        "w-[11rem] h-[13rem] sm:w-[12.5rem] sm:h-[15rem] md:w-[13.75rem] md:h-[16.25rem]",
         "translate-y-4 md:translate-y-6",
         "bg-neutral-900/40 hover:bg-neutral-900 transition",
         className,
@@ -1404,13 +1417,14 @@ function ShopCoffeeCard({ className = "" }: { className?: string }) {
         className="absolute inset-0 w-full h-full object-cover"
       />
       <div className="absolute inset-x-0 bottom-0 p-3 bg-neutral-950/40 backdrop-blur-sm">
-        <div className="text-center text-lg md:text-xl text-amber-300 font-bold group-hover:underline">
+        <div className="text-center text-base sm:text-lg md:text-xl text-amber-300 font-bold group-hover:underline">
           SHOP COFFEE
         </div>
       </div>
     </Link>
   );
 }
+
 function FleetPage() {
   return (
     <main className="py-6 md:py-8">
@@ -1941,28 +1955,33 @@ function RoastDetailPage() {
 
   // ---------- 1) Seeded reviews (mixed order, ~30–40% with text) ----------
   const SEEDED: Record<string, Review[]> = {
-    // 16 total • 6 with text • 10 star-only
+    // FLAGSHIP
     flagship: [
       {
         id: "f8",
         name: "Ryan C.",
         date: "September 28, 2025",
         rating: 5,
+        title: "Perfect Morning Brew",
+        body: "Perfect morning coffee.",
         source: "seed",
       },
       {
         id: "f3",
-        name: "Paul R.",
+        name: "Paul",
         date: "October 7, 2025",
         rating: 4,
-        body: "Solid medium roast. Not too bright. Not flat either.",
+        title: "Solid Medium Roast",
+        body: "Really balanced cup. I’d order it again. Only thing is I wish shipping was a little faster but the roast itself is great.",
         source: "seed",
       },
       {
         id: "f14",
-        name: "Shelby R.",
+        name: "S.R.",
         date: "September 16, 2025",
         rating: 5,
+        title: "Love This Roast!",
+        body: "Love this roast!",
         source: "seed",
       },
       {
@@ -1970,30 +1989,35 @@ function RoastDetailPage() {
         name: "Jacob S.",
         date: "October 12, 2025",
         rating: 5,
-        title: "Steady and smooth",
-        body: "Balanced cup with no sharp edges. I drink it black and it goes down easy.",
+        title: "Steady and Smooth",
+        body: "Smooth every single time. No bitterness at all. I drink it black and it goes down clean.",
         source: "seed",
       },
       {
         id: "f10",
-        name: "Chris P.",
+        name: "Chris",
         date: "September 25, 2025",
         rating: 5,
+        title: "Great Every Morning",
+        body: "Great coffee.",
         source: "seed",
       },
       {
         id: "f6",
-        name: "Kate W.",
+        name: "K.W.",
         date: "October 2, 2025",
         rating: 5,
-        body: "No bitterness. Easy recommend.",
+        title: "Best Coffee for Work",
+        body: "I brew this at work and people literally come by my desk asking what it is. Smells amazing and tastes even better.",
         source: "seed",
       },
       {
         id: "f12",
-        name: "Derek B.",
+        name: "Derek",
         date: "September 20, 2025",
         rating: 5,
+        title: "Excellent Flavor",
+        body: "Really smooth with cream or without. Flavor holds up and doesn’t go watery.",
         source: "seed",
       },
       {
@@ -2001,36 +2025,44 @@ function RoastDetailPage() {
         name: "Megan T.",
         date: "October 9, 2025",
         rating: 5,
-        body: "Good every morning. A splash of cream and it still keeps the flavor.",
+        title: "Nice Aroma",
+        body: "The smell when you open the bag is insane. Taste is smooth and not acidic at all.",
         source: "seed",
       },
       {
         id: "f7",
-        name: "Victor H.",
+        name: "V.H.",
         date: "September 30, 2025",
         rating: 5,
+        title: "Clean Finish",
+        body: "Super clean finish. No weird aftertaste. This is my new daily coffee.",
         source: "seed",
       },
       {
         id: "f4",
-        name: "Nate D.",
+        name: "Nate",
         date: "October 5, 2025",
         rating: 5,
-        body: "Clean finish and the bag smells great when you open it.",
+        title: "Perfect for the Office",
+        body: "Total hit at work.",
         source: "seed",
       },
       {
         id: "f11",
-        name: "Lindsay K.",
+        name: "L.K.",
         date: "September 23, 2025",
         rating: 5,
+        title: "Great Taste, Great Price",
+        body: "Smooth, not too acidic, great taste. Way better than grocery store coffee and honestly cheaper than what I was overpaying for before.",
         source: "seed",
       },
       {
         id: "f16",
-        name: "Trent D.",
+        name: "Trent",
         date: "September 12, 2025",
         rating: 5,
+        title: "Always Delicious",
+        body: "Always good.",
         source: "seed",
       },
       {
@@ -2038,21 +2070,26 @@ function RoastDetailPage() {
         name: "Erika L.",
         date: "October 4, 2025",
         rating: 5,
-        body: "Brought it to the office. Everyone asked what it was.",
+        title: "Great Taste, No Complaints",
+        body: "No bitterness at all. I drink it black and it’s just smooth and easy. Zero aftertaste.",
         source: "seed",
       },
       {
         id: "f15",
-        name: "Alan M.",
+        name: "A.M.",
         date: "September 14, 2025",
         rating: 4,
+        title: "The Best Medium Roast",
+        body: "This is my go-to medium roast now. Really balanced and not harsh. I’d love to see them add a light roast too.",
         source: "seed",
       },
       {
         id: "f13",
-        name: "Owen J.",
+        name: "Owen",
         date: "September 18, 2025",
         rating: 5,
+        title: "Excellent All-Around",
+        body: "New favorite.",
         source: "seed",
       },
       {
@@ -2060,32 +2097,39 @@ function RoastDetailPage() {
         name: "Amanda G.",
         date: "September 27, 2025",
         rating: 4,
+        title: "A Great Classic",
+        body: "This one became my normal morning cup fast. Super consistent. Only complaint is I wish the bag was bigger.",
         source: "seed",
       },
     ],
 
-    // 14 total • 5 with text • 9 star-only
+    // BAPTISM BY FIRE
     "baptism-by-fire": [
       {
         id: "b8",
-        name: "Helen D.",
+        name: "Helen",
         date: "September 27, 2025",
         rating: 5,
+        title: "Bold and Smooth",
+        body: "Was not a dark roast person until this. Bold but not burnt tasting. I actually drink this black.",
         source: "seed",
       },
       {
         id: "b3",
-        name: "Nick F.",
+        name: "N.F.",
         date: "October 6, 2025",
         rating: 4,
-        body: "I usually drink light roasts. This one won me over.",
+        title: "Perfect Dark Roast",
+        body: "Best dark roast I’ve had.",
         source: "seed",
       },
       {
         id: "b10",
-        name: "Zack T.",
+        name: "Zack",
         date: "September 24, 2025",
         rating: 5,
+        title: "Best Dark Roast",
+        body: "Dark, rich, smooth. No bitterness at all. This is exactly what I want in a dark roast.",
         source: "seed",
       },
       {
@@ -2093,37 +2137,44 @@ function RoastDetailPage() {
         name: "Cara S.",
         date: "October 1, 2025",
         rating: 5,
+        title: "Smooth and Bold",
+        body: "Crazy smooth.",
         source: "seed",
       },
       {
         id: "b1",
-        name: "Tom O.",
+        name: "Tom",
         date: "October 10, 2025",
         rating: 5,
-        title: "Dark without the burn",
-        body: "Bold flavor but not harsh. Finishes clean.",
+        title: "Deep, Rich Flavor",
+        body: "Strong without going bitter. You get that heavy, rich taste but it still finishes smooth. Wakes me up fast.",
         source: "seed",
       },
       {
         id: "b12",
-        name: "Peter Q.",
+        name: "P.Q.",
         date: "September 20, 2025",
         rating: 4,
+        title: "Perfectly Dark",
+        body: "Really nice deep roast. Bold, kind of chocolatey, and not burnt. I’d buy again.",
         source: "seed",
       },
       {
         id: "b2",
-        name: "Sarah V.",
+        name: "Sarah",
         date: "October 8, 2025",
         rating: 5,
-        body: "Dark chocolate note stands out. I add a little milk.",
+        title: "Love the Richness",
+        body: "That dark chocolate note is legit. I drink this after dinner like dessert.",
         source: "seed",
       },
       {
         id: "b13",
-        name: "Gary L.",
+        name: "G.L.",
         date: "September 18, 2025",
         rating: 5,
+        title: "Great Dark Roast",
+        body: "Super smooth dark roast.",
         source: "seed",
       },
       {
@@ -2131,14 +2182,17 @@ function RoastDetailPage() {
         name: "Jose M.",
         date: "October 4, 2025",
         rating: 5,
-        body: "Stays smooth as it cools. Nice work.",
+        title: "Rich and Flavorful",
+        body: "Deep roast flavor without that burnt taste you get in a lot of dark coffee. Very clean finish.",
         source: "seed",
       },
       {
         id: "b7",
-        name: "Walt A.",
+        name: "Walt",
         date: "September 29, 2025",
         rating: 4,
+        title: "Amazing Dark Roast",
+        body: "I add a splash of milk and it’s perfect. Bold but not harsh. I’ll keep buying this one.",
         source: "seed",
       },
       {
@@ -2146,69 +2200,84 @@ function RoastDetailPage() {
         name: "Mike B.",
         date: "September 16, 2025",
         rating: 5,
+        title: "Fantastic Dark Roast",
+        body: "So smooth.",
         source: "seed",
       },
       {
         id: "b11",
-        name: "Anna R.",
+        name: "Anna",
         date: "September 22, 2025",
         rating: 5,
+        title: "Perfect for Dark Roast Lovers",
+        body: "If you’re into dark coffee, this is it. Rich, smooth, zero bitterness. I’m getting more.",
         source: "seed",
       },
       {
         id: "b5",
-        name: "Evan J.",
+        name: "E.J.",
         date: "October 3, 2025",
         rating: 5,
-        body: "Heavy body and still clean. Great in the moka pot.",
+        title: "Not Too Bitter",
+        body: "Bold but not bitter.",
         source: "seed",
       },
       {
         id: "b9",
-        name: "Ivy N.",
+        name: "Ivy",
         date: "September 26, 2025",
         rating: 5,
+        title: "Love This Roast",
+        body: "Best dark roast ever.",
         source: "seed",
       },
     ],
 
-    // 15 total • 5 with text • 10 star-only
+    // JAVA ACTION
     "java-action": [
       {
         id: "j10",
-        name: "Rae C.",
+        name: "Rae",
         date: "September 25, 2025",
         rating: 5,
+        title: "Great for the Morning",
+        body: "Light caramel taste, super smooth, easy first cup. Not harsh at all.",
         source: "seed",
       },
       {
         id: "j4",
-        name: "Theo B.",
+        name: "T.B.",
         date: "October 5, 2025",
         rating: 5,
-        body: "Easy cup to share with guests. Everyone liked it.",
+        title: "Love the Hazelnut Taste",
+        body: "Love this flavor.",
         source: "seed",
       },
       {
         id: "j7",
-        name: "Iris K.",
+        name: "Iris",
         date: "September 29, 2025",
         rating: 5,
+        title: "Full Body, Smooth Finish",
+        body: "Full body but still smooth. You get a tiny caramel note at the end that’s actually really nice.",
         source: "seed",
       },
       {
         id: "j3",
-        name: "Omar H.",
+        name: "O.H.",
         date: "October 6, 2025",
         rating: 4,
-        body: "Nice balance. No sour bite.",
+        title: "Easy to Drink",
+        body: "Easy to drink.",
         source: "seed",
       },
       {
         id: "j13",
-        name: "Tim A.",
+        name: "Tim",
         date: "September 19, 2025",
         rating: 4,
+        title: "Great for Sharing",
+        body: "I made a pot when people were over and everyone asked what coffee it was. Zero leftovers. That kinda sold me.",
         source: "seed",
       },
       {
@@ -2216,14 +2285,17 @@ function RoastDetailPage() {
         name: "Jen L.",
         date: "October 7, 2025",
         rating: 5,
-        body: "I get a little hazelnut and caramel. Very pleasant.",
+        title: "Smooth and Delicious",
+        body: "No bitterness at all. Just smooth and a little caramel at the end. Super easy cup.",
         source: "seed",
       },
       {
         id: "j11",
-        name: "Luis V.",
+        name: "L.V.",
         date: "September 23, 2025",
         rating: 5,
+        title: "A Perfect Cup",
+        body: "Perfect morning coffee.",
         source: "seed",
       },
       {
@@ -2231,43 +2303,53 @@ function RoastDetailPage() {
         name: "Caleb D.",
         date: "September 28, 2025",
         rating: 5,
+        title: "Great Flavor!",
+        body: "Hazelnut and caramel are there but not fake or syrupy. Just smooth, good coffee.",
         source: "seed",
       },
       {
         id: "j1",
-        name: "Mark S.",
+        name: "Mark",
         date: "October 9, 2025",
         rating: 5,
-        body: "Full body and a smooth finish. Works great in the drip machine.",
+        title: "Easy Favorite",
+        body: "My favorite one.",
         source: "seed",
       },
       {
         id: "j6",
-        name: "Sam W.",
+        name: "S.W.",
         date: "October 1, 2025",
         rating: 4,
+        title: "Perfect Balance",
+        body: "Right in the middle for me. Not too light, not too strong. Very steady cup and not acidic.",
         source: "seed",
       },
       {
         id: "j15",
-        name: "Cole J.",
+        name: "Cole",
         date: "September 15, 2025",
         rating: 5,
+        title: "Very Pleasant",
+        body: "Really smooth.",
         source: "seed",
       },
       {
         id: "j5",
-        name: "Gina P.",
+        name: "G.P.",
         date: "October 3, 2025",
         rating: 5,
-        body: "Brews consistent every time.",
+        title: "Smooth and Tasty",
+        body: "Great taste.",
         source: "seed",
       },
       {
         id: "j14",
-        name: "Maya R.",
+        name: "Maya",
         date: "September 17, 2025",
         rating: 5,
+        title: "Great Cup",
+        body: "No weird aftertaste. Just clean and easy. I’ve been drinking this every day.",
         source: "seed",
       },
       {
@@ -2275,39 +2357,48 @@ function RoastDetailPage() {
         name: "Becca Y.",
         date: "September 21, 2025",
         rating: 5,
+        title: "Crowd Favorite",
+        body: "Everyone loves this one at my house. No complaints from anybody.",
         source: "seed",
       },
       {
         id: "j9",
-        name: "Noah M.",
+        name: "N.M.",
         date: "September 26, 2025",
         rating: 4,
+        title: "Balanced and Smooth",
+        body: "Really smooth cup. Could be a touch stronger, but still super drinkable.",
         source: "seed",
       },
     ],
 
-    // 13 total • 5 with text • 8 star-only
+    // OAK & COPPER
     "oak-and-copper": [
       {
         id: "o10",
-        name: "Iain D.",
+        name: "I.D.",
         date: "September 28, 2025",
         rating: 5,
+        title: "Love the Oak Flavor",
+        body: "Oak and caramel come through and it’s still smooth. Slightly sweet finish, not fake sweet. I’m into it.",
         source: "seed",
       },
       {
         id: "o3",
-        name: "Harper G.",
+        name: "Harper",
         date: "October 8, 2025",
         rating: 4,
-        body: "Unique take on a medium roast. I like it black.",
+        title: "Bourbon Barrel Taste",
+        body: "Great barrel flavor.",
         source: "seed",
       },
       {
         id: "o6",
-        name: "Sean R.",
+        name: "S.R.",
         date: "October 4, 2025",
         rating: 5,
+        title: "Great for Weekend Mornings",
+        body: "Weekend coffee for sure. Just smooth, little vanilla note, little oak at the end. Chill and slow kind of cup.",
         source: "seed",
       },
       {
@@ -2315,14 +2406,17 @@ function RoastDetailPage() {
         name: "Quinn P.",
         date: "October 11, 2025",
         rating: 5,
-        body: "Oak comes through with a slightly sweet finish. Nice weekend cup.",
+        title: "Smooth with a Kick",
+        body: "Super smooth.",
         source: "seed",
       },
       {
         id: "o12",
-        name: "Zoe N.",
+        name: "Zoe",
         date: "September 24, 2025",
         rating: 5,
+        title: "Amazing Flavor",
+        body: "I drink this after dinner. Slight sweetness, oak finish, really calm and warm cup. I love it at night.",
         source: "seed",
       },
       {
@@ -2330,7 +2424,8 @@ function RoastDetailPage() {
         name: "Kurt E.",
         date: "October 7, 2025",
         rating: 5,
-        body: "Save it for guests. Everyone comments on it.",
+        title: "Subtle Bourbon Flavor",
+        body: "Not fake sweet, not overpowering. You can tell it was barrel aged in a good way.",
         source: "seed",
       },
       {
@@ -2338,50 +2433,62 @@ function RoastDetailPage() {
         name: "Mia C.",
         date: "September 30, 2025",
         rating: 4,
+        title: "Smooth and Balanced",
+        body: "Smooth and mellow.",
         source: "seed",
       },
       {
         id: "o2",
-        name: "Dana S.",
+        name: "Dana",
         date: "October 9, 2025",
         rating: 5,
-        body: "Gentle bourbon note without tasting boozy. Very smooth.",
+        title: "Wonderful Oak Finish",
+        body: "That oak note at the end is perfect. Super smooth even with a splash of cream.",
         source: "seed",
       },
       {
         id: "o7",
-        name: "Yara T.",
+        name: "Y.T.",
         date: "October 3, 2025",
         rating: 5,
+        title: "Great for Coffee Lovers",
+        body: "So smooth.",
         source: "seed",
       },
       {
         id: "o11",
-        name: "Nora H.",
+        name: "Nora",
         date: "September 26, 2025",
         rating: 5,
+        title: "Rich and Flavorful",
+        body: "Little vanilla, little oak, just super rich and warming. Honestly kind of addicting.",
         source: "seed",
       },
       {
         id: "o5",
-        name: "Elle F.",
+        name: "E.F.",
         date: "October 6, 2025",
         rating: 5,
-        body: "Oak note without bitterness. Balanced cup.",
+        title: "Perfectly Aged",
+        body: "Really well balanced.",
         source: "seed",
       },
       {
         id: "o13",
-        name: "Eli W.",
+        name: "Eli",
         date: "September 22, 2025",
         rating: 4,
+        title: "Nice Oak Note",
+        body: "Smooth, a little sweet, not bitter. Super easy drinker.",
         source: "seed",
       },
       {
         id: "o8",
-        name: "Vlad K.",
+        name: "V.K.",
         date: "October 2, 2025",
         rating: 5,
+        title: "Great for Coffee Enthusiasts",
+        body: "New favorite.",
         source: "seed",
       },
     ],
@@ -2459,7 +2566,100 @@ function RoastDetailPage() {
   //
   // Until then, the seeded reviews above render so your pages are not empty.
 
-  const reviews: Review[] = reviewList;
+  const reviews: Review[] = (() => {
+    // Stable per product per day (doesn't reshuffle on every render)
+    const handle = String(card.slug ?? "unknown");
+    const d = new Date();
+    const dayKey = `${d.getUTCFullYear()}-${
+      d.getUTCMonth() + 1
+    }-${d.getUTCDate()}`;
+
+    // Tiny seeded RNG + shuffle (scoped here so we don't touch the rest of your file)
+    function cyrb53(str: string, seed = 0) {
+      let h1 = 0xdeadbeef ^ seed,
+        h2 = 0x41c6ce57 ^ seed;
+      for (let i = 0, ch; i < str.length; i++) {
+        ch = str.charCodeAt(i);
+        h1 = Math.imul(h1 ^ ch, 2654435761);
+        h2 = Math.imul(h2 ^ ch, 1597334677);
+      }
+      h1 =
+        Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^
+        Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+      h2 =
+        Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^
+        Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+      return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+    }
+    function mulberry32(a: number) {
+      return function () {
+        a |= 0;
+        a = (a + 0x6d2b79f5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+    function seededShuffle<T>(arr: T[], rng: () => number): T[] {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    function interleaveNatural<T>(
+      commented: T[],
+      starsOnly: T[],
+      rng: () => number,
+      maxRun = 3
+    ): T[] {
+      const out: T[] = [];
+      let c = 0,
+        s = 0,
+        last: "c" | "s" | null = null,
+        run = 0;
+      while (c < commented.length || s < starsOnly.length) {
+        const cLeft = commented.length - c;
+        const sLeft = starsOnly.length - s;
+        let pComment = cLeft / Math.max(1, cLeft + sLeft);
+        if (last === "c" && run >= maxRun) pComment = 0.15;
+        if (last === "s" && run >= maxRun) pComment = 0.85;
+        const pickComment =
+          cLeft > 0 && sLeft > 0 ? rng() < pComment : cLeft > 0 ? true : false;
+        if (pickComment && cLeft > 0) {
+          out.push(commented[c++]);
+          last === "c" ? run++ : ((last = "c"), (run = 1));
+        } else if (sLeft > 0) {
+          out.push(starsOnly[s++]);
+          last === "s" ? run++ : ((last = "s"), (run = 1));
+        } else {
+          out.push(commented[c++]);
+          last === "c" ? run++ : ((last = "c"), (run = 1));
+        }
+      }
+      return out;
+    }
+
+    const seed = cyrb53(`${handle}:${dayKey}`);
+    const rng = mulberry32(seed);
+
+    const commented = reviewList.filter(
+      (r) => r.body && r.body.trim().length > 0
+    );
+    const starsOnly = reviewList.filter(
+      (r) => !r.body || r.body.trim().length === 0
+    );
+
+    const mix = interleaveNatural(
+      seededShuffle(commented, rng),
+      seededShuffle(starsOnly, rng),
+      rng,
+      3
+    );
+
+    return mix;
+  })();
 
   const { add } = useCart();
   const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("one");
@@ -2703,6 +2903,12 @@ function RoastDetailPage() {
                       </div>
 
                       <div className="flex items-center gap-2 shrink-0">
+                        {/* numeric value on the left */}
+                        <span className="text-amber-300 font-semibold tabular-nums">
+                          {reviewData.avg.toFixed(1)}
+                        </span>
+
+                        {/* per-star fractional fill */}
                         <a
                           href="#reviews"
                           onClick={(e) => {
@@ -2721,23 +2927,71 @@ function RoastDetailPage() {
                               offset;
                             window.scrollTo({ top, behavior: "smooth" });
                           }}
-                          className="group inline-flex items-center gap-1 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                          className="inline-flex items-center gap-0.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                           aria-label="Jump to customer reviews"
                           title="Jump to customer reviews"
                         >
-                          {[...Array(5)].map((_, i) => (
-                            <svg
-                              key={i}
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                              className="h-5 w-5 text-amber-400 group-hover:text-amber-300"
-                              aria-hidden
-                            >
-                              <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                            </svg>
-                          ))}
+                          {[0, 1, 2, 3, 4].map((i) => {
+                            const starFill = Math.max(
+                              0,
+                              Math.min(1, (reviewData.avg ?? 0) - i)
+                            ); // 0..1
+                            const clipWidth = 24 * starFill; // viewBox is 24
+                            const clipId = `titleStarClip-${i}`;
+                            return (
+                              <svg
+                                key={i}
+                                viewBox="0 0 24 24"
+                                className="h-5 w-5"
+                                aria-hidden
+                              >
+                                <defs>
+                                  <clipPath
+                                    id={clipId}
+                                    clipPathUnits="userSpaceOnUse"
+                                  >
+                                    <rect
+                                      x="0"
+                                      y="0"
+                                      width={clipWidth}
+                                      height="24"
+                                    />
+                                  </clipPath>
+                                </defs>
+
+                                {/* base (neutral) */}
+                                <path
+                                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                  className="text-neutral-800"
+                                  fill="currentColor"
+                                />
+
+                                {/* amber fill clipped to percentage */}
+                                <path
+                                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                  className="text-amber-400"
+                                  fill="currentColor"
+                                  clipPath={`url(#${clipId})`}
+                                />
+
+                                {/* OUTLINE (matches review tiles: grey stroke around star) */}
+                                <path
+                                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  className="text-neutral-600"
+                                  strokeWidth="1.4"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            );
+                          })}
+                          <span className="sr-only">
+                            {reviewData.avg.toFixed(1)} out of 5 stars
+                          </span>
                         </a>
 
+                        {/* review count on the right (unchanged) */}
                         <span className="text-xs md:text-sm text-neutral-400/80 tracking-wide whitespace-nowrap">
                           {reviewData.count} REVIEWS
                         </span>
@@ -3346,19 +3600,59 @@ function RoastLevelAnchors({
 
       {/* Overall stars + count */}
       <div className="mt-2 md:mt-3 flex items-center justify-center gap-2 mb-2">
-        <div className="flex items-center gap-1">
-          {[...Array(5)].map((_, i) => (
-            <svg
-              key={i}
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="h-6 w-6 text-amber-400"
-              aria-hidden
-            >
-              <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-            </svg>
-          ))}
+        {/* numeric value on the left */}
+        <span className="text-amber-300 font-semibold tabular-nums">
+          {(reviewData?.avg ?? 0).toFixed(1)}
+        </span>
+
+        {/* fractional, outlined stars (Amazon-style), same look as title stars */}
+        <div className="inline-flex items-center gap-0.5">
+          {[0, 1, 2, 3, 4].map((i) => {
+            const avg = reviewData?.avg ?? 0;
+            const starFill = Math.max(0, Math.min(1, avg - i)); // 0..1
+            const clipWidth = 24 * starFill; // viewBox is 24
+            const clipId = `reviewsStarClip-${i}`;
+            return (
+              <svg key={i} viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
+                <defs>
+                  <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+                    <rect x="0" y="0" width={clipWidth} height="24" />
+                  </clipPath>
+                </defs>
+
+                {/* base (neutral) */}
+                <path
+                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                  className="text-neutral-800"
+                  fill="currentColor"
+                />
+
+                {/* amber fill clipped to percentage */}
+                <path
+                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                  className="text-amber-400"
+                  fill="currentColor"
+                  clipPath={`url(#${clipId})`}
+                />
+
+                {/* outline stroke (matches review tiles + title stars) */}
+                <path
+                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                  fill="none"
+                  stroke="currentColor"
+                  className="text-neutral-600"
+                  strokeWidth="1.6"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            );
+          })}
+          <span className="sr-only">
+            {(reviewData?.avg ?? 0).toFixed(1)} out of 5 stars
+          </span>
         </div>
+
+        {/* review count on the right (unchanged) */}
         <div className="text-neutral-400 text-sm">{total} REVIEWS</div>
       </div>
 
@@ -3384,6 +3678,14 @@ function RoastLevelAnchors({
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-visible">
         {pageItems.map((r) => {
           const isOpen = expandedId === r.id;
+
+          // Format the date to MM/DD/YY
+          const formattedDate = new Date(r.date).toLocaleDateString("en-US", {
+            month: "2-digit",
+            day: "2-digit",
+            year: "2-digit",
+          });
+
           return (
             <article
               key={r.id}
@@ -3402,12 +3704,13 @@ function RoastLevelAnchors({
                 (isOpen ? "z-[70]" : "")
               }
             >
-              {/* Compact tile content */}
+              {/* Name and Formatted Date */}
               <div className="flex items-center justify-between">
                 <div className="font-semibold text-amber-300">{r.name}</div>
-                <div className="text-xs text-neutral-400">{r.date}</div>
+                <div className="text-xs text-neutral-400">{formattedDate}</div>
               </div>
 
+              {/* Rating Stars */}
               <div className="mt-1 flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
                   <svg
@@ -3425,21 +3728,26 @@ function RoastLevelAnchors({
                 ))}
               </div>
 
+              {/* Title for the Review */}
               {r.title && (
-                <div className="mt-2 text-sm font-semibold text-neutral-200">
+                <div className="mt-2 text-sm font-semibold text-neutral-300">
                   {r.title}
                 </div>
               )}
+
+              {/* Review Body */}
               {r.body ? (
                 <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
                   {r.body}
                 </p>
               ) : null}
 
+              {/* Verified Buyer */}
               <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
                 Verified Buyer
               </div>
 
+              {/* Expanded View */}
               {isOpen && (
                 <div
                   className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
@@ -3448,9 +3756,12 @@ function RoastLevelAnchors({
                 >
                   <div className="flex items-center justify-between">
                     <div className="font-semibold text-amber-300">{r.name}</div>
-                    <div className="text-xs text-neutral-400">{r.date}</div>
+                    <div className="text-xs text-neutral-400">
+                      {formattedDate}
+                    </div>
                   </div>
 
+                  {/* Rating Stars for Expanded View */}
                   <div className="mt-1 flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
                       <svg
@@ -3468,18 +3779,19 @@ function RoastLevelAnchors({
                     ))}
                   </div>
 
+                  {/* Title and Review Body for Expanded View */}
                   {r.title && (
-                    <div className="mt-2 text-sm font-semibold text-neutral-200">
+                    <div className="mt-2 text-sm font-semibold text-neutral-300">
                       {r.title}
                     </div>
                   )}
-
                   {r.body ? (
-                    <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
+                    <p className="mt-1 text-sm text-neutral-300 leading-relaxed">
                       {r.body}
                     </p>
                   ) : null}
 
+                  {/* Verified Buyer for Expanded View */}
                   <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
                     Verified Buyer
                   </div>
@@ -3489,6 +3801,7 @@ function RoastLevelAnchors({
           );
         })}
       </div>
+
       {expandedId && (
         <div
           className="fixed inset-0 z-40 bg-black/40"
@@ -3677,10 +3990,6 @@ function RoastLevelAnchors({
                 >
                   POST
                 </button>
-              </div>
-
-              <div className="text-center text-[11px] uppercase tracking-wide text-amber-300/90 mt-2">
-                Verified Buyer
               </div>
             </form>
           </div>
@@ -7651,10 +7960,20 @@ function Layout() {
   const [openMega, setOpenMega] = useState<
     null | "coffee" | "merch" | "origins"
   >(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   // Close the mega panel whenever the route changes
   useEffect(() => {
     setOpenMega(null);
   }, [location.pathname, location.search, location.hash]);
+  // lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [mobileOpen]);
 
   // Inline subscribe state for Origins mega panel
   const [mmEmail, setMmEmail] = useState("");
@@ -7718,14 +8037,63 @@ function Layout() {
       <ScrollToTop />
       <FlashToast />
       <PromoSubscribeModal />
+
+      {/* ===== HEADER (desktop + mobile) ===== */}
       <header className="fixed top-0 inset-x-0 z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800">
-        {/* === TOP BAR (40px) === */}
-        <div className="border-b border-neutral-800">
+        {/* === TOP PROMO BAR === */}
+        {/* === MOBILE PROMO + BRAND ROW === */}
+        <div className="md:hidden border-b border-neutral-800 bg-neutral-950">
+          {/* promo block mobile: smaller text, 2 lines max, centered */}
+          <div className="px-4 py-2 text-center text-[13px] font-semibold leading-tight text-amber-300 space-y-1">
+            <div>Join The Fleet &amp; Save 15%</div>
+            <div>Free Shipping on 3+ Bags • GovX Partner</div>
+          </div>
+
+          {/* brand row mobile: burger | emblem | fleet */}
+          <div className="flex items-center justify-between px-4 py-3 border-t border-neutral-800">
+            {/* burger button */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="flex flex-col justify-center gap-[6px] text-amber-300"
+              aria-label="Open menu"
+            >
+              <span className="block w-8 h-[3px] bg-amber-300" />
+              <span className="block w-8 h-[3px] bg-amber-300" />
+              <span className="block w-8 h-[3px] bg-amber-300" />
+            </button>
+
+            {/* emblem acts as home link */}
+            <Link
+              to="/"
+              aria-label="Old Ironsides Coffee Home"
+              className="flex-shrink-0"
+            >
+              <img
+                src="/emblem-black.png"
+                alt="Old Ironsides Coffee Company"
+                className="w-auto object-contain md:h-10"
+                style={{ height: "9rem", maxHeight: "9rem" }}
+              />
+            </Link>
+
+            {/* My Fleet link */}
+            <Link
+              to="/account"
+              className="flex flex-col items-end text-right text-amber-300 text-sm font-semibold leading-tight"
+            >
+              <span className="text-xl leading-none">⚓</span>
+              <span>My Fleet</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* === DESKTOP TOP BAR === */}
+        <div className="hidden md:block border-b border-neutral-800 bg-neutral-950">
           <Container>
             <div className="h-10 flex items-center relative">
-              {/* Centered promo text */}
-              <div className="absolute left-1/2 -translate-x-1/2 text-amber-300 text-xs md:text-sm font-semibold tracking-wide text-center space-x-3">
-                {/* First Order button now opens modal */}
+              {/* promo text centered */}
+              <div className="absolute left-1/2 -translate-x-1/2 text-amber-300 text-sm font-semibold tracking-wide text-center space-x-3">
                 <button
                   type="button"
                   onClick={() =>
@@ -7743,7 +8111,6 @@ function Layout() {
 
                 <span>|</span>
 
-                {/* Subscribe & Save link */}
                 <Link
                   to="/account/login"
                   className="hover:text-amber-200 underline-offset-2 hover:underline"
@@ -7753,7 +8120,6 @@ function Layout() {
 
                 <span>|</span>
 
-                {/* Free Shipping link */}
                 <Link
                   to="/legal/shipping"
                   className="hover:text-amber-200 underline-offset-2 hover:underline"
@@ -7762,8 +8128,7 @@ function Layout() {
                 </Link>
 
                 <span>|</span>
-                {/* GovX Partner */}
-                {/* GovX Partner (temporary info link) */}
+
                 <a
                   href="https://www.govx.com/govx-id/"
                   target="_blank"
@@ -7774,14 +8139,14 @@ function Layout() {
                 </a>
               </div>
 
-              {/* Right-aligned My Fleet login */}
+              {/* right My Fleet */}
               <Link
                 to="/account"
-                className="ml-auto inline-flex items-center gap-2 text-amber-300 hover:text-amber-200 text-sm md:text-base font-semibold"
+                className="ml-auto inline-flex items-center gap-2 text-amber-300 hover:text-amber-200 text-base font-semibold"
                 aria-label="My Fleet"
                 title="My Fleet"
               >
-                <span aria-hidden className="text-lg md:text-xl">
+                <span aria-hidden className="text-xl">
                   ⚓
                 </span>
                 <span>My Fleet</span>
@@ -7790,401 +8155,521 @@ function Layout() {
           </Container>
         </div>
 
-        <Container>
-          <div
-            className={
-              (shrunk ? "pt-2 md:pt-3 pb-2" : "pt-6 md:pt-8 pb-3") + " relative"
-            }
-          >
-            {/* ===== HEADER STACK + NAV (fixed CHEST) ===== */}
+        {/* === DESKTOP HEADER STACK + NAV (unchanged look) === */}
+        <div className="hidden md:block">
+          <Container>
+            <div className={(shrunk ? "pt-3 pb-2" : "pt-8 pb-3") + " relative"}>
+              {/* centered brand block with emblem on the left */}
+              <div className="relative mx-auto w-max">
+                {/* emblem left of stack */}
+                <Link to="/" aria-label="Go to Home Port">
+                  <img
+                    src="/emblem-black.png"
+                    alt="Old Ironsides emblem"
+                    className={
+                      (shrunk
+                        ? "h-28 md:h-32 top-[calc(50%+6px)]"
+                        : "h-40 md:h-48 top-[calc(50%+12px)]") +
+                      " w-auto object-contain select-none transition-all cursor-pointer " +
+                      "absolute -translate-y-1/2 right-[calc(100%+72px)]"
+                    }
+                  />
+                </Link>
 
-            {/* Centered stack; emblem sits to the left and does NOT affect width */}
-            <div className="relative mx-auto w-max">
-              {/* Emblem to the LEFT of the centered stack (clickable) */}
-              <Link to="/" aria-label="Go to Home Port">
-                <img
-                  src="/emblem-black.png"
-                  alt="Old Ironsides emblem"
-                  className={
-                    (shrunk
-                      ? "h-28 md:h-32 top-[calc(50%+6px)]"
-                      : "h-40 md:h-48 top-[calc(50%+12px)]") +
-                    " w-auto object-contain select-none transition-all cursor-pointer " +
-                    "absolute -translate-y-1/2 right-[calc(100%+72px)]"
-                  }
-                />
-              </Link>
+                {/* Title + taglines (desktop only now) */}
+                <div className="flex flex-col items-center">
+                  <div
+                    className={
+                      shrunk
+                        ? "text-4xl font-bold tracking-[0.18em] text-neutral-300 text-center"
+                        : "text-5xl font-bold tracking-[0.18em] text-neutral-300 text-center"
+                    }
+                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+                  >
+                    OLD IRONSIDES COFFEE
+                  </div>
 
-              {/* Title + taglines */}
-              <div className="flex flex-col items-center">
-                <div
-                  className={
-                    shrunk
-                      ? "text-2xl md:text-4xl font-bold tracking-[0.18em] text-neutral-300 text-center"
-                      : "text-3xl md:text-5xl font-bold tracking-[0.18em] text-neutral-300 text-center"
-                  }
-                  style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+                  <div
+                    className={
+                      shrunk
+                        ? "text-sm text-amber-200 text-center"
+                        : "text-lg text-amber-200 text-center"
+                    }
+                  >
+                    Ignite the Spirit, Savor the Victory!
+                  </div>
+                  <div
+                    className={
+                      shrunk
+                        ? "text-sm text-neutral-300 text-center"
+                        : "text-base text-neutral-300 text-center"
+                    }
+                  >
+                    Proudly Veteran-owned
+                  </div>
+                </div>
+              </div>
+
+              {/* NAV + CHEST row */}
+              <div
+                className="relative mt-3"
+                onMouseEnter={cancelClose}
+                onMouseLeave={scheduleClose}
+              >
+                {/* CHEST pinned right */}
+                <Link
+                  to="/cart"
+                  className="hidden md:flex items-center gap-3 h-11 px-4 rounded-xl
+          ring-1 ring-amber-400/60 bg-neutral-900/60 text-amber-300
+          hover:bg-amber-400 hover:text-neutral-900 transition shadow-lg
+          divide-x divide-neutral-700 z-30 absolute right-0 top-1/2 -translate-y-1/2"
+                  aria-label="Open Chest (Cart)"
+                  title="Chest"
                 >
-                  OLD IRONSIDES COFFEE
+                  <span className="flex items-center gap-2 pr-3">
+                    <ChestIcon className="h-6 w-6" />
+                    <span className="uppercase tracking-wide font-bold text-lg">
+                      CHEST
+                    </span>
+                  </span>
+                  <span className="pl-3 font-bold tabular-nums text-lg">
+                    {count ?? 0}
+                  </span>
+                </Link>
+
+                {/* desktop nav */}
+                <nav className="hidden md:flex justify-center">
+                  <div className="flex items-center gap-6 text-neutral-100 font-semibold">
+                    <div
+                      onMouseEnter={() => {
+                        cancelClose();
+                        setOpenMega("coffee");
+                      }}
+                      className="relative"
+                    >
+                      <HeaderNavLink to="/coffee">SHOP COFFEE</HeaderNavLink>
+                    </div>
+
+                    <div
+                      onMouseEnter={() => {
+                        cancelClose();
+                        setOpenMega("merch");
+                      }}
+                      className="relative"
+                    >
+                      <HeaderNavLink to="/store#merch">GEAR</HeaderNavLink>
+                    </div>
+
+                    <div
+                      onMouseEnter={() => {
+                        cancelClose();
+                        setOpenMega("origins");
+                      }}
+                      className="relative"
+                    >
+                      <HeaderNavLink to="/origins">
+                        ORIGINS AND VOYAGES
+                      </HeaderNavLink>
+                    </div>
+
+                    <HeaderNavLink to="/contact">
+                      CONTACT THE CREW
+                    </HeaderNavLink>
+                  </div>
+                </nav>
+
+                {/* mega menu unchanged */}
+                {openMega && (
+                  /* keep your same mega menu block exactly like you already have */
+                  <div
+                    ref={panelRef}
+                    className="absolute left-1/2 -translate-x-1/2 w-screen z-40"
+                    onMouseEnter={() => {
+                      const p = panelRef.current as any;
+                      if (p) p.__sticky = true;
+                    }}
+                    onMouseLeave={() => {
+                      const p = panelRef.current as any;
+                      if (p) p.__sticky = false;
+                      setTimeout(() => {
+                        const active =
+                          document.activeElement as HTMLElement | null;
+                        const within =
+                          !!panelRef.current &&
+                          ((!!active && panelRef.current.contains(active)) ||
+                            (panelRef.current as any).matches?.(
+                              ":focus-within"
+                            ));
+                        const until =
+                          (panelRef.current as any)?.__suppressUntil || 0;
+                        if (!within && Date.now() > until) setOpenMega(null);
+                      }, 600);
+                    }}
+                    onFocusCapture={() => {
+                      const p = panelRef.current as any;
+                      if (p) p.__sticky = true;
+                    }}
+                    onBlurCapture={() => {
+                      setTimeout(() => {
+                        const active =
+                          document.activeElement as HTMLElement | null;
+                        const within =
+                          !!panelRef.current &&
+                          ((!!active && panelRef.current.contains(active)) ||
+                            (panelRef.current as any).matches?.(
+                              ":focus-within"
+                            ));
+                        const until =
+                          (panelRef.current as any)?.__suppressUntil || 0;
+                        if (!within && Date.now() > until) setOpenMega(null);
+                      }, 600);
+                    }}
+                    onPointerDownCapture={() => {
+                      const p = panelRef.current as any;
+                      if (p) p.__suppressUntil = Date.now() + 2000;
+                    }}
+                    onKeyDownCapture={(e) => {
+                      if (e.key === "Tab" || e.key === "Enter") {
+                        const p = panelRef.current as any;
+                        if (p) p.__suppressUntil = Date.now() + 1200;
+                      }
+                    }}
+                  >
+                    <div className="mt-2 border-t border-neutral-800">
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-neutral-950/95 backdrop-blur" />
+                        <Container className="relative py-4 md:py-6">
+                          {/* keep your inner openMega === 'coffee' / 'merch' / 'origins' exactly */}
+                          {openMega === "coffee" && (
+                            <div className="grid lg:grid-cols-[1fr,auto] gap-8 items-start">
+                              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {roastCards.map((card) => (
+                                  <Link
+                                    key={`mega-roast-${card.id}`}
+                                    to={`/roast/${card.slug}`}
+                                    onClick={() => setOpenMega(null)}
+                                    className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
+                                  >
+                                    <img
+                                      src={card.img}
+                                      alt={card.title}
+                                      className="h-52 sm:h-60 lg:h-60 w-full object-cover"
+                                    />
+                                    <div className="p-3">
+                                      <div
+                                        className="text-lg font-extrabold text-amber-300"
+                                        style={{
+                                          fontFamily: "'Cinzel', serif",
+                                          fontWeight: 800,
+                                        }}
+                                      >
+                                        {card.title}
+                                      </div>
+                                      <div className="text-xs text-neutral-400">
+                                        {card.variant}
+                                      </div>
+                                      <div className="text-xs md:text-sm text-neutral-300">
+                                        {card.subTitle}
+                                      </div>
+                                    </div>
+                                  </Link>
+                                ))}
+                              </div>
+
+                              <MegaSubscribeBox
+                                email={mmEmail}
+                                setEmail={setMmEmail}
+                                done={mmDone}
+                                onSubmit={submitMegaSubscribe}
+                              />
+                            </div>
+                          )}
+
+                          {openMega === "merch" && (
+                            <div className="grid lg:grid-cols-[1fr,auto] gap-8 items-start">
+                              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {merchTiles.map((t) => (
+                                  <div
+                                    key={`mega-merch-${t.key}`}
+                                    className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 transition shadow-lg flex flex-col"
+                                  >
+                                    <div className="h-52 sm:h-60 lg:h-60 w-full overflow-hidden">
+                                      <img
+                                        src={t.img}
+                                        alt={`${t.label} preview`}
+                                        className="h-full w-full object-cover"
+                                      />
+                                    </div>
+                                    <div className="p-3">
+                                      <div className="text-lg font-extrabold text-amber-300">
+                                        {t.label}
+                                      </div>
+                                      <div className="text-xs text-neutral-400">
+                                        Coming soon
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+
+                              <MegaSubscribeBox
+                                email={mmEmail}
+                                setEmail={setMmEmail}
+                                done={mmDone}
+                                onSubmit={submitMegaSubscribe}
+                                title="RING THAT BELL"
+                                subtitle={`Get first access to gear.
+                          Plus 20% off your first coffee order.`}
+                                buttonText="GET 20% OFF"
+                              />
+                            </div>
+                          )}
+
+                          {openMega === "origins" && (
+                            <div className="grid md:grid-cols-[auto,1fr,auto] gap-8 items-start">
+                              <Link
+                                to="/coffee"
+                                onClick={() => setOpenMega(null)}
+                                className="group block rounded-2xl overflow-hidden ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition text-center justify-self-center md:justify-self-start w-40 sm:w-48 md:w-56"
+                              >
+                                <div className="aspect-[4/3] w-full overflow-hidden">
+                                  <img
+                                    src={flagship?.img || "Flagship-web.png"}
+                                    alt="Shop Coffee"
+                                    className="h-full w-full object-cover"
+                                  />
+                                </div>
+                                <div className="p-3">
+                                  <div className="text-sm md:text-base text-amber-300 font-semibold group-hover:underline">
+                                    Shop Coffee
+                                  </div>
+                                </div>
+                              </Link>
+
+                              <div className="justify-self-center">
+                                <ul className="space-y-2 text-neutral-300 text-sm md:text-base">
+                                  <li>
+                                    <Link
+                                      to="/origins#origins-roasting"
+                                      onClick={() => setOpenMega(null)}
+                                      className="hover:text-amber-300"
+                                    >
+                                      Roasting Process
+                                    </Link>
+                                  </li>
+                                  <li>
+                                    <Link
+                                      to="/origins#origins-lands"
+                                      className="hover:text-amber-300"
+                                    >
+                                      The Lands Where Our Beans Are Grown
+                                    </Link>
+                                  </li>
+                                  <li>
+                                    <Link
+                                      to="/origins#origins-hands"
+                                      className="hover:text-amber-300"
+                                    >
+                                      The Hands That Grow Our Beans
+                                    </Link>
+                                  </li>
+                                  <li>
+                                    <Link
+                                      to="/origins#origins-history"
+                                      className="hover:text-amber-300"
+                                    >
+                                      The History Behind The Fleet
+                                    </Link>
+                                  </li>
+                                  <li>
+                                    <Link
+                                      to="/origins#origins-service"
+                                      className="hover:text-amber-300"
+                                    >
+                                      Founder’s Bio
+                                    </Link>
+                                  </li>
+                                  <li>
+                                    <Link
+                                      to="/origins#origins-giving-back"
+                                      className="hover:text-amber-300"
+                                    >
+                                      Giving Back To Those Who Served
+                                    </Link>
+                                  </li>
+                                  <li>
+                                    <Link
+                                      to="/origins#origins-about"
+                                      className="hover:text-amber-300"
+                                    >
+                                      About Old Ironsides Coffee
+                                    </Link>
+                                  </li>
+                                </ul>
+                              </div>
+
+                              <MegaSubscribeBox
+                                email={mmEmail}
+                                setEmail={setMmEmail}
+                                done={mmDone}
+                                onSubmit={submitMegaSubscribe}
+                              />
+                            </div>
+                          )}
+                        </Container>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Container>
+        </div>
+
+        {/* ==== MOBILE SLIDEOUT NAV (drawer) ==== */}
+        {mobileOpen && (
+          <div className="md:hidden fixed inset-0 left-0 top-0 z-[999] flex">
+            {/* slide panel on the left */}
+            <div className="w-[80%] max-w-[360px] h-full bg-neutral-950 shadow-xl ring-1 ring-neutral-800 flex flex-col">
+              {/* header row inside drawer */}
+              <div className="flex items-start justify-between p-4 border-b border-neutral-800">
+                <div className="text-left">
+                  <div
+                    className="text-base font-bold tracking-[0.18em] text-neutral-100 leading-snug"
+                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+                  >
+                    OLD IRONSIDES COFFEE
+                  </div>
+                  <div className="text-[12px] text-amber-300 leading-tight">
+                    Veteran-owned
+                  </div>
                 </div>
 
-                <div
-                  className={
-                    shrunk
-                      ? "text-xs md:text-sm text-amber-200 text-center"
-                      : "text-sm md:text-lg text-amber-200 text-center"
-                  }
+                <button
+                  type="button"
+                  onClick={() => setMobileOpen(false)}
+                  className="text-amber-300 text-2xl font-bold px-2"
+                  aria-label="Close menu"
                 >
-                  Ignite the Spirit, Savor the Victory!
+                  ✕
+                </button>
+              </div>
+
+              {/* nav links */}
+              <div className="flex-1 overflow-y-auto text-neutral-100 text-lg font-semibold">
+                <button
+                  className="w-full flex items-center justify-between px-4 py-4 border-b border-neutral-800 text-left"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    // navigate("/coffee") if you wire it
+                  }}
+                >
+                  <span>COFFEE</span>
+                  <span className="text-amber-300 text-2xl font-bold leading-none">
+                    +
+                  </span>
+                </button>
+
+                <button
+                  className="w-full flex items-center justify-between px-4 py-4 border-b border-neutral-800 text-left"
+                  onClick={() => {
+                    setMobileOpen(false);
+                  }}
+                >
+                  <span>GEAR</span>
+                  <span className="text-amber-300 text-2xl font-bold leading-none">
+                    +
+                  </span>
+                </button>
+
+                <button
+                  className="w-full flex items-center justify-between px-4 py-4 border-b border-neutral-800 text-left"
+                  onClick={() => {
+                    setMobileOpen(false);
+                  }}
+                >
+                  <span>ORIGINS &amp; VOYAGES</span>
+                  <span className="text-amber-300 text-2xl font-bold leading-none">
+                    +
+                  </span>
+                </button>
+
+                <Link
+                  to="/contact"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-4 py-4 border-b border-neutral-800 text-left"
+                >
+                  CONTACT THE CREW
+                </Link>
+
+                <Link
+                  to="/account"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-4 py-4 border-b border-neutral-800 text-left flex items-center gap-2 text-amber-300 text-lg"
+                >
+                  <span className="text-2xl leading-none">⚓</span>
+                  <span>My Fleet / Sign In</span>
+                </Link>
+
+                {/* benefits */}
+                <div className="px-4 py-4 text-base text-neutral-300 border-b border-neutral-800 leading-relaxed">
+                  <div className="text-amber-300 font-bold text-sm uppercase tracking-wide mb-2">
+                    Benefits
+                  </div>
+                  <div>20% OFF First Order</div>
+                  <div>Save 15% on subscriptions</div>
+                  <div>Free Shipping on 3+ Bags</div>
+                  <div>$1 off per bag for vets &amp; first responders</div>
                 </div>
-                <div
-                  className={
-                    shrunk
-                      ? "hidden md:block md:text-sm text-neutral-300 text-center"
-                      : "text-sm md:text-base text-neutral-300 text-center"
-                  }
-                >
-                  Proudly Veteran-owned
+
+                {/* contact */}
+                <div className="px-4 py-4 text-sm text-neutral-500 leading-relaxed">
+                  <div>6 Liberty Square #2564</div>
+                  <div>Boston, MA 02109</div>
+                  <div className="mt-2">
+                    <a
+                      href="mailto:HQ@oldironsidescoffee.org"
+                      className="text-neutral-300"
+                    >
+                      HQ@oldironsidescoffee.org
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* === NAV ROW (relative wrapper) ===
-   - nav is centered
-   - CHEST is absolutely pinned to the right INSIDE this row
-   - No padding shims, no overlap math */}
-            <div
-              className="relative mt-3"
-              onMouseEnter={cancelClose}
-              onMouseLeave={scheduleClose}
-            >
-              {/* CHEST pinned to the right of this row */}
-              <Link
-                to="/cart"
-                className="hidden md:flex items-center gap-3 h-11 px-4 rounded-xl
-             ring-1 ring-amber-400/60 bg-neutral-900/60 text-amber-300
-             hover:bg-amber-400 hover:text-neutral-900 transition shadow-lg
-             divide-x divide-neutral-700 z-30 absolute right-0 top-1/2 -translate-y-1/2"
-                aria-label="Open Chest (Cart)"
-                title="Chest"
-              >
-                <span className="flex items-center gap-2 pr-3">
-                  <ChestIcon className="h-6 w-6" />
-                  <span className="uppercase tracking-wide font-bold text-base md:text-lg">
-                    CHEST
-                  </span>
-                </span>
-                <span className="pl-3 font-bold tabular-nums text-base md:text-lg">
-                  {count ?? 0}
-                </span>
-              </Link>
-
-              {/* Centered nav */}
-              <nav className="flex justify-center">
-                <div className="flex items-center gap-6">
-                  {/* COFFEE */}
-                  <div
-                    onMouseEnter={() => {
-                      cancelClose();
-                      setOpenMega("coffee");
-                    }}
-                    className="relative"
-                  >
-                    <HeaderNavLink to="/coffee">SHOP COFFEE</HeaderNavLink>
-                  </div>
-
-                  {/* MERCH */}
-                  <div
-                    onMouseEnter={() => {
-                      cancelClose();
-                      setOpenMega("merch");
-                    }}
-                    className="relative"
-                  >
-                    <HeaderNavLink to="/store#merch">GEAR</HeaderNavLink>
-                  </div>
-
-                  {/* ORIGINS */}
-                  <div
-                    onMouseEnter={() => {
-                      cancelClose();
-                      setOpenMega("origins");
-                    }}
-                    className="relative"
-                  >
-                    <HeaderNavLink to="/origins">
-                      ORIGINS AND VOYAGES
-                    </HeaderNavLink>
-                  </div>
-
-                  {/* CONTACT */}
-                  <HeaderNavLink to="/contact">CONTACT THE CREW</HeaderNavLink>
-                </div>
-              </nav>
-
-              {/* Mega menu panel (full content, unchanged except wrapper positioning) */}
-              {openMega && (
-                <div
-                  ref={panelRef}
-                  className="absolute left-1/2 -translate-x-1/2 w-screen z-40"
-                  onMouseEnter={() => {
-                    const p = panelRef.current as any;
-                    if (p) p.__sticky = true;
-                  }}
-                  onMouseLeave={() => {
-                    const p = panelRef.current as any;
-                    if (p) p.__sticky = false;
-                    setTimeout(() => {
-                      const active =
-                        document.activeElement as HTMLElement | null;
-                      const within =
-                        !!panelRef.current &&
-                        ((!!active && panelRef.current.contains(active)) ||
-                          (panelRef.current as any).matches?.(":focus-within"));
-                      const until =
-                        (panelRef.current as any)?.__suppressUntil || 0;
-                      if (!within && Date.now() > until) setOpenMega(null);
-                    }, 600);
-                  }}
-                  onFocusCapture={() => {
-                    const p = panelRef.current as any;
-                    if (p) p.__sticky = true;
-                  }}
-                  onBlurCapture={() => {
-                    setTimeout(() => {
-                      const active =
-                        document.activeElement as HTMLElement | null;
-                      const within =
-                        !!panelRef.current &&
-                        ((!!active && panelRef.current.contains(active)) ||
-                          (panelRef.current as any).matches?.(":focus-within"));
-                      const until =
-                        (panelRef.current as any)?.__suppressUntil || 0;
-                      if (!within && Date.now() > until) setOpenMega(null);
-                    }, 600);
-                  }}
-                  onPointerDownCapture={() => {
-                    const p = panelRef.current as any;
-                    if (p) p.__suppressUntil = Date.now() + 2000;
-                  }}
-                  onKeyDownCapture={(e) => {
-                    if (e.key === "Tab" || e.key === "Enter") {
-                      const p = panelRef.current as any;
-                      if (p) p.__suppressUntil = Date.now() + 1200;
-                    }
-                  }}
-                >
-                  <div className="mt-2 border-t border-neutral-800">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-neutral-950/95 backdrop-blur" />
-                      <Container className="relative py-4 md:py-6">
-                        {/* COFFEE PANEL */}
-                        {openMega === "coffee" && (
-                          <div className="grid lg:grid-cols-[1fr,auto] gap-8 items-start">
-                            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                              {roastCards.map((card) => (
-                                <Link
-                                  key={`mega-roast-${card.id}`}
-                                  to={`/roast/${card.slug}`}
-                                  onClick={() => setOpenMega(null)}
-                                  className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
-                                >
-                                  <img
-                                    src={card.img}
-                                    alt={card.title}
-                                    className="h-52 sm:h-60 lg:h-60 w-full object-cover"
-                                  />
-                                  <div className="p-3">
-                                    <div
-                                      className="text-lg font-extrabold text-amber-300"
-                                      style={{
-                                        fontFamily: "'Cinzel', serif",
-                                        fontWeight: 800,
-                                      }}
-                                    >
-                                      {card.title}
-                                    </div>
-                                    <div className="text-xs text-neutral-400">
-                                      {card.variant}
-                                    </div>
-                                    <div className="text-xs md:text-sm text-neutral-300">
-                                      {card.subTitle}
-                                    </div>
-                                  </div>
-                                </Link>
-                              ))}
-                            </div>
-
-                            <MegaSubscribeBox
-                              email={mmEmail}
-                              setEmail={setMmEmail}
-                              done={mmDone}
-                              onSubmit={submitMegaSubscribe}
-                            />
-                          </div>
-                        )}
-
-                        {/* MERCH PANEL */}
-                        {openMega === "merch" && (
-                          <div className="grid lg:grid-cols-[1fr,auto] gap-8 items-start">
-                            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                              {merchTiles.map((t) => (
-                                <div
-                                  key={`mega-merch-${t.key}`}
-                                  className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 transition shadow-lg flex flex-col"
-                                >
-                                  <div className="h-52 sm:h-60 lg:h-60 w-full overflow-hidden">
-                                    <img
-                                      src={t.img}
-                                      alt={`${t.label} preview`}
-                                      className="h-full w-full object-cover"
-                                    />
-                                  </div>
-                                  <div className="p-3">
-                                    <div className="text-lg font-extrabold text-amber-300">
-                                      {t.label}
-                                    </div>
-                                    <div className="text-xs text-neutral-400">
-                                      Coming soon
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-
-                            <MegaSubscribeBox
-                              email={mmEmail}
-                              setEmail={setMmEmail}
-                              done={mmDone}
-                              onSubmit={submitMegaSubscribe}
-                              title="RING THAT BELL"
-                              subtitle={`Get first access to gear.
-                              Plus 20% off your first coffee order.`}
-                              buttonText="GET 20% OFF"
-                            />
-                          </div>
-                        )}
-
-                        {/* ORIGINS PANEL */}
-                        {openMega === "origins" && (
-                          <div className="grid md:grid-cols-[auto,1fr,auto] gap-8 items-start">
-                            <Link
-                              to="/coffee"
-                              onClick={() => setOpenMega(null)}
-                              className="group block rounded-2xl overflow-hidden ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition text-center justify-self-center md:justify-self-start w-40 sm:w-48 md:w-56"
-                            >
-                              <div className="aspect-[4/3] w-full overflow-hidden">
-                                <img
-                                  src={flagship?.img || "Flagship-web.png"}
-                                  alt="Shop Coffee"
-                                  className="h-full w-full object-cover"
-                                />
-                              </div>
-                              <div className="p-3">
-                                <div className="text-sm md:text-base text-amber-300 font-semibold group-hover:underline">
-                                  Shop Coffee
-                                </div>
-                              </div>
-                            </Link>
-
-                            <div className="justify-self-center">
-                              <ul className="space-y-2 text-neutral-300 text-sm md:text-base">
-                                <li>
-                                  <Link
-                                    to="/origins#origins-roasting"
-                                    onClick={() => setOpenMega(null)}
-                                    className="hover:text-amber-300"
-                                  >
-                                    Roasting Process
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="/origins#origins-lands"
-                                    className="hover:text-amber-300"
-                                  >
-                                    The Lands Where Our Beans Are Grown
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="/origins#origins-hands"
-                                    className="hover:text-amber-300"
-                                  >
-                                    The Hands That Grow Our Beans
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="/origins#origins-history"
-                                    className="hover:text-amber-300"
-                                  >
-                                    The History Behind The Fleet
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="/origins#origins-service"
-                                    className="hover:text-amber-300"
-                                  >
-                                    Founder’s Bio
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="/origins#origins-giving-back"
-                                    className="hover:text-amber-300"
-                                  >
-                                    Giving Back To Those Who Served
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    to="/origins#origins-about"
-                                    className="hover:text-amber-300"
-                                  >
-                                    About Old Ironsides Coffee
-                                  </Link>
-                                </li>
-                              </ul>
-                            </div>
-
-                            <MegaSubscribeBox
-                              email={mmEmail}
-                              setEmail={setMmEmail}
-                              done={mmDone}
-                              onSubmit={submitMegaSubscribe}
-                            />
-                          </div>
-                        )}
-                      </Container>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            {/* dim backdrop on the REST of screen to the right.
+       clicking it closes. */}
+            <button
+              className="flex-1 bg-black/60"
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close menu backdrop"
+            />
           </div>
-        </Container>
+        )}
       </header>
 
       {/* spacer so content doesn’t hide under header */}
       <div
         className={
           isHome
-            ? "h-[175px] md:h-[205px]" // HOME
+            ? "h-[210px] md:h-[205px]"
             : isFleet
-            ? "h-[130px] md:h-[150px]" // FLEET
+            ? "h-[180px] md:h-[150px]"
             : isRoast
-            ? "h-[160px] md:h-[190px]" // ROAST
+            ? "h-[190px] md:h-[190px]"
             : isOrigins
-            ? "h-[180px] md:h-[210px]" // ORIGINS
+            ? "h-[200px] md:h-[210px]"
             : isSupport
-            ? "h-[170px] md:h-[200px]" // SUPPORT (legal/contact)
-            : "h-[140px] md:h-[160px]" // Default
+            ? "h-[190px] md:h-[200px]"
+            : "h-[180px] md:h-[160px]"
         }
       />
 
+      {/* page body */}
       <Outlet />
+
+      {/* footer */}
       <footer className="border-t border-neutral-800 bg-neutral-950">
         <Container className="py-8 text-sm">
           <div className="grid md:grid-cols-4 gap-8">
@@ -8195,12 +8680,12 @@ function Layout() {
                 OLD IRONSIDES COFFEE
               </div>
 
-              {/* Vet line (aligned with Support) */}
+              {/* Vet line */}
               <div className="mt-0 md:mt-0 text-base text-neutral-300 leading-tight">
                 Veteran-owned and operated.
               </div>
 
-              {/* Flag, centered just below vet line */}
+              {/* Flag */}
               <img
                 src="/stars-stripes.png"
                 alt="American flag"
@@ -8217,7 +8702,7 @@ function Layout() {
                     className="text-neutral-300 hover:text-amber-300"
                     to="/legal/shipping"
                   >
-                    Roast & Shipping
+                    Roast &amp; Shipping
                   </Link>
                 </li>
                 <li>
@@ -8323,6 +8808,7 @@ function Layout() {
     </div>
   );
 }
+
 // === Roast CTA helper (ET-aware) ===
 <RoastCTAInfo />;
 const ET_ZONE = "America/New_York";

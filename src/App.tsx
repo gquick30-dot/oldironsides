@@ -1124,7 +1124,7 @@ function HomePage() {
             className="w-full h-full object-contain object-center"
           />
           {/* dark overlay for readability */}
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-black/20" />
         </div>
 
         {/* DESKTOP original emblem + radial glow */}
@@ -1137,7 +1137,7 @@ function HomePage() {
         <div className="hidden md:block absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
 
         {/* content wrapper sits on top */}
-        <Container className="relative desktopHeroPad pt-60 pb-10 sm:pt-64 sm:pb-14">
+        <Container className="relative desktopHeroPad pt-[26rem] pb-10 sm:pt-[24rem] sm:pb-14">
           <style>{`
             @media (min-width: 768px) {
               #top .desktopHeroPad {
@@ -1173,36 +1173,34 @@ function HomePage() {
 
                     {/* HEADLINE */}
                     <h2
-                      className="text-amber-400 font-extrabold leading-snug tracking-tight
-                text-[1.5rem] sm:text-[1.7rem] md:text-[2.1rem]"
-                      style={{ fontFamily: "'Cinzel', serif" }}
-                    >
-                      PREMIUM, SMALL-BATCH COFFEE
-                    </h2>
+  className="text-amber-400 font-extrabold leading-snug tracking-tight
+                text-[1.25rem] sm:text-[1.5rem] md:text-[2.1rem]"
+  style={{ fontFamily: "'Cinzel', serif" }}
+>
+  PREMIUM, SMALL-BATCH COFFEE
+</h2>
+
 
                     {/* bullet line */}
-                    <div className="mt-2 text-neutral-300 text-xs sm:text-sm md:text-lg">
-                      <span>Ethically Sourced</span>
-                      <span className="mx-1.5 text-amber-400/70" aria-hidden>
-                        •
-                      </span>
-                      <span>Roasted to Order</span>
-                      <span className="mx-1.5 text-amber-400/70" aria-hidden>
-                        •
-                      </span>
-                      <span>Veteran-owned</span>
-                      <span className="mx-1.5 text-amber-400/70" aria-hidden>
-                        •
-                      </span>
-                      <a
-                        href="https://www.govx.com/govx-id/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-amber-200 underline-offset-2 hover:underline"
-                      >
-                        GovX Partner
-                      </a>
-                    </div>
+                    <div className="mt-0 text-neutral-300 text-[13px] sm:text-sm md:text-lg">
+  <span>Roasted To Order</span>
+  <span className="mx-1.5 text-amber-400/70" aria-hidden>
+    •
+  </span>
+  <span>Ethically Sourced</span>
+  <span className="mx-1.5 text-amber-400/70" aria-hidden>
+    •
+  </span>
+  <a
+    href="https://www.govx.com/govx-id/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:text-amber-200 underline-offset-2 hover:underline"
+  >
+    GovX Partner
+  </a>
+</div>
+
 
                     {/* CTA */}
                     <div aria-hidden className="h-2 md:h-3" />
@@ -1212,7 +1210,7 @@ function HomePage() {
                         className="w-full inline-flex items-center justify-center gap-2
                     px-6 py-3 sm:px-8 sm:py-4
                     rounded-xl bg-neutral-900 text-amber-400 font-extrabold
-                    text-base sm:text-lg md:text-2xl tracking-wide
+                    text-xl sm:text-lg md:text-2xl tracking-wide
                     border border-amber-500 shadow-xl shadow-amber-500/20
                     hover:bg-amber-400 hover:text-neutral-900
                     transition-all duration-200"
@@ -8040,53 +8038,92 @@ function Layout() {
 
       {/* ===== HEADER (desktop + mobile) ===== */}
       <header className="fixed top-0 inset-x-0 z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800">
-        {/* === TOP PROMO BAR === */}
-        {/* === MOBILE PROMO + BRAND ROW === */}
-        <div className="md:hidden border-b border-neutral-800 bg-neutral-950">
-          {/* promo block mobile: smaller text, 2 lines max, centered */}
-          <div className="px-4 py-2 text-center text-[13px] font-semibold leading-tight text-amber-300 space-y-1">
-            <div>Join The Fleet &amp; Save 15%</div>
-            <div>Free Shipping on 3+ Bags • GovX Partner</div>
-          </div>
+       {/* === MOBILE HEADER TALL v3 === */}
+<div className="md:hidden border-b border-neutral-800 bg-neutral-950">
+  {/* promo strip */}
+  <div className="px-3 py-2 text-center text-[12px] font-semibold leading-tight text-amber-300 truncate border-b border-neutral-800">
+    <button
+      type="button"
+      onClick={() =>
+        document.dispatchEvent(
+          new CustomEvent("promo-subscribe", {
+            bubbles: true,
+            composed: true,
+          })
+        )
+      }
+      className="hover:text-amber-200 underline-offset-2 hover:underline"
+    >
+      20% Off First Order
+    </button>
+    <span className="mx-1 text-neutral-500">|</span>
+    <Link
+      to="/legal/shipping"
+      className="hover:text-amber-200 underline-offset-2 hover:underline"
+    >
+      Free Shipping on 3+ Bags
+    </Link>
+  </div>
 
-          {/* brand row mobile: burger | emblem | fleet */}
-          <div className="flex items-center justify-between px-4 py-3 border-t border-neutral-800">
-            {/* burger button */}
-            <button
-              type="button"
-              onClick={() => setMobileOpen(true)}
-              className="flex flex-col justify-center gap-[6px] text-amber-300"
-              aria-label="Open menu"
-            >
-              <span className="block w-8 h-[3px] bg-amber-300" />
-              <span className="block w-8 h-[3px] bg-amber-300" />
-              <span className="block w-8 h-[3px] bg-amber-300" />
-            </button>
+  {/* brand block full width on its own row */}
+  <Link
+    to="/"
+    aria-label="Old Ironsides Coffee Home"
+    className="block px-4 pt-3 pb-2 text-center leading-tight"
+  >
+    <div
+      className="text-[21.5px] font-bold tracking-[0.18em] text-neutral-300"
+      style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+    >
+      OLD IRONSIDES COFFEE
+    </div>
+    <div className="text-[12px] text-amber-200">
+      Ignite the Spirit, Savor the Victory!
+    </div>
+    
+  </Link>
 
-            {/* emblem acts as home link */}
-            <Link
-              to="/"
-              aria-label="Old Ironsides Coffee Home"
-              className="flex-shrink-0"
-            >
-              <img
-                src="/emblem-black.png"
-                alt="Old Ironsides Coffee Company"
-                className="w-auto object-contain md:h-10"
-                style={{ height: "9rem", maxHeight: "9rem" }}
-              />
-            </Link>
+  {/* row 2: burger left / icons right */}
+  <div className="flex items-start justify-between px-4 pb-3">
+    {/* left: burger */}
+    <button
+      type="button"
+      onClick={() => setMobileOpen(true)}
+      className="flex flex-col justify-center gap-[4px] text-amber-300 pt-1"
+      aria-label="Open menu"
+    >
+      <span className="block w-8 h-[3px] bg-amber-300" />
+      <span className="block w-8 h-[3px] bg-amber-300" />
+      <span className="block w-8 h-[3px] bg-amber-300" />
+    </button>
 
-            {/* My Fleet link */}
-            <Link
-              to="/account"
-              className="flex flex-col items-end text-right text-amber-300 text-sm font-semibold leading-tight"
-            >
-              <span className="text-xl leading-none">⚓</span>
-              <span>My Fleet</span>
-            </Link>
-          </div>
-        </div>
+    {/* right icons */}
+    <div className="flex items-start gap-4 text-amber-300">
+      {/* chest/cart */}
+      <Link
+        to="/cart"
+        aria-label="Open Chest (Cart)"
+        title="Chest"
+        className="relative flex flex-col items-center text-center leading-none"
+      >
+        <ChestIcon className="h-6 w-6" />
+        <span className="absolute -top-1 -right-2 text-[10px] font-bold tabular-nums bg-neutral-900 rounded px-1 py-[1px] ring-1 ring-amber-400/60 text-amber-300 leading-none">
+          {count ?? 0}
+        </span>
+      </Link>
+
+      {/* sign in / my fleet */}
+      <Link
+        to="/account"
+        aria-label="My Fleet / Sign In"
+        className="flex flex-col items-center text-center leading-none text-neutral-300 hover:text-amber-300"
+      >
+        <span className="text-xl leading-none text-amber-300">⚓</span>
+      </Link>
+    </div>
+  </div>
+</div>
+
 
         {/* === DESKTOP TOP BAR === */}
         <div className="hidden md:block border-b border-neutral-800 bg-neutral-950">
@@ -8653,7 +8690,7 @@ function Layout() {
       <div
         className={
           isHome
-            ? "h-[210px] md:h-[205px]"
+            ? "h-[105px] md:h-[205px]"
             : isFleet
             ? "h-[180px] md:h-[150px]"
             : isRoast
@@ -8899,42 +8936,95 @@ function RoastCTAInfo() {
   const dateLabel = formatEtDate(roastMonday);
 
   return (
-    <div className="mt-3 text-center leading-tight">
-      {state === "countdown" ? (
-        <div className="space-y-1">
-          <div className="text-lg md:text-lg text-neutral-300 font-medium">
-            Next batch roasts:{" "}
-            <span className="text-amber-300">{dateLabel}</span>{" "}
-            <span className="text-neutral-400"></span>
+    <>
+      {/* MOBILE VERSION */}
+      <div className="mt-3 text-center leading-tight md:hidden">
+        {state === "countdown" ? (
+          // countdown phase (Thu morning -> Sun 5pm ET)
+          <div className="space-y-1">
+            <div className="text-m text-neutral-300">
+              Time left to make the next roast:
+              {" "}
+              <span className="text-amber-300">{left}</span>
+            </div>
+            <div className="text-[14px] text-neutral-400">
+              Secure your fresh order now.
+            </div>
           </div>
-          <div className="text-xs md:text-sm text-neutral-400">
-            Time left to make the next roast:{" "}
-            <span className="text-amber-300">{left}</span> <br /> Secure your
-            fresh order now.
+        ) : state === "closed" ? (
+          // after cutoff passed, next roast date known, preorder
+          <div className="space-y-1">
+            <div className="text-sm text-neutral-300 font-medium">
+              Next batch roasts:
+              {" "}
+              <span className="text-amber-300">{dateLabel}</span>
+            </div>
+            <div className="text-[11px] text-neutral-400">
+              Reserve your bag today
+            </div>
           </div>
-        </div>
-      ) : state === "closed" ? (
-        <div className="space-y-1">
-          <div className="text-lg md:text-lg text-neutral-300 font-medium">
-            Next batch roasts:{" "}
-            <span className="text-amber-300">{dateLabel}</span>{" "}
-            <span className="text-neutral-400"></span>
+        ) : (
+          // normal early-week state
+          <div className="space-y-1">
+            <div className="text-sm text-neutral-300">
+              <span className="font-medium">Next batch roasts:</span>
+              {" "}
+              <span className="text-amber-300">{dateLabel}</span>
+              {" "}
+              <span className="text-neutral-400">(ET)</span>
+            </div>
           </div>
-          <div className="text-m md:text-m text-neutral-400">
-            Reserve your bag today
+        )}
+      </div>
+
+      {/* DESKTOP / TABLET VERSION (unchanged behavior) */}
+      <div className="mt-3 text-center leading-tight hidden md:block">
+        {state === "countdown" ? (
+          <div className="space-y-1">
+            <div className="text-lg md:text-lg text-neutral-300 font-medium">
+              Next batch roasts:
+              {" "}
+              <span className="text-amber-300">{dateLabel}</span>
+              {" "}
+              <span className="text-neutral-400"></span>
+            </div>
+            <div className="text-m md:text-m text-neutral-400">
+              Time left to make the next roast:
+              {" "}
+              <span className="text-amber-300">{left}</span>
+              {" "}
+              <br />
+              Secure your fresh order now.
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="space-y-1">
-          <div className="text-xs md:text-sm text-neutral-300">
-            <span className="font-medium">Next batch roasts:</span>{" "}
-            <span className="text-amber-300">{dateLabel}</span>{" "}
-            <span className="text-neutral-400">(ET)</span>
+        ) : state === "closed" ? (
+          <div className="space-y-1">
+            <div className="text-lg md:text-lg text-neutral-300 font-medium">
+              Next batch roasts:
+              {" "}
+              <span className="text-amber-300">{dateLabel}</span>
+              {" "}
+              <span className="text-neutral-400"></span>
+            </div>
+            <div className="text-m md:text-m text-neutral-400">
+              Reserve your bag today
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        ) : (
+          <div className="space-y-1">
+            <div className="text-xs md:text-sm text-neutral-300">
+              <span className="font-medium">Next batch roasts:</span>
+              {" "}
+              <span className="text-amber-300">{dateLabel}</span>
+              {" "}
+              <span className="text-neutral-400">(ET)</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
+
 }
 
 /* ================= App Entrypoint ================= */

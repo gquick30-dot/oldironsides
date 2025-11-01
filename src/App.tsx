@@ -54,6 +54,114 @@ declare global {
     __REVIEWS__?: Record<string, { stats?: ReviewStats; list?: Review[] }>;
   }
 }
+// ===== SEEDED REVIEWS PER ROAST (copied from RoastDetailPage) =====
+const SEEDED: Record<string, Review[]> = {
+  flagship: [
+    { id: "f8", name: "Ryan C.", date: "September 28, 2025", rating: 5, title: "Perfect Morning Brew", body: "Perfect morning coffee.", source: "seed" },
+    { id: "f3", name: "Paul", date: "October 7, 2025", rating: 4, title: "Solid Medium Roast", body: "Really balanced cup. I’d order it again. Only thing is I wish shipping was a little faster but the roast itself is great.", source: "seed" },
+    { id: "f14", name: "S.R.", date: "September 16, 2025", rating: 5, title: "Love This Roast!", body: "Love this roast!", source: "seed" },
+    { id: "f1", name: "Jacob S.", date: "October 12, 2025", rating: 5, title: "Steady and Smooth", body: "Smooth every single time. No bitterness at all. I drink it black and it goes down clean.", source: "seed" },
+    { id: "f10", name: "Chris", date: "September 25, 2025", rating: 5, title: "Great Every Morning", body: "Great coffee.", source: "seed" },
+    { id: "f6", name: "K.W.", date: "October 2, 2025", rating: 5, title: "Best Coffee for Work", body: "I brew this at work and people literally come by my desk asking what it is. Smells amazing and tastes even better.", source: "seed" },
+    { id: "f12", name: "Derek", date: "September 20, 2025", rating: 5, title: "Excellent Flavor", body: "Really smooth with cream or without. Flavor holds up and doesn’t go watery.", source: "seed" },
+    { id: "f2", name: "Megan T.", date: "October 9, 2025", rating: 5, title: "Nice Aroma", body: "The smell when you open the bag is insane. Taste is smooth and not acidic at all.", source: "seed" },
+    { id: "f7", name: "V.H.", date: "September 30, 2025", rating: 5, title: "Clean Finish", body: "Super clean finish. No weird aftertaste. This is my new daily coffee.", source: "seed" },
+    { id: "f4", name: "Nate", date: "October 5, 2025", rating: 5, title: "Perfect for the Office", body: "Total hit at work.", source: "seed" },
+    { id: "f11", name: "L.K.", date: "September 23, 2025", rating: 5, title: "Great Taste, Great Price", body: "Smooth, not too acidic, great taste. Way better than grocery store coffee and honestly cheaper than what I was overpaying for before.", source: "seed" },
+    { id: "f16", name: "Trent", date: "September 12, 2025", rating: 5, title: "Always Delicious", body: "Always good.", source: "seed" },
+    { id: "f5", name: "Erika L.", date: "October 4, 2025", rating: 5, title: "Great Taste, No Complaints", body: "No bitterness at all. I drink it black and it’s just smooth and easy. Zero aftertaste.", source: "seed" },
+    { id: "f15", name: "A.M.", date: "September 14, 2025", rating: 4, title: "The Best Medium Roast", body: "This is my go-to medium roast now. Really balanced and not harsh. I’d love to see them add a light roast too.", source: "seed" },
+    { id: "f13", name: "Owen", date: "September 18, 2025", rating: 5, title: "Excellent All-Around", body: "New favorite.", source: "seed" },
+    { id: "f9", name: "Amanda G.", date: "September 27, 2025", rating: 4, title: "A Great Classic", body: "This one became my normal morning cup fast. Super consistent. Only complaint is I wish the bag was bigger.", source: "seed" },
+  ],
+
+  "baptism-by-fire": [
+    { id: "b8", name: "Helen", date: "September 27, 2025", rating: 5, title: "Bold and Smooth", body: "Was not a dark roast person until this. Bold but not burnt tasting. I actually drink this black.", source: "seed" },
+    { id: "b3", name: "N.F.", date: "October 6, 2025", rating: 4, title: "Perfect Dark Roast", body: "Best dark roast I’ve had.", source: "seed" },
+    { id: "b10", name: "Zack", date: "September 24, 2025", rating: 5, title: "Best Dark Roast", body: "Dark, rich, smooth. No bitterness at all. This is exactly what I want in a dark roast.", source: "seed" },
+    { id: "b6", name: "Cara S.", date: "October 1, 2025", rating: 5, title: "Smooth and Bold", body: "Crazy smooth.", source: "seed" },
+    { id: "b1", name: "Tom", date: "October 10, 2025", rating: 5, title: "Deep, Rich Flavor", body: "Strong without going bitter. You get that heavy, rich taste but it still finishes smooth. Wakes me up fast.", source: "seed" },
+    { id: "b12", name: "P.Q.", date: "September 20, 2025", rating: 4, title: "Perfectly Dark", body: "Really nice deep roast. Bold, kind of chocolatey, and not burnt. I’d buy again.", source: "seed" },
+    { id: "b2", name: "Sarah", date: "October 8, 2025", rating: 5, title: "Love the Richness", body: "That dark chocolate note is legit. I drink this after dinner like dessert.", source: "seed" },
+    { id: "b13", name: "G.L.", date: "September 18, 2025", rating: 5, title: "Great Dark Roast", body: "Super smooth dark roast.", source: "seed" },
+    { id: "b4", name: "Jose M.", date: "October 4, 2025", rating: 5, title: "Rich and Flavorful", body: "Deep roast flavor without that burnt taste you get in a lot of dark coffee. Very clean finish.", source: "seed" },
+    { id: "b7", name: "Walt", date: "September 29, 2025", rating: 4, title: "Amazing Dark Roast", body: "I add a splash of milk and it’s perfect. Bold but not harsh. I’ll keep buying this one.", source: "seed" },
+    { id: "b14", name: "Mike B.", date: "September 16, 2025", rating: 5, title: "Fantastic Dark Roast", body: "So smooth.", source: "seed" },
+    { id: "b11", name: "Anna", date: "September 22, 2025", rating: 5, title: "Perfect for Dark Roast Lovers", body: "If you’re into dark coffee, this is it. Rich, smooth, zero bitterness. I’m getting more.", source: "seed" },
+    { id: "b5", name: "E.J.", date: "October 3, 2025", rating: 5, title: "Not Too Bitter", body: "Bold but not bitter.", source: "seed" },
+    { id: "b9", name: "Ivy", date: "September 26, 2025", rating: 5, title: "Love This Roast", body: "Best dark roast ever.", source: "seed" },
+  ],
+
+  "java-action": [
+    { id: "j10", name: "Rae", date: "September 25, 2025", rating: 5, title: "Great for the Morning", body: "Light caramel taste, super smooth, easy first cup. Not harsh at all.", source: "seed" },
+    { id: "j4", name: "T.B.", date: "October 5, 2025", rating: 5, title: "Love the Hazelnut Taste", body: "Love this flavor.", source: "seed" },
+    { id: "j7", name: "Iris", date: "September 29, 2025", rating: 5, title: "Full Body, Smooth Finish", body: "Full body but still smooth. You get a tiny caramel note at the end that’s actually really nice.", source: "seed" },
+    { id: "j3", name: "O.H.", date: "October 6, 2025", rating: 4, title: "Easy to Drink", body: "Easy to drink.", source: "seed" },
+    { id: "j13", name: "Tim", date: "September 19, 2025", rating: 4, title: "Great for Sharing", body: "I made a pot when people were over and everyone asked what coffee it was. Zero leftovers. That kinda sold me.", source: "seed" },
+    { id: "j2", name: "Jen L.", date: "October 7, 2025", rating: 5, title: "Smooth and Delicious", body: "No bitterness at all. Just smooth and a little caramel at the end. Super easy cup.", source: "seed" },
+    { id: "j11", name: "L.V.", date: "September 23, 2025", rating: 5, title: "A Perfect Cup", body: "Perfect morning coffee.", source: "seed" },
+    { id: "j8", name: "Caleb D.", date: "September 28, 2025", rating: 5, title: "Great Flavor!", body: "Hazelnut and caramel are there but not fake or syrupy. Just smooth, good coffee.", source: "seed" },
+    { id: "j1", name: "Mark", date: "October 9, 2025", rating: 5, title: "Easy Favorite", body: "My favorite one.", source: "seed" },
+    { id: "j6", name: "S.W.", date: "October 1, 2025", rating: 4, title: "Perfect Balance", body: "Right in the middle for me. Not too light, not too strong. Very steady cup and not acidic.", source: "seed" },
+    { id: "j15", name: "Cole", date: "September 15, 2025", rating: 5, title: "Very Pleasant", body: "Really smooth.", source: "seed" },
+    { id: "j5", name: "G.P.", date: "October 3, 2025", rating: 5, title: "Smooth and Tasty", body: "Great taste.", source: "seed" },
+    { id: "j14", name: "Maya", date: "September 17, 2025", rating: 5, title: "Great Cup", body: "No weird aftertaste. Just clean and easy. I’ve been drinking this every day.", source: "seed" },
+    { id: "j12", name: "Becca Y.", date: "September 21, 2025", rating: 5, title: "Crowd Favorite", body: "Everyone loves this one at my house. No complaints from anybody.", source: "seed" },
+    { id: "j9", name: "N.M.", date: "September 26, 2025", rating: 4, title: "Balanced and Smooth", body: "Really smooth cup. Could be a touch stronger, but still super drinkable.", source: "seed" },
+  ],
+
+  "oak-and-copper": [
+    { id: "o10", name: "I.D.", date: "September 28, 2025", rating: 5, title: "Love the Oak Flavor", body: "Oak and caramel come through and it’s still smooth. Slightly sweet finish, not fake sweet. I’m into it.", source: "seed" },
+    { id: "o3", name: "Harper", date: "October 8, 2025", rating: 4, title: "Bourbon Barrel Taste", body: "Great barrel flavor.", source: "seed" },
+    { id: "o6", name: "S.R.", date: "October 4, 2025", rating: 5, title: "Great for Weekend Mornings", body: "Weekend coffee for sure. Just smooth, little vanilla note, little oak at the end. Chill and slow kind of cup.", source: "seed" },
+    { id: "o1", name: "Quinn P.", date: "October 11, 2025", rating: 5, title: "Smooth with a Kick", body: "Super smooth.", source: "seed" },
+    { id: "o12", name: "Zoe", date: "September 24, 2025", rating: 5, title: "Amazing Flavor", body: "I drink this after dinner. Slight sweetness, oak finish, really calm and warm cup. I love it at night.", source: "seed" },
+    { id: "o4", name: "Kurt E.", date: "October 7, 2025", rating: 5, title: "Subtle Bourbon Flavor", body: "Not fake sweet, not overpowering. You can tell it was barrel aged in a good way.", source: "seed" },
+    { id: "o9", name: "Mia C.", date: "September 30, 2025", rating: 4, title: "Smooth and Balanced", body: "Smooth and mellow.", source: "seed" },
+    { id: "o2", name: "Dana", date: "October 9, 2025", rating: 5, title: "Wonderful Oak Finish", body: "That oak note at the end is perfect. Super smooth even with a splash of cream.", source: "seed" },
+    { id: "o7", name: "Y.T.", date: "October 3, 2025", rating: 5, title: "Great for Coffee Lovers", body: "So smooth.", source: "seed" },
+    { id: "o11", name: "Nora", date: "September 26, 2025", rating: 5, title: "Rich and Flavorful", body: "Little vanilla, little oak, just super rich and warming. Honestly kind of addicting.", source: "seed" },
+    { id: "o5", name: "E.F.", date: "October 6, 2025", rating: 5, title: "Perfectly Aged", body: "Really well balanced.", source: "seed" },
+    { id: "o13", name: "Eli", date: "September 22, 2025", rating: 4, title: "Nice Oak Note", body: "Smooth, a little sweet, not bitter. Super easy drinker.", source: "seed" },
+    { id: "o8", name: "V.K.", date: "October 2, 2025", rating: 5, title: "Great for Coffee Enthusiasts", body: "New favorite.", source: "seed" },
+  ],
+};
+
+// same computeStats you already wrote in RoastDetailPage
+function computeStats(list: Review[]): ReviewStats {
+  const count = list.length;
+  if (count === 0) {
+    return { avg: 0, count: 0, breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } };
+  }
+
+  const breakdown: Record<number, number> = {
+    5: 0,
+    4: 0,
+    3: 0,
+    2: 0,
+    1: 0,
+  };
+
+  let sum = 0;
+  for (const r of list) {
+    sum += r.rating;
+    breakdown[r.rating] = (breakdown[r.rating] || 0) + 1;
+  }
+
+  const avg = Math.round((sum / count) * 10) / 10;
+  return { avg, count, breakdown };
+}
+
+// precompute summary for each roast
+const DEFAULT_REVIEW_SUMMARY: Record<
+  string,
+  { avg: number; count: number }
+> = Object.fromEntries(
+  Object.entries(SEEDED).map(([slug, list]) => {
+    const stats = computeStats(list);
+    return [slug, { avg: stats.avg, count: stats.count }];
+  })
+);
 
 export {}; // keep this file a module so the global merge works
 // ----------------------------------------------------------------------
@@ -941,6 +1049,57 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
   const dateLabel = formatEtDate(roastMonday);
   const nextInfo = state === "countdown" && left ? left : dateLabel;
 
+  // refs + state for mobile carousel
+  const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const cardRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
+  const [currentIdx, setCurrentIdx] = React.useState(0);
+
+  // helper: scroll to a given index (wrap safe)
+  const scrollToIndex = React.useCallback(
+    (idx: number) => {
+      const clamped =
+        ((idx % roastCards.length) + roastCards.length) % roastCards.length;
+      const el = cardRefs.current[clamped];
+      if (el && scrollRef.current) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+      }
+      setCurrentIdx(clamped);
+    },
+    [roastCards.length]
+  );
+
+  // arrow handlers
+  const handlePrev = React.useCallback(() => {
+    scrollToIndex(currentIdx - 1);
+  }, [currentIdx, scrollToIndex]);
+
+  const handleNext = React.useCallback(() => {
+    scrollToIndex(currentIdx + 1);
+  }, [currentIdx, scrollToIndex]);
+
+  // sync index when user swipes manually
+  const handleScroll = React.useCallback(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const scrollLeft = container.scrollLeft;
+
+    let bestIdx = 0;
+    let bestDist = Infinity;
+    cardRefs.current.forEach((cardEl, idx) => {
+      if (!cardEl) return;
+      const dist = Math.abs(cardEl.offsetLeft - scrollLeft);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestIdx = idx;
+      }
+    });
+    setCurrentIdx(bestIdx);
+  }, []);
+
   return (
     <section
       id="fleet"
@@ -965,11 +1124,11 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         className={`relative z-10 ${isStore ? "pt-8 sm:pt-10 md:pt-16" : ""}`}
       >
         {/* header row: title + (maybe) back button */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between text-center md:text-left">
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between text-center md:text-left">
           <SectionTitle
             title={
               <span
-                className="block text-2xl sm:text-3xl md:text-5xl font-bold text-amber-300 tracking-tight"
+                className="block md:inline md:whitespace-nowrap text-2xl sm:text-3xl md:text-5xl font-bold text-amber-300 tracking-tight"
                 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
               >
                 LAUNCHED FROM THE HARBOR
@@ -977,21 +1136,27 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             }
             subtitle={
               <>
-                <div className="text-neutral-300 font-normal mb-4 text-base sm:text-lg md:text-xl tracking-tight">
+                {/* desktop-only tagline */}
+                <div className="hidden md:block text-neutral-300 font-normal text-base sm:text-lg md:text-xl tracking-tight mb-2">
                   Our premium roasts, crafted for modern legends.
                 </div>
 
-                <div className="mt-1 text-neutral-300 text-base sm:text-lg">
-                  <span>Roasted to order</span>
-                  <span className="mx-1.5 text-amber-400/70" aria-hidden>
-                    •
-                  </span>
-                  <span>Reserve your fresh coffee today</span>
-                  <span className="mx-1.5 text-amber-400/70" aria-hidden>
-                    •
-                  </span>
-                  <span>Next roast date: </span>
-                  <span className="text-amber-400">{nextInfo}</span>
+                {/* info lines */}
+                <div className="text-neutral-300 text-base sm:text-lg font-normal tracking-tight flex flex-col items-center md:items-start gap-1">
+                  {/* line 1: Roast CTA */}
+                  <div className="whitespace-nowrap">
+                    <span>Roasted to Order</span>
+                    <span className="mx-1.5 text-amber-400/70" aria-hidden>
+                      •
+                    </span>
+                    <span>Order your fresh coffee now.</span>
+                  </div>
+
+                  {/* line 2: Next Roast Date: <value>  (same line now, both mobile + desktop) */}
+                  <div className="text-center md:text-left whitespace-nowrap">
+                    <span>Next Roast Date: </span>
+                    <span className="text-amber-400">{nextInfo}</span>
+                  </div>
                 </div>
               </>
             }
@@ -1005,81 +1170,357 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
           )}
         </div>
 
-        {/* cards grid */}
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {roastCards.map((card) => {
-            const base = card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
-            const sub = Math.round(base * 0.85 * 100) / 100; // 15% off
+        {/* tighten gap before cards */}
+        <div className="mt-4">
+          {/* mobile: 1-card swipe carousel with arrows */}
+          <div className="relative md:hidden">
+            {/* scroll row */}
+            <div
+              ref={scrollRef}
+              onScroll={handleScroll}
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 pl-4 pr-4 no-scrollbar scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none]"
+              style={{ WebkitOverflowScrolling: "touch" }}
+            >
+              {roastCards.map((card, idx) => {
+                const base =
+                  card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
+                const sub = Math.round(base * 0.85 * 100) / 100; // 15% off
 
-            return (
-              <Link
-                key={card.id}
-                to={`/roast/${card.slug}`}
-                aria-label={`${card.title} details`}
-                className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col"
-              >
-                <img
-                  src={card.img}
-                  alt={card.title}
-                  className="w-full h-64 sm:h-80 md:h-[28rem] object-cover"
-                  loading="lazy"
-                  decoding="async"
-                  onError={(e) => {
-                    const el = e.currentTarget as HTMLImageElement;
-                    if (!el.src.includes("/placeholder.png")) {
-                      el.src = "/placeholder.png";
-                    }
-                  }}
-                />
-
-                <div className="p-5 flex flex-col flex-1 text-center md:text-left">
-                  <h3
-                    className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-amber-300"
-                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                return (
+                  <Link
+                    key={card.id}
+                    to={`/roast/${card.slug}`}
+                    aria-label={`${card.title} details`}
+                    ref={(el) => {
+                      cardRefs.current[idx] = el;
+                    }}
+                    className="
+              snap-center shrink-0
+              w-[88vw] max-w-[88vw]
+              rounded-2xl ring-1 ring-amber-400/60
+              bg-neutral-900/40 shadow-lg shadow-amber-400/10
+              hover:ring-amber-300 hover:bg-neutral-900
+              transition flex flex-col
+            "
                   >
-                    {card.title}
-                  </h3>
+                    <img
+                      src={card.img}
+                      alt={card.title}
+                      className="w-full h-96 object-cover rounded-t-2xl"
+                      loading="lazy"
+                      decoding="async"
+                      onError={(e) => {
+                        const el = e.currentTarget as HTMLImageElement;
+                        if (!el.src.includes("/placeholder.png")) {
+                          el.src = "/placeholder.png";
+                        }
+                      }}
+                    />
 
-                  {/* Roast type + 12 oz */}
-                  <p className="text-base sm:text-[1.05rem] md:text-[1.15rem] italic text-neutral-500">
-                    {card.subTitle}
-                    <span className="mx-1.5 text-amber-300/80" aria-hidden>
-                      -
-                    </span>
-                    <span className="not-italic">12 oz</span>
-                  </p>
-
-                  {/* Short note/descriptor */}
-                  <p className="text-base sm:text-lg text-neutral-400 flex-1">
-                    {card.note}
-                  </p>
-
-                  {/* price row */}
-                  <div className="mt-4 text-sm md:text-base flex flex-col items-center gap-2 md:flex-row md:items-center md:gap-3">
-                    <span className="text-neutral-200">From {fmt(base)}</span>
-
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
-                      Subscribe &amp; Save 15%
-                      <span
-                        className="hidden sm:inline mx-1.5 opacity-60"
-                        aria-hidden
+                    <div className="p-5 flex flex-col flex-1 text-center">
+                      <h3
+                        className="text-3xl font-extrabold text-amber-300"
+                        style={{
+                          fontFamily: "'Cinzel', serif",
+                          fontWeight: 800,
+                        }}
                       >
-                        •
+                        {card.title}
+                      </h3>
+
+                      <p className="text-base italic text-neutral-500">
+                        {card.subTitle}
+                        <span className="mx-1.5 text-amber-300/80" aria-hidden>
+                          -
+                        </span>
+                        <span className="not-italic">12 oz</span>
+                      </p>
+
+                      <p className="text-base text-neutral-400 flex-1">
+                        {card.note}
+                      </p>
+
+                      {/* PRICE ROW (mobile) - one line */}
+                      <div className="mt-4 text-sm flex flex-row flex-wrap items-center justify-center gap-2">
+                        <span className="text-neutral-200">
+                          From {fmt(base)}
+                        </span>
+
+                        <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] bg-amber-400/10 text-amber-300 ring-1 ring-amber-400/30 whitespace-nowrap">
+                          <span className="font-semibold">{fmt(sub)}</span>
+                          <span className="opacity-70">
+                            Subscribe &amp; Save 15%
+                          </span>
+                        </span>
+                      </div>
+
+                      {/* STARS ROW (mobile) UNDER PRICE */}
+                      <div className="mt-3 flex flex-col items-center text-[13px] text-neutral-400">
+                        <div className="flex items-center gap-2">
+                          {(() => {
+                            const summary =
+                              DEFAULT_REVIEW_SUMMARY[card.slug] || {
+                                avg: 0,
+                                count: 0,
+                              };
+                            const avg = summary.avg ?? 0;
+                            const count = summary.count ?? 0;
+                            return (
+                              <>
+                                {/* numeric avg */}
+                                <span className="text-amber-300 font-semibold tabular-nums">
+                                  {avg.toFixed(1)}
+                                </span>
+
+                                {/* stars with outline + fractional fill */}
+                                <div className="inline-flex items-center gap-0.5">
+                                  {[0, 1, 2, 3, 4].map((i) => {
+                                    const starFill = Math.max(
+                                      0,
+                                      Math.min(1, avg - i)
+                                    ); // 0..1
+                                    const clipWidth = 24 * starFill;
+                                    const clipId = `cardStarClip-${card.slug}-${i}`;
+                                    return (
+                                      <svg
+                                        key={i}
+                                        viewBox="0 0 24 24"
+                                        className="h-4 w-4"
+                                        aria-hidden
+                                      >
+                                        <defs>
+                                          <clipPath
+                                            id={clipId}
+                                            clipPathUnits="userSpaceOnUse"
+                                          >
+                                            <rect
+                                              x="0"
+                                              y="0"
+                                              width={clipWidth}
+                                              height="24"
+                                            />
+                                          </clipPath>
+                                        </defs>
+
+                                        {/* base (neutral) */}
+                                        <path
+                                          d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                          className="text-neutral-800"
+                                          fill="currentColor"
+                                        />
+
+                                        {/* amber fill clipped */}
+                                        <path
+                                          d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                          className="text-amber-400"
+                                          fill="currentColor"
+                                          clipPath={`url(#${clipId})`}
+                                        />
+
+                                        {/* outline stroke */}
+                                        <path
+                                          d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          className="text-neutral-600"
+                                          strokeWidth="1.4"
+                                          strokeLinejoin="round"
+                                        />
+                                      </svg>
+                                    );
+                                  })}
+                                </div>
+
+                                {/* count */}
+                                <span className="text-[11px] text-neutral-400/80 tracking-wide whitespace-nowrap">
+                                  {count} REVIEWS
+                                </span>
+                              </>
+                            );
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* left/right hint arrows - clickable */}
+            <div className="absolute inset-y-1/2 -translate-y-1/2 left-1 flex items-center pl-1 pointer-events-none">
+              <button
+                type="button"
+                onClick={handlePrev}
+                className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
+                aria-label="Previous roast"
+              >
+                ‹
+              </button>
+            </div>
+            <div className="absolute inset-y-1/2 -translate-y-1/2 right-1 flex items-center pr-1 pointer-events-none">
+              <button
+                type="button"
+                onClick={handleNext}
+                className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
+                aria-label="Next roast"
+              >
+                ›
+              </button>
+            </div>
+          </div>
+
+          {/* desktop / tablet: original grid BUT stars moved under price */}
+          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {roastCards.map((card) => {
+              const base =
+                card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
+              const sub = Math.round(base * 0.85 * 100) / 100;
+
+              return (
+                <Link
+                  key={card.id}
+                  to={`/roast/${card.slug}`}
+                  aria-label={`${card.title} details`}
+                  className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col"
+                >
+                  <img
+                    src={card.img}
+                    alt={card.title}
+                    className="w-full h-[28rem] object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      if (!el.src.includes("/placeholder.png")) {
+                        el.src = "/placeholder.png";
+                      }
+                    }}
+                  />
+
+                  <div className="p-5 flex flex-col flex-1 text-left">
+                    <h3
+                      className="text-4xl font-extrabold text-amber-300"
+                      style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                    >
+                      {card.title}
+                    </h3>
+
+                    <p className="text-[1.15rem] italic text-neutral-500">
+                      {card.subTitle}
+                      <span className="mx-1.5 text-amber-300/80" aria-hidden>
+                        -
                       </span>
-                      <span className="hidden sm:inline font-semibold">
-                        {fmt(sub)}
+                      <span className="not-italic">12 oz</span>
+                    </p>
+
+                    <p className="text-lg text-neutral-400 flex-1">
+                      {card.note}
+                    </p>
+
+                    {/* PRICE ROW (desktop) now ABOVE stars */}
+                    <div className="mt-4 text-base flex flex-col md:flex-row md:items-center md:gap-3 gap-2">
+                      <span className="text-neutral-200">From {fmt(base)}</span>
+
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
+                        Subscribe &amp; Save 15%
+                        <span className="mx-1.5 opacity-60" aria-hidden>
+                          •
+                        </span>
+                        <span className="font-semibold">{fmt(sub)}</span>
                       </span>
-                    </span>
+                    </div>
+
+                    {/* STARS ROW (desktop) moved UNDER price row */}
+                    <div className="mt-3 flex flex-col text-[13px] text-neutral-400">
+                      <div className="flex items-center gap-2">
+                        {(() => {
+                          const summary = DEFAULT_REVIEW_SUMMARY[card.slug] || {
+                            avg: 0,
+                            count: 0,
+                          };
+                          const avg = summary.avg ?? 0;
+                          const count = summary.count ?? 0;
+                          return (
+                            <>
+                              <span className="text-amber-300 font-semibold tabular-nums">
+                                {avg.toFixed(1)}
+                              </span>
+
+                              <div className="inline-flex items-center gap-0.5">
+                                {[0, 1, 2, 3, 4].map((i) => {
+                                  const starFill = Math.max(
+                                    0,
+                                    Math.min(1, avg - i)
+                                  );
+                                  const clipWidth = 24 * starFill;
+                                  const clipId = `cardStarClipDesk-${card.slug}-${i}`;
+                                  return (
+                                    <svg
+                                      key={i}
+                                      viewBox="0 0 24 24"
+                                      className="h-4 w-4"
+                                      aria-hidden
+                                    >
+                                      <defs>
+                                        <clipPath
+                                          id={clipId}
+                                          clipPathUnits="userSpaceOnUse"
+                                        >
+                                          <rect
+                                            x="0"
+                                            y="0"
+                                            width={clipWidth}
+                                            height="24"
+                                          />
+                                        </clipPath>
+                                      </defs>
+
+                                      {/* base */}
+                                      <path
+                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                        className="text-neutral-800"
+                                        fill="currentColor"
+                                      />
+                                      {/* amber fill */}
+                                      <path
+                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                        className="text-amber-400"
+                                        fill="currentColor"
+                                        clipPath={`url(#${clipId})`}
+                                      />
+                                      {/* outline */}
+                                      <path
+                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        className="text-neutral-600"
+                                        strokeWidth="1.4"
+                                        strokeLinejoin="round"
+                                      />
+                                    </svg>
+                                  );
+                                })}
+                              </div>
+
+                              <span className="text-[11px] text-neutral-400/80 tracking-wide whitespace-nowrap">
+                                {count} REVIEWS
+                              </span>
+                            </>
+                          );
+                        })()}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </Container>
     </section>
   );
 }
+
 
 function SDVOSBHighlight() {
   return (
@@ -1113,7 +1554,8 @@ function HomePage() {
     <>
       <header
         id="top"
-        className="relative overflow-hidden border-b border-neutral-800"
+        className="relative overflow-hidden border-b border-neutral-800 z-[0]"
+        style={{ isolation: "isolate" }}
       >
         {/* MOBILE full-bleed bean hero */}
         <div className="absolute inset-0 md:hidden bg-neutral-950">
@@ -1173,34 +1615,32 @@ function HomePage() {
 
                     {/* HEADLINE */}
                     <h2
-  className="text-amber-400 font-extrabold leading-snug tracking-tight
+                      className="text-amber-400 font-extrabold leading-snug tracking-tight
                 text-[1.25rem] sm:text-[1.5rem] md:text-[2.1rem]"
-  style={{ fontFamily: "'Cinzel', serif" }}
->
-  PREMIUM, SMALL-BATCH COFFEE
-</h2>
-
+                      style={{ fontFamily: "'Cinzel', serif" }}
+                    >
+                      PREMIUM, SMALL-BATCH COFFEE
+                    </h2>
 
                     {/* bullet line */}
                     <div className="mt-0 text-neutral-300 text-[13px] sm:text-sm md:text-lg">
-  <span>Roasted To Order</span>
-  <span className="mx-1.5 text-amber-400/70" aria-hidden>
-    •
-  </span>
-  <span>Ethically Sourced</span>
-  <span className="mx-1.5 text-amber-400/70" aria-hidden>
-    •
-  </span>
-  <a
-    href="https://www.govx.com/govx-id/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="hover:text-amber-200 underline-offset-2 hover:underline"
-  >
-    GovX Partner
-  </a>
-</div>
-
+                      <span>Roasted To Order</span>
+                      <span className="mx-1.5 text-amber-400/70" aria-hidden>
+                        •
+                      </span>
+                      <span>Ethically Sourced</span>
+                      <span className="mx-1.5 text-amber-400/70" aria-hidden>
+                        •
+                      </span>
+                      <a
+                        href="https://www.govx.com/govx-id/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-amber-200 underline-offset-2 hover:underline"
+                      >
+                        GovX Partner
+                      </a>
+                    </div>
 
                     {/* CTA */}
                     <div aria-hidden className="h-2 md:h-3" />
@@ -1233,15 +1673,17 @@ function HomePage() {
                   src="officer-window.png"
                   alt="Old Ironsides hero"
                   className="
-              block
-              w-auto
-              h-auto
-              max-w-full
-              max-h-[60vh]
-              sm:max-h-[70vh]
-              md:max-h-[calc(100vh-300px)]
-              object-contain
-            "
+                  block
+                  w-auto
+                  h-auto
+                  max-w-full
+                  max-h-[60vh]
+                  sm:max-h-[70vh]
+                  md:max-h-[calc(100vh-300px)]
+                  object-contain
+                  relative
+                  z-0
+                "
                 />
               </div>
             </div>
@@ -2836,10 +3278,10 @@ function RoastDetailPage() {
   };
 
   return (
-    <main className="relative overflow-hidden min-h-[calc(100vh-140px)] py-10 md:py-16">
+    <main className="relative overflow-hidden min-h-[calc(100vh-140px)] pt-0 pb-6 md:pt-16 md:pb-16">
       <div className="absolute inset-0 z-0 bg-neutral-950/30" aria-hidden />
 
-      <Container className="relative z-10">
+      <Container className="relative z-10 mt-0 md:mt-0">
         {/* ===== HERO ===== */}
         <div className="relative">
           <div
@@ -2853,33 +3295,33 @@ function RoastDetailPage() {
             />
           </div>
 
-          <div className="relative z-10 mt-2 md:mt-3 grid md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-start">
+          <div className="relative z-10 mt-0 md:mt-3 grid md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-start">
             {/* HERO IMAGE */}
-            <div className="flex flex-col items-center md:items-start">
-              <div className="inline-block rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20 bg-neutral-900/40">
-                {/* Fixed, tall frame that the image fully fills */}
-                <div className="flex flex-col items-center md:items-start">
+            <div className="flex flex-col items-center md:items-start w-full md:w-auto">
+              <div className="w-full md:w-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20 bg-neutral-900/40">
+                <div className="flex flex-col items-center md:items-start w-full md:w-auto">
                   <img
                     src={card.img}
                     alt={card.title}
                     loading="eager"
                     decoding="async"
-                    className="block h-auto w-auto max-h-[61vh] md:max-h-[65vh] object-contain
-               rounded-2xl md:rounded-3xl ring-1 ring-amber-400/60
-               shadow-2xl shadow-amber-500/20"
+                    className="block w-full h-auto max-h-[61vh] md:w-auto md:max-h-[65vh] object-cover md:object-contain rounded-2xl md:rounded-3xl ring-1 ring-amber-400/60 shadow-2xl shadow-amber-500/20"
                   />
                 </div>
               </div>
             </div>
+            {/* ...rest of your text column stays exactly the same */}
 
-            {/* TEXT COLUMN */}
-            <div className="self-start space-y-4">
-              {/* Title row */}
-              <div className="mb-1 flex items-start justify-between gap-3">
+
+
+            {/* 2/3/4/5/6 live together in this column so desktop still sees one text column */}
+            <div className="order-2 md:order-none self-start flex flex-col space-y-4">
+              {/* ===== TITLE / SUBTITLE / STARS (Mobile #1, Desktop #1) ===== */}
+              <div className="order-1 md:order-1 mb-1 flex items-start justify-between gap-3">
                 <div className="w-full">
                   {/* Title */}
                   <h1
-                    className="m-0 text-3xl md:text-4xl font-extrabold tracking-tight text-amber-300"
+                    className="m-0 text-2xl md:text-4xl font-extrabold tracking-tight text-amber-300"
                     style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
                   >
                     {isFlagship
@@ -2891,8 +3333,9 @@ function RoastDetailPage() {
 
                   {/* Subtitle + stars + count */}
                   <div className="mt-1 max-w-[72ch]">
-                    <div className="flex items-baseline justify-between gap-3 text-neutral-400">
-                      <div className="text-[1.05rem] md:text-[1.2rem]">
+                    <div className="flex flex-col gap-2 text-neutral-400 md:flex-row md:items-baseline md:justify-between md:gap-3">
+                      {/* roast style text */}
+                      <div className="text-base md:text-[1.2rem]">
                         {isFlagship
                           ? "Medium Roast"
                           : isBaptism
@@ -2900,13 +3343,14 @@ function RoastDetailPage() {
                           : card.subTitle}
                       </div>
 
+                      {/* Stars + avg + count */}
                       <div className="flex items-center gap-2 shrink-0">
-                        {/* numeric value on the left */}
-                        <span className="text-amber-300 font-semibold tabular-nums">
+                        {/* numeric value */}
+                        <span className="text-amber-300 font-semibold tabular-nums text-sm md:text-base">
                           {reviewData.avg.toFixed(1)}
                         </span>
 
-                        {/* per-star fractional fill */}
+                        {/* stars */}
                         <a
                           href="#reviews"
                           onClick={(e) => {
@@ -2933,14 +3377,14 @@ function RoastDetailPage() {
                             const starFill = Math.max(
                               0,
                               Math.min(1, (reviewData.avg ?? 0) - i)
-                            ); // 0..1
-                            const clipWidth = 24 * starFill; // viewBox is 24
+                            );
+                            const clipWidth = 24 * starFill;
                             const clipId = `titleStarClip-${i}`;
                             return (
                               <svg
                                 key={i}
                                 viewBox="0 0 24 24"
-                                className="h-5 w-5"
+                                className="h-4 w-4 md:h-5 md:w-5"
                                 aria-hidden
                               >
                                 <defs>
@@ -2964,7 +3408,7 @@ function RoastDetailPage() {
                                   fill="currentColor"
                                 />
 
-                                {/* amber fill clipped to percentage */}
+                                {/* amber fill clipped */}
                                 <path
                                   d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
                                   className="text-amber-400"
@@ -2972,7 +3416,7 @@ function RoastDetailPage() {
                                   clipPath={`url(#${clipId})`}
                                 />
 
-                                {/* OUTLINE (matches review tiles: grey stroke around star) */}
+                                {/* outline */}
                                 <path
                                   d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
                                   fill="none"
@@ -2989,8 +3433,8 @@ function RoastDetailPage() {
                           </span>
                         </a>
 
-                        {/* review count on the right (unchanged) */}
-                        <span className="text-xs md:text-sm text-neutral-400/80 tracking-wide whitespace-nowrap">
+                        {/* review count */}
+                        <span className="text-[10px] md:text-xs text-neutral-400/80 tracking-wide whitespace-nowrap">
                           {reviewData.count} REVIEWS
                         </span>
                       </div>
@@ -3002,230 +3446,16 @@ function RoastDetailPage() {
 
                 <BackButton to="/store" size="sm" />
               </div>
+              {/* ===== END TITLE BLOCK ===== */}
 
-              {/* SHIP STORY */}
-              <div
-                className="max-w-[64ch] sm:max-w-[68ch] md:max-w-[70ch] lg:max-w-[72ch] text-pretty leading-[1.85]"
-                lang="en"
-                style={{ hyphens: "auto", textWrap: "balance" as any }}
-              >
-                {isFlagship && (
-                  <div className="space-y-3">
-                    <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
-                      <p className="text-amber-300">
-                        USS Constitution - Commissioned October 21, 1797
-                      </p>
-                      <p>
-                        Commissioned by President George Washington, the USS
-                        Constitution was built to stand as the strength and
-                        pride of a new Republic. She was one of six great
-                        frigates launched to secure America’s place on the seas,
-                        yet time and war would claim all but one.
-                      </p>
-                      <p>
-                        Through every storm and every battle, the Constitution
-                        endured. Today she stands as a living symbol of the
-                        nation she was made to defend.
-                      </p>{" "}
-                      <br />
-                      This roast honors that legacy, steady and enduring as the
-                      ship herself. Smooth, balanced, and bold, our Flagship
-                      Medium Roast carries her spirit in every cup.
-                      <p>
-                        Old Ironsides Coffee - Ignite the Spirit, Savor the
-                        Victory!
-                      </p>
-                    </div>
-
-                    <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-                      {cleanCopy(AMBER_DESC)}
-                    </div>
-
-                    <div className="h-1 md:h-2" />
-                  </div>
-                )}
-
-                {isBaptism && (
-                  <div className="space-y-6">
-                    <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
-                      <p className="text-amber-300">
-                        USS Constitution vs HMS Guerriere - August 19, 1812
-                      </p>
-                      <p>
-                        The Constitution’s first great reckoning came in a
-                        deadly duel at sea. British shot struck her hull with
-                        fury yet bounced away as a sailor cried, “Her sides are
-                        made of iron!”
-                      </p>
-                      <p>
-                        The Guerriere was left wrecked, and at last claimed by
-                        the sea.
-                      </p>
-                      <p>
-                        This bold roast pays tribute to the day a legend was
-                        born, fierce, proud, and forged in victory.
-                      </p>
-                      <p>
-                        Old Ironsides Coffee - Ignite the Spirit, Savor the
-                        Victory!
-                      </p>
-                    </div>
-
-                    <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-                      {cleanCopy(AMBER_DESC)}
-                    </div>
-
-                    <div className="h-1 md:h-2" />
-                  </div>
-                )}
-
-                {isJava && (
-                  <div className="space-y-6">
-                    <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
-                      <p className="text-amber-300">
-                        USS Constitution vs HMS Java - December 29, 1812
-                      </p>
-                      <p>
-                        In the wake of HMS Guerriere’s defeat, the Royal Navy
-                        cast its hope upon the formidable HMS Java to restore
-                        British honor. Swift, heavily armed, and set upon the
-                        hunt for the USS Constitution, she was expected to sink
-                        the American frigate once and for all.
-                      </p>
-                      <p>
-                        Off Brazil’s sunlit coast, the sea became the
-                        battlefield. Broadsides clashed, cannons roared, masts
-                        splintered, and the resolve of a young nation was tested
-                        once again. Out from the smoke and chaos, scarred but
-                        victorious, Old Ironsides watched as the Java burned in
-                        fiery defeat.
-                      </p>
-                      <p>
-                        This medium roast carries that victory forward in every
-                        cup, with a smooth, full-bodied flavor and a finish as
-                        enduring as Old Ironsides herself.
-                      </p>
-                      <p>
-                        Old Ironsides Coffee - Ignite the Spirit, Savor the
-                        Victory!
-                      </p>
-                    </div>
-
-                    <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-                      {cleanCopy(AMBER_DESC)}
-                    </div>
-
-                    <div className="h-1 md:h-2" />
-                  </div>
-                )}
-
-                {isOak && (
-                  <div className="space-y-6">
-                    <div className="space-y-3 text-neutral-300 text-lg leading-relaxed">
-                      <p className="text-amber-300">
-                        Wrapped in Oak Above, Clad in Copper Below
-                      </p>
-                      <p>
-                        Her copper hull kissed the waves beneath, above, her
-                        timbers stood firm against the British cannon’s plea,
-                        her heart of oak and copper forged for battle on the
-                        open sea.
-                      </p>
-                      <p>
-                        Born for speed, for maneuver, and for glory, she cut the
-                        waves, mastered the cannons, and sailed her name into
-                        history.
-                      </p>
-                      <p>
-                        Aged in bourbon barrels, this roast honors the
-                        shipwrights that built her, with notes of smooth
-                        caramel, warm vanilla, and toasted oak.
-                      </p>
-                      <p>
-                        Old Ironsides Coffee - Ignite the Spirit, Savor the
-                        Victory!
-                      </p>
-                    </div>
-
-                    <div className="mt-2 text-amber-300/90 text-base md:text-lg">
-                      {cleanCopy(AMBER_DESC)}
-                    </div>
-
-                    <div className="h-1 md:h-2" />
-                  </div>
-                )}
-              </div>
-
-              {/* Purchase mode selector — styled like the Buy Box */}
-              <div className="mt-6 w-auto">
-                <div className="inline-flex items-center gap-2 rounded-xl border border-amber-400/60 bg-black/70 p-4 px-5 shadow-md shadow-amber-400/10 w-fit whitespace-nowrap">
-                  <button
-                    type="button"
-                    onClick={() => setPurchaseMode("one")}
-                    className={
-                      "px-3 py-1.5 rounded-lg border text-xs md:text-sm leading-none tracking-tight font-semibold transition " +
-                      (purchaseMode === "one"
-                        ? "bg-amber-400 text-neutral-900 border-amber-400"
-                        : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
-                    }
-                    aria-pressed={purchaseMode === "one"}
-                  >
-                    Single Purchase
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setPurchaseMode("sub")}
-                    className={
-                      "px-4 py-2 rounded-lg border text-sm md:text-base font-semibold transition " +
-                      (purchaseMode === "sub"
-                        ? "bg-amber-400 text-neutral-900 border-amber-400"
-                        : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
-                    }
-                    aria-pressed={purchaseMode === "sub"}
-                  >
-                    Join the Fleet &amp; Save 15%
-                  </button>
-                </div>
-              </div>
-
-              {/* Subscription frequency */}
-              {purchaseMode === "sub" && (
-                <div className="mt-3 mb-4 w-full max-w-[36rem]">
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <div className="text-[1.15rem] text-amber-300 font-medium">
-                      Deliver every:
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {[14, 30, 60].map((d) => (
-                        <button
-                          key={d}
-                          type="button"
-                          onClick={() => setSubEvery(d as 14 | 30 | 60)}
-                          className={
-                            "px-3 py-1.5 rounded-lg border text-sm transition " +
-                            (subEvery === d
-                              ? "border-amber-400/70 text-amber-300 bg-black"
-                              : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
-                          }
-                          aria-pressed={subEvery === d}
-                        >
-                          {d} days
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Add to Chest */}
+              {/* ===== BUY BOX / ADD TO CHEST (Mobile #2, Desktop #4) ===== */}
               {(card.canBuy || isOak) && (
-                <div className="mt-10 w-auto">
-                  <div className="flex items-stretch gap-4">
+                <div className="order-2 md:order-4 mt-4 w-full">
+                  <div className="flex flex-col md:flex-row md:items-stretch md:gap-4">
                     {/* BUY BOX */}
                     <div
                       ref={buyBoxRef}
-                      className="inline-flex items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-3 px-4 shadow-md shadow-amber-400/10"
+                      className="inline-flex w-full md:w-auto items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-3 px-4 shadow-md shadow-amber-400/10"
                     >
                       {/* Price */}
                       <div className="text-sm text-neutral-300">
@@ -3253,7 +3483,7 @@ function RoastDetailPage() {
                         )}
                       </div>
 
-                      {/* Quantity + Add */}
+                      {/* Qty + Add */}
                       <div className="ml-auto inline-flex items-center gap-4">
                         <div className="inline-flex items-center rounded-lg border border-neutral-700">
                           <button
@@ -3305,7 +3535,7 @@ function RoastDetailPage() {
                           onClick={addToChest}
                           disabled={adding}
                           className={
-                            "px-6 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
+                            "px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm md:text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
                             (adding
                               ? "opacity-60 cursor-not-allowed"
                               : "hover:bg-amber-400 hover:text-neutral-900")
@@ -3320,9 +3550,9 @@ function RoastDetailPage() {
                     {/* BEAN TYPE BOX */}
                     <div
                       className={
-                        "group inline-flex items-center justify-between gap-4 rounded-xl p-3 px-4 shadow-md transition " +
+                        "group inline-flex w-full md:w-auto items-center justify-between gap-4 rounded-xl p-3 px-4 shadow-md transition mt-3 md:mt-0 " +
                         (showBeanError
-                          ? "border border-red-500 ring-2 ring-red-500 animate-pulse"
+                          ? "border border-red-500 ring-2 ring-red-500 animate-pulse bg-black/70"
                           : "border border-amber-400/60 bg-black/70 shadow-amber-400/10 hover:border-amber-400/80 hover:shadow-[0_0_0_2px_rgba(251,191,36,0.25)]")
                       }
                       style={{
@@ -3331,7 +3561,7 @@ function RoastDetailPage() {
                           : undefined,
                         height: buyBoxDims.h ? `${buyBoxDims.h}px` : undefined,
                         width: buyBoxDims.w
-                          ? `${Math.round(buyBoxDims.w * BEAN_BOX_RATIO)}px`
+                          ? undefined
                           : undefined,
                       }}
                     >
@@ -3357,7 +3587,7 @@ function RoastDetailPage() {
                           setShowBeanError(false);
                         }}
                         className={
-                          "min-w-[12rem] rounded-lg border px-3 py-2 text-sm outline-none bg-black/70 " +
+                          "min-w-[10rem] md:min-w-[12rem] rounded-lg border px-3 py-2 text-sm outline-none bg-black/70 " +
                           (beanType
                             ? "border-amber-400/70 text-amber-300"
                             : "border-neutral-700 text-neutral-400") +
@@ -3372,15 +3602,223 @@ function RoastDetailPage() {
                     </div>
                   </div>
 
-                  <div className="mt-2 text-lg text-neutral-400">
+                  <div className="mt-2 text-sm md:text-lg text-neutral-400 text-center md:text-left">
                     <span className="text-amber-300 font-semibold">
                       3+ bags ship free
                     </span>{" "}
                   </div>
                 </div>
               )}
+              {/* ===== END BUY BOX ===== */}
+
+              {/* ===== SUBSCRIBE & SAVE (Mobile #3, Desktop #3) ===== */}
+              <div className="order-3 md:order-3 mt-6 w-full">
+                {/* mode selector */}
+                <div className="inline-flex flex-col sm:flex-row items-start sm:items-center gap-2 rounded-xl border border-amber-400/60 bg-black/70 p-4 px-5 shadow-md shadow-amber-400/10 w-full md:w-fit whitespace-nowrap">
+                  <button
+                    type="button"
+                    onClick={() => setPurchaseMode("one")}
+                    className={
+                      "px-3 py-1.5 rounded-lg border text-xs md:text-sm leading-none tracking-tight font-semibold transition w-full sm:w-auto text-center " +
+                      (purchaseMode === "one"
+                        ? "bg-amber-400 text-neutral-900 border-amber-400"
+                        : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
+                    }
+                    aria-pressed={purchaseMode === "one"}
+                  >
+                    Single Purchase
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPurchaseMode("sub")}
+                    className={
+                      "px-4 py-2 rounded-lg border text-sm md:text-base font-semibold transition w-full sm:w-auto text-center " +
+                      (purchaseMode === "sub"
+                        ? "bg-amber-400 text-neutral-900 border-amber-400"
+                        : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
+                    }
+                    aria-pressed={purchaseMode === "sub"}
+                  >
+                    Join the Fleet &amp; Save 15%
+                  </button>
+                </div>
+
+                {/* subscription frequency */}
+                {purchaseMode === "sub" && (
+                  <div className="mt-3 mb-4 w-full max-w-[36rem]">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="text-base md:text-[1.15rem] text-amber-300 font-medium">
+                        Deliver every:
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {[14, 30, 60].map((d) => (
+                          <button
+                            key={d}
+                            type="button"
+                            onClick={() => setSubEvery(d as 14 | 30 | 60)}
+                            className={
+                              "px-3 py-1.5 rounded-lg border text-sm transition " +
+                              (subEvery === d
+                                ? "border-amber-400/70 text-amber-300 bg-black"
+                                : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
+                            }
+                            aria-pressed={subEvery === d}
+                          >
+                            {d} days
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {/* ===== END SUBSCRIBE ===== */}
+
+              {/* ===== STORY CONTENT (Mobile #4, Desktop #2) ===== */}
+              <div className="order-4 md:order-2">
+                <div
+                  className="max-w-[64ch] sm:max-w-[68ch] md:max-w-[70ch] lg:max-w-[72ch] text-pretty leading-[1.7] md:leading-[1.85]"
+                  lang="en"
+                  style={{ hyphens: "auto", textWrap: "balance" as any }}
+                >
+                  {isFlagship && (
+                    <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                      <p className="text-amber-300 text-base md:text-lg">
+                        USS Constitution - Commissioned October 21, 1797
+                      </p>
+                      <p>
+                        Commissioned by President George Washington, the USS
+                        Constitution was built to stand as the strength and
+                        pride of a new Republic. She was one of six great
+                        frigates launched to secure America’s place on the seas,
+                        yet time and war would claim all but one.
+                      </p>
+                      <p>
+                        Through every storm and every battle, the Constitution
+                        endured. Today she stands as a living symbol of the
+                        nation she was made to defend.
+                      </p>
+                      <p>
+                        This roast honors that legacy, steady and enduring as
+                        the ship herself. Smooth, balanced, and bold, our
+                        Flagship Medium Roast carries her spirit in every cup.
+                      </p>
+                      <p>
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the
+                        Victory!
+                      </p>
+
+                      <div className="mt-2 text-amber-300/90 text-sm md:text-lg">
+                        {cleanCopy(AMBER_DESC)}
+                      </div>
+                    </div>
+                  )}
+
+                  {isBaptism && (
+                    <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                      <p className="text-amber-300 text-base md:text-lg">
+                        USS Constitution vs HMS Guerriere - August 19, 1812
+                      </p>
+                      <p>
+                        The Constitution’s first great reckoning came in a
+                        deadly duel at sea. British shot struck her hull with
+                        fury yet bounced away as a sailor cried, “Her sides are
+                        made of iron!”
+                      </p>
+                      <p>
+                        The Guerriere was left wrecked, and at last claimed by
+                        the sea.
+                      </p>
+                      <p>
+                        This bold roast pays tribute to the day a legend was
+                        born, fierce, proud, and forged in victory.
+                      </p>
+                      <p>
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the
+                        Victory!
+                      </p>
+
+                      <div className="mt-2 text-amber-300/90 text-sm md:text-lg">
+                        {cleanCopy(AMBER_DESC)}
+                      </div>
+                    </div>
+                  )}
+
+                  {isJava && (
+                    <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                      <p className="text-amber-300 text-base md:text-lg">
+                        USS Constitution vs HMS Java - December 29, 1812
+                      </p>
+                      <p>
+                        In the wake of HMS Guerriere’s defeat, the Royal Navy
+                        cast its hope upon the formidable HMS Java to restore
+                        British honor. Swift, heavily armed, and set upon the
+                        hunt for the USS Constitution, she was expected to sink
+                        the American frigate once and for all.
+                      </p>
+                      <p>
+                        Off Brazil’s sunlit coast, the sea became the
+                        battlefield. Broadsides clashed, cannons roared, masts
+                        splintered, and the resolve of a young nation was tested
+                        once again. Out from the smoke and chaos, scarred but
+                        victorious, Old Ironsides watched as the Java burned in
+                        fiery defeat.
+                      </p>
+                      <p>
+                        This medium roast carries that victory forward in every
+                        cup, with a smooth, full-bodied flavor and a finish as
+                        enduring as Old Ironsides herself.
+                      </p>
+                      <p>
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the
+                        Victory!
+                      </p>
+
+                      <div className="mt-2 text-amber-300/90 text-sm md:text-lg">
+                        {cleanCopy(AMBER_DESC)}
+                      </div>
+                    </div>
+                  )}
+
+                  {isOak && (
+                    <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                      <p className="text-amber-300 text-base md:text-lg">
+                        Wrapped in Oak Above, Clad in Copper Below
+                      </p>
+                      <p>
+                        Her copper hull kissed the waves beneath, above, her
+                        timbers stood firm against the British cannon’s plea,
+                        her heart of oak and copper forged for battle on the
+                        open sea.
+                      </p>
+                      <p>
+                        Born for speed, for maneuver, and for glory, she cut the
+                        waves, mastered the cannons, and sailed her name into
+                        history.
+                      </p>
+                      <p>
+                        Aged in bourbon barrels, this roast honors the
+                        shipwrights that built her, with notes of smooth
+                        caramel, warm vanilla, and toasted oak.
+                      </p>
+                      <p>
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the
+                        Victory!
+                      </p>
+
+                      <div className="mt-2 text-amber-300/90 text-sm md:text-lg">
+                        {cleanCopy(AMBER_DESC)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* ===== END STORY ===== */}
             </div>
             {/* end text column */}
+
+            {/* end right column for desktop / stacked column for mobile */}
           </div>
           {/* end hero grid */}
         </div>
@@ -3396,6 +3834,7 @@ function RoastDetailPage() {
       />
     </main>
   );
+
 }
 
 /* ================== COFFEE SECTION ROUTER ================== */
@@ -8037,93 +8476,91 @@ function Layout() {
       <PromoSubscribeModal />
 
       {/* ===== HEADER (desktop + mobile) ===== */}
-      <header className="fixed top-0 inset-x-0 z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800">
-       {/* === MOBILE HEADER TALL v3 === */}
-<div className="md:hidden border-b border-neutral-800 bg-neutral-950">
-  {/* promo strip */}
-  <div className="px-3 py-2 text-center text-[12px] font-semibold leading-tight text-amber-300 truncate border-b border-neutral-800">
-    <button
-      type="button"
-      onClick={() =>
-        document.dispatchEvent(
-          new CustomEvent("promo-subscribe", {
-            bubbles: true,
-            composed: true,
-          })
-        )
-      }
-      className="hover:text-amber-200 underline-offset-2 hover:underline"
-    >
-      20% Off First Order
-    </button>
-    <span className="mx-1 text-neutral-500">|</span>
-    <Link
-      to="/legal/shipping"
-      className="hover:text-amber-200 underline-offset-2 hover:underline"
-    >
-      Free Shipping on 3+ Bags
-    </Link>
-  </div>
+      <header className="fixed top-0 inset-x-0 z-[999999] md:z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800">
+        {/* === MOBILE HEADER TALL v3 === */}
+        <div className="md:hidden border-b border-neutral-800 bg-neutral-950">
+          {/* promo strip */}
+          <div className="px-3 py-2 text-center text-[12px] font-semibold leading-tight text-amber-300 truncate border-b border-neutral-800">
+            <button
+              type="button"
+              onClick={() =>
+                document.dispatchEvent(
+                  new CustomEvent("promo-subscribe", {
+                    bubbles: true,
+                    composed: true,
+                  })
+                )
+              }
+              className="hover:text-amber-200 underline-offset-2 hover:underline"
+            >
+              20% Off First Order
+            </button>
+            <span className="mx-1 text-neutral-500">|</span>
+            <Link
+              to="/legal/shipping"
+              className="hover:text-amber-200 underline-offset-2 hover:underline"
+            >
+              Free Shipping on 3+ Bags
+            </Link>
+          </div>
 
-  {/* brand block full width on its own row */}
-  <Link
-    to="/"
-    aria-label="Old Ironsides Coffee Home"
-    className="block px-4 pt-3 pb-2 text-center leading-tight"
-  >
-    <div
-      className="text-[21.5px] font-bold tracking-[0.18em] text-neutral-300"
-      style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
-    >
-      OLD IRONSIDES COFFEE
-    </div>
-    <div className="text-[12px] text-amber-200">
-      Ignite the Spirit, Savor the Victory!
-    </div>
-    
-  </Link>
+          {/* brand block full width on its own row */}
+          <Link
+            to="/"
+            aria-label="Old Ironsides Coffee Home"
+            className="block px-4 pt-3 pb-2 text-center leading-tight"
+          >
+            <div
+              className="text-[21.5px] font-bold tracking-[0.18em] text-neutral-300"
+              style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+            >
+              OLD IRONSIDES COFFEE
+            </div>
+            <div className="text-[12px] text-amber-200">
+              Ignite the Spirit, Savor the Victory!
+            </div>
+          </Link>
 
-  {/* row 2: burger left / icons right */}
-  <div className="flex items-start justify-between px-4 pb-3">
-    {/* left: burger */}
-    <button
-      type="button"
-      onClick={() => setMobileOpen(true)}
-      className="flex flex-col justify-center gap-[4px] text-amber-300 pt-1"
-      aria-label="Open menu"
-    >
-      <span className="block w-8 h-[3px] bg-amber-300" />
-      <span className="block w-8 h-[3px] bg-amber-300" />
-      <span className="block w-8 h-[3px] bg-amber-300" />
-    </button>
+          {/* row 2: burger left / icons right */}
+          <div className="flex items-start justify-between px-4 pb-3">
+            {/* left: burger */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="flex flex-col justify-center gap-[4px] text-amber-300 pt-1"
+              aria-label="Open menu"
+            >
+              <span className="block w-8 h-[3px] bg-amber-300" />
+              <span className="block w-8 h-[3px] bg-amber-300" />
+              <span className="block w-8 h-[3px] bg-amber-300" />
+            </button>
 
-    {/* right icons */}
-    <div className="flex items-start gap-4 text-amber-300">
-      {/* chest/cart */}
-      <Link
-        to="/cart"
-        aria-label="Open Chest (Cart)"
-        title="Chest"
-        className="relative flex flex-col items-center text-center leading-none"
-      >
-        <ChestIcon className="h-6 w-6" />
-        <span className="absolute -top-1 -right-2 text-[10px] font-bold tabular-nums bg-neutral-900 rounded px-1 py-[1px] ring-1 ring-amber-400/60 text-amber-300 leading-none">
-          {count ?? 0}
-        </span>
-      </Link>
+            {/* right icons */}
+            <div className="flex items-start gap-4 text-amber-300">
+              {/* chest/cart */}
+              <Link
+                to="/cart"
+                aria-label="Open Chest (Cart)"
+                title="Chest"
+                className="relative flex flex-col items-center text-center leading-none"
+              >
+                <ChestIcon className="h-6 w-6" />
+                <span className="absolute -top-1 -right-2 text-[10px] font-bold tabular-nums bg-neutral-900 rounded px-1 py-[1px] ring-1 ring-amber-400/60 text-amber-300 leading-none">
+                  {count ?? 0}
+                </span>
+              </Link>
 
-      {/* sign in / my fleet */}
-      <Link
-        to="/account"
-        aria-label="My Fleet / Sign In"
-        className="flex flex-col items-center text-center leading-none text-neutral-300 hover:text-amber-300"
-      >
-        <span className="text-xl leading-none text-amber-300">⚓</span>
-      </Link>
-    </div>
-  </div>
-</div>
-
+              {/* sign in / my fleet */}
+              <Link
+                to="/account"
+                aria-label="My Fleet / Sign In"
+                className="flex flex-col items-center text-center leading-none text-neutral-300 hover:text-amber-300"
+              >
+                <span className="text-xl leading-none text-amber-300">⚓</span>
+              </Link>
+            </div>
+          </div>
+        </div>
 
         {/* === DESKTOP TOP BAR === */}
         <div className="hidden md:block border-b border-neutral-800 bg-neutral-950">
@@ -8562,129 +8999,83 @@ function Layout() {
             </div>
           </Container>
         </div>
+      </header>
 
-        {/* ==== MOBILE SLIDEOUT NAV (drawer) ==== */}
-        {mobileOpen && (
-          <div className="md:hidden fixed inset-0 left-0 top-0 z-[999] flex">
-            {/* slide panel on the left */}
-            <div className="w-[80%] max-w-[360px] h-full bg-neutral-950 shadow-xl ring-1 ring-neutral-800 flex flex-col">
-              {/* header row inside drawer */}
-              <div className="flex items-start justify-between p-4 border-b border-neutral-800">
-                <div className="text-left">
-                  <div
-                    className="text-base font-bold tracking-[0.18em] text-neutral-100 leading-snug"
-                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
-                  >
-                    OLD IRONSIDES COFFEE
-                  </div>
-                  <div className="text-[12px] text-amber-300 leading-tight">
-                    Veteran-owned
-                  </div>
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-[999999] flex items-start">
+          <div className="relative z-[1000000] w-[80%] max-w-[360px] bg-neutral-950 shadow-xl ring-1 ring-neutral-800 inline-flex flex-col max-h-[90vh]">
+            {/* header */}
+            <div className="flex items-start justify-between p-4 border-b border-neutral-800">
+              <div className="text-left">
+                <div
+                  className="text-base font-bold tracking-[0.18em] text-neutral-100 leading-snug"
+                  style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+                >
+                  OLD IRONSIDES COFFEE
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => setMobileOpen(false)}
-                  className="text-amber-300 text-2xl font-bold px-2"
-                  aria-label="Close menu"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* nav links */}
-              <div className="flex-1 overflow-y-auto text-neutral-100 text-lg font-semibold">
-                <button
-                  className="w-full flex items-center justify-between px-4 py-4 border-b border-neutral-800 text-left"
-                  onClick={() => {
-                    setMobileOpen(false);
-                    // navigate("/coffee") if you wire it
-                  }}
-                >
-                  <span>COFFEE</span>
-                  <span className="text-amber-300 text-2xl font-bold leading-none">
-                    +
-                  </span>
-                </button>
-
-                <button
-                  className="w-full flex items-center justify-between px-4 py-4 border-b border-neutral-800 text-left"
-                  onClick={() => {
-                    setMobileOpen(false);
-                  }}
-                >
-                  <span>GEAR</span>
-                  <span className="text-amber-300 text-2xl font-bold leading-none">
-                    +
-                  </span>
-                </button>
-
-                <button
-                  className="w-full flex items-center justify-between px-4 py-4 border-b border-neutral-800 text-left"
-                  onClick={() => {
-                    setMobileOpen(false);
-                  }}
-                >
-                  <span>ORIGINS &amp; VOYAGES</span>
-                  <span className="text-amber-300 text-2xl font-bold leading-none">
-                    +
-                  </span>
-                </button>
-
-                <Link
-                  to="/contact"
-                  onClick={() => setMobileOpen(false)}
-                  className="block px-4 py-4 border-b border-neutral-800 text-left"
-                >
-                  CONTACT THE CREW
-                </Link>
-
-                <Link
-                  to="/account"
-                  onClick={() => setMobileOpen(false)}
-                  className="block px-4 py-4 border-b border-neutral-800 text-left flex items-center gap-2 text-amber-300 text-lg"
-                >
-                  <span className="text-2xl leading-none">⚓</span>
-                  <span>My Fleet / Sign In</span>
-                </Link>
-
-                {/* benefits */}
-                <div className="px-4 py-4 text-base text-neutral-300 border-b border-neutral-800 leading-relaxed">
-                  <div className="text-amber-300 font-bold text-sm uppercase tracking-wide mb-2">
-                    Benefits
-                  </div>
-                  <div>20% OFF First Order</div>
-                  <div>Save 15% on subscriptions</div>
-                  <div>Free Shipping on 3+ Bags</div>
-                  <div>$1 off per bag for vets &amp; first responders</div>
-                </div>
-
-                {/* contact */}
-                <div className="px-4 py-4 text-sm text-neutral-500 leading-relaxed">
-                  <div>6 Liberty Square #2564</div>
-                  <div>Boston, MA 02109</div>
-                  <div className="mt-2">
-                    <a
-                      href="mailto:HQ@oldironsidescoffee.org"
-                      className="text-neutral-300"
-                    >
-                      HQ@oldironsidescoffee.org
-                    </a>
-                  </div>
+                <div className="text-[12px] text-amber-300 leading-tight">
+                  Veteran-owned
                 </div>
               </div>
+              <button
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                className="text-amber-300 text-2xl font-bold px-2"
+                aria-label="Close menu"
+              >
+                ✕
+              </button>
             </div>
 
-            {/* dim backdrop on the REST of screen to the right.
-       clicking it closes. */}
-            <button
-              className="flex-1 bg-black/60"
-              onClick={() => setMobileOpen(false)}
-              aria-label="Close menu backdrop"
-            />
+            {/* body */}
+            <div className="flex-1 overflow-y-auto text-neutral-100 text-lg font-semibold">
+              <Link
+                to="/coffee"
+                onClick={() => setMobileOpen(false)}
+                className="block px-4 py-4 border-b border-neutral-800"
+              >
+                COFFEE
+              </Link>
+              <Link
+                to="/store#merch"
+                onClick={() => setMobileOpen(false)}
+                className="block px-4 py-4 border-b border-neutral-800"
+              >
+                GEAR
+              </Link>
+              <Link
+                to="/origins"
+                onClick={() => setMobileOpen(false)}
+                className="block px-4 py-4 border-b border-neutral-800"
+              >
+                ORIGINS &amp; VOYAGES
+              </Link>
+              <Link
+                to="/contact"
+                onClick={() => setMobileOpen(false)}
+                className="block px-4 py-4 border-b border-neutral-800"
+              >
+                CONTACT THE CREW
+              </Link>
+              <Link
+                to="/account"
+                onClick={() => setMobileOpen(false)}
+                className="block px-4 py-4 text-amber-300 flex items-center gap-2"
+              >
+                <span className="text-2xl leading-none">⚓</span>
+                <span>Sign In</span>
+              </Link>
+            </div>
           </div>
-        )}
-      </header>
+
+          {/* backdrop */}
+          <button
+            className="flex-1 bg-black/70 z-[999999]"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close menu backdrop"
+          />
+        </div>
+      )}
 
       {/* spacer so content doesn’t hide under header */}
       <div
@@ -8943,8 +9334,7 @@ function RoastCTAInfo() {
           // countdown phase (Thu morning -> Sun 5pm ET)
           <div className="space-y-1">
             <div className="text-m text-neutral-300">
-              Time left to make the next roast:
-              {" "}
+              Time left to make the next roast:{" "}
               <span className="text-amber-300">{left}</span>
             </div>
             <div className="text-[14px] text-neutral-400">
@@ -8955,8 +9345,7 @@ function RoastCTAInfo() {
           // after cutoff passed, next roast date known, preorder
           <div className="space-y-1">
             <div className="text-sm text-neutral-300 font-medium">
-              Next batch roasts:
-              {" "}
+              Next batch roasts:{" "}
               <span className="text-amber-300">{dateLabel}</span>
             </div>
             <div className="text-[11px] text-neutral-400">
@@ -8967,10 +9356,8 @@ function RoastCTAInfo() {
           // normal early-week state
           <div className="space-y-1">
             <div className="text-sm text-neutral-300">
-              <span className="font-medium">Next batch roasts:</span>
-              {" "}
-              <span className="text-amber-300">{dateLabel}</span>
-              {" "}
+              <span className="font-medium">Next batch roasts:</span>{" "}
+              <span className="text-amber-300">{dateLabel}</span>{" "}
               <span className="text-neutral-400">(ET)</span>
             </div>
           </div>
@@ -8982,28 +9369,21 @@ function RoastCTAInfo() {
         {state === "countdown" ? (
           <div className="space-y-1">
             <div className="text-lg md:text-lg text-neutral-300 font-medium">
-              Next batch roasts:
-              {" "}
-              <span className="text-amber-300">{dateLabel}</span>
-              {" "}
+              Next batch roasts:{" "}
+              <span className="text-amber-300">{dateLabel}</span>{" "}
               <span className="text-neutral-400"></span>
             </div>
             <div className="text-m md:text-m text-neutral-400">
-              Time left to make the next roast:
-              {" "}
-              <span className="text-amber-300">{left}</span>
-              {" "}
-              <br />
+              Time left to make the next roast:{" "}
+              <span className="text-amber-300">{left}</span> <br />
               Secure your fresh order now.
             </div>
           </div>
         ) : state === "closed" ? (
           <div className="space-y-1">
             <div className="text-lg md:text-lg text-neutral-300 font-medium">
-              Next batch roasts:
-              {" "}
-              <span className="text-amber-300">{dateLabel}</span>
-              {" "}
+              Next batch roasts:{" "}
+              <span className="text-amber-300">{dateLabel}</span>{" "}
               <span className="text-neutral-400"></span>
             </div>
             <div className="text-m md:text-m text-neutral-400">
@@ -9013,10 +9393,8 @@ function RoastCTAInfo() {
         ) : (
           <div className="space-y-1">
             <div className="text-xs md:text-sm text-neutral-300">
-              <span className="font-medium">Next batch roasts:</span>
-              {" "}
-              <span className="text-amber-300">{dateLabel}</span>
-              {" "}
+              <span className="font-medium">Next batch roasts:</span>{" "}
+              <span className="text-amber-300">{dateLabel}</span>{" "}
               <span className="text-neutral-400">(ET)</span>
             </div>
           </div>
@@ -9024,7 +9402,6 @@ function RoastCTAInfo() {
       </div>
     </>
   );
-
 }
 
 /* ================= App Entrypoint ================= */

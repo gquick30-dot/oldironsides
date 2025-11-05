@@ -24,12 +24,14 @@ import {
   MemoryRouter,
   Routes,
   Route,
+  Navigate,
   Link,
   useLocation,
   Outlet,
   useNavigate,
   useParams,
 } from "react-router-dom";
+
 import { DateTime } from "luxon";
 // ---------- TESTIMONIAL REVIEWS (8 per page UI) ----------
 type Review = {
@@ -1495,6 +1497,12 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const isStore = location.pathname.startsWith("/store");
+  const mobileMerch = [
+    { key: "tees", label: "Tees", img: "shirts-web.png" },
+    { key: "hats", label: "Hats", img: "hat1-web.png" },
+    { key: "mugs", label: "Mugs", img: "Mugs-deck.png" },
+    { key: "accessories", label: "Accessories", img: "canister-web.png" },
+  ];
 
   // Inline timer data (uses your existing helpers)
   const nowET = useEtNow(45000); // update ~45s
@@ -1561,40 +1569,53 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
     });
     setCurrentIdx(bestIdx);
   }, []);
+// === MOBILE IMAGE TUNING PER CARD (by slug) ===
+const IMG_TUNE: Record<string, { imgH: string; objY: string; shift: string; gradH: string }> = {
+  "flagship":         { imgH: "h-[21.5rem]", objY: "object-[center_40%]", shift: "-translate-y-[1.0rem]", gradH: "h-10" },
+  "baptism-by-fire":  { imgH: "h-[22rem]",   objY: "object-[center_42%]", shift: "-translate-y-[1.2rem]", gradH: "h-12" },
+  "java-action":      { imgH: "h-[19.75rem]",objY: "object-[center_36%]", shift: "",                      gradH: "h-6"  },
+};
+// default if a slug isn’t listed
+const DEFAULT_TUNE = { imgH: "h-[19.75rem]", objY: "object-[center_36%]", shift: "", gradH: "h-6" };
 
   return (
     <section
       id="fleet"
       className={`relative overflow-hidden ${
         isHome
-          ? "pt-4 pb-10 md:py-14 min-h-[auto] md:min-h-[820px]"
-          : isStore
-          ? "pt-4 pb-10 md:py-14 min-h-[auto] md:min-h-[1000px]"
-          : "pt-4 pb-12 md:py-20 min-h-[auto] md:min-h-[1100px]"
+        ? "pt-2 pb-6 md:py-14 min-h-[auto] md:min-h-[820px]"
+: isStore
+? "pt-2 pb-6 md:pt-8 md:pb-14 min-h-[auto] md:min-h-[1000px]"
+          
+: "pt-2 pb-6 md:py-20 min-h-[auto] md:min-h-[1100px]"
+
       }`}
     >
       {/* Background image just for this section */}
       {!noBg && (
-        <img
-          src="/old-boston-harbor.png"
-          alt="Boston Harbor backdrop"
-          className="absolute inset-0 w-full h-full object-cover opacity-40 -z-0"
-        />
-      )}
+  <img
+    src="/old-boston-harbor.png"
+    alt="Boston Harbor backdrop"
+    className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-40 -z-0"
+  />
+)}
 
-      <Container
-        className={`relative z-10 ${isStore ? "pt-8 sm:pt-10 md:pt-16" : ""}`}
-      >
+
+
+      <Container className={`relative z-10 ${isStore ? "md:pt-16" : ""}`}>
         {/* header row: title + (maybe) back button */}
         <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between text-center md:text-left">
           <SectionTitle
             title={
               <span
-                className="
-                block md:inline md:whitespace-nowrap
-                text-[18px] sm:text-[24px] md:text-5xl
-                leading-tight md:leading-[1.1]
-                tracking-[0.08em] md:text-5xl font-extrabold md:font-bold text-amber-300 tracking-tight"
+              className="
+              block md:inline md:whitespace-nowrap
+              text-[18.5px] sm:text-[24px] md:text-5xl
+              leading-tight md:leading-[1.1]
+              tracking-[0.08em] md:text-5xl font-extrabold md:font-bold text-amber-300
+              mt-2 md:mt-0
+              "
+              
                 style={{ fontFamily: "'Cinzel', serif", fontWeight: 1000 }}
               >
                 LAUNCHED FROM THE HARBOR
@@ -1602,20 +1623,11 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             }
             subtitle={
               <>
-                {/* desktop-only tagline */}
-                <div className="hidden md:block text-neutral-300 font-normal text-base sm:text-lg md:text-xl tracking-tight mb-2">
-                  Our premium roasts, crafted for modern legends.
-                </div>
-
                 {/* info lines */}
-                <div className="text-neutral-300 text-base sm:text-lg font-normal tracking-tight flex flex-col items-center md:items-start gap-1">
+                <div className="text-neutral-300 text-sm sm:text-base font-normal tracking-tight flex flex-col items-center md:items-start gap-1">
                   {/* line 1: Roast CTA */}
                   <div className="whitespace-nowrap">
-                    <span>Roasted to Order</span>
-                    <span className="mx-1.5 text-amber-400/70" aria-hidden>
-                      •
-                    </span>
-                    <span>Order your fresh coffee now.</span>
+                    <span>Order your fresh roasted coffee now</span>
                   </div>
 
                   {/* line 2: Next Roast Date: <value>  (same line now, both mobile + desktop) */}
@@ -1636,6 +1648,8 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
           )}
         </div>
 
+      
+
         {/* tighten gap before cards */}
         <div className="mt-4">
           {/* mobile: 1-card swipe carousel with arrows */}
@@ -1644,23 +1658,22 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             <div
               ref={scrollRef}
               onScroll={handleScroll}
-              className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 pl-4 pr-4 no-scrollbar scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none]"
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pl-3 pr-3 no-scrollbar scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none]"
               style={{ WebkitOverflowScrolling: "touch" }}
             >
               {roastCards.map((card, idx) => {
                 const base =
                   card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
                 const sub = Math.round(base * 0.85 * 100) / 100; // 15% off
+                const tune = IMG_TUNE[card.slug] ?? DEFAULT_TUNE;
 
                 return (
                   <Link
-                    key={card.id}
-                    to={`/roast/${card.slug}`}
-                    aria-label={`${card.title} details`}
-                    ref={(el) => {
-                      cardRefs.current[idx] = el;
-                    }}
-                    className="
+                  key={card.id}
+                  to={`/roast/${card.slug}`}
+                  aria-label={`${card.title} details`}
+                  ref={(el) => { cardRefs.current[idx] = el; }}
+                  className="
                     mt-2 snap-center shrink-0
                     w-[88vw] max-w-[88vw]
                     rounded-2xl ring-1 ring-amber-400/60
@@ -1668,147 +1681,101 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     hover:ring-amber-300 hover:bg-neutral-900
                     transition flex flex-col
                   "
-                  >
+                >
+                  {/* ===== IMAGE (no overlay text) ===== */}
+                  {/* Tweak these two numbers if needed */}
+                  {/* IMG_HEIGHT ↓ and OBJECT_Y ↓ */}
+                  <div className="relative h-[22rem] rounded-t-2xl overflow-hidden">
+
                     <img
                       src={card.img}
                       alt={card.title}
-                      className="w-full h-96 object-cover rounded-t-2xl"
+                      className="w-full h-[22rem] object-cover object-[center_44%]" 
                       loading="lazy"
                       decoding="async"
                       onError={(e) => {
                         const el = e.currentTarget as HTMLImageElement;
-                        if (!el.src.includes("/placeholder.png")) {
-                          el.src = "/placeholder.png";
-                        }
+                        if (!el.src.includes('/placeholder.png')) el.src = '/placeholder.png';
                       }}
                     />
+                    {/* subtle seam fade so sea blends into the panel below */}
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/80 via-black/45 to-transparent" />
 
-                    <div className="p-5 flex flex-col flex-1 text-center">
-                      <h3
-                        className="text-3xl font-extrabold text-amber-300"
-                        style={{
-                          fontFamily: "'Cinzel', serif",
-                          fontWeight: 800,
-                        }}
-                      >
-                        {card.title}
-                      </h3>
 
-                      <p className="text-base italic text-neutral-500">
-                        {card.subTitle}
-                        <span className="mx-1.5 text-amber-300/80" aria-hidden>
-                          -
-                        </span>
-                        <span className="not-italic">12 oz</span>
-                      </p>
+                  </div>
+                
+                  {/* ===== CONTENT BELOW IMAGE (tight stack) ===== */}
+                  <div className="px-4 pt-0 pb-4 flex flex-col text-center">
 
-                      <p className="text-base text-neutral-400 flex-1">
-                        {card.note}
-                      </p>
-
-                      {/* PRICE ROW (mobile) - one line */}
-                      <div className="mt-4 text-sm flex flex-row flex-wrap items-center justify-center gap-2">
-                        <span className="text-neutral-200">
-                          From {fmt(base)}
-                        </span>
-
-                        <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] bg-amber-400/10 text-amber-300 ring-1 ring-amber-400/30 whitespace-nowrap">
-                          <span className="font-semibold">{fmt(sub)}</span>
-                          <span className="opacity-70">
-                            Subscribe &amp; Save 15%
-                          </span>
-                        </span>
-                      </div>
-
-                      {/* STARS ROW (mobile) UNDER PRICE */}
-                      <div className="mt-3 flex flex-col items-center text-[13px] text-neutral-400">
-                        <div className="flex items-center gap-2">
-                          {(() => {
-                            const summary = DEFAULT_REVIEW_SUMMARY[
-                              card.slug
-                            ] || {
-                              avg: 0,
-                              count: 0,
-                            };
-                            const avg = summary.avg ?? 0;
-                            const count = summary.count ?? 0;
-                            return (
-                              <>
-                                {/* numeric avg */}
-                                <span className="text-amber-300 font-semibold tabular-nums">
-                                  {avg.toFixed(1)}
-                                </span>
-
-                                {/* stars with outline + fractional fill */}
-                                <div className="inline-flex items-center gap-0.5">
-                                  {[0, 1, 2, 3, 4].map((i) => {
-                                    const starFill = Math.max(
-                                      0,
-                                      Math.min(1, avg - i)
-                                    ); // 0..1
-                                    const clipWidth = 24 * starFill;
-                                    const clipId = `cardStarClip-${card.slug}-${i}`;
-                                    return (
-                                      <svg
-                                        key={i}
-                                        viewBox="0 0 24 24"
-                                        className="h-4 w-4"
-                                        aria-hidden
-                                      >
-                                        <defs>
-                                          <clipPath
-                                            id={clipId}
-                                            clipPathUnits="userSpaceOnUse"
-                                          >
-                                            <rect
-                                              x="0"
-                                              y="0"
-                                              width={clipWidth}
-                                              height="24"
-                                            />
-                                          </clipPath>
-                                        </defs>
-
-                                        {/* base (neutral) */}
-                                        <path
-                                          d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                          className="text-neutral-800"
-                                          fill="currentColor"
-                                        />
-
-                                        {/* amber fill clipped */}
-                                        <path
-                                          d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                          className="text-amber-400"
-                                          fill="currentColor"
-                                          clipPath={`url(#${clipId})`}
-                                        />
-
-                                        {/* outline stroke */}
-                                        <path
-                                          d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                          fill="none"
-                                          stroke="currentColor"
-                                          className="text-neutral-600"
-                                          strokeWidth="1.4"
-                                          strokeLinejoin="round"
-                                        />
-                                      </svg>
-                                    );
-                                  })}
-                                </div>
-
-                                {/* count */}
-                                <span className="text-[11px] text-neutral-400/80 tracking-wide whitespace-nowrap">
-                                  {count} REVIEWS
-                                </span>
-                              </>
-                            );
-                          })()}
-                        </div>
+                    <h3
+                      className="text-[26px] leading-[1.1] font-extrabold text-amber-300"
+                      style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                    >
+                      {card.title}
+                    </h3>
+                
+                    <p className="mt-0.5 text-[13px] italic text-neutral-400">
+                      {card.subTitle}
+                      <span className="mx-1.5 text-amber-300/80" aria-hidden>-</span>
+                      <span className="not-italic">12 oz</span>
+                    </p>
+                
+                    {/* short note; clamp to keep stack tight */}
+                    <p className="mt-1 text-sm text-neutral-400 line-clamp-1">
+                      {card.note}
+                    </p>
+                
+                    {/* PRICE */}
+                    <div className="mt-2 text-[15px] flex flex-row flex-wrap items-center justify-center gap-2">
+                      <span className="text-neutral-100">From {fmt(base)}</span>
+                      <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] bg-amber-400/10 text-amber-300 ring-1 ring-amber-400/30 whitespace-nowrap">
+                        <span className="font-semibold">{fmt(sub)}</span>
+                        <span className="opacity-70">Subscribe &amp; Save 15%</span>
+                      </span>
+                    </div>
+                
+                    {/* STARS */}
+                    <div className="mt-2 flex flex-col items-center text-[12px] text-neutral-300">
+                      <div className="flex items-center gap-2">
+                        {(() => {
+                          const summary = DEFAULT_REVIEW_SUMMARY[card.slug] || { avg: 0, count: 0 };
+                          const avg = summary.avg ?? 0;
+                          const count = summary.count ?? 0;
+                          return (
+                            <>
+                              <span className="text-amber-300 font-semibold tabular-nums">
+                                {avg.toFixed(1)}
+                              </span>
+                              <div className="inline-flex items-center gap-0.5">
+                                {[0,1,2,3,4].map((i) => {
+                                  const starFill = Math.max(0, Math.min(1, avg - i));
+                                  const clipWidth = 24 * starFill;
+                                  const clipId = `cardStarClip-${card.slug}-${i}`;
+                                  return (
+                                    <svg key={i} viewBox="0 0 24 24" className="h-4 w-4" aria-hidden>
+                                      <defs>
+                                        <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+                                          <rect x="0" y="0" width={clipWidth} height="24" />
+                                        </clipPath>
+                                      </defs>
+                                      <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" className="text-neutral-800" fill="currentColor" />
+                                      <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" className="text-amber-400" fill="currentColor" clipPath={`url(#${clipId})`} />
+                                      <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" fill="none" stroke="currentColor" className="text-neutral-600" strokeWidth="1.4" strokeLinejoin="round" />
+                                    </svg>
+                                  );
+                                })}
+                              </div>
+                              <span className="text-[11px] text-neutral-300/85 tracking-wide whitespace-nowrap">
+                                {count} REVIEWS
+                              </span>
+                            </>
+                          );
+                        })()}
                       </div>
                     </div>
-                  </Link>
+                  </div>
+                </Link>
+                
                 );
               })}
             </div>
@@ -2112,14 +2079,14 @@ function HomePage() {
                     <div aria-hidden className="h-2 md:h-3" />
                     <div className="w-full max-w-[24rem] mx-auto md:mx-0">
                       <Link
-                        to="/coffee"
+                        to="/store"
                         className="w-full inline-flex items-center justify-center gap-2
-                    px-6 py-3 sm:px-8 sm:py-4
-                    rounded-xl bg-neutral-900 text-amber-400 font-extrabold
-                    text-2xl sm:text-lg md:text-2xl tracking-wide
-                    border border-amber-500 shadow-xl shadow-amber-500/20
-                    hover:bg-amber-400 hover:text-neutral-900
-                    transition-all duration-200"
+  px-6 py-3 sm:px-8 sm:py-4
+  rounded-xl bg-neutral-900 text-amber-400 font-extrabold
+  text-2xl sm:text-lg md:text-2xl tracking-wide
+  border border-amber-500 shadow-xl shadow-amber-500/20
+  hover:bg-amber-400 hover:text-neutral-900
+  transition-all duration-200"
                       >
                         <span aria-hidden>⚓</span>
                         SHOP COFFEE NOW
@@ -2334,7 +2301,7 @@ function ShopCoffeeCard({ className = "" }: { className?: string }) {
   const flagship = roastCards.find((c) => c.slug === "flagship");
   return (
     <Link
-      to="/coffee"
+      to="/store"
       className={[
         "group relative inline-block align-top overflow-hidden rounded-xl",
         "ring-1 ring-amber-500 shadow-2xl shadow-black/30",
@@ -6302,43 +6269,91 @@ function StorePage() {
       <LaunchedFromHarbor />
       {/* 2) Store content below */}
       <section
-        id="merch"
-        className="relative overflow-hidden pt-10 pb-16 md:pt-12 md:pb-24 scroll-mt-28 md:scroll-mt-36"
-      >
+  id="merch"
+  className="relative overflow-hidden pt-10 pb-16 md:pt-12 md:pb-24 scroll-mt-28 md:scroll-mt-36"
+>
+
+
+
         <Container>
-          <SectionTitle
-            title="Launching Winter 2025!"
-            subtitle="Apparel, mugs, hats, and gear for the Fleet."
-          />
-          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {tiles.map((t) => (
-              <div
-                key={t.key}
-                className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 transition text-left overflow-hidden flex flex-col"
-              >
-                <div className="aspect-[4/3] w-full overflow-hidden">
-                  <img
-                    src={t.img}
-                    alt={`${t.label} preview`}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-3 text-amber-300 font-semibold">
-                    {t.icon}
-                    <span>{t.label}</span>
-                  </div>
-                </div>
-                <div className="px-6 pb-6">
-                  <div className="mt-2 text-sm text-neutral-400">
-                    Join the Fleet to get first access on gear. <br />
-                    Plus 20% off on first order of coffee.
-                  </div>
-                  <NotifyForm onSubmit={() => {}} />
-                </div>
-              </div>
-            ))}
+        <SectionTitle
+  title="Launching Winter 2025!"
+  subtitle="Apparel, mugs, hats, and gear for the Fleet."
+/>
+
+{/* MOBILE: 2×2 gear tiles */}
+<div className="md:hidden mt-4">
+  <div className="grid grid-cols-2 gap-4">
+    {tiles.map((t) => {
+      const slug = String(t.key).toLowerCase();
+      return (
+        <Link
+          key={`mob-merch-${slug}`}
+          to={`/store/${slug}`}
+          className="group overflow-hidden rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/40 shadow-lg shadow-amber-400/10 hover:bg-neutral-900 hover:ring-amber-300 transition"
+          aria-label={t.label}
+        >
+          <div className="aspect-[3/4] w-full overflow-hidden bg-neutral-900">
+            <img
+              src={t.img}
+              alt={`${t.label} preview`}
+              className="h-full w-full object-cover"
+              loading="lazy"
+              decoding="async"
+              onError={(e) => {
+                const el = e.currentTarget as HTMLImageElement;
+                if (!el.src.includes("/placeholder.png")) {
+                  el.src = "/placeholder.png";
+                }
+              }}
+            />
           </div>
+          <div className="p-3 text-center">
+            <div
+              className="text-base font-extrabold text-amber-300 tracking-wide"
+              style={{ fontFamily: "'Cinzel', serif" }}
+            >
+              {t.label}
+            </div>
+            <div className="text-[11px] text-neutral-400">Coming soon</div>
+          </div>
+        </Link>
+      );
+    })}
+  </div>
+</div>
+
+{/* DESKTOP: original grid */}
+<div className="hidden md:grid mt-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  {tiles.map((t) => (
+    <div
+      key={t.key}
+      className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 transition text-left overflow-hidden flex flex-col"
+    >
+      <div className="aspect-[4/3] w-full overflow-hidden">
+        <img
+          src={t.img}
+          alt={`${t.label} preview`}
+          className="h-full w-full object-cover"
+        />
+      </div>
+      <div className="p-6">
+        <div className="flex items-center gap-3 text-amber-300 font-semibold">
+          {t.icon}
+          <span>{t.label}</span>
+        </div>
+      </div>
+      <div className="px-6 pb-6">
+        <div className="mt-2 text-sm text-neutral-400">
+          Join the Fleet to get first access on gear. <br />
+          Plus 20% off on first order of coffee.
+        </div>
+        <NotifyForm onSubmit={() => {}} />
+      </div>
+    </div>
+  ))}
+</div>
+
         </Container>
       </section>
     </main>
@@ -6448,7 +6463,7 @@ function OriginsPage() {
 
                 {/* Buy box ~15% larger: font + padding increased */}
                 <Link
-                  to="/coffee"
+                  to="/store"
                   className="mt-7 inline-block rounded-xl ring-1 ring-amber-400/60 
                        text-amber-400 font-semibold text-[1.15rem] md:text-[1.3rem]
                        px-[1.45rem] py-[0.6rem]
@@ -9625,7 +9640,7 @@ function Layout() {
   const { count } = useCart();
   const location = useLocation();
   const isHome = location.pathname === "/";
-  const isFleet = location.pathname.startsWith("/coffee");
+
   const isRoast = location.pathname.startsWith("/roast");
   const isOrigins = location.pathname.startsWith("/origins");
   const isSupport =
@@ -9641,6 +9656,8 @@ function Layout() {
     null | "coffee" | "merch" | "origins"
   >(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const isStore = location.pathname.startsWith("/store");
+
 
   // Close the mega panel whenever the route changes
   useEffect(() => {
@@ -9964,7 +9981,7 @@ function Layout() {
                       }}
                       className="relative"
                     >
-                      <HeaderNavLink to="/coffee">SHOP COFFEE</HeaderNavLink>
+                      <HeaderNavLink to="/store">SHOP COFFEE</HeaderNavLink>
                     </div>
 
                     <div
@@ -10145,7 +10162,7 @@ function Layout() {
                           {openMega === "origins" && (
                             <div className="grid md:grid-cols-[auto,1fr,auto] gap-8 items-start">
                               <Link
-                                to="/coffee"
+                                to="/store"
                                 onClick={() => setOpenMega(null)}
                                 className="group block rounded-2xl overflow-hidden ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition text-center justify-self-center md:justify-self-start w-40 sm:w-48 md:w-56"
                               >
@@ -10273,12 +10290,13 @@ function Layout() {
             {/* body */}
             <div className="flex-1 overflow-y-auto text-neutral-100 text-lg font-semibold">
               <Link
-                to="/coffee"
+                to="/store"
                 onClick={() => setMobileOpen(false)}
                 className="block px-4 py-4 border-b border-neutral-800"
               >
                 COFFEE
               </Link>
+
               <Link
                 to="/store#merch"
                 onClick={() => setMobileOpen(false)}
@@ -10325,8 +10343,8 @@ function Layout() {
         className={
           isHome
             ? "h-[105px] md:h-[205px]"
-            : isFleet
-            ? "h-[100px] md:h-[150px]" // ↓ was 180px causing the black gap
+            : isStore
+            ? "h-[120px] md:h-[150px]"
             : isRoast
             ? "h-[140px] md:h-[190px]"
             : isOrigins
@@ -10654,7 +10672,7 @@ function AppShell() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="coffee" element={<FleetPage />} />
+          <Route path="coffee" element={<Navigate to="/store" replace />} />
           <Route path="roast/:slug" element={<RoastDetailPage />} />
           <Route path="store" element={<StorePage />} />
           <Route path="store/:slug" element={<StoreCategoryPage />} />

@@ -1590,8 +1590,12 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
           <SectionTitle
             title={
               <span
-                className="block md:inline md:whitespace-nowrap text-2xl sm:text-3xl md:text-5xl font-bold text-amber-300 tracking-tight"
-                style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+                className="
+                block md:inline md:whitespace-nowrap
+                text-[18px] sm:text-[24px] md:text-5xl
+                leading-tight md:leading-[1.1]
+                tracking-[0.08em] md:text-5xl font-extrabold md:font-bold text-amber-300 tracking-tight"
+                style={{ fontFamily: "'Cinzel', serif", fontWeight: 1000 }}
               >
                 LAUNCHED FROM THE HARBOR
               </span>
@@ -1626,7 +1630,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
 
           {/* Back button drops under title on mobile, floats right on desktop */}
           {!isHome && (
-            <div className="self-center md:self-start">
+            <div className="hidden md:block self-center md:self-start">
               <BackButton size="sm" />
             </div>
           )}
@@ -2078,14 +2082,14 @@ function HomePage() {
                     {/* HEADLINE */}
                     <h2
                       className="text-amber-400 font-extrabold leading-snug tracking-tight
-                text-[1.5rem] sm:text-[1.5rem] md:text-[2.1rem]"
+                text-[1.25rem] sm:text-[1.5rem] md:text-[2.1rem]"
                       style={{ fontFamily: "'Cinzel', serif" }}
                     >
                       PREMIUM, SMALL-BATCH COFFEE
                     </h2>
 
                     {/* bullet line */}
-                    <div className="mt-0 text-neutral-300 text-[16px] sm:text-sm md:text-lg">
+                    <div className="mt-0 text-neutral-300 text-[12px] sm:text-sm md:text-lg">
                       <span>Roasted To Order</span>
                       <span className="mx-1.5 text-amber-400/70" aria-hidden>
                         •
@@ -2181,58 +2185,84 @@ function HomePage() {
         </div>
 
         <Container>
-          <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex flex-col justify-center">
-            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              <div className="justify-self-center md:justify-self-start self-center">
-                <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
-                  <img
-                    src="/soliders-sunset.png"
-                    alt="Giving back"
-                    className="w-full h-full object-cover hue-rotate-[-10deg] saturate-70"
-                  />
-                  {/* top and bottom vignettes reduce perceived warmth */}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10" />
+          {/* ===== MOBILE-ONLY: amber line + GovX button ===== */}
+          <div className="relative z-10 md:hidden min-h-[420px] py-12 flex items-center">
+            <div className="mx-auto max-w-screen-sm space-y-4 text-center">
+              <p className="text-amber-300 text-xl leading-relaxed tracking-[0.02em]">
+                Active duty, veterans, and first responders including fire, law
+                enforcement, and EMTs receive $1 off every bag of fresh roasted
+                coffee, every day. The discount stacks with subscriptions.
+              </p>
+              <a
+                href="https://www.govx.com/govx-id/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block rounded-xl ring-1 ring-amber-400/60 
+                     text-amber-400 font-semibold text-[1rem]
+                     px-[1.1rem] py-[0.45rem]
+                     hover:bg-amber-400 hover:text-neutral-900 transition-all"
+              >
+                Verify with GovX
+              </a>
+            </div>
+          </div>
+
+          {/* ===== DESKTOP/TABLET: original layout (unchanged) ===== */}
+          <div className="relative z-10 hidden md:block">
+            <div className="min-h-[700px] py-16 flex flex-col justify-center">
+              <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-6 items-center">
+                <div className="justify-self-center md:justify-self-start self-center">
+                  <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
+                    <img
+                      src="/soliders-sunset.png"
+                      alt="Giving back"
+                      className="w-full h-full object-cover hue-rotate-[-10deg] saturate-70"
+                    />
+                    {/* top and bottom vignettes reduce perceived warmth */}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10" />
+                  </div>
                 </div>
-              </div>
 
-              {/* text: center on mobile, left on md+ */}
-              <div className="space-y-3 text-center md:text-left">
-                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
-                  Giving Back To Those Who Served
-                </h3>
-                <br />
-
-                <p className="text-neutral-100 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Even as a young company where every dollar counts, giving back
-                  is a big part of who we are and what Old Ironsides Coffee
-                  stands for. As a veteran, I believe service is a promise kept
-                  when no one is watching. It is standards held high, teamwork
-                  under pressure, and loyalty to the people beside you. <br />
+                {/* text: center on mobile, left on md+ */}
+                <div className="space-y-3 text-center md:text-left">
+                  <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                    Giving Back To Those Who Served
+                  </h3>
                   <br />
-                  This brand exists to honor that code, to stand with those who
-                  protect our freedoms, and to keep their legacy present in the
-                  work we do every day.
-                </p>
-                <br />
-                <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Active duty, veterans, and first responders including fire,
-                  law enforcement, and EMTs receive $1 off every bag of fresh
-                  roasted coffee, every day. The discount stacks with
-                  subscriptions.
-                </p>
-                <br />
-                <a
-                  href="https://www.govx.com/govx-id/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
-                   text-amber-400 font-semibold text-[1rem]
-                   px-[1.1rem] py-[0.45rem]
-                   hover:bg-amber-400 hover:text-neutral-900 transition-all"
-                >
-                  Verify with GovX
-                </a>
+
+                  <p className="text-neutral-100 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                    Even as a young company where every dollar counts, giving
+                    back is a big part of who we are and what Old Ironsides
+                    Coffee stands for. As a veteran, I believe service is a
+                    promise kept when no one is watching. It is standards held
+                    high, teamwork under pressure, and loyalty to the people
+                    beside you. <br />
+                    <br />
+                    This brand exists to honor that code, to stand with those
+                    who protect our freedoms, and to keep their legacy present
+                    in the work we do every day.
+                  </p>
+                  <br />
+                  <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                    Active duty, veterans, and first responders including fire,
+                    law enforcement, and EMTs receive $1 off every bag of fresh
+                    roasted coffee, every day. The discount stacks with
+                    subscriptions.
+                  </p>
+                  <br />
+                  <a
+                    href="https://www.govx.com/govx-id/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
+                         text-amber-400 font-semibold text-[1rem]
+                         px-[1.1rem] py-[0.45rem]
+                         hover:bg-amber-400 hover:text-neutral-900 transition-all"
+                  >
+                    Verify with GovX
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -2294,7 +2324,9 @@ function HomePage() {
         </Container>
       </section>
 
-      <SDVOSBHighlight />
+      <div className="hidden md:block">
+        <SDVOSBHighlight />
+      </div>
     </>
   );
 }
@@ -2774,7 +2806,10 @@ function RoastDetailPage() {
     "oak-and-copper": 3,
     "baptism-by-fire": 4,
   };
-  const [mobileToast, setMobileToast] = useState<null | { title: string; qty: number }>(null);
+  const [mobileToast, setMobileToast] = useState<null | {
+    title: string;
+    qty: number;
+  }>(null);
 
   const anchorLevel = roastLevelBySlug[String(slug)];
 
@@ -2790,12 +2825,15 @@ function RoastDetailPage() {
   const craftSubtitleMap: Record<string, React.ReactNode> = {
     flagship: (
       <>
-        Our everyday staple, Flagship is a breakfast-style medium roast that is smooth, reliable, and never bitter. A roast you can reach for day after day.
+        Our everyday staple, Flagship is a breakfast-style medium roast that is
+        smooth, reliable, and never bitter. A roast you can reach for day after
+        day.
       </>
     ),
     "baptism-by-fire": (
       <>
-       Our darkest and most intense roast in the fleet - full-bodied and unyielding, with a finish so smooth you have to taste it to believe it.
+        Our darkest and most intense roast in the fleet - full-bodied and
+        unyielding, with a finish so smooth you have to taste it to believe it.
       </>
     ),
     "java-action": (
@@ -3725,19 +3763,18 @@ function RoastDetailPage() {
         title: `${card.title} (${variantLabel})`,
         qty: n,
       });
-      
+
       // auto-hide after 2.5s
       setTimeout(() => {
         setMobileToast(null);
       }, 2500);
-      
+
       // still fire the existing desktop/global flash event
       window.dispatchEvent(
         new CustomEvent("flash", {
           detail: `${n} × ${card.title} (${variantLabel}) added to Chest`,
         })
       );
-      
     } catch (e) {
       console.error(e);
       window.dispatchEvent(
@@ -3757,17 +3794,16 @@ function RoastDetailPage() {
       <Container className="relative z-10 mt-0 md:mt-0">
         {/* ===== HERO ===== */}
         <div className="relative">
-        <div
-  className="pointer-events-none select-none absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 z-0 hidden md:block"
-  aria-hidden
->
-  <img
-    src="/emblem-black.png"
-    alt=""
-    className="w-[58vw] max-w-[720px] opacity-15 object-contain"
-  />
-</div>
-
+          <div
+            className="pointer-events-none select-none absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 z-0 hidden md:block"
+            aria-hidden
+          >
+            <img
+              src="/emblem-black.png"
+              alt=""
+              className="w-[58vw] max-w-[720px] opacity-15 object-contain"
+            />
+          </div>
 
           <div className="relative z-10 mt-0 md:mt-3 grid md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-start">
             {/* HERO IMAGE */}
@@ -4185,30 +4221,29 @@ function RoastDetailPage() {
                   </div>
                 </div>
               )}
-{mobileToast && (
-  <div className="fixed left-0 right-0 top-1/2 transform -translate-y-1/2 z-[9999] px-4 md:hidden">
-    <div className="w-full rounded-lg border border-amber-400/70 bg-amber-400/90 text-black shadow-lg shadow-amber-400/20 px-6 py-4 flex items-center justify-center gap-4">
-      <div className="flex-1 text-center">
-        <div className="text-xl font-bold text-black">
-          Added to Chest
-        </div>
-        <div className="text-lg font-bold text-neutral-800 leading-snug">
-          {mobileToast.qty} × {mobileToast.title}
-        </div>
-      </div>
+              {mobileToast && (
+                <div className="fixed left-0 right-0 top-1/2 transform -translate-y-1/2 z-[9999] px-4 md:hidden">
+                  <div className="w-full rounded-lg border border-amber-400/70 bg-amber-400/90 text-black shadow-lg shadow-amber-400/20 px-6 py-4 flex items-center justify-center gap-4">
+                    <div className="flex-1 text-center">
+                      <div className="text-xl font-bold text-black">
+                        Added to Chest
+                      </div>
+                      <div className="text-lg font-bold text-neutral-800 leading-snug">
+                        {mobileToast.qty} × {mobileToast.title}
+                      </div>
+                    </div>
 
-      <button
-        type="button"
-        onClick={() => setMobileToast(null)}
-        className="text-[12px] text-neutral-500 hover:text-neutral-200"
-        aria-label="Close message"
-      >
-        ✕
-      </button>
-    </div>
-  </div>
-)}
-
+                    <button
+                      type="button"
+                      onClick={() => setMobileToast(null)}
+                      className="text-[12px] text-neutral-500 hover:text-neutral-200"
+                      aria-label="Close message"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* ================= DESKTOP VERSION (hidden on mobile) ================= */}
               {(card.canBuy || isOak) && (
@@ -4447,150 +4482,183 @@ function RoastDetailPage() {
                 </>
               )}
 
-          {/* ===== STORY CONTENT (Mobile #4, Desktop #2) ===== */}
-<div className="order-4 md:order-2">
-  <div
-    className="max-w-[64ch] sm:max-w-[68ch] md:max-w-[70ch] lg:max-w-[72ch] text-pretty leading-[1.7] md:leading-[1.85]"
-    lang="en"
-    style={{ hyphens: "auto", textWrap: "balance" }}
-  >
-    {isFlagship && (
-      <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
-        <p className="text-amber-300 text-base md:text-lg">
-          USS Constitution - Commissioned October 21, 1797
-        </p>
-        <p>
-          Commissioned by President George Washington, the USS Constitution was
-          built to stand as the strength and pride of a new Republic. She was one
-          of six great frigates launched to secure America’s place on the seas, yet
-          time and war would claim all but one.
-        </p>
-        <p>
-          Through every storm and every battle, the Constitution endured. Today
-          she stands as a living symbol of the nation she was made to defend.
-        </p>
-        <p>
-          This roast honors that legacy, steady and enduring as the ship herself.
-          Smooth, balanced, and bold, our Flagship Medium Roast carries her spirit
-          in every cup.
-        </p>
-        {/* Desktop version */}
-<p className="hidden md:block text-left text-xl font-normal text-amber-300 break-words md:font-semibold">
-  Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
-</p>
+              {/* ===== STORY CONTENT (Mobile #4, Desktop #2) ===== */}
+              <div className="order-4 md:order-2">
+                <div
+                  className="max-w-[64ch] sm:max-w-[68ch] md:max-w-[70ch] lg:max-w-[72ch] text-pretty leading-[1.7] md:leading-[1.85]"
+                  lang="en"
+                  style={{ hyphens: "auto", textWrap: "balance" }}
+                >
+                  {isFlagship && (
+                    <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                      <p className="text-amber-300 text-base md:text-lg">
+                        USS Constitution - Commissioned October 21, 1797
+                      </p>
+                      <p>
+                        Commissioned by President George Washington, the USS
+                        Constitution was built to stand as the strength and
+                        pride of a new Republic. She was one of six great
+                        frigates launched to secure America’s place on the seas,
+                        yet time and war would claim all but one.
+                      </p>
+                      <p>
+                        Through every storm and every battle, the Constitution
+                        endured. Today she stands as a living symbol of the
+                        nation she was made to defend.
+                      </p>
+                      <p>
+                        This roast honors that legacy, steady and enduring as
+                        the ship herself. Smooth, balanced, and bold, our
+                        Flagship Medium Roast carries her spirit in every cup.
+                      </p>
+                      {/* Desktop version */}
+                      <p className="hidden md:block text-left text-xl font-normal text-amber-300 break-words md:font-semibold">
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the
+                        Victory!
+                      </p>
 
-{/* Mobile version */}
-<p className="md:hidden text-center text-xl font-normal text-amber-300 break-words">
-  Old Ironsides Coffee
-  <br />
-  <span className="block text-sm">Ignite the Spirit, Savor the Victory!</span>
-</p>
-      </div>
-    )}
+                      {/* Mobile version */}
+                      <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words">
+                        Old Ironsides Coffee
+                        <br />
+                        <span className="block text-sm">
+                          Ignite the Spirit, Savor the Victory!
+                        </span>
+                      </p>
+                    </div>
+                  )}
 
-    {isBaptism && (
-      <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
-        <p className="text-amber-300 text-base md:text-lg">
-          USS Constitution vs HMS Guerriere - August 19, 1812
-        </p>
-        <p>
-        Off the coast of Nova Scotia, the Constitution met the British frigate Guerriere in her first great trial at sea. As they drew within range, the sea erupted with the thunder of broadside cannons. British shot struck hard against the hull of the American frigate but failed to pierce it. A British sailor, awestruck by what he saw, shouted, “Her sides are made of iron!”
-        </p>
-        <p>Through smoke and cannon fire, the Guerriere’s masts splintered and her decks shattered. She fought bravely, but her rigging fell to ruin and her colors were struck. As flames consumed what remained, Old Ironsides sailed on, scarred yet unbroken, carrying a nation’s pride upon the sea.</p>
-        <p>
-        This bold roast carries that victory forward in every cup and enduring as the ship herself.
-        </p>
-        {/* Tagline for Baptism (Desktop + Mobile, no bold on desktop, reduced bold on mobile) */}
-    {/* Desktop version */}
-<p className="hidden md:block text-left text-xl font-normal text-amber-300 break-words md:font-semibold">
-  Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
-</p>
+                  {isBaptism && (
+                    <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                      <p className="text-amber-300 text-base md:text-lg">
+                        USS Constitution vs HMS Guerriere - August 19, 1812
+                      </p>
+                      <p>
+                        Off the coast of Nova Scotia, the Constitution met the
+                        British frigate Guerriere in her first great trial at
+                        sea. As they drew within range, the sea erupted with the
+                        thunder of broadside cannons. British shot struck hard
+                        against the hull of the American frigate but failed to
+                        pierce it. A British sailor, awestruck by what he saw,
+                        shouted, “Her sides are made of iron!”
+                      </p>
+                      <p>
+                        Through smoke and cannon fire, the Guerriere’s masts
+                        splintered and her decks shattered. She fought bravely,
+                        but her rigging fell to ruin and her colors were struck.
+                        As flames consumed what remained, Old Ironsides sailed
+                        on, scarred yet unbroken, carrying a nation’s pride upon
+                        the sea.
+                      </p>
+                      <p>
+                        This bold roast carries that victory forward in every
+                        cup and enduring as the ship herself.
+                      </p>
+                      {/* Tagline for Baptism (Desktop + Mobile, no bold on desktop, reduced bold on mobile) */}
+                      {/* Desktop version */}
+                      <p className="hidden md:block text-left text-xl font-normal text-amber-300 break-words md:font-semibold">
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the
+                        Victory!
+                      </p>
 
-{/* Mobile version */}
-<p className="md:hidden text-center text-xl font-normal text-amber-300 break-words">
-  Old Ironsides Coffee
-  <br />
-  <span className="block text-sm">Ignite the Spirit, Savor the Victory!</span>
-</p>
+                      {/* Mobile version */}
+                      <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words">
+                        Old Ironsides Coffee
+                        <br />
+                        <span className="block text-sm">
+                          Ignite the Spirit, Savor the Victory!
+                        </span>
+                      </p>
+                    </div>
+                  )}
 
-      </div>
-    )}
+                  {isJava && (
+                    <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                      <p className="text-amber-300 text-base md:text-lg">
+                        USS Constitution vs HMS Java - December 29, 1812
+                      </p>
+                      <p>
+                        In the wake of HMS Guerriere’s defeat, the Royal Navy
+                        cast its hope upon the formidable HMS Java to restore
+                        British honor. Swift, heavily armed, and set upon the
+                        hunt for the USS Constitution, she was expected to sink
+                        the American frigate once and for all.
+                      </p>
+                      <p>
+                        Off Brazil’s sunlit coast, the sea became the
+                        battlefield. Broadsides clashed, cannons roared, masts
+                        splintered, and the resolve of a young nation was tested
+                        once again. Out from the smoke and chaos, scarred but
+                        victorious, Old Ironsides watched as the Java burned in
+                        fiery defeat.
+                      </p>
+                      <p>
+                        This medium roast carries that victory forward in every
+                        cup, with a smooth, full-bodied flavor and a finish as
+                        enduring as Old Ironsides herself.
+                      </p>
+                      {/* Desktop version */}
+                      <p className="hidden md:block text-left text-xl font-normal text-amber-300 break-words md:font-semibold">
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the
+                        Victory!
+                      </p>
 
-    {isJava && (
-      <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
-        <p className="text-amber-300 text-base md:text-lg">
-          USS Constitution vs HMS Java - December 29, 1812
-        </p>
-        <p>
-          In the wake of HMS Guerriere’s defeat, the Royal Navy cast its hope upon
-          the formidable HMS Java to restore British honor. Swift, heavily armed,
-          and set upon the hunt for the USS Constitution, she was expected to sink
-          the American frigate once and for all.
-        </p>
-        <p>
-          Off Brazil’s sunlit coast, the sea became the battlefield. Broadsides
-          clashed, cannons roared, masts splintered, and the resolve of a young
-          nation was tested once again. Out from the smoke and chaos, scarred but
-          victorious, Old Ironsides watched as the Java burned in fiery defeat.
-        </p>
-        <p>
-          This medium roast carries that victory forward in every cup, with a
-          smooth, full-bodied flavor and a finish as enduring as Old Ironsides
-          herself.
-        </p>
-         {/* Desktop version */}
-<p className="hidden md:block text-left text-xl font-normal text-amber-300 break-words md:font-semibold">
-  Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
-</p>
+                      {/* Mobile version */}
+                      <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words">
+                        Old Ironsides Coffee
+                        <br />
+                        <span className="block text-sm">
+                          Ignite the Spirit, Savor the Victory!
+                        </span>
+                      </p>
+                    </div>
+                  )}
 
-{/* Mobile version */}
-<p className="md:hidden text-center text-xl font-normal text-amber-300 break-words">
-  Old Ironsides Coffee
-  <br />
-  <span className="block text-sm">Ignite the Spirit, Savor the Victory!</span>
-</p>
-      </div>
-    )}
+                  {isOak && (
+                    <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                      <p className="text-amber-300 text-base md:text-lg">
+                        Wrapped in Oak Above, Clad in Copper Below
+                      </p>
+                      <p>
+                        Her copper hull kissed the waves beneath, above, her
+                        timbers stood firm against the British cannon’s plea,
+                        her heart of oak and copper forged for battle on the
+                        open sea.
+                      </p>
+                      <p>
+                        Born for speed, for maneuver, and for glory, she cut the
+                        waves, mastered the cannons, and sailed her name into
+                        history.
+                      </p>
+                      <p>
+                        Aged in bourbon barrels, this roast honors the
+                        shipwrights that built her, with notes of smooth
+                        caramel, warm vanilla, and toasted oak.
+                      </p>
 
-    {isOak && (
-      <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
-        <p className="text-amber-300 text-base md:text-lg">
-          Wrapped in Oak Above, Clad in Copper Below
-        </p>
-        <p>
-          Her copper hull kissed the waves beneath, above, her timbers stood firm
-          against the British cannon’s plea, her heart of oak and copper forged for
-          battle on the open sea.
-        </p>
-        <p>
-          Born for speed, for maneuver, and for glory, she cut the waves, mastered
-          the cannons, and sailed her name into history.
-        </p>
-        <p>
-          Aged in bourbon barrels, this roast honors the shipwrights that built her,
-          with notes of smooth caramel, warm vanilla, and toasted oak.
-        </p>
-        
-          {/* Desktop version */}
-<p className="hidden md:block text-left text-xl font-normal text-amber-300 break-words md:font-semibold">
-  Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
-</p>
+                      {/* Desktop version */}
+                      <p className="hidden md:block text-left text-xl font-normal text-amber-300 break-words md:font-semibold">
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the
+                        Victory!
+                      </p>
 
-{/* Mobile version */}
-<p className="md:hidden text-center text-xl font-normal text-amber-300 break-words">
-  Old Ironsides Coffee
-  <br />
-  <span className="block text-sm">Ignite the Spirit, Savor the Victory!</span>
-</p>
-      </div>
-    )}
-  </div>
-</div>
-{/* ===== END STORY ===== */}
-{/* Hide on desktop, visible on mobile */}
-<div className="md:hidden">
-  {/* Add any additional mobile content adjustments if needed */}
-</div>
+                      {/* Mobile version */}
+                      <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words">
+                        Old Ironsides Coffee
+                        <br />
+                        <span className="block text-sm">
+                          Ignite the Spirit, Savor the Victory!
+                        </span>
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* ===== END STORY ===== */}
+              {/* Hide on desktop, visible on mobile */}
+              <div className="md:hidden">
+                {/* Add any additional mobile content adjustments if needed */}
+              </div>
             </div>
             {/* end right column for desktop / stacked column for mobile */}
           </div>
@@ -4728,7 +4796,6 @@ function CareCard() {
   );
 }
 
-
 function OriginImg({
   name,
   bumpIndonesia = false,
@@ -4794,7 +4861,6 @@ function OriginImg({
   );
 }
 
-
 function RoastLevelAnchors({
   level,
   reviewData,
@@ -4848,192 +4914,141 @@ function RoastLevelAnchors({
 
   return (
     <section className="mt-0 md:mt-2">
+      {/* ================= DESKTOP (unchanged from your original) ================= */}
+      <div className="hidden md:block">
+        {/* Header row: title + write button */}
+        {/* Desktop header, BRCC-style layout */}
+        <div className="mb-4 flex flex-col items-center text-center">
+          {/* Title */}
+          <h2 className="text-xl md:text-2xl font-bold tracking-wide text-amber-300">
+            CUSTOMER REVIEWS
+          </h2>
 
-  {/* ================= DESKTOP (unchanged from your original) ================= */}
-  <div className="hidden md:block">
+          {/* Row under title: rating num, stars, count, button */}
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-center">
+            {/* rating number */}
+            <span className="text-amber-300 font-semibold tabular-nums text-base">
+              {(reviewData?.avg ?? 0).toFixed(1)}
+            </span>
 
-    {/* Header row: title + write button */}
-   {/* Desktop header, BRCC-style layout */}
-<div className="mb-4 flex flex-col items-center text-center">
+            {/* stars */}
+            <div className="inline-flex items-center gap-0.5">
+              {[0, 1, 2, 3, 4].map((i) => {
+                const avg = reviewData?.avg ?? 0;
+                const starFill = Math.max(0, Math.min(1, avg - i));
+                const clipWidth = 24 * starFill;
+                const clipId = `reviewsStarClip-desktop-header-${i}`;
+                return (
+                  <svg
+                    key={i}
+                    viewBox="0 0 24 24"
+                    className="h-6 w-6"
+                    aria-hidden
+                  >
+                    <defs>
+                      <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+                        <rect x="0" y="0" width={clipWidth} height="24" />
+                      </clipPath>
+                    </defs>
 
-{/* Title */}
-<h2 className="text-xl md:text-2xl font-bold tracking-wide text-amber-300">
-  CUSTOMER REVIEWS
-</h2>
+                    {/* base (neutral) */}
+                    <path
+                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                      className="text-neutral-800"
+                      fill="currentColor"
+                    />
 
-{/* Row under title: rating num, stars, count, button */}
-<div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-center">
+                    {/* amber fill clipped */}
+                    <path
+                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                      className="text-amber-400"
+                      fill="currentColor"
+                      clipPath={`url(#${clipId})`}
+                    />
 
-  {/* rating number */}
-  <span className="text-amber-300 font-semibold tabular-nums text-base">
-    {(reviewData?.avg ?? 0).toFixed(1)}
-  </span>
+                    {/* outline stroke */}
+                    <path
+                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                      fill="none"
+                      stroke="currentColor"
+                      className="text-neutral-600"
+                      strokeWidth="1.6"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                );
+              })}
+              <span className="sr-only">
+                {(reviewData?.avg ?? 0).toFixed(1)} out of 5 stars
+              </span>
+            </div>
 
-  {/* stars */}
-  <div className="inline-flex items-center gap-0.5">
-    {[0, 1, 2, 3, 4].map((i) => {
-      const avg = reviewData?.avg ?? 0;
-      const starFill = Math.max(0, Math.min(1, avg - i));
-      const clipWidth = 24 * starFill;
-      const clipId = `reviewsStarClip-desktop-header-${i}`;
-      return (
-        <svg key={i} viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-          <defs>
-            <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
-              <rect x="0" y="0" width={clipWidth} height="24" />
-            </clipPath>
-          </defs>
+            {/* review count */}
+            <div className="text-neutral-400 text-lg">{total} REVIEWS</div>
 
-          {/* base (neutral) */}
-          <path
-            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-            className="text-neutral-800"
-            fill="currentColor"
-          />
-
-          {/* amber fill clipped */}
-          <path
-            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-            className="text-amber-400"
-            fill="currentColor"
-            clipPath={`url(#${clipId})`}
-          />
-
-          {/* outline stroke */}
-          <path
-            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-            fill="none"
-            stroke="currentColor"
-            className="text-neutral-600"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-          />
-        </svg>
-      );
-    })}
-    <span className="sr-only">
-      {(reviewData?.avg ?? 0).toFixed(1)} out of 5 stars
-    </span>
-  </div>
-
-  {/* review count */}
-  <div className="text-neutral-400 text-lg">
-    {total} REVIEWS
-  </div>
-
-  {/* Write a Review button, now inline and centered */}
-  <button
-  type="button"
-  onClick={() => setShowModal(true)}
-  className="ml-10 px-4 py-2 rounded-lg text-sm font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
-  aria-label="Write a review"
->
-  Write a Review
-</button>
-
-
-</div>
-</div>
-
-
-    {/* Histogram box */}
-    <div className="mt-4 mx-auto max-w-[780px] w-full rounded-xl border border-amber-400/40 bg-black/40 p-4 md:p-6">
-      {[5, 4, 3, 2, 1].map((s) => (
-        <div key={s} className="flex items-center gap-3 py-1">
-          <div className="w-8 text-right text-sm text-neutral-300">{s}★</div>
-          <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
-            <div
-              className="h-full bg-amber-400"
-              style={{ width: `${pct(b[s] || 0)}%` }}
-            />
-          </div>
-          <div className="w-12 text-left text-sm text-neutral-400">
-            {b[s] || 0}
+            {/* Write a Review button, now inline and centered */}
+            <button
+              type="button"
+              onClick={() => setShowModal(true)}
+              className="ml-10 px-4 py-2 rounded-lg text-sm font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
+              aria-label="Write a review"
+            >
+              Write a Review
+            </button>
           </div>
         </div>
-      ))}
-    </div>
 
-    {/* Testimonials grid */}
-    <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-visible">
-      {pageItems.map((r) => {
-        const isOpen = expandedId === r.id;
-
-        // Format the date to MM/DD/YY
-        const formattedDate = new Date(r.date).toLocaleDateString("en-US", {
-          month: "2-digit",
-          day: "2-digit",
-          year: "2-digit",
-        });
-
-        return (
-          <article
-            key={r.id}
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              if (!isOpen) toggleExpand(r.id);
-            }}
-            onKeyDown={(e) => {
-              if (!isOpen && (e.key === "Enter" || e.key === " "))
-                toggleExpand(r.id);
-            }}
-            aria-expanded={isOpen}
-            className={
-              "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-4 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
-              (isOpen ? "z-[70]" : "")
-            }
-          >
-            {/* Name and Formatted Date */}
-            <div className="flex items-center justify-between">
-              <div className="font-semibold text-amber-300">{r.name}</div>
-              <div className="text-xs text-neutral-400">{formattedDate}</div>
-            </div>
-
-            {/* Rating Stars */}
-            <div className="mt-1 flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <svg
-                  key={i}
-                  viewBox="0 0 24 24"
-                  fill={i < r.rating ? "currentColor" : "none"}
-                  className={
-                    "h-4 w-4 " +
-                    (i < r.rating ? "text-amber-400" : "text-neutral-700")
-                  }
-                  stroke="currentColor"
-                >
-                  <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                </svg>
-              ))}
-            </div>
-
-            {/* Title for the Review */}
-            {r.title && (
-              <div className="mt-2 text-sm font-semibold text-neutral-300">
-                {r.title}
+        {/* Histogram box */}
+        <div className="mt-4 mx-auto max-w-[780px] w-full rounded-xl border border-amber-400/40 bg-black/40 p-4 md:p-6">
+          {[5, 4, 3, 2, 1].map((s) => (
+            <div key={s} className="flex items-center gap-3 py-1">
+              <div className="w-8 text-right text-sm text-neutral-300">
+                {s}★
               </div>
-            )}
-
-            {/* Review Body */}
-            {r.body ? (
-              <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
-                {r.body}
-              </p>
-            ) : null}
-
-            {/* Verified Buyer */}
-            <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
-              Verified Buyer
+              <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
+                <div
+                  className="h-full bg-amber-400"
+                  style={{ width: `${pct(b[s] || 0)}%` }}
+                />
+              </div>
+              <div className="w-12 text-left text-sm text-neutral-400">
+                {b[s] || 0}
+              </div>
             </div>
+          ))}
+        </div>
 
-            {/* Expanded View */}
-            {isOpen && (
-              <div
-                className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
-                style={{ minHeight: 280 }}
-                onClick={() => toggleExpand(r.id)}
+        {/* Testimonials grid */}
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-visible">
+          {pageItems.map((r) => {
+            const isOpen = expandedId === r.id;
+
+            // Format the date to MM/DD/YY
+            const formattedDate = new Date(r.date).toLocaleDateString("en-US", {
+              month: "2-digit",
+              day: "2-digit",
+              year: "2-digit",
+            });
+
+            return (
+              <article
+                key={r.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => {
+                  if (!isOpen) toggleExpand(r.id);
+                }}
+                onKeyDown={(e) => {
+                  if (!isOpen && (e.key === "Enter" || e.key === " "))
+                    toggleExpand(r.id);
+                }}
+                aria-expanded={isOpen}
+                className={
+                  "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-4 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
+                  (isOpen ? "z-[70]" : "")
+                }
               >
+                {/* Name and Formatted Date */}
                 <div className="flex items-center justify-between">
                   <div className="font-semibold text-amber-300">{r.name}</div>
                   <div className="text-xs text-neutral-400">
@@ -5059,14 +5074,16 @@ function RoastLevelAnchors({
                   ))}
                 </div>
 
-                {/* Title and Review Body */}
+                {/* Title for the Review */}
                 {r.title && (
                   <div className="mt-2 text-sm font-semibold text-neutral-300">
                     {r.title}
                   </div>
                 )}
+
+                {/* Review Body */}
                 {r.body ? (
-                  <p className="mt-1 text-sm text-neutral-300 leading-relaxed">
+                  <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
                     {r.body}
                   </p>
                 ) : null}
@@ -5075,251 +5092,250 @@ function RoastLevelAnchors({
                 <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
                   Verified Buyer
                 </div>
-              </div>
-            )}
-          </article>
-        );
-      })}
-    </div>
 
-    {/* Pager */}
-    {pageCount > 1 && (
-      <div className="mt-6 flex items-center justify-center gap-2">
-        <button
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1}
-          className={
-            "px-3 py-1.5 rounded-md border text-sm " +
-            (page === 1
-              ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-              : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-          }
-          aria-label="Previous reviews page"
-        >
-          ‹ Prev
-        </button>
+                {/* Expanded View */}
+                {isOpen && (
+                  <div
+                    className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
+                    style={{ minHeight: 280 }}
+                    onClick={() => toggleExpand(r.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="font-semibold text-amber-300">
+                        {r.name}
+                      </div>
+                      <div className="text-xs text-neutral-400">
+                        {formattedDate}
+                      </div>
+                    </div>
 
-        {[...Array(pageCount)].map((_, i) => {
-          const n = i + 1;
-          const active = n === page;
-          return (
-            <button
-              key={n}
-              onClick={() => setPage(n)}
-              className={
-                "h-8 min-w-[2rem] px-2 rounded-md border text-sm " +
-                (active
-                  ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
-                  : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-              }
-              aria-current={active ? "page" : undefined}
-              aria-label={`Go to page ${n}`}
-            >
-              {n}
-            </button>
-          );
-        })}
+                    {/* Rating Stars */}
+                    <div className="mt-1 flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          key={i}
+                          viewBox="0 0 24 24"
+                          fill={i < r.rating ? "currentColor" : "none"}
+                          className={
+                            "h-4 w-4 " +
+                            (i < r.rating
+                              ? "text-amber-400"
+                              : "text-neutral-700")
+                          }
+                          stroke="currentColor"
+                        >
+                          <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                        </svg>
+                      ))}
+                    </div>
 
-        <button
-          onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-          disabled={page === pageCount}
-          className={
-            "px-3 py-1.5 rounded-md border text-sm " +
-            (page === pageCount
-              ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-              : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-          }
-          aria-label="Next reviews page"
-        >
-          Next ›
-        </button>
-      </div>
-    )}
-  </div>
-  {/* ================= END DESKTOP ================= */}
+                    {/* Title and Review Body */}
+                    {r.title && (
+                      <div className="mt-2 text-sm font-semibold text-neutral-300">
+                        {r.title}
+                      </div>
+                    )}
+                    {r.body ? (
+                      <p className="mt-1 text-sm text-neutral-300 leading-relaxed">
+                        {r.body}
+                      </p>
+                    ) : null}
 
-
-
-  {/* ================= MOBILE (tweaked) ================= */}
-  <div className="block md:hidden">
-
-    {/* Header: stacked, no absolute button */}
-    <div className="mb-4 flex flex-col items-center text-center">
-      <h2 className="text-lg font-bold tracking-wide text-amber-300">
-        CUSTOMER REVIEWS
-      </h2>
-
-      <button
-        type="button"
-        onClick={() => setShowModal(true)}
-        className="mt-3 w-full max-w-[220px] px-3 py-2 rounded-lg text-sm font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
-        aria-label="Write a review"
-      >
-        Write a Review
-      </button>
-    </div>
-
-    {/* Avg / Stars / Count */}
-    <div className="mt-2 flex flex-col items-center justify-center gap-2 mb-4">
-      {/* rating number + stars on same row now */}
-      <div className="flex items-center gap-2">
-        <div className="text-amber-300 font-semibold tabular-nums text-base leading-none">
-          {(reviewData?.avg ?? 0).toFixed(1)}
-        </div>
-
-        <div className="inline-flex items-center gap-0.5">
-          {[0, 1, 2, 3, 4].map((i) => {
-            const avg = reviewData?.avg ?? 0;
-            const starFill = Math.max(0, Math.min(1, avg - i));
-            const clipWidth = 20 * starFill;
-            const clipId = `reviewsStarClip-mobile-${i}`;
-            return (
-              <svg
-                key={i}
-                viewBox="0 0 24 24"
-                className="h-5 w-5"
-                aria-hidden
-              >
-                <defs>
-                  <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
-                    <rect x="0" y="0" width={clipWidth} height="24" />
-                  </clipPath>
-                </defs>
-
-                <path
-                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                  className="text-neutral-800"
-                  fill="currentColor"
-                />
-                <path
-                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                  className="text-amber-400"
-                  fill="currentColor"
-                  clipPath={`url(#${clipId})`}
-                />
-                <path
-                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                  fill="none"
-                  stroke="currentColor"
-                  className="text-neutral-600"
-                  strokeWidth="1.6"
-                  strokeLinejoin="round"
-                />
-              </svg>
+                    {/* Verified Buyer */}
+                    <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
+                      Verified Buyer
+                    </div>
+                  </div>
+                )}
+              </article>
             );
           })}
-          <span className="sr-only">
-            {(reviewData?.avg ?? 0).toFixed(1)} out of 5 stars
-          </span>
         </div>
-      </div>
 
-      {/* review count below */}
-      <div className="text-neutral-400 text-xs tracking-wide">
-        {total} REVIEWS
-      </div>
-    </div>
+        {/* Pager */}
+        {pageCount > 1 && (
+          <div className="mt-6 flex items-center justify-center gap-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className={
+                "px-3 py-1.5 rounded-md border text-sm " +
+                (page === 1
+                  ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+                  : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+              }
+              aria-label="Previous reviews page"
+            >
+              ‹ Prev
+            </button>
 
-    {/* Histogram: tighter padding to pull text closer to border */}
-    <div className="mt-2 mx-auto w-full rounded-xl border border-amber-400/40 bg-black/40 p-3">
-      {[5, 4, 3, 2, 1].map((s) => (
-        <div key={s} className="flex items-center gap-3 py-1">
-          <div className="w-8 text-right text-xs text-neutral-300">{s}★</div>
-          <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
-            <div
-              className="h-full bg-amber-400"
-              style={{ width: `${pct(b[s] || 0)}%` }}
-            />
-          </div>
-          <div className="w-10 text-left text-xs text-neutral-400">
-            {b[s] || 0}
-          </div>
-        </div>
-      ))}
-    </div>
-
-    {/* Testimonials: tighter padding inside each card too */}
-    <div className="mt-6 grid grid-cols-1 gap-4 overflow-visible">
-      {pageItems.map((r) => {
-        const isOpen = expandedId === r.id;
-        const formattedDate = new Date(r.date).toLocaleDateString("en-US", {
-          month: "2-digit",
-          day: "2-digit",
-          year: "2-digit",
-        });
-
-        return (
-          <article
-            key={r.id}
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              if (!isOpen) toggleExpand(r.id);
-            }}
-            onKeyDown={(e) => {
-              if (!isOpen && (e.key === "Enter" || e.key === " "))
-                toggleExpand(r.id);
-            }}
-            aria-expanded={isOpen}
-            className={
-              "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-3 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
-              (isOpen ? "z-[70]" : "")
-            }
-          >
-            {/* Header row */}
-            <div className="flex items-start justify-between">
-              <div className="font-semibold text-amber-300 text-sm leading-tight">
-                {r.name}
-              </div>
-              <div className="text-[10px] text-neutral-400">
-                {formattedDate}
-              </div>
-            </div>
-
-            {/* Rating Stars */}
-            <div className="mt-1 flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <svg
-                  key={i}
-                  viewBox="0 0 24 24"
-                  fill={i < r.rating ? "currentColor" : "none"}
+            {[...Array(pageCount)].map((_, i) => {
+              const n = i + 1;
+              const active = n === page;
+              return (
+                <button
+                  key={n}
+                  onClick={() => setPage(n)}
                   className={
-                    "h-4 w-4 " +
-                    (i < r.rating ? "text-amber-400" : "text-neutral-700")
+                    "h-8 min-w-[2rem] px-2 rounded-md border text-sm " +
+                    (active
+                      ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
+                      : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
                   }
-                  stroke="currentColor"
+                  aria-current={active ? "page" : undefined}
+                  aria-label={`Go to page ${n}`}
                 >
-                  <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                </svg>
-              ))}
+                  {n}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+              disabled={page === pageCount}
+              className={
+                "px-3 py-1.5 rounded-md border text-sm " +
+                (page === pageCount
+                  ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+                  : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+              }
+              aria-label="Next reviews page"
+            >
+              Next ›
+            </button>
+          </div>
+        )}
+      </div>
+      {/* ================= END DESKTOP ================= */}
+
+      {/* ================= MOBILE (tweaked) ================= */}
+      <div className="block md:hidden">
+        {/* Header: stacked, no absolute button */}
+        <div className="mb-4 flex flex-col items-center text-center">
+          <h2 className="text-lg font-bold tracking-wide text-amber-300">
+            CUSTOMER REVIEWS
+          </h2>
+
+          <button
+            type="button"
+            onClick={() => setShowModal(true)}
+            className="mt-3 w-full max-w-[220px] px-3 py-2 rounded-lg text-sm font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
+            aria-label="Write a review"
+          >
+            Write a Review
+          </button>
+        </div>
+
+        {/* Avg / Stars / Count */}
+        <div className="mt-2 flex flex-col items-center justify-center gap-2 mb-4">
+          {/* rating number + stars on same row now */}
+          <div className="flex items-center gap-2">
+            <div className="text-amber-300 font-semibold tabular-nums text-base leading-none">
+              {(reviewData?.avg ?? 0).toFixed(1)}
             </div>
 
-            {/* Title */}
-            {r.title && (
-              <div className="mt-2 text-[0.8rem] font-semibold text-neutral-300 leading-snug">
-                {r.title}
+            <div className="inline-flex items-center gap-0.5">
+              {[0, 1, 2, 3, 4].map((i) => {
+                const avg = reviewData?.avg ?? 0;
+                const starFill = Math.max(0, Math.min(1, avg - i));
+                const clipWidth = 20 * starFill;
+                const clipId = `reviewsStarClip-mobile-${i}`;
+                return (
+                  <svg
+                    key={i}
+                    viewBox="0 0 24 24"
+                    className="h-5 w-5"
+                    aria-hidden
+                  >
+                    <defs>
+                      <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+                        <rect x="0" y="0" width={clipWidth} height="24" />
+                      </clipPath>
+                    </defs>
+
+                    <path
+                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                      className="text-neutral-800"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                      className="text-amber-400"
+                      fill="currentColor"
+                      clipPath={`url(#${clipId})`}
+                    />
+                    <path
+                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                      fill="none"
+                      stroke="currentColor"
+                      className="text-neutral-600"
+                      strokeWidth="1.6"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                );
+              })}
+              <span className="sr-only">
+                {(reviewData?.avg ?? 0).toFixed(1)} out of 5 stars
+              </span>
+            </div>
+          </div>
+
+          {/* review count below */}
+          <div className="text-neutral-400 text-xs tracking-wide">
+            {total} REVIEWS
+          </div>
+        </div>
+
+        {/* Histogram: tighter padding to pull text closer to border */}
+        <div className="mt-2 mx-auto w-full rounded-xl border border-amber-400/40 bg-black/40 p-3">
+          {[5, 4, 3, 2, 1].map((s) => (
+            <div key={s} className="flex items-center gap-3 py-1">
+              <div className="w-8 text-right text-xs text-neutral-300">
+                {s}★
               </div>
-            )}
-
-            {/* Body */}
-            {r.body ? (
-              <p className="mt-1 text-[0.8rem] text-neutral-300 leading-relaxed overflow-hidden max-h-24">
-                {r.body}
-              </p>
-            ) : null}
-
-            {/* Verified Buyer */}
-            <div className="mt-3 text-[10px] uppercase tracking-wide text-amber-300/90">
-              Verified Buyer
+              <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
+                <div
+                  className="h-full bg-amber-400"
+                  style={{ width: `${pct(b[s] || 0)}%` }}
+                />
+              </div>
+              <div className="w-10 text-left text-xs text-neutral-400">
+                {b[s] || 0}
+              </div>
             </div>
+          ))}
+        </div>
 
-            {/* Expanded View */}
-            {isOpen && (
-              <div
-                className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-3"
-                style={{ minHeight: 240 }}
-                onClick={() => toggleExpand(r.id)}
+        {/* Testimonials: tighter padding inside each card too */}
+        <div className="mt-6 grid grid-cols-1 gap-4 overflow-visible">
+          {pageItems.map((r) => {
+            const isOpen = expandedId === r.id;
+            const formattedDate = new Date(r.date).toLocaleDateString("en-US", {
+              month: "2-digit",
+              day: "2-digit",
+              year: "2-digit",
+            });
+
+            return (
+              <article
+                key={r.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => {
+                  if (!isOpen) toggleExpand(r.id);
+                }}
+                onKeyDown={(e) => {
+                  if (!isOpen && (e.key === "Enter" || e.key === " "))
+                    toggleExpand(r.id);
+                }}
+                aria-expanded={isOpen}
+                className={
+                  "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-3 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
+                  (isOpen ? "z-[70]" : "")
+                }
               >
+                {/* Header row */}
                 <div className="flex items-start justify-between">
                   <div className="font-semibold text-amber-300 text-sm leading-tight">
                     {r.name}
@@ -5329,6 +5345,7 @@ function RoastLevelAnchors({
                   </div>
                 </div>
 
+                {/* Rating Stars */}
                 <div className="mt-1 flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
                     <svg
@@ -5337,9 +5354,7 @@ function RoastLevelAnchors({
                       fill={i < r.rating ? "currentColor" : "none"}
                       className={
                         "h-4 w-4 " +
-                        (i < r.rating
-                          ? "text-amber-400"
-                          : "text-neutral-700")
+                        (i < r.rating ? "text-amber-400" : "text-neutral-700")
                       }
                       stroke="currentColor"
                     >
@@ -5348,239 +5363,279 @@ function RoastLevelAnchors({
                   ))}
                 </div>
 
+                {/* Title */}
                 {r.title && (
                   <div className="mt-2 text-[0.8rem] font-semibold text-neutral-300 leading-snug">
                     {r.title}
                   </div>
                 )}
 
+                {/* Body */}
                 {r.body ? (
-                  <p className="mt-1 text-[0.8rem] text-neutral-300 leading-relaxed">
+                  <p className="mt-1 text-[0.8rem] text-neutral-300 leading-relaxed overflow-hidden max-h-24">
                     {r.body}
                   </p>
                 ) : null}
 
+                {/* Verified Buyer */}
                 <div className="mt-3 text-[10px] uppercase tracking-wide text-amber-300/90">
                   Verified Buyer
                 </div>
-              </div>
-            )}
-          </article>
-        );
-      })}
-    </div>
 
-    {/* Pager (mobile) */}
-    {pageCount > 1 && (
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
-        <button
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1}
-          className={
-            "px-3 py-1.5 rounded-md border text-xs " +
-            (page === 1
-              ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-              : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-          }
-          aria-label="Previous reviews page"
-        >
-          ‹ Prev
-        </button>
+                {/* Expanded View */}
+                {isOpen && (
+                  <div
+                    className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-3"
+                    style={{ minHeight: 240 }}
+                    onClick={() => toggleExpand(r.id)}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="font-semibold text-amber-300 text-sm leading-tight">
+                        {r.name}
+                      </div>
+                      <div className="text-[10px] text-neutral-400">
+                        {formattedDate}
+                      </div>
+                    </div>
 
-        {[...Array(pageCount)].map((_, i) => {
-          const n = i + 1;
-          const active = n === page;
-          return (
-            <button
-              key={n}
-              onClick={() => setPage(n)}
-              className={
-                "h-8 min-w-[2rem] px-2 rounded-md border text-xs " +
-                (active
-                  ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
-                  : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-              }
-              aria-current={active ? "page" : undefined}
-              aria-label={`Go to page ${n}`}
-            >
-              {n}
-            </button>
-          );
-        })}
+                    <div className="mt-1 flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          key={i}
+                          viewBox="0 0 24 24"
+                          fill={i < r.rating ? "currentColor" : "none"}
+                          className={
+                            "h-4 w-4 " +
+                            (i < r.rating
+                              ? "text-amber-400"
+                              : "text-neutral-700")
+                          }
+                          stroke="currentColor"
+                        >
+                          <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                        </svg>
+                      ))}
+                    </div>
 
-        <button
-          onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-          disabled={page === pageCount}
-          className={
-            "px-3 py-1.5 rounded-md border text-xs " +
-            (page === pageCount
-              ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-              : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-          }
-          aria-label="Next reviews page"
-        >
-          Next ›
-        </button>
-      </div>
-    )}
-  </div>
-  {/* ================= END MOBILE ================= */}
+                    {r.title && (
+                      <div className="mt-2 text-[0.8rem] font-semibold text-neutral-300 leading-snug">
+                        {r.title}
+                      </div>
+                    )}
 
+                    {r.body ? (
+                      <p className="mt-1 text-[0.8rem] text-neutral-300 leading-relaxed">
+                        {r.body}
+                      </p>
+                    ) : null}
 
-
-  {/* Fullscreen dim behind expanded tile (both views) */}
-  {expandedId && (
-    <div
-      className="fixed inset-0 z-40 bg-black/40"
-      onClick={() => toggleExpand(expandedId)}
-      aria-hidden
-    />
-  )}
-
-
-
-  {/* WRITE A REVIEW MODAL */}
-  {showModal && (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        className="absolute inset-0 bg-black/70"
-        onClick={() => setShowModal(false)}
-        aria-hidden
-      />
-      <div className="relative z-10 w-[92vw] max-w-[720px] rounded-xl border border-amber-400/60 bg-neutral-950 p-5 md:p-6 shadow-2xl shadow-amber-500/20 text-left">
-        <div className="flex items-center justify-between mb-3">
-          <div className="text-lg md:text-xl font-bold text-amber-300">
-            WRITE A REVIEW
-          </div>
-          <button
-            className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-neutral-700 hover:border-amber-400/60"
-            onClick={() => setShowModal(false)}
-            aria-label="Close write a review"
-          >
-            ×
-          </button>
+                    <div className="mt-3 text-[10px] uppercase tracking-wide text-amber-300/90">
+                      Verified Buyer
+                    </div>
+                  </div>
+                )}
+              </article>
+            );
+          })}
         </div>
 
-        <form onSubmit={submitReview} className="space-y-3">
-          {/* SCORE */}
-          <div className="space-y-1">
-            <div className="text-sm text-neutral-300">
-              SCORE*{" "}
-              {rating < 1 && (
-                <span className="text-red-400 text-xs ml-1">required</span>
-              )}
-            </div>
+        {/* Pager (mobile) */}
+        {pageCount > 1 && (
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className={
+                "px-3 py-1.5 rounded-md border text-xs " +
+                (page === 1
+                  ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+                  : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+              }
+              aria-label="Previous reviews page"
+            >
+              ‹ Prev
+            </button>
 
-            <div className="flex items-center gap-1">
-              {[1, 2, 3, 4, 5].map((n) => (
+            {[...Array(pageCount)].map((_, i) => {
+              const n = i + 1;
+              const active = n === page;
+              return (
                 <button
                   key={n}
-                  type="button"
-                  onClick={() => setRating(n)}
-                  className="p-1"
-                  aria-label={`Rate ${n} star${n > 1 ? "s" : ""}`}
+                  onClick={() => setPage(n)}
+                  className={
+                    "h-8 min-w-[2rem] px-2 rounded-md border text-xs " +
+                    (active
+                      ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
+                      : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+                  }
+                  aria-current={active ? "page" : undefined}
+                  aria-label={`Go to page ${n}`}
                 >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill={n <= rating ? "currentColor" : "none"}
-                    className={
-                      "h-6 w-6 " +
-                      (n <= rating
-                        ? "text-amber-400"
-                        : "text-neutral-600")
-                    }
-                    stroke="currentColor"
-                  >
-                    <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                  </svg>
+                  {n}
                 </button>
-              ))}
-            </div>
-          </div>
+              );
+            })}
 
-          {/* TITLE */}
-          <div>
-            <div className="text-sm text-neutral-300 mb-1">TITLE*</div>
-            <input
-              className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              placeholder="Give your review a title"
-            />
-          </div>
-
-          {/* CONTENT */}
-          <div>
-            <div className="text-sm text-neutral-300 mb-1">
-              What did you think of {roastTitle}?*
-            </div>
-            <textarea
-              className="w-full min-h-[120px] rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              required
-              placeholder="Write your comments here"
-            />
-          </div>
-
-          {/* NAME / EMAIL */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <div className="text-sm text-neutral-300 mb-1">NAME*</div>
-              <input
-                className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                placeholder="Enter your name"
-              />
-            </div>
-            <div>
-              <div className="text-sm text-neutral-300 mb-1">EMAIL*</div>
-              <input
-                type="email"
-                className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="Enter your email"
-              />
-            </div>
-          </div>
-
-          {/* POST */}
-          <div className="pt-2">
             <button
-              type="submit"
-              disabled={
-                rating < 1 || !title || !body || !name || !email
-              }
+              onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+              disabled={page === pageCount}
               className={
-                "w-full px-4 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
-                (rating < 1 ||
-                !title ||
-                !body ||
-                !name ||
-                !email
-                  ? "opacity-60 cursor-not-allowed"
-                  : "hover:bg-amber-400 hover:text-neutral-900")
+                "px-3 py-1.5 rounded-md border text-xs " +
+                (page === pageCount
+                  ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+                  : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
               }
+              aria-label="Next reviews page"
             >
-              POST
+              Next ›
             </button>
           </div>
-        </form>
+        )}
       </div>
-    </div>
-  )}
+      {/* ================= END MOBILE ================= */}
 
-</section>
+      {/* Fullscreen dim behind expanded tile (both views) */}
+      {expandedId && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40"
+          onClick={() => toggleExpand(expandedId)}
+          aria-hidden
+        />
+      )}
 
+      {/* WRITE A REVIEW MODAL */}
+      {showModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="absolute inset-0 bg-black/70"
+            onClick={() => setShowModal(false)}
+            aria-hidden
+          />
+          <div className="relative z-10 w-[92vw] max-w-[720px] rounded-xl border border-amber-400/60 bg-neutral-950 p-5 md:p-6 shadow-2xl shadow-amber-500/20 text-left">
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-lg md:text-xl font-bold text-amber-300">
+                WRITE A REVIEW
+              </div>
+              <button
+                className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-neutral-700 hover:border-amber-400/60"
+                onClick={() => setShowModal(false)}
+                aria-label="Close write a review"
+              >
+                ×
+              </button>
+            </div>
+
+            <form onSubmit={submitReview} className="space-y-3">
+              {/* SCORE */}
+              <div className="space-y-1">
+                <div className="text-sm text-neutral-300">
+                  SCORE*{" "}
+                  {rating < 1 && (
+                    <span className="text-red-400 text-xs ml-1">required</span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setRating(n)}
+                      className="p-1"
+                      aria-label={`Rate ${n} star${n > 1 ? "s" : ""}`}
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill={n <= rating ? "currentColor" : "none"}
+                        className={
+                          "h-6 w-6 " +
+                          (n <= rating ? "text-amber-400" : "text-neutral-600")
+                        }
+                        stroke="currentColor"
+                      >
+                        <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* TITLE */}
+              <div>
+                <div className="text-sm text-neutral-300 mb-1">TITLE*</div>
+                <input
+                  className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                  placeholder="Give your review a title"
+                />
+              </div>
+
+              {/* CONTENT */}
+              <div>
+                <div className="text-sm text-neutral-300 mb-1">
+                  What did you think of {roastTitle}?*
+                </div>
+                <textarea
+                  className="w-full min-h-[120px] rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  required
+                  placeholder="Write your comments here"
+                />
+              </div>
+
+              {/* NAME / EMAIL */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <div className="text-sm text-neutral-300 mb-1">NAME*</div>
+                  <input
+                    className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    placeholder="Enter your name"
+                  />
+                </div>
+                <div>
+                  <div className="text-sm text-neutral-300 mb-1">EMAIL*</div>
+                  <input
+                    type="email"
+                    className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="Enter your email"
+                  />
+                </div>
+              </div>
+
+              {/* POST */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={rating < 1 || !title || !body || !name || !email}
+                  className={
+                    "w-full px-4 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
+                    (rating < 1 || !title || !body || !name || !email
+                      ? "opacity-60 cursor-not-allowed"
+                      : "hover:bg-amber-400 hover:text-neutral-900")
+                  }
+                >
+                  POST
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -5709,37 +5764,36 @@ function TheCoffeeFlagship({
               )}
             </div>
 
-          {/* RIGHT: CareCard desktop */}
-<aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
-  <CareCard />
-</aside>
-</div>
-</Container>
+            {/* RIGHT: CareCard desktop */}
+            <aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
+              <CareCard />
+            </aside>
+          </div>
+        </Container>
 
-{/* MOBILE CareCard (stacked above RoastLevel, with breathing room) */}
-<div className="block md:hidden bg-neutral-950">
-  <Container className="pt-2 pb-0">
-    <div className="mt-0">
-      <CareCard />
-    </div>
-  </Container>
-</div>
+        {/* MOBILE CareCard (stacked above RoastLevel, with breathing room) */}
+        <div className="block md:hidden bg-neutral-950">
+          <Container className="pt-2 pb-0">
+            <div className="mt-0">
+              <CareCard />
+            </div>
+          </Container>
+        </div>
 
-<div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
+        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
 
-<div className="bg-neutral-950">
-  <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-    <RoastLevelAnchors
-      level={level}
-      reviewData={reviewData}
-      reviews={reviews}
-      roastTitle="Flagship"
-    />
-  </Container>
-</div>
-</div>
-</section>
-
+        <div className="bg-neutral-950">
+          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+              roastTitle="Flagship"
+            />
+          </Container>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -5867,37 +5921,36 @@ function TheCoffeeBaptism({
               )}
             </div>
 
-           {/* RIGHT: CareCard desktop */}
-<aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
-  <CareCard />
-</aside>
-</div>
-</Container>
+            {/* RIGHT: CareCard desktop */}
+            <aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
+              <CareCard />
+            </aside>
+          </div>
+        </Container>
 
-{/* MOBILE CareCard (stacked above RoastLevel, tighter spacing like you said) */}
-<div className="block md:hidden bg-neutral-950">
-  <Container className="pt-2 pb-0">
-    <div className="mt-0">
-      <CareCard />
-    </div>
-  </Container>
-</div>
+        {/* MOBILE CareCard (stacked above RoastLevel, tighter spacing like you said) */}
+        <div className="block md:hidden bg-neutral-950">
+          <Container className="pt-2 pb-0">
+            <div className="mt-0">
+              <CareCard />
+            </div>
+          </Container>
+        </div>
 
-<div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
+        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
 
-<div className="bg-neutral-950">
-  <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-    <RoastLevelAnchors
-      level={level}
-      reviewData={reviewData}
-      reviews={reviews}
-      roastTitle="Baptism by Fire"
-    />
-  </Container>
-</div>
-</div>
-</section>
-
+        <div className="bg-neutral-950">
+          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+              roastTitle="Baptism by Fire"
+            />
+          </Container>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -6025,37 +6078,36 @@ function TheCoffeeJava({
               )}
             </div>
 
-           {/* RIGHT: CareCard desktop */}
-<aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
-  <CareCard />
-</aside>
-</div>
-</Container>
+            {/* RIGHT: CareCard desktop */}
+            <aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
+              <CareCard />
+            </aside>
+          </div>
+        </Container>
 
-{/* MOBILE CareCard (stacked above RoastLevel, tight spacing) */}
-<div className="block md:hidden bg-neutral-950">
-  <Container className="pt-2 pb-0">
-    <div className="mt-0">
-      <CareCard />
-    </div>
-  </Container>
-</div>
+        {/* MOBILE CareCard (stacked above RoastLevel, tight spacing) */}
+        <div className="block md:hidden bg-neutral-950">
+          <Container className="pt-2 pb-0">
+            <div className="mt-0">
+              <CareCard />
+            </div>
+          </Container>
+        </div>
 
-<div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
+        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
 
-<div className="bg-neutral-950">
-  <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-    <RoastLevelAnchors
-      level={level}
-      reviewData={reviewData}
-      reviews={reviews}
-      roastTitle="The Java Action"
-    />
-  </Container>
-</div>
-</div>
-</section>
-
+        <div className="bg-neutral-950">
+          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+              roastTitle="The Java Action"
+            />
+          </Container>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -6183,37 +6235,36 @@ function TheCoffeeOak({
               )}
             </div>
 
-           {/* RIGHT: CareCard desktop */}
-<aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
-  <CareCard />
-</aside>
-</div>
-</Container>
+            {/* RIGHT: CareCard desktop */}
+            <aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
+              <CareCard />
+            </aside>
+          </div>
+        </Container>
 
-{/* MOBILE CareCard (stacked above RoastLevel, tight spacing) */}
-<div className="block md:hidden bg-neutral-950">
-  <Container className="pt-2 pb-0">
-    <div className="mt-0">
-      <CareCard />
-    </div>
-  </Container>
-</div>
+        {/* MOBILE CareCard (stacked above RoastLevel, tight spacing) */}
+        <div className="block md:hidden bg-neutral-950">
+          <Container className="pt-2 pb-0">
+            <div className="mt-0">
+              <CareCard />
+            </div>
+          </Container>
+        </div>
 
-<div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
+        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
 
-<div className="bg-neutral-950">
-  <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-    <RoastLevelAnchors
-      level={level}
-      reviewData={reviewData}
-      reviews={reviews}
-      roastTitle="Oak & Copper"
-    />
-  </Container>
-</div>
-</div>
-</section>
-
+        <div className="bg-neutral-950">
+          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+              roastTitle="Oak & Copper"
+            />
+          </Container>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -9672,7 +9723,7 @@ function Layout() {
         {/* === MOBILE HEADER TALL v3 === */}
         <div className="md:hidden border-b border-neutral-800 bg-neutral-950 pb-1">
           {/* promo strip */}
-          <div className="px-3 py-2 text-center text-[14px] font-semibold leading-tight text-amber-300 truncate border-b border-neutral-800">
+          <div className="px-3 py-2 text-center text-[13px] font-semibold leading-tight text-amber-300 truncate border-b border-neutral-800">
             <button
               type="button"
               onClick={() =>
@@ -9703,18 +9754,18 @@ function Layout() {
             className="block px-4 pt-2 pb-1 text-center leading-tight"
           >
             <div
-              className="text-[26px] font-bold tracking-[0.18em] text-neutral-300"
-              style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+              className="text-[20px] font-bold tracking-[0.18em] text-neutral-300"
+              style={{ fontFamily: "'Cinzel', serif", fontWeight: 1000 }}
             >
               OLD IRONSIDES COFFEE
             </div>
-            <div className="text-[14px] text-amber-200">
+            <div className="text-[12px] text-amber-200">
               Ignite the Spirit, Savor the Victory!
             </div>
           </Link>
 
-                 {/* row 2: burger left / icons right */}
-                 <div className="flex justify-between px-4 pb-1">
+          {/* row 2: burger left / icons right */}
+          <div className="flex justify-between px-4 pb-1">
             {/* left: burger */}
             <button
               type="button"
@@ -9752,7 +9803,6 @@ function Layout() {
               </Link>
             </div>
           </div>
-
         </div>
 
         {/* === DESKTOP TOP BAR === */}
@@ -10270,13 +10320,13 @@ function Layout() {
         </div>
       )}
 
-      {/* spacer so content doesn’t hide under header */}
+      {/* spacer so content doesn’t hide under header (mobile-tuned for /coffee) */}
       <div
         className={
           isHome
             ? "h-[105px] md:h-[205px]"
             : isFleet
-            ? "h-[180px] md:h-[150px]"
+            ? "h-[100px] md:h-[150px]" // ↓ was 180px causing the black gap
             : isRoast
             ? "h-[140px] md:h-[190px]"
             : isOrigins
@@ -10537,11 +10587,11 @@ function RoastCTAInfo() {
         ) : state === "closed" ? (
           // after cutoff passed, next roast date known, preorder
           <div className="space-y-1">
-            <div className="text-sm text-neutral-300 font-medium">
+            <div className="text-m text-neutral-300 font-medium">
               Next batch roasts:{" "}
               <span className="text-amber-300">{dateLabel}</span>
             </div>
-            <div className="text-[11px] text-neutral-400">
+            <div className="text-[14px] text-neutral-400">
               Reserve your bag today
             </div>
           </div>

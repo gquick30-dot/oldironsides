@@ -9,7 +9,6 @@ import {
   getCart,
   cartCreate,
 } from "./lib/shopify";
-
 import React, {
   useState,
   useMemo,
@@ -19,6 +18,8 @@ import React, {
   useRef,
   useCallback,
 } from "react";
+
+import { createPortal } from "react-dom";
 
 import {
   MemoryRouter,
@@ -1351,6 +1352,8 @@ function MegaSubscribeBox({
   title,
   subtitle,
   buttonText,
+  imageSrc = "/subscribe-hero.jpg",
+  imageAlt = "Old Ironsides at sea",
 }: {
   email: string;
   setEmail: (v: string) => void;
@@ -1359,63 +1362,145 @@ function MegaSubscribeBox({
   title?: string;
   subtitle?: string;
   buttonText?: string;
+  imageSrc?: string;
+  imageAlt?: string;
 }) {
   const heading = title ?? "RING THAT BELL";
   const sub =
     subtitle ??
     `Get 20% off your first order
   Join the fleet for 15% off recurring orders`;
-
   const btn = buttonText ?? "GET 20% OFF";
 
   return (
     <div className="w-full lg:w-[36rem]">
-      <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
-        <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 mb-4">
-          <Bell className="h-6 w-6 sm:h-7 sm:w-7 text-amber-300" />
-          <h3 className="text-xl sm:text-2xl font-extrabold text-amber-300">
-            {heading}
-          </h3>
+      {/* MOBILE VERSION ONLY */}
+      <div className="md:hidden">
+        <div className="overflow-hidden rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60">
+          {imageSrc ? (
+            <img
+              src={imageSrc}
+              alt={imageAlt}
+              className="w-full h-24 object-cover"
+            />
+          ) : null}
+
+          <div className="p-4 text-center">
+            <div className="flex flex-col items-center gap-2 mb-3">
+              <Bell className="h-5 w-5 text-amber-300" />
+              {/* force compact heading on mobile */}
+              <h3
+                className="font-extrabold text-amber-300"
+                style={{ fontSize: 18, lineHeight: 1.15, letterSpacing: 0.2 }}
+              >
+                {heading}
+              </h3>
+            </div>
+
+            {/* force compact copy on mobile */}
+            <p
+              className="text-neutral-300 mb-4 whitespace-pre-line"
+              style={{ fontSize: 14, lineHeight: 1.3 }}
+            >
+              {sub}
+            </p>
+
+            <form
+              onSubmit={onSubmit}
+              className="flex flex-col justify-center gap-2 max-w-xs mx-auto"
+            >
+              <input
+                type="email"
+                name="email"
+                autoComplete="email"
+                inputMode="email"
+                autoCapitalize="off"
+                autoCorrect="off"
+                spellCheck={false}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[13px] focus:outline-none focus:ring-2 focus:ring-amber-400"
+              />
+              <button className="w-full px-4 py-2 rounded-xl bg-amber-400 text-neutral-900 text-[13px] font-semibold hover:bg-amber-300">
+                {btn}
+              </button>
+            </form>
+
+            <div
+              className="mt-2 text-neutral-400"
+              style={{ fontSize: 11, lineHeight: 1.2 }}
+            >
+              Already a member?{" "}
+              <Link
+                to="/account/login"
+                className="text-amber-300 hover:underline"
+              >
+                Sign in
+              </Link>
+            </div>
+
+            {done && (
+              <p className="mt-2 text-emerald-400" style={{ fontSize: 12 }}>
+                Welcome aboard! Your discount is on the way!
+              </p>
+            )}
+          </div>
         </div>
+      </div>
 
-        <p className="text-neutral-300 mb-5 text-base sm:text-lg md:text-xl whitespace-pre-line">
-          {sub}
-        </p>
+      {/* DESKTOP/TABLET VERSION — unchanged */}
+      <div className="hidden md:block">
+        <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
+          <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 mb-4">
+            <Bell className="h-6 w-6 sm:h-7 sm:w-7 text-amber-300" />
+            <h3 className="text-xl sm:text-2xl font-extrabold text-amber-300">
+              {heading}
+            </h3>
+          </div>
 
-        <form
-          onSubmit={onSubmit}
-          className="flex flex-col sm:flex-row justify-center gap-3 max-w-md mx-auto"
-        >
-          <input
-            type="email"
-            name="email"
-            autoComplete="email"
-            inputMode="email"
-            autoCapitalize="off"
-            autoCorrect="off"
-            spellCheck={false}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
-          />
-          <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
-            {btn}
-          </button>
-        </form>
-
-        <div className="mt-3 text-[11px] sm:text-xs text-neutral-400">
-          Already a member?{" "}
-          <Link to="/account/login" className="text-amber-300 hover:underline">
-            Sign in
-          </Link>
-        </div>
-
-        {done && (
-          <p className="mt-3 text-sm text-emerald-400">
-            Welcome aboard! Your discount is on the way!
+          <p className="text-neutral-300 mb-5 text-base sm:text-lg md:text-xl whitespace-pre-line">
+            {sub}
           </p>
-        )}
+
+          <form
+            onSubmit={onSubmit}
+            className="flex flex-col sm:flex-row justify-center gap-3 max-w-md mx-auto"
+          >
+            <input
+              type="email"
+              name="email"
+              autoComplete="email"
+              inputMode="email"
+              autoCapitalize="off"
+              autoCorrect="off"
+              spellCheck={false}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+            />
+            <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+              {btn}
+            </button>
+          </form>
+
+          <div className="mt-3 text-[11px] sm:text-xs text-neutral-400">
+            Already a member?{" "}
+            <Link
+              to="/account/login"
+              className="text-amber-300 hover:underline"
+            >
+              Sign in
+            </Link>
+          </div>
+
+          {done && (
+            <p className="mt-3 text-sm text-emerald-400">
+              Welcome aboard! Your discount is on the way!
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -9397,6 +9482,8 @@ function PromoSubscribeModal() {
   // ===== STATE =====
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState("");
+  const [phase, setPhase] = React.useState<"form" | "success">("form");
+
 
   // ===== KEYS =====
   const KEY_SUB = "promo_subscribed";
@@ -9503,6 +9590,7 @@ function PromoSubscribeModal() {
 
     g.__promo.isLockedOpen = true;
     setEmail("");
+    setPhase("form");
     setOpen(true);
   };
 
@@ -9586,25 +9674,42 @@ function PromoSubscribeModal() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailOk(email)) return flash("Enter a valid email.");
-
+  
     localStorage.setItem(KEY_SUB, "1");
     setCookieDays(COOKIE_SUB, "1", 365);
-
-    safeClose();
-    setTimeout(() => {
-      window.dispatchEvent(
-        new CustomEvent("flash", {
-          detail: "Welcome aboard! Your 20% code is on the way!",
-        })
-      );
-    }, 75);
+  
+    // MOBILE: show amber full-width banner for ~2.5s, then close
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+    if (isDesktop) {
+      safeClose();
+      setTimeout(() => {
+        window.dispatchEvent(
+          new CustomEvent("flash", {
+            detail: "Welcome aboard! Your 20% code is on the way!",
+          })
+        );
+      }, 75);
+    } else {
+      setPhase("success");
+      setTimeout(() => {
+        safeClose();
+        // also trigger your global flash after close (optional)
+        window.dispatchEvent(
+          new CustomEvent("flash", {
+            detail: "Welcome aboard! Your 20% code is on the way!",
+          })
+        );
+      }, 2500); // was 1000 — now ~2.5s
+    }
   };
+  
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[120] flex items-center justify-center"
+      className="fixed inset-0 z-[2147483647] flex items-center justify-center pt-[calc(env(safe-area-inset-top)+40px)] md:pt-0"
+      style={{ zIndex: 2147483647 }}
       role="dialog"
       aria-modal="true"
       aria-label="Get 20% off your first order"
@@ -9614,13 +9719,34 @@ function PromoSubscribeModal() {
     >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-
-      {/* Modal */}
-      <div className="relative z-10 w-[98vw] max-w-6xl">
-        <div className="relative rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 overflow-hidden">
-          {/* Body: LEFT hero, RIGHT content */}
-          <div className="grid md:grid-cols-[auto,1fr] items-center gap-0">
-            {/* LEFT: hero — fill edge to edge */}
+  
+      {/* Modal shell */}
+      <div className="relative z-10 w-[92vw] max-w-[380px] md:w-[98vw] md:max-w-6xl">
+        <div
+          className="relative rounded-2xl md:rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 
+          overflow-y-auto md:overflow-visible max-h-[96vh] md:min-h-0 md:max-h-none"
+        >
+          {/* Body: grid */}
+          <div className="grid md:grid-cols-[auto,1fr] items-stretch gap-0 min-h-full">
+            {/* MOBILE HERO */}
+            <div className="md:hidden">
+              <div className="relative w-full h-[246px] sm:h-[282px] bg-neutral-900 overflow-hidden">
+                <img
+                  src="/captain-deck.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 w-full h-full object-cover blur-sm scale-110 opacity-60"
+                />
+                <img
+                  src="/captain-deck.png"
+                  alt="Hero"
+                  className="relative z-10 h-full mx-auto object-contain"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
+              </div>
+            </div>
+  
+            {/* DESKTOP HERO */}
             <div className="hidden md:flex items-center justify-start pl-6 pr-0 py-6">
               <div className="rounded-2xl ring-1 ring-amber-400 bg-neutral-900/60 overflow-hidden shadow-2xl shadow-black/40">
                 <div className="w-[19rem] lg:w-[21rem] aspect-[4/5]">
@@ -9632,79 +9758,167 @@ function PromoSubscribeModal() {
                 </div>
               </div>
             </div>
+  
+            {/* RIGHT CONTENT */}
+            <div className="py-5 md:py-10 px-4 md:pl-4 md:pr-10 md:-ml-8 min-h-full flex">
+              <div className="h-full w-full flex flex-col justify-between text-center">
+                {/* Title + copy + form */}
+                <div>
+                  <div className="flex items-center justify-center gap-2 md:gap-3 mb-2 md:mb-4">
+                    <Bell className="h-8 w-8 md:h-12 md:w-12 text-amber-300" />
+                    <h3 className="font-extrabold text-amber-300 text-[31px] leading-tight md:text-[3.25rem]">
+                      RING THAT BELL
+                    </h3>
+                  </div>
+  
+                  <p className="text-neutral-300 mb-3 md:mb-5 text-[14px] leading-snug md:text-[1.5625rem] md:leading-normal md:whitespace-nowrap">
+                    Get 20% off your first freshly roasted coffee order.
+                    <br className="hidden md:block" />
+                    Join the fleet and save 15% off every order.
+                  </p>
+  
+                  {/* === THIS WHOLE WRAPPER SWAPPED === */}
+                  <div className="w-full max-w-[300px] sm:max-w-sm md:max-w-2xl mx-auto">
+                    {/* MOBILE: success OR form */}
+                    <div className="md:hidden">
+                    {phase === "success" ? (
+  <>
+    {/* Full-width amber banner fixed to the top */}
+    <div className="fixed inset-x-0 top-0 z-[2147483647] bg-amber-400 text-neutral-900 text-center font-semibold px-4 py-3 shadow-lg">
+      Welcome aboard! Your discount is on the way.
+    </div>
 
-            {/* RIGHT: content */}
-            <div className="py-8 md:py-10 pl-3 md:pl-4 pr-8 md:pr-10 md:-ml-8">
-              <div className="h-full w-full flex flex-col items-center justify-center text-center">
-                <div className="flex items-center justify-center gap-3 mb-3">
-                  <Bell className="h-12 w-12 text-amber-300" />
-                  <h3 className="font-extrabold text-amber-300 text-[2.5875rem] leading-tight">
-                    RING THAT BELL
-                  </h3>
+    {/* Spacer so content below doesn’t jump if visible briefly */}
+    <div className="h-12" />
+  </>
+) : (
+
+                        <div>
+                          <form
+                            onSubmit={onSubmit}
+                            className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center"
+                          >
+                            <input
+                              type="email"
+                              name="email"
+                              autoComplete="email"
+                              inputMode="email"
+                              autoCapitalize="off"
+                              autoCorrect="off"
+                              spellCheck={false}
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              placeholder="Enter your email"
+                              className="rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[16px] focus:outline-none focus:ring-2 focus:ring-amber-400 md:px-5 md:py-3 md:text-[1.25rem] md:flex-none md:w-[50%]"
+                            />
+                            <button
+                              type="submit"
+                              className="px-4 py-2 md:px-10 md:py-3.5 rounded-xl ring-1 ring-amber-400/70 bg-amber-400 text-neutral-900 text-[18px] md:text-lg font-semibold hover:bg-amber-300 transition-all"
+                            >
+                              GET 20% OFF
+                            </button>
+                          </form>
+  
+                          <div className="mt-2 md:mt-3 text-[11px] md:text-[0.9375rem] text-neutral-400 text-center">
+                            Already a member?{" "}
+                            <Link
+                              to="/account/login"
+                              className="text-amber-300 hover:underline"
+                              onClick={() => {
+                                localStorage.setItem(KEY_SUB, "1");
+                                setCookieDays(COOKIE_SUB, "1", 365);
+                                safeClose();
+                              }}
+                            >
+                              Sign in
+                            </Link>
+                          </div>
+  
+                          <div className="mt-1 text-[11px] md:text-xs text-neutral-400 text-center">
+                            Cancel anytime
+                          </div>
+                        </div>
+                      )}
+                    </div>
+  
+                    {/* DESKTOP: form (closes immediately on submit) */}
+                    <div className="hidden md:block">
+                      <form
+                        onSubmit={onSubmit}
+                        className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center"
+                      >
+                        <input
+                          type="email"
+                          name="email"
+                          autoComplete="email"
+                          inputMode="email"
+                          autoCapitalize="off"
+                          autoCorrect="off"
+                          spellCheck={false}
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="Enter your email"
+                          className="rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[16px] focus:outline-none focus:ring-2 focus:ring-amber-400 md:px-5 md:py-3 md:text-[1.25rem] md:flex-none md:w-[50%]"
+                        />
+                        <button
+                          type="submit"
+                          className="px-4 py-2 md:px-10 md:py-3.5 rounded-xl ring-1 ring-amber-400/70 bg-amber-400 text-neutral-900 text-[18px] md:text-lg font-semibold hover:bg-amber-300 transition-all"
+                        >
+                          GET 20% OFF
+                        </button>
+                      </form>
+  
+                      <div className="mt-2 md:mt-3 text-[11px] md:text-[0.9375rem] text-neutral-400 text-center">
+                        Already a member?{" "}
+                        <Link
+                          to="/account/login"
+                          className="text-amber-300 hover:underline"
+                          onClick={() => {
+                            localStorage.setItem(KEY_SUB, "1");
+                            setCookieDays(COOKIE_SUB, "1", 365);
+                            safeClose();
+                          }}
+                        >
+                          Sign in
+                        </Link>
+                      </div>
+  
+                      <div className="mt-1 text-[11px] md:text-xs text-neutral-400 text-center">
+                        Cancel anytime
+                      </div>
+                    </div>
+                  </div>
+                  {/* === /WRAPPER === */}
                 </div>
-
-                <p className="text-neutral-300 mb-5 text-lg md:text-xl md:whitespace-nowrap">
-                  Get 20% off your first freshly roasted coffee order. <br />{" "}
-                  Join the fleet later and save 15% off every order.
-                </p>
-
-                <div className="w-full max-w-lg mx-auto">
-                  <form
-                    onSubmit={onSubmit}
-                    className="flex gap-3 justify-center"
+  
+                {/* BOTTOM: desktop-only Nah */}
+                <div className="hidden md:flex justify-center pt-4">
+                  <button
+                    type="button"
+                    onClick={safeClose}
+                    className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl ring-1 ring-amber-400/60 
+                    text-amber-400 font-semibold text-lg hover:bg-amber-400 hover:text-neutral-900 transition-all"
+                    aria-label="Close banner"
                   >
-                    <input
-                      type="email"
-                      name="email"
-                      autoComplete="email"
-                      inputMode="email"
-                      autoCapitalize="off"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
-                    />
-                    <button
-                      className="px-6 py-3 rounded-xl ring-1 ring-amber-400/70 text-amber-300 font-semibold bg-transparent
-                                 hover:bg-amber-400 hover:text-neutral-900 transition-all"
-                    >
-                      GET 20% OFF
-                    </button>
-                  </form>
-
-                  <div className="mt-3 text-[0.9375rem] text-neutral-400 text-center">
-                    Already a member?{" "}
-                    <Link
-                      to="/account/login"
-                      className="text-amber-300 hover:underline"
-                      onClick={() => {
-                        localStorage.setItem(KEY_SUB, "1");
-                        setCookieDays(COOKIE_SUB, "1", 365);
-                        safeClose();
-                      }}
-                    >
-                      Sign in
-                    </Link>
-                  </div>
-
-                  <div className="mt-1 text-xs text-neutral-400 text-center">
-                    Cancel anytime
-                  </div>
+                    Nah. Tax me like it&apos;s 1773. Give my 20% to the Redcoats.
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* FOOTER: close button */}
-          <div className="border-t border-neutral-800 p-4 md:p-5 flex justify-center bg-neutral-900/40">
+  
+          {/* FOOTER: mobile Nah (hide after success) */}
+          <div
+            className={`border-t border-neutral-800 p-4 justify-center bg-neutral-900/40 md:hidden ${
+              phase === "success" ? "hidden" : "flex"
+            }`}
+          >
             <button
               type="button"
               onClick={safeClose}
-              className="inline-flex items-center justify-center px-5 py-2 rounded-xl ring-1 ring-amber-400/60 
-                         text-amber-400 font-semibold text-base md:text-lg
-                         hover:bg-amber-400 hover:text-neutral-900 transition-all"
+              className="inline-flex items-center justify-center px-4 md:px-5 py-2 rounded-xl ring-1 ring-amber-400/60 
+              text-amber-400 font-semibold text-m md:text-lg
+              hover:bg-amber-400 hover:text-neutral-900 transition-all"
               aria-label="Close banner"
             >
               Nah. Tax me like it&apos;s 1773. Give my 20% to the Redcoats.
@@ -9712,9 +9926,11 @@ function PromoSubscribeModal() {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
-}
+  } // <-- end PromoSubscribeModal
+  
 
 function RoastAnchorsInline({ level = 3 }: { level?: 1 | 2 | 3 | 4 | 5 }) {
   return (

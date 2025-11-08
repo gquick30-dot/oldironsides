@@ -20,9 +20,8 @@ import React, {
 } from "react";
 
 import { createPortal } from "react-dom";
-
 import {
-  MemoryRouter,
+  BrowserRouter,
   Routes,
   Route,
   Navigate,
@@ -1851,7 +1850,12 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                       {/* FILLER LAYER: covers side bars when using object-contain */}
                       {t.sideFill && (
                         <img
-                          src={card.img}
+                          src={
+                            card.img?.startsWith("/") ||
+                            card.img?.startsWith("http")
+                              ? card.img
+                              : `/${card.img}`
+                          }
                           alt=""
                           aria-hidden
                           className={`absolute inset-0 w-full ${t.imgH} object-cover scale-110 blur-sm opacity-60 z-0`}
@@ -1860,7 +1864,12 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
 
                       {/* MAIN IMAGE */}
                       <img
-                        src={card.img}
+                        src={
+                          card.img?.startsWith("/") ||
+                          card.img?.startsWith("http")
+                            ? card.img
+                            : `/${card.img}`
+                        }
                         alt={card.title}
                         className={`relative z-[1] w-full ${t.imgH} ${t.fit} ${t.objY}`}
                         loading="lazy"
@@ -2041,7 +2050,11 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                   className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col"
                 >
                   <img
-                    src={card.img}
+                    src={
+                      card.img?.startsWith("/") || card.img?.startsWith("http")
+                        ? card.img
+                        : `/${card.img}`
+                    }
                     alt={card.title}
                     className="w-full h-[28rem] object-cover"
                     loading="lazy"
@@ -2536,10 +2549,15 @@ function ShopCoffeeCard({ className = "" }: { className?: string }) {
       ].join(" ")}
     >
       <img
-        src={flagship?.img || "Flagship-web.png"}
+        src={
+          flagship?.img?.startsWith("/") || flagship?.img?.startsWith("http")
+            ? flagship?.img
+            : `/${flagship?.img || "Flagship-web.png"}`
+        }
         alt="Shop Coffee"
         className="absolute inset-0 w-full h-full object-cover"
       />
+
       <div className="absolute inset-x-0 bottom-0 p-3 bg-neutral-950/40 backdrop-blur-sm">
         <div className="text-center text-base sm:text-lg md:text-xl text-amber-300 font-bold group-hover:underline">
           SHOP COFFEE
@@ -2618,9 +2636,26 @@ function FleetStoryPage() {
     right: "Commodore John Barry",
   };
   // Use conditional fallback for undefined properties
-  const imgLeft = card.imgLeft || "/path/to/default-left-image.jpg"; // Default image for the left side
-  const imgRight = card.imgRight || "/path/to/default-right-image.jpg"; // Default image for the right side
-  const heroImg = card.heroImg || "/path/to/default-hero-image.jpg"; // Default image for the hero section
+  const heroImg =
+    (card.heroImg &&
+      (card.heroImg.startsWith("/") || card.heroImg.startsWith("http")
+        ? card.heroImg
+        : `/${card.heroImg}`)) ||
+    "/placeholder.png";
+
+  const imgLeft =
+    (card.imgLeft &&
+      (card.imgLeft.startsWith("/") || card.imgLeft.startsWith("http")
+        ? card.imgLeft
+        : `/${card.imgLeft}`)) ||
+    "/placeholder.png";
+
+  const imgRight =
+    (card.imgRight &&
+      (card.imgRight.startsWith("/") || card.imgRight.startsWith("http")
+        ? card.imgRight
+        : `/${card.imgRight}`)) ||
+    "/placeholder.png";
 
   const duelStoryMap: Record<string, { title: string; story: string[] }> = {
     "java-action": {
@@ -3995,13 +4030,17 @@ function RoastDetailPage() {
             />
           </div>
 
-          <div className="relative z-10 mt-0 md:mt-3 grid md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-start">
+          <div className="relative z-10 mt-0 md:mt-3 grid md:grid-cols-[auto,1fr] gap-0 md:gap-6 items-start">
             {/* HERO IMAGE */}
             <div className="flex flex-col items-center md:items-start w-full md:w-auto">
               <div className="w-full md:w-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20 bg-neutral-900/40">
                 <div className="flex flex-col items-center md:items-start w-full md:w-auto">
                   <img
-                    src={card.img}
+                    src={
+                      card.img?.startsWith("/") || card.img?.startsWith("http")
+                        ? card.img
+                        : `/${card.img}`
+                    }
                     alt={card.title}
                     loading="eager"
                     decoding="async"
@@ -4015,11 +4054,11 @@ function RoastDetailPage() {
             {/* 2/3/4/5/6 live together in this column so desktop still sees one text column */}
             <div className="order-2 md:order-none self-start flex flex-col space-y-4">
               {/* ===== TITLE / SUBTITLE / STARS (Mobile #1, Desktop #1) ===== */}
-              <div className="order-1 md:order-1 mb-1 flex items-start justify-between gap-3">
+              <div className="order-1 md:order-1 -mt-1 md:mt-0 mb-0 flex items-start justify-between gap-3">
                 <div className="w-full">
                   {/* Title */}
                   <h1
-                    className="m-0 text-2xl md:text-4xl font-extrabold tracking-tight text-amber-300"
+                    className="m-0 text-3xl md:text-4xl font-extrabold tracking-tight text-amber-300"
                     style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
                   >
                     {isFlagship
@@ -4030,8 +4069,8 @@ function RoastDetailPage() {
                   </h1>
 
                   {/* Subtitle + stars + count */}
-                  <div className="mt-1 max-w-[72ch]">
-                    <div className="flex flex-col gap-2 text-neutral-400 md:flex-row md:items-baseline md:justify-between md:gap-3">
+                  <div className="mt-0 max-w-[72ch]">
+                    <div className="flex flex-col gap-1 text-neutral-400 md:flex-row md:items-baseline md:justify-between md:gap-3">
                       {/* roast style text */}
                       <div className="text-base md:text-[1.2rem]">
                         {isFlagship
@@ -4142,7 +4181,9 @@ function RoastDetailPage() {
                   </div>
                 </div>
 
-                <BackButton to="/store" size="sm" />
+                <div className="hidden md:inline-flex">
+                  <BackButton to="/store" size="sm" />
+                </div>
               </div>
               {/* ===== END TITLE BLOCK ===== */}
 
@@ -6515,7 +6556,11 @@ function StorePage() {
                   >
                     <div className="aspect-[3/4] w-full overflow-hidden bg-neutral-900">
                       <img
-                        src={t.img}
+                        src={
+                          t.img?.startsWith("/") || t.img?.startsWith("http")
+                            ? t.img
+                            : `/${t.img}`
+                        }
                         alt={`${t.label} preview`}
                         className="h-full w-full object-cover"
                         loading="lazy"
@@ -6632,17 +6677,71 @@ function StoreCategoryPage() {
 }
 
 function OriginsPage() {
+  // Mobile History carousel (Origins > The History Behind The Fleet)
+  const histScrollRef = React.useRef<HTMLDivElement | null>(null);
+  const histCardRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
+  const [histIdx, setHistIdx] = React.useState(0);
+  const histSlugs = [
+    "flagship",
+    "baptism-by-fire",
+    "java-action",
+    "oak-and-copper",
+  ];
+
+  const histScrollTo = React.useCallback(
+    (idx: number) => {
+      const len = histSlugs.length;
+      const clamped = ((idx % len) + len) % len;
+      const el = histCardRefs.current[clamped];
+      if (el && histScrollRef.current) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+      }
+      setHistIdx(clamped);
+    },
+    [histSlugs.length]
+  );
+
+  const histPrev = React.useCallback(
+    () => histScrollTo(histIdx - 1),
+    [histIdx, histScrollTo]
+  );
+  const histNext = React.useCallback(
+    () => histScrollTo(histIdx + 1),
+    [histIdx, histScrollTo]
+  );
+
+  const onHistScroll = React.useCallback(() => {
+    const c = histScrollRef.current;
+    if (!c) return;
+    const sl = c.scrollLeft;
+    let best = 0;
+    let bestDist = Infinity;
+    histCardRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const dist = Math.abs(el.offsetLeft - sl);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
+    });
+    setHistIdx(best);
+  }, []);
+
   // Shared frame for all sections
   const SECTION_FRAME = "relative overflow-hidden border-t border-neutral-800";
   const SECTION_INNER =
     "relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16";
 
   return (
-    <main className="pt-0">
+    <main className="pt-0 -mt-16 md:mt-0">
       {/* ===== ROASTING PROCESS (buy box + fonts ~15% larger) ===== */}
       <section
         id="origins-roasting"
-        className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
+        className={`${SECTION_FRAME} -translate-y-3 md:translate-y-0 scroll-mt-28 md:scroll-mt-36`}
       >
         <img
           src="/roasted-dark.jpg"
@@ -6685,12 +6784,22 @@ function OriginsPage() {
                 {/* Buy box ~15% larger: font + padding increased */}
                 <Link
                   to="/store"
-                  className="mt-7 inline-block rounded-xl ring-1 ring-amber-400/60 
-                       text-amber-400 font-semibold text-[1.15rem] md:text-[1.3rem]
-                       px-[1.45rem] py-[0.6rem]
-                       hover:bg-amber-400 hover:text-neutral-900 transition-all"
+                  className="mt-8 mx-auto md:mx-0 flex md:inline-flex items-center justify-center gap-2
+
+             rounded-xl ring-1 ring-amber-400/60
+             text-amber-400 font-semibold
+             text-[1.25rem] md:text-[1.55rem]
+             w-[88%] max-w-[22rem] md:w-auto md:max-w-none
+             px-[1.65rem] py-[0.7rem] md:px-[1.75rem] md:py-[0.75rem]
+             hover:bg-amber-400 hover:text-neutral-900
+             transition-all leading-snug text-center"
                 >
-                  ⚓ SHOP OUR FRESHLY ROASTED COFFEE
+                  <span className="leading-none text-[2em] md:text-[1em] flex items-center">
+                    ⚓
+                  </span>
+                  <span className="md:whitespace-nowrap">
+                    SHOP OUR FRESHLY ROASTED COFFEE
+                  </span>
                 </Link>
               </div>
             </div>
@@ -6821,57 +6930,178 @@ function OriginsPage() {
           <SectionTitle
             title={
               <span
-                className="text-3xl md:text-5xl font-bold text-amber-300 tracking-tight whitespace-nowrap"
+                className="text-3xl md:text-5xl font-bold text-amber-300 tracking-tight whitespace-normal md:whitespace-nowrap leading-tight"
                 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
               >
                 The History Behind The Fleet
               </span>
             }
-            subtitle="Explore the history of the USS Constitution and her victories that inspired our roasts."
+            subtitle=""
           />
-          <div className="mt-10 grid md:grid-cols-4 gap-6">
-            {[
-              "flagship",
-              "baptism-by-fire",
-              "java-action",
-              "oak-and-copper",
-            ].map((slug) => {
-              const card = roastCards.find((c) => c.slug === slug);
-              if (!card) return null;
-              return (
-                <Link
-                  key={`story-${card.slug}`}
-                  to={`/stories/${card.slug}`}
-                  onClick={() => {
-                    try {
-                      sessionStorage.setItem("storiesReturnTo", STORIES_HOME);
-                    } catch {}
-                  }}
-                  className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
+          {/* Mobile-only subtitle (smaller, tighter, centered) */}
+          <p className="md:hidden mt-2 text-[13px] leading-snug text-neutral-300 text-center px-3">
+            Explore the history of the USS Constitution and her victories that
+            inspired our roasts.
+          </p>
+          {/* Desktop/tablet subtitle preserved, just below title */}
+          <p className="hidden md:block mt-3 text-base leading-relaxed text-neutral-300">
+            Explore the history of the USS Constitution and her victories that
+            inspired our roasts.
+          </p>
+
+          <div className="mt-10">
+            {/* MOBILE: swipeable carousel with arrows */}
+            <div className="relative md:hidden">
+              <div
+                ref={histScrollRef}
+                onScroll={onHistScroll}
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pl-3 pr-3 no-scrollbar scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none]"
+                style={{ WebkitOverflowScrolling: "touch" }}
+              >
+                {histSlugs.map((slug, idx) => {
+                  const card = roastCards.find((c) => c.slug === slug);
+                  if (!card) return null;
+
+                  return (
+                    <Link
+                      key={`story-m-${card.slug}`}
+                      ref={(el) => {
+                        histCardRefs.current[idx] = el;
+                      }}
+                      to={`/stories/${card.slug}`}
+                      onClick={() => {
+                        try {
+                          sessionStorage.setItem(
+                            "storiesReturnTo",
+                            STORIES_HOME
+                          );
+                        } catch {}
+                      }}
+                      className="
+                        mt-2 snap-center shrink-0
+                        w-[88vw] max-w-[88vw]
+                        rounded-2xl ring-1 ring-neutral-800
+                        bg-neutral-900/40 shadow-lg shadow-black/30
+                        hover:bg-neutral-900 transition flex flex-col
+                      "
+                      aria-label={`${card.storyTitle} details`}
+                    >
+                      <div className="relative h-[22rem] rounded-t-2xl overflow-hidden bg-black">
+                        <img
+                          src={
+                            card.img?.startsWith("/") ||
+                            card.img?.startsWith("http")
+                              ? card.img
+                              : `/${card.img}`
+                          }
+                          alt={String(card.title)}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
+                          onError={(e) => {
+                            const el = e.currentTarget as HTMLImageElement;
+                            if (!el.src.includes("/placeholder.png"))
+                              el.src = "/placeholder.png";
+                          }}
+                        />
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+                      </div>
+
+                      <div className="p-4 flex flex-col text-left">
+                        <div className="flex items-center gap-2 text-amber-300 mb-1">
+                          <Compass className="h-4 w-4" />
+                          <div className="text-sm font-semibold">
+                            {card.storyTitle}
+                          </div>
+                        </div>
+                        <div className="text-[13px] text-amber-300 font-semibold">
+                          {card.battleDate}
+                        </div>
+                        <p className="mt-1 text-[13px] text-neutral-300 line-clamp-3">
+                          {card.story}
+                        </p>
+                        <span className="mt-3 inline-block text-[13px] text-amber-300">
+                          Learn more
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {/* arrows */}
+              <div className="absolute inset-y-1/2 -translate-y-1/2 left-1 flex items-center pl-1 pointer-events-none">
+                <button
+                  type="button"
+                  onClick={histPrev}
+                  className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
+                  aria-label="Previous story"
                 >
-                  <img
-                    src={card.img}
-                    alt={String(card.title)}
-                    className="h-72 sm:h-80 md:h-96 w-full object-cover"
-                  />
-                  <div className="p-5 flex flex-col flex-1">
-                    <div className="flex items-center gap-3 text-amber-300 mb-1">
-                      <Compass className="h-4 w-4" />
-                      <div>{card.storyTitle}</div>
+                  ‹
+                </button>
+              </div>
+              <div className="absolute inset-y-1/2 -translate-y-1/2 right-1 flex items-center pr-1 pointer-events-none">
+                <button
+                  type="button"
+                  onClick={histNext}
+                  className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
+                  aria-label="Next story"
+                >
+                  ›
+                </button>
+              </div>
+            </div>
+
+            {/* DESKTOP/TABLET: original grid unchanged */}
+            <div className="hidden md:grid md:grid-cols-4 gap-6">
+              {[
+                "flagship",
+                "baptism-by-fire",
+                "java-action",
+                "oak-and-copper",
+              ].map((slug) => {
+                const card = roastCards.find((c) => c.slug === slug);
+                if (!card) return null;
+                return (
+                  <Link
+                    key={`story-${card.slug}`}
+                    to={`/stories/${card.slug}`}
+                    onClick={() => {
+                      try {
+                        sessionStorage.setItem("storiesReturnTo", STORIES_HOME);
+                      } catch {}
+                    }}
+                    className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
+                  >
+                    <img
+                      src={
+                        card.img?.startsWith("/") ||
+                        card.img?.startsWith("http")
+                          ? card.img
+                          : `/${card.img}`
+                      }
+                      alt={String(card.title)}
+                      className="h-72 sm:h-80 md:h-96 w-full object-cover"
+                    />
+                    <div className="p-5 flex flex-col flex-1">
+                      <div className="flex items-center gap-3 text-amber-300 mb-1">
+                        <Compass className="h-4 w-4" />
+                        <div>{card.storyTitle}</div>
+                      </div>
+                      <div className="text-sm md:text-base text-amber-300 font-semibold">
+                        {card.battleDate}
+                      </div>
+                      <p className="mt-1 text-sm text-neutral-300 flex-1">
+                        {card.story}
+                      </p>
+                      <span className="mt-4 inline-block text-sm text-amber-300">
+                        Learn more
+                      </span>
                     </div>
-                    <div className="text-sm md:text-base text-amber-300 font-semibold">
-                      {card.battleDate}
-                    </div>
-                    <p className="mt-1 text-sm text-neutral-300 flex-1">
-                      {card.story} {/* Display the blurb (short version) */}
-                    </p>
-                    <span className="mt-4 inline-block text-sm text-amber-300">
-                      Learn more
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </Container>
       </section>
@@ -9484,7 +9714,6 @@ function PromoSubscribeModal() {
   const [email, setEmail] = React.useState("");
   const [phase, setPhase] = React.useState<"form" | "success">("form");
 
-
   // ===== KEYS =====
   const KEY_SUB = "promo_subscribed";
   const KEY_CD = "promo_cooldown_until";
@@ -9674,10 +9903,10 @@ function PromoSubscribeModal() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailOk(email)) return flash("Enter a valid email.");
-  
+
     localStorage.setItem(KEY_SUB, "1");
     setCookieDays(COOKIE_SUB, "1", 365);
-  
+
     // MOBILE: show amber full-width banner for ~2.5s, then close
     const isDesktop = window.matchMedia("(min-width: 768px)").matches;
     if (isDesktop) {
@@ -9702,7 +9931,6 @@ function PromoSubscribeModal() {
       }, 2500); // was 1000 — now ~2.5s
     }
   };
-  
 
   if (!open) return null;
 
@@ -9719,7 +9947,7 @@ function PromoSubscribeModal() {
     >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-  
+
       {/* Modal shell */}
       <div className="relative z-10 w-[92vw] max-w-[380px] md:w-[98vw] md:max-w-6xl">
         <div
@@ -9745,7 +9973,7 @@ function PromoSubscribeModal() {
                 <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
               </div>
             </div>
-  
+
             {/* DESKTOP HERO */}
             <div className="hidden md:flex items-center justify-start pl-6 pr-0 py-6">
               <div className="rounded-2xl ring-1 ring-amber-400 bg-neutral-900/60 overflow-hidden shadow-2xl shadow-black/40">
@@ -9758,7 +9986,7 @@ function PromoSubscribeModal() {
                 </div>
               </div>
             </div>
-  
+
             {/* RIGHT CONTENT */}
             <div className="py-5 md:py-10 px-4 md:pl-4 md:pr-10 md:-ml-8 min-h-full flex">
               <div className="h-full w-full flex flex-col justify-between text-center">
@@ -9770,29 +9998,28 @@ function PromoSubscribeModal() {
                       RING THAT BELL
                     </h3>
                   </div>
-  
+
                   <p className="text-neutral-300 mb-3 md:mb-5 text-[14px] leading-snug md:text-[1.5625rem] md:leading-normal md:whitespace-nowrap">
                     Get 20% off your first freshly roasted coffee order.
                     <br className="hidden md:block" />
                     Join the fleet and save 15% off every order.
                   </p>
-  
+
                   {/* === THIS WHOLE WRAPPER SWAPPED === */}
                   <div className="w-full max-w-[300px] sm:max-w-sm md:max-w-2xl mx-auto">
                     {/* MOBILE: success OR form */}
                     <div className="md:hidden">
-                    {phase === "success" ? (
-  <>
-    {/* Full-width amber banner fixed to the top */}
-    <div className="fixed inset-x-0 top-0 z-[2147483647] bg-amber-400 text-neutral-900 text-center font-semibold px-4 py-3 shadow-lg">
-      Welcome aboard! Your discount is on the way.
-    </div>
+                      {phase === "success" ? (
+                        <>
+                          {/* Full-width amber banner fixed to the top */}
+                          <div className="fixed inset-x-0 top-0 z-[2147483647] bg-amber-400 text-neutral-900 text-center font-semibold px-4 py-3 shadow-lg">
+                            Welcome aboard! Your discount is on the way.
+                          </div>
 
-    {/* Spacer so content below doesn’t jump if visible briefly */}
-    <div className="h-12" />
-  </>
-) : (
-
+                          {/* Spacer so content below doesn’t jump if visible briefly */}
+                          <div className="h-12" />
+                        </>
+                      ) : (
                         <div>
                           <form
                             onSubmit={onSubmit}
@@ -9818,7 +10045,7 @@ function PromoSubscribeModal() {
                               GET 20% OFF
                             </button>
                           </form>
-  
+
                           <div className="mt-2 md:mt-3 text-[11px] md:text-[0.9375rem] text-neutral-400 text-center">
                             Already a member?{" "}
                             <Link
@@ -9833,14 +10060,14 @@ function PromoSubscribeModal() {
                               Sign in
                             </Link>
                           </div>
-  
+
                           <div className="mt-1 text-[11px] md:text-xs text-neutral-400 text-center">
                             Cancel anytime
                           </div>
                         </div>
                       )}
                     </div>
-  
+
                     {/* DESKTOP: form (closes immediately on submit) */}
                     <div className="hidden md:block">
                       <form
@@ -9867,7 +10094,7 @@ function PromoSubscribeModal() {
                           GET 20% OFF
                         </button>
                       </form>
-  
+
                       <div className="mt-2 md:mt-3 text-[11px] md:text-[0.9375rem] text-neutral-400 text-center">
                         Already a member?{" "}
                         <Link
@@ -9882,7 +10109,7 @@ function PromoSubscribeModal() {
                           Sign in
                         </Link>
                       </div>
-  
+
                       <div className="mt-1 text-[11px] md:text-xs text-neutral-400 text-center">
                         Cancel anytime
                       </div>
@@ -9890,7 +10117,7 @@ function PromoSubscribeModal() {
                   </div>
                   {/* === /WRAPPER === */}
                 </div>
-  
+
                 {/* BOTTOM: desktop-only Nah */}
                 <div className="hidden md:flex justify-center pt-4">
                   <button
@@ -9900,13 +10127,14 @@ function PromoSubscribeModal() {
                     text-amber-400 font-semibold text-lg hover:bg-amber-400 hover:text-neutral-900 transition-all"
                     aria-label="Close banner"
                   >
-                    Nah. Tax me like it&apos;s 1773. Give my 20% to the Redcoats.
+                    Nah. Tax me like it&apos;s 1773. Give my 20% to the
+                    Redcoats.
                   </button>
                 </div>
               </div>
             </div>
           </div>
-  
+
           {/* FOOTER: mobile Nah (hide after success) */}
           <div
             className={`border-t border-neutral-800 p-4 justify-center bg-neutral-900/40 md:hidden ${
@@ -9929,8 +10157,7 @@ function PromoSubscribeModal() {
     </div>,
     document.body
   );
-  } // <-- end PromoSubscribeModal
-  
+} // <-- end PromoSubscribeModal
 
 function RoastAnchorsInline({ level = 3 }: { level?: 1 | 2 | 3 | 4 | 5 }) {
   return (
@@ -10436,10 +10663,16 @@ function Layout() {
                                     className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
                                   >
                                     <img
-                                      src={card.img}
+                                      src={
+                                        card.img?.startsWith("/") ||
+                                        card.img?.startsWith("http")
+                                          ? card.img
+                                          : `/${card.img}`
+                                      }
                                       alt={card.title}
                                       className="h-52 sm:h-60 lg:h-60 w-full object-cover"
                                     />
+
                                     <div className="p-3">
                                       <div
                                         className="text-lg font-extrabold text-amber-300"
@@ -10519,7 +10752,14 @@ function Layout() {
                               >
                                 <div className="aspect-[4/3] w-full overflow-hidden">
                                   <img
-                                    src={flagship?.img || "Flagship-web.png"}
+                                    src={
+                                      flagship?.img?.startsWith("/") ||
+                                      flagship?.img?.startsWith("http")
+                                        ? flagship?.img
+                                        : `/${
+                                            flagship?.img || "Flagship-web.png"
+                                          }`
+                                    }
                                     alt="Shop Coffee"
                                     className="h-full w-full object-cover"
                                   />
@@ -11074,13 +11314,14 @@ function useSmokeTests() {
 export default function App() {
   useSmokeTests();
   return (
-    <MemoryRouter initialEntries={["/"]}>
+    <BrowserRouter>
       <CartProvider>
         <ErrorBoundary>
           <AppShell />
         </ErrorBoundary>
       </CartProvider>
-    </MemoryRouter>
+    </BrowserRouter>
   );
 }
+
 // auto-deploy test Tue 28 Oct 2025 12:33:22 AM UTC

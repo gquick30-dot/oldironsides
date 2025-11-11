@@ -2429,7 +2429,7 @@ function HomePage() {
 
                 {/* text: center on mobile, left on md+ */}
                 <div className="space-y-3 text-center md:text-left">
-                  <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                  <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                     Giving Back To Those Who Served
                   </h3>
                   <br />
@@ -2569,7 +2569,7 @@ function ShopCoffeeCard({ className = "" }: { className?: string }) {
 
 function FleetPage() {
   return (
-    <main className="py-6 md:py-8">
+    <main className="max-md:py-0 md:py-8 max-md:-mt-10">
       <LaunchedFromHarbor />
     </main>
   );
@@ -2704,15 +2704,15 @@ function FleetStoryPage() {
   const storiesHome = "/origins#origins-history"; // Add this line right here
 
   return (
-    <main className="relative overflow-hidden py-12 md:py-20">
+    <main className="relative overflow-hidden pt-0 pb-12 md:py-20 max-md:-mt-10">
       <img
         src="/maps-books.png"
         alt=""
-        className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover opacity-35 z-0"
+        className="hidden md:block pointer-events-none select-none absolute inset-0 w-full h-full object-cover opacity-35 z-0"
       />
 
-      <Container className="relative z-10">
-        <div className="flex justify-end">
+      <Container className="relative z-10 max-md:pt-0">
+        <div className="hidden md:flex justify-end">
           <Link
             to={storiesHome} // Use the constant STORIES_HOME here
             className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm ring-1 ring-amber-400/70 text-amber-300 hover:bg-amber-400 hover:text-neutral-900 transition"
@@ -2725,16 +2725,15 @@ function FleetStoryPage() {
             ← Back
           </Link>
         </div>
-
-        <div className="mt-4 flex items-start mb-16 md:mb-24 lg:mb-28">
+        <div className="mt-0 md:mt-4 max-md:mt-0 flex items-start mb-16 md:mb-0 lg:mb-0 max-md:flex-col max-md:gap-4 max-md:mb-12">
           <figure
-            className={`${cardFrame} h-[720px]`}
-            style={{ maxWidth: "1000px", width: "130%" }}
+            className={`${cardFrame} md:h-[720px] md:w-[130%] max-md:h-[120vw] max-md:w-[92%] max-md:mx-auto relative max-md:bg-transparent max-md:ring-0 max-md:shadow-none`}
+            style={{ maxWidth: "1000px" }}
           >
             <img
               src={heroImg}
               alt={card.title}
-              className="h-full w-full object-cover"
+              className="block w-full h-full object-cover max-md:rounded-2xl max-md:ring-1 max-md:ring-amber-400/60"
               loading="eager"
               decoding="async"
             />
@@ -2952,16 +2951,21 @@ function FleetStoryPage() {
         <div
           role="separator"
           aria-hidden="true"
-          className="my-0 h-px w-full bg-amber-400/30"
+          className="my-0 md:my-12 lg:my-16 h-px w-full bg-amber-400/30"
         />
-        <div className="mt-16 md:mt-24 lg:mt-28 flex items-start gap-6">
-          {/* Left Image */}
-          <figure className="flex-shrink-0">
-            <div className={cardFrame}>
+
+        <div className="mt-16 md:mt-0 lg:mt-0 max-md:grid max-md:grid-cols-2 max-md:gap-2 md:flex md:items-start md:gap-6">
+          {/* Left Image (desktop left, mobile left) */}
+          <figure className="md:flex-shrink-0 max-md:col-span-1">
+            <div
+              className={`${cardFrame} ${
+                isOakAndCopper ? "max-md:aspect-[123/100]" : ""
+              }`}
+            >
               <img
                 src={imgLeft}
                 alt={caps.left}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover max-md:h-auto"
                 loading="lazy"
                 decoding="async"
               />
@@ -2971,16 +2975,16 @@ function FleetStoryPage() {
             </figcaption>
           </figure>
 
-          {/* Text Block - Left Aligned */}
-          <div className="flex-grow text-left px-2 md:px-6">
+          {/* Text Block (desktop center, mobile below spanning both) */}
+          <div className="md:flex-grow md:px-6 max-md:col-span-2 max-md:order-3 max-md:mt-6 text-left px-2">
             <h2
-              className="text-xl md:text-2xl font-bold text-amber-300 tracking-tight"
+              className="text-xl md:text-2xl font-bold text-amber-300 tracking-tight max-md:text-center md:text-center"
               style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
             >
               {duelStory.title}
             </h2>
 
-            <div className="mt-4 text-neutral-300 text-lg leading-relaxed">
+            <div className="mt-4 md:mt-3 text-neutral-300 text-lg leading-relaxed max-md:text-left">
               {typeof duelStory.story === "string"
                 ? duelStory.story.split("\n").map((paragraph, i) => (
                     <p key={i} className="mb-4 last:mb-0">
@@ -2994,18 +2998,22 @@ function FleetStoryPage() {
                   ))}
             </div>
 
-            <div className="mt-4">
+            <div className="mt-4 max-md:flex max-md:justify-center">
               <ShopButton slug={card.slug} title={card.title} />
             </div>
           </div>
 
-          {/* Right Image */}
-          <figure className="flex-shrink-0">
-            <div className={cardFrame}>
+          {/* Right Image (desktop right, mobile right) */}
+          <figure className="md:flex-shrink-0 max-md:col-span-1">
+            <div
+              className={`${cardFrame} ${
+                isOakAndCopper ? "max-md:aspect-[123/100]" : ""
+              }`}
+            >
               <img
                 src={imgRight}
                 alt={caps.right}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover max-md:h-auto"
                 loading="eager"
                 decoding="async"
               />
@@ -6733,8 +6741,7 @@ function OriginsPage() {
 
   // Shared frame for all sections
   const SECTION_FRAME = "relative overflow-hidden border-t border-neutral-800";
-  const SECTION_INNER =
-    "relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16";
+  const SECTION_INNER = "relative z-10 min-h-0 md:min-h-[700px] py-4 md:py-16";
 
   return (
     <main className="pt-0 -mt-16 md:mt-0">
@@ -6746,7 +6753,7 @@ function OriginsPage() {
         <img
           src="/roasted-dark.jpg"
           alt="Roasting process backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-50 z-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover object-center transform scale-[0.9] md:scale-100 opacity-50 z-0 pointer-events-none"
         />
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
@@ -6766,10 +6773,10 @@ function OriginsPage() {
 
               {/* Text RIGHT (fonts bumped ~15%) */}
               <div className="space-y-3">
-                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                   ROASTING PROCESS
                 </h3>
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
                   Coffee is at its best in the first days after roasting when
                   the oils are alive, the aroma is full, and the flavor is at
                   its peak. That is why we roast to order every Monday and ship
@@ -6815,19 +6822,19 @@ function OriginsPage() {
         <img
           src="/farm1-web.jpg"
           alt="Origins & Voyages backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-[50%_68%] opacity-80 z-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover object-[50%_68%] opacity-80 z-0 pointer-events-none origin-center [transform:scaleY(1.08)] md:[transform:none]"
         />
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
         <Container>
-          <div className="relative z-10 flex items-center min-h-[720px] md:min-h-[820px] py-12 md:py-16">
+          <div className="relative z-10 flex items-center min-h-0 md:min-h-[820px] py-4 md:py-16">
             <div className="grid w-full grid-cols-1 md:grid-cols-[1fr,auto] gap-4 md:gap-6 items-center">
               {/* Text LEFT */}
               <div className="space-y-3">
-                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                   The Lands Where Our Beans Are Grown
                 </h3>
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
                   From the volcanic slopes of Guatemala to the highlands of
                   Ethiopia and the misty mountains of Colombia, our beans are
                   born in lands where rich soil and thin air forge extraordinary
@@ -6858,20 +6865,28 @@ function OriginsPage() {
         id="origins-hands"
         className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
       >
+        {/* Mobile: no backdrop. Desktop: keep backdrop */}
         <img
           src="/hands-bowl.jpg"
           alt="Growers backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-70 z-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-70 z-0 pointer-events-none hidden md:block"
         />
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none hidden md:block" />
+        {/* Mobile-only flat bg */}
+        <div className="absolute inset-0 z-0 md:hidden bg-neutral-950" />
 
         <Container>
           <div
             className={`${SECTION_INNER} flex items-center min-h-[720px] md:min-h-[820px]`}
           >
             <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-3 md:gap-4">
-              {/* 3-stack LEFT (top/bottom pinned LEFT, middle offset RIGHT) */}
-              <div className="justify-self-center md:justify-self-start self-center">
+              {/* MOBILE-ONLY TITLE (above pics) */}
+              <h3 className="md:hidden font-cinzel text-2xl font-extrabold text-amber-300 tracking-wide uppercase order-1">
+                The Hands That Grow Our Beans
+              </h3>
+
+              {/* 3-STACK PICS — mobile order 2, desktop left */}
+              <div className="justify-self-center md:justify-self-start self-center order-2 md:order-1">
                 <div className="relative w-[22rem] sm:w-[28rem] md:w-[36rem] h-[30rem] sm:h-[40rem] md:h-[48rem]">
                   {/* Top card (far LEFT) */}
                   <div className="absolute left-0 top-0 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
@@ -6881,7 +6896,7 @@ function OriginsPage() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  {/* Middle card (offset to RIGHT) — existing hands pic */}
+                  {/* Middle card (offset to RIGHT) */}
                   <div className="absolute left-[58%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-2xl">
                     <img
                       src="/hands-beans.jpg"
@@ -6900,17 +6915,21 @@ function OriginsPage() {
                 </div>
               </div>
 
-              {/* Text RIGHT (snug to image stack) */}
-              <div className="space-y-3 md:justify-self-start">
-                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+              {/* TEXT — desktop right; on mobile shows only the story (title hidden) */}
+              <div className="space-y-3 md:justify-self-start order-3 md:order-2">
+                {/* Desktop title */}
+                <h3 className="hidden md:block font-cinzel text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                   The Hands That Grow Our Beans
                 </h3>
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+
+                {/* Story paragraph */}
+                <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug md:leading-relaxed tracking-[0.01em]">
                   Behind every harvest are the families who make it possible.
                   Generations of farmers rise before dawn, nurturing each tree
                   by hand and protecting the land that sustains them. Their
                   knowledge, patience, and respect for nature give our coffee
-                  its strength and character. <br /> <br />
+                  its strength and character. <br />
+                  <br />
                   These small family farms are the heart of what we do. Every
                   bean is ethically sourced, every grower treated with fairness
                   and dignity. Their craftsmanship and pride live on in every
@@ -6949,7 +6968,7 @@ function OriginsPage() {
             inspired our roasts.
           </p>
 
-          <div className="mt-10">
+          <div className="mt-6 md:mt-10">
             {/* MOBILE: swipeable carousel with arrows */}
             <div className="relative md:hidden">
               <div
@@ -7111,23 +7130,26 @@ function OriginsPage() {
         id="origins-service"
         className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
       >
+        {/* Mobile: no backdrop. Desktop: keep backdrop */}
         <img
           src="/iraq-moon.JPG"
           alt="Service backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-70 z-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-70 z-0 pointer-events-none hidden md:block"
         />
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none hidden md:block" />
+        {/* Mobile-only flat bg */}
+        <div className="absolute inset-0 z-0 md:hidden bg-neutral-950" />
 
         <Container>
-          <div className="relative z-10 flex items-center min-h-[900px] md:min-h-[960px] py-12 md:py-16">
+          <div className="relative z-10 flex items-center min-h-0 md:min-h-[960px] py-3 md:py-16">
             {/* Collapsed to two columns: text + right stack */}
-            <div className="grid w-full grid-cols-1 md:grid-cols-[1fr,auto] items-center gap-8">
+            <div className="grid w-full grid-cols-1 md:grid-cols-[1fr,auto] items-center gap-3 md:gap-8">
               {/* CENTER TEXT (now left column on desktop) */}
               <div className="text-center md:text-left self-center">
-                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                   From The Sand To The Sea
                 </h3>
-                <p className="mt-3 text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                <p className="mt-1 md:mt-3 text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
                   Although my boots were in the sand, not on the deck, the
                   spirit of Old Ironsides has always inspired me. She is a
                   reminder that grit, sacrifice, and courage win the day. Those
@@ -7136,8 +7158,39 @@ function OriginsPage() {
                 </p>
               </div>
 
-              {/* RIGHT STACK (unchanged) */}
-              <div className="justify-self-center md:justify-self-end">
+              {/* RIGHT STACK: mobile mimics “Hands” collage; desktop keeps original */}
+              {/* MOBILE COLLAGE (like Hands) */}
+              <div className="md:hidden justify-self-center">
+                <div className="relative w-[20rem] sm:w-[22rem] h-[26rem]">
+                  {/* Top card (left) */}
+                  <div className="absolute left-0 top-0 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                    <img
+                      src="/humvee-turret.jpg"
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {/* Middle card (offset right) */}
+                  <div className="absolute left-[56%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-2xl">
+                    <img
+                      src="/iraq-self1.JPG"
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {/* Bottom card (left) */}
+                  <div className="absolute left-0 bottom-0 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                    <img
+                      src="/iraq-kids.JPG"
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* DESKTOP ORIGINAL STACK */}
+              <div className="hidden md:block justify-self-center md:justify-self-end">
                 <div className="relative w-[36rem] h-[48rem]">
                   <div className="absolute left-1/2 top-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
                     <img
@@ -7178,7 +7231,7 @@ function OriginsPage() {
           alt=""
           role="presentation"
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover object-center z-0 pointer-events-none brightness-70 saturate-70 hue-rotate-[-10deg]"
+          className="absolute inset-0 w-full h-full object-contain md:object-cover object-center z-0 pointer-events-none brightness-70 saturate-70 hue-rotate-[-10deg] bg-black"
         />
 
         <div className="pointer-events-none absolute inset-0 z-0">
@@ -7210,7 +7263,7 @@ function OriginsPage() {
 
               {/* text: center on mobile, left on md+ */}
               <div className="space-y-3 text-center md:text-left">
-                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                   Giving Back To Those Who Served
                 </h3>
                 <br />
@@ -7260,12 +7313,12 @@ function OriginsPage() {
         <img
           src="/sunrise-deck.png"
           alt="About backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-40 z-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover object-center transform scale-[0.9] md:scale-100 opacity-40 z-0 pointer-events-none"
         />
         <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
 
         <Container>
-          <div className="relative z-10 flex items-center min-h-[720px] md:min-h-[820px] py-12 md:py-16">
+          <div className="relative z-10 flex items-center min-h-0 md:min-h-[820px] py-4 md:py-16">
             <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
               {/* Photo LEFT */}
               <div className="justify-self-center self-center">
@@ -7280,10 +7333,10 @@ function OriginsPage() {
 
               {/* Text RIGHT */}
               <div className="space-y-3">
-                <h3 className="font-cinzel text-3xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
                   About Old Ironsides Coffee
                 </h3>
-                <p className="text-neutral-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
                   At Old Ironsides Coffee, our mission is to bring education,
                   pride, and a revival of the American spirit that is being lost
                   at an alarming rate. <br /> <br />

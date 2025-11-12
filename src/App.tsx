@@ -7608,9 +7608,9 @@ function LegalPage() {
     return () => clearInterval(id);
   }, []);
   return (
-    <main className="py-16">
-      <Container>
-        <div className="flex items-start justify-between">
+    <main className="md:py-16 max-md:py-6 max-md:-mt-12">
+      <Container className="max-md:pt-0">
+        <div className="flex items-start justify-between max-md:mt-0">
           <SectionTitle
             title={title}
             subtitle={
@@ -7624,7 +7624,9 @@ function LegalPage() {
             }
           />
 
-          <BackButton size="sm" />
+          <div className="hidden md:block">
+            <BackButton size="sm" />
+          </div>
         </div>
 
         {/* Live roast schedule notice only on Roast & Shipping */}
@@ -11408,10 +11410,15 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
   } = useCart();
 
   // --- helpers ---
-  const isFleetAuthed = () =>
-    (typeof window !== "undefined" && (window as any).isFleetAuthed === true) ||
-    (typeof window !== "undefined" &&
-      localStorage.getItem("oi_fleet_authed") === "1");
+  // --- helpers ---
+  const isLoggedIn = React.useMemo(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return !!localStorage.getItem("oi_user");
+    } catch {
+      return false;
+    }
+  }, []);
 
   const hasSubscription = cart.some((i: any) => !!i.isSubscription);
 
@@ -11419,18 +11426,24 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
   const [open, setOpen] = React.useState(false);
   const [pinned, setPinned] = React.useState(false); // interaction cancels autoclose
   React.useEffect(() => setOpen(true), []);
-  React.useEffect(() => {
-    if (pinned) return;
-    const id = setTimeout(() => onClose(), 3500);
-    return () => clearTimeout(id);
-  }, [pinned, onClose]);
+  // No autoclose — user explicitly closes via ✕, backdrop, or "Continue shopping"
+  React.useEffect(() => {}, []);
 
   // per-item sub frequency (14/30/60)
   const [freq, setFreq] = React.useState<Record<string, number>>({});
+  const [showSubChooser, setShowSubChooser] = React.useState<
+    Record<string, boolean>
+  >({});
+  const [manageSubOpen, setManageSubOpen] = React.useState<
+    Record<string, boolean>
+  >({});
+
   const getFreq = (id: string, fallback?: number) => freq[id] ?? fallback ?? 30;
 
   // modals / banners
   const [showRoastInfo, setShowRoastInfo] = React.useState(false);
+  // ADD THIS just below other state hooks in MobileCartSheet
+  const [checkingOut, setCheckingOut] = React.useState(false);
   const [showSubGate, setShowSubGate] = React.useState(false);
 
   // roast timer (reuse your ET helpers already in this file)
@@ -11448,14 +11461,79 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
 
   const bagsLeft = Math.max(0, freeShippingThreshold - coffeeBagCount);
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
+    if (checkingOut) return; // guard
+    setCheckingOut(true);
     setPinned(true);
-    if (hasSubscription && !isFleetAuthed()) {
+
+    if (hasSubscription && !isLoggedIn) {
       setShowSubGate(true);
+      setCheckingOut(false);
       return;
     }
-    // go to checkout (same as desktop route)
-    window.location.assign("/checkout");
+
+    try {
+      const { id: cartId } = await ensureCart();
+
+      const desired: Array<{ merchandiseId: string; quantity: number }> = [];
+      for (const i of cart ?? []) {
+        const v = i?.merchandiseId;
+        const q = Math.max(0, Math.min(99, Number(i?.qty ?? 0)));
+        if (v && q > 0) desired.push({ merchandiseId: v, quantity: q });
+      }
+
+      const sf = await getCart(cartId);
+      const existingLineIds =
+        sf?.lines?.edges
+          ?.map((e: any) => String(e?.node?.id))
+          .filter(Boolean) ?? [];
+      if (existingLineIds.length) {
+        await cartLinesRemove({ cartId, lineIds: existingLineIds });
+      }
+
+      if (desired.length === 0) {
+        window.dispatchEvent(
+          new CustomEvent("flash", { detail: "Your cart is empty." })
+        );
+        setCheckingOut(false);
+        return;
+      }
+
+      const byVariant = new Map<string, number>();
+      for (const d of desired) {
+        byVariant.set(
+          d.merchandiseId,
+          (byVariant.get(d.merchandiseId) ?? 0) + d.quantity
+        );
+      }
+      for (const [merchandiseId, quantity] of byVariant.entries()) {
+        await cartLinesAdd({ cartId, merchandiseId, quantity });
+      }
+
+      const fresh = await getCart(cartId);
+      const url: string | undefined = fresh?.checkoutUrl;
+      if (
+        !url ||
+        !/^https?:\/\/[^\/]+\.myshopify\.com\/(cart|checkouts)\b/i.test(url)
+      ) {
+        console.error("Invalid checkoutUrl:", url, fresh);
+        window.dispatchEvent(
+          new CustomEvent("flash", {
+            detail: "Couldn’t get a valid checkout link. Try again.",
+          })
+        );
+        setCheckingOut(false);
+        return;
+      }
+
+      window.location.assign(url);
+    } catch (e) {
+      console.error(e);
+      window.dispatchEvent(
+        new CustomEvent("flash", { detail: "Checkout failed. See console." })
+      );
+      setCheckingOut(false);
+    }
   };
 
   return (
@@ -11499,25 +11577,29 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className="px-4 py-2 bg-amber-400 text-neutral-900">
+          {freeShippingQualified ? (
+            <div className="text-center">
+              <div className="text-[13px] font-extrabold leading-tight">Congratulations!</div>
+              <div className="text-[13px] font-extrabold leading-tight">Free Shipping Unlocked!</div>
+            </div>
+          ) : (
             <div className="text-[13px] font-extrabold text-center">
-              {freeShippingQualified
-                ? "CONGRATULATIONS — FREE SHIPPING UNLOCKED!"
-                : `ONLY ${bagsLeft} MORE BAG${
-                    bagsLeft === 1 ? "" : "S"
-                  } TO UNLOCK FREE SHIPPING`}
+              {`Only ${bagsLeft} more bag${bagsLeft === 1 ? "" : "s"} to unlock free shipping`}
             </div>
-            <div className="mt-2 h-[6px] w-full bg-neutral-200/60 rounded">
-              <div
-                className="h-[6px] bg-neutral-900 rounded"
-                style={{
-                  width: `${Math.min(
-                    100,
-                    Math.round((coffeeBagCount / freeShippingThreshold) * 100)
-                  )}%`,
-                }}
-              />
-            </div>
+          )}
+          <div className="mt-2 h-[6px] w-full bg-neutral-200/60 rounded">
+            <div
+              className="h-[6px] bg-neutral-900 rounded"
+              style={{
+                width: `${Math.min(
+                  100,
+                  Math.round((coffeeBagCount / freeShippingThreshold) * 100)
+                )}%`,
+              }}
+            />
           </div>
+        </div>
+
         </div>
 
         {/* ITEMS (condensed further; removes big bean tag) */}
@@ -11567,14 +11649,82 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                   : "Whole Bean"}
                               </div>
                             )}
-                            {isSub && (
-                              <div className="mt-1 inline-flex items-center gap-2 text-[10px] text-emerald-400">
-                                <span className="px-1.5 py-[1px] rounded bg-emerald-900/30 ring-1 ring-emerald-700">
-                                  Subscription
-                                </span>
-                                <span>Every {it?.subEvery ?? 30}d</span>
+                                                     {isSub && (
+                              <div className="mt-1">
+                                <div className="inline-flex items-center gap-2 text-[10px] text-emerald-400">
+                                  <span className="px-1.5 py-[1px] rounded bg-emerald-900/30 ring-1 ring-emerald-700">
+                                    Subscription
+                                  </span>
+                                  <span>Every {it?.subEvery ?? 30}d</span>
+                                  <button
+                                    onClick={() =>
+                                      setManageSubOpen((prev) => ({ ...prev, [it.id]: !prev[it.id] }))
+                                    }
+                                    className="ml-2 text-[10px] text-amber-300 underline underline-offset-2"
+                                  >
+                                    Manage
+                                  </button>
+                                </div>
+
+                                {manageSubOpen[it.id] && (
+                                  <div className="mt-2">
+                                    <div className="mb-2 grid grid-cols-3 gap-2">
+                                      {[14, 30, 60].map((d) => (
+                                        <button
+                                          key={`${it.id}-manage-${d}`}
+                                          onClick={() =>
+                                            setFreq((prev) => ({ ...prev, [it.id]: d }))
+                                          }
+                                          className={[
+                                            "py-1.5 rounded-md text-[12px] font-semibold ring-1",
+                                            (freq[it.id] ?? it?.subEvery ?? 30) === d
+                                              ? "bg-amber-400 text-neutral-900 ring-amber-400"
+                                              : "bg-neutral-900/60 text-amber-300 ring-amber-400/60",
+                                          ].join(" ")}
+                                        >
+                                          {d} days
+                                        </button>
+                                      ))}
+                                    </div>
+
+                                    <div className="flex gap-2">
+                                      <button
+                                        onClick={() => {
+                                          const newEvery = freq[it.id] ?? it?.subEvery ?? 30;
+                                          updateItem(it.id, {
+                                            isSubscription: true,
+                                            purchaseMode: "sub",
+                                            subEvery: newEvery,
+                                            subPrice: getSubPrice({ ...it, subEvery: newEvery }),
+                                          });
+                                          setManageSubOpen((prev) => ({ ...prev, [it.id]: false }));
+                                        }}
+                                        className="flex-1 rounded-md bg-amber-400 text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-amber-300 transition"
+                                      >
+                                        Update
+                                      </button>
+
+                                      <button
+                                        onClick={() => {
+                                          // convert back to one-time
+                                          updateItem(it.id, {
+                                            isSubscription: false,
+                                            purchaseMode: "one",
+                                            subEvery: undefined,
+                                            subPrice: undefined,
+                                          });
+                                          setManageSubOpen((prev) => ({ ...prev, [it.id]: false }));
+                                        }}
+                                        className="px-3 rounded-md ring-1 ring-amber-400/60 text-amber-300 text-[12px]"
+                                      >
+                                        One-time
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                             )}
+
                           </div>
 
                           <button
@@ -11618,40 +11768,77 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                         {/* JOIN THE FLEET — 14/30/60 selector */}
                         {!isSub && (
                           <div className="mt-2">
-                            <div className="mb-2 grid grid-cols-3 gap-2">
-                              {[14, 30, 60].map((d) => (
+                            {!showSubChooser[it.id] ? (
+                              <button
+                                onClick={() =>
+                                  setShowSubChooser((prev) => ({
+                                    ...prev,
+                                    [it.id]: true,
+                                  }))
+                                }
+                                className="w-full rounded-md ring-1 ring-amber-400/60 bg-neutral-900/60 text-amber-300 font-semibold py-1.5 text-[12px] hover:bg-amber-400 hover:text-neutral-900 transition"
+                              >
+                                Join The Fleet &amp; Save 15%
+                              </button>
+                            ) : (
+                              <>
+                                <div className="mb-2 grid grid-cols-3 gap-2">
+                                  {[14, 30, 60].map((d) => (
+                                    <button
+                                      key={`${it.id}-freq-${d}`}
+                                      onClick={() =>
+                                        setFreq((prev) => ({
+                                          ...prev,
+                                          [it.id]: d,
+                                        }))
+                                      }
+                                      className={[
+                                        "py-1.5 rounded-md text-[12px] font-semibold ring-1",
+                                        selFreq === d
+                                          ? "bg-amber-400 text-neutral-900 ring-amber-400"
+                                          : "bg-neutral-900/60 text-amber-300 ring-amber-400/60",
+                                      ].join(" ")}
+                                    >
+                                      {d} days
+                                    </button>
+                                  ))}
+                                </div>
+                                <div className="flex gap-2">
                                 <button
-                                  key={`${it.id}-freq-${d}`}
-                                  onClick={() =>
-                                    setFreq((prev) => ({ ...prev, [it.id]: d }))
-                                  }
-                                  className={[
-                                    "py-1.5 rounded-md text-[12px] font-semibold ring-1",
-                                    selFreq === d
-                                      ? "bg-amber-400 text-neutral-900 ring-amber-400"
-                                      : "bg-neutral-900/60 text-amber-300 ring-amber-400/60",
-                                  ].join(" ")}
-                                >
-                                  {d} days
-                                </button>
-                              ))}
-                            </div>
-                            <button
-                              onClick={() =>
-                                updateItem(it.id, {
-                                  isSubscription: true,
-                                  purchaseMode: "sub",
-                                  subEvery: selFreq,
-                                  subPrice: getSubPrice({
-                                    ...it,
-                                    subEvery: selFreq,
-                                  }),
-                                })
-                              }
-                              className="w-full rounded-md ring-1 ring-amber-400/60 bg-neutral-900/60 text-amber-300 font-semibold py-1.5 text-[12px] hover:bg-amber-400 hover:text-neutral-900 transition"
-                            >
-                              Join The Fleet &amp; Save 15%
-                            </button>
+                                    onClick={() => {
+                                      updateItem(it.id, {
+                                        isSubscription: true,
+                                        purchaseMode: "sub",
+                                        subEvery: selFreq,
+                                        subPrice: getSubPrice({ ...it, subEvery: selFreq }),
+                                      });
+                                      // collapse the chooser after starting
+                                      setShowSubChooser((prev) => {
+                                        const next = { ...prev };
+                                        delete next[it.id];
+                                        return next;
+                                      });
+                                    }}
+                                    className="flex-1 rounded-md bg-amber-400 text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-amber-300 transition"
+                                  >
+                                    Start Subscription
+                                  </button>
+
+                                  <button
+                                    onClick={() =>
+                                      setShowSubChooser((prev) => {
+                                        const next = { ...prev };
+                                        delete next[it.id];
+                                        return next;
+                                      })
+                                    }
+                                    className="px-3 rounded-md ring-1 ring-amber-400/60 text-amber-300 text-[12px]"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                              </>
+                            )}
                           </div>
                         )}
                       </div>
@@ -11673,10 +11860,17 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
           {/* Checkout first */}
           <button
             type="button"
-            onClick={handleCheckout}
-            className="block w-full rounded-xl bg-amber-400 text-neutral-900 font-extrabold py-2.5 text-center text-[15px]"
+            onClick={checkingOut ? undefined : handleCheckout}
+            disabled={checkingOut}
+            className={[
+              "block w-full rounded-xl font-extrabold py-2.5 text-center text-[15px]",
+              checkingOut
+                ? "bg-amber-300/70 text-neutral-800 cursor-not-allowed"
+                : "bg-amber-400 text-neutral-900",
+            ].join(" ")}
+            aria-busy={checkingOut}
           >
-            Checkout • ${total.toFixed(2)}
+            {checkingOut ? "Syncing cart…" : `Checkout • $${total.toFixed(2)}`}
           </button>
 
           {/* Continue shopping closes drawer */}
@@ -11686,12 +11880,12 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
               setPinned(true);
               onClose();
             }}
-            className="block w-full text-center text-[16px] text-neutral-300 underline underline-offset-4"
+            className="block w-full text-center text-[20px] text-neutral-300 underline underline-offset-4"
           >
             Continue shopping
           </button>
 
-          {/* ID.me after checkout */}
+          {/* GovX login after checkout */}
           <a
             href="https://www.govx.com/govx-id/"
             target="_blank"
@@ -11699,7 +11893,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
             className="flex items-center justify-center gap-2 w-full rounded-lg ring-1 ring-emerald-600 bg-emerald-900/30 py-2 text-emerald-300 text-[13px] font-semibold"
           >
             <span className="text-lg">✔</span>
-            <span>Verify with ID.me</span>
+            <span>Verify with GovX ID</span>
           </a>
 
           {/* Read-before-checkout link */}

@@ -109,6 +109,25 @@ export async function getProductByHandle(handle: string) {
                 name
                 value
               }
+              price {
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
+        sellingPlanGroups(first: 5) {
+          edges {
+            node {
+              name
+              sellingPlans(first: 10) {
+                edges {
+                  node {
+                    id
+                    name
+                  }
+                }
+              }
             }
           }
         }
@@ -323,4 +342,11 @@ function getCartLocal(): { id: string; checkoutUrl: string } | null {
   } catch {
     return null;
   }
+}
+export function getSellingPlanIds(product: any): string[] {
+  return (
+    product?.sellingPlanGroups?.edges?.flatMap((g: any) =>
+      g?.node?.sellingPlans?.edges?.map((e: any) => e?.node?.id)
+    ) || []
+  );
 }

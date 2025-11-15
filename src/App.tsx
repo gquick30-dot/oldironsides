@@ -1059,12 +1059,27 @@ function CartProvider({ children }: any) {
 
   const subtotal = useMemo(
     () =>
-      cart.reduce(
-        (s: number, i: any) => s + Number(i.price || 0) * Number(i.qty || 0),
-        0
-      ),
+      cart.reduce((s: number, i: any) => {
+        const qty = Number(i.qty || 0);
+        if (!qty) return s;
+
+        // If it's marked as a subscription:
+        // - use explicit subPrice if present
+        // - otherwise use price (already discounted for subs added from product page)
+        if (i?.isSubscription) {
+          const explicitSub = Number(i?.subPrice ?? 0);
+          const p =
+            explicitSub > 0 ? explicitSub : Number(i?.price ?? 0);
+          return s + p * qty;
+        }
+
+        // One-time purchase: use normal price
+        const p = Number(i?.price || 0);
+        return s + p * qty;
+      }, 0),
     [cart]
   );
+
 
   // === Free shipping logic ===
   const FREE_SHIPPING_THRESHOLD = 3;
@@ -1196,11 +1211,21 @@ function CartProvider({ children }: any) {
     [persist]
   );
 
-  // simple sub price helper: uses explicit subPrice if present, else 15% off
+  // simple sub price helper:
+  // - if explicit subPrice stored, use that
+  // - if item is already marked as subscription, treat `price` as the sub price
+  // - otherwise, compute 15% off
   const getSubPrice = useCallback((it: any) => {
-    const p = Number(it?.price ?? 0);
     const explicit = Number(it?.subPrice ?? 0);
-    return explicit > 0 ? explicit : Math.max(0, +(p * 0.85).toFixed(2));
+    if (explicit > 0) return explicit;
+
+    const p = Number(it?.price ?? 0);
+    if (it?.isSubscription) {
+      // price is already the subscription price; don't double-discount
+      return Math.max(0, +p.toFixed(2));
+    }
+
+    return Math.max(0, +(p * 0.85).toFixed(2));
   }, []);
 
   // generic updater for one item
@@ -1407,40 +1432,39 @@ function MegaSubscribeBox({
 
   return (
     <div className="w-full lg:w-[36rem]">
-      {/* MOBILE VERSION ONLY */}
+      {/* MOBILE VERSION ONLY (tighter v2) */}
       <div className="md:hidden">
-        <div className="overflow-hidden rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60">
+        <div className="mx-auto max-w-[16.5rem] overflow-hidden rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60">
           {imageSrc ? (
             <img
               src={imageSrc}
               alt={imageAlt}
-              className="w-full h-24 object-cover"
+              className="w-full h-14 object-cover"
             />
           ) : null}
 
-          <div className="p-4 text-center">
-            <div className="flex flex-col items-center gap-2 mb-3">
-              <Bell className="h-5 w-5 text-amber-300" />
-              {/* force compact heading on mobile */}
+          <div className="p-2 text-center">
+            {/* Icon inline with heading */}
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <Bell className="h-3.5 w-3.5 text-amber-300" />
               <h3
                 className="font-extrabold text-amber-300"
-                style={{ fontSize: 18, lineHeight: 1.15, letterSpacing: 0.2 }}
+                style={{ fontSize: 13, lineHeight: 1.05, letterSpacing: 0.2 }}
               >
                 {heading}
               </h3>
             </div>
 
-            {/* force compact copy on mobile */}
             <p
-              className="text-neutral-300 mb-4 whitespace-pre-line"
-              style={{ fontSize: 14, lineHeight: 1.3 }}
+              className="text-neutral-300 mb-2 whitespace-pre-line"
+              style={{ fontSize: 11, lineHeight: 1.2 }}
             >
               {sub}
             </p>
 
             <form
               onSubmit={onSubmit}
-              className="flex flex-col justify-center gap-2 max-w-xs mx-auto"
+              className="flex flex-col justify-center gap-1 max-w-[14.5rem] mx-auto"
             >
               <input
                 type="email"
@@ -1453,16 +1477,16 @@ function MegaSubscribeBox({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[13px] focus:outline-none focus:ring-2 focus:ring-amber-400"
+                className="flex-1 min-w-0 rounded-md bg-neutral-900/70 border border-neutral-700 px-2 py-[5px] text-[11px] focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
-              <button className="w-full px-4 py-2 rounded-xl bg-amber-400 text-neutral-900 text-[13px] font-semibold hover:bg-amber-300">
+              <button className="w-full px-3 py-[6px] rounded-md bg-amber-400 text-neutral-900 text-[11px] font-semibold hover:bg-amber-300">
                 {btn}
               </button>
             </form>
 
             <div
-              className="mt-2 text-neutral-400"
-              style={{ fontSize: 11, lineHeight: 1.2 }}
+              className="mt-1 text-neutral-400"
+              style={{ fontSize: 9.5, lineHeight: 1.2 }}
             >
               Already a member?{" "}
               <Link
@@ -1474,7 +1498,7 @@ function MegaSubscribeBox({
             </div>
 
             {done && (
-              <p className="mt-2 text-emerald-400" style={{ fontSize: 12 }}>
+              <p className="mt-1 text-emerald-400" style={{ fontSize: 10.5 }}>
                 Welcome aboard! Your discount is on the way!
               </p>
             )}
@@ -2515,7 +2539,7 @@ function HomePage() {
             title="Hail The Quarterdeck"
             subtitle="Questions • Comments • Press – We’ll get back to you fast."
           />
-          <div className="mt-8 grid md:grid-cols-3 gap-6 text-sm">
+          <div className="mt-2 md:mt-8 grid md:grid-cols-3 gap-6 text-sm">
             <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
               <div className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-amber-300" />
@@ -2532,7 +2556,7 @@ function HomePage() {
               </div>
             </div>
             <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
-              <h4 className="font-semibold text-amber-300">Follow</h4>
+              <h4 className="font-semibold text-amber-300">Follow Us</h4>
               <div className="mt-3 flex gap-4 text-neutral-300">
                 <button
                   type="button"
@@ -3875,27 +3899,87 @@ function RoastDetailPage() {
   const [showBeanError, setShowBeanError] = useState(false);
   // Shopify product + chosen variant
   const [shopifyProduct, setShopifyProduct] = useState<any>(null);
+  // Map Seal plan names -> 14/30/60
+  const planMap = useMemo(() => {
+    const map: Record<number, string> = {};
+    const allPlans: { name: string; id: string }[] = [];
+
+    const groups = shopifyProduct?.sellingPlanGroups?.edges ?? [];
+    for (const g of groups) {
+      const plans = g?.node?.sellingPlans?.edges ?? [];
+      for (const e of plans) {
+        const name = (e?.node?.name || "").toLowerCase();
+        const id = e?.node?.id;
+        if (!id) continue;
+
+        allPlans.push({ name, id });
+
+        // 14-day / bi-weekly
+        if (name.includes("14") || name.includes("bi-weekly")) {
+          map[14] = id;
+        }
+        // 60-day / bi-monthly / every 2 months
+        else if (
+          name.includes("60") ||
+          name.includes("every 2 months") ||
+          name.includes("every 2 month") ||
+          name.includes("bi monthly") ||
+          name.includes("bi-monthly") ||
+          name.includes("bimonthly")
+        ) {
+          // important: treat bi-monthly as 60d BEFORE generic "monthly"
+          map[60] = id;
+        }
+        // 30-day / monthly (but not bi-monthly)
+        else if (
+          name.includes("30") ||
+          name.includes("every 1 month") ||
+          name.includes("every month") ||
+          (name.includes("monthly") && !name.includes("bi-monthly"))
+        ) {
+          map[30] = id;
+        }
+      }
+    }
+
+    // Fallback: if we have at least 3 plans and only 14 + 30 mapped,
+    // treat the remaining one as 60.
+    if (!map[60] && allPlans.length >= 3) {
+      const used = new Set([map[14], map[30]].filter(Boolean));
+      const leftover = allPlans.find((p) => !used.has(p.id));
+      if (leftover) map[60] = leftover.id;
+    }
+
+    console.log("[DEBUG] planMap", map, allPlans);
+    return map;
+  }, [shopifyProduct]);
+
   const [merchandiseId, setMerchandiseId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
+  // Use the real Shopify product handles now
   const handleMap: Record<string, string> = {
-    flagship: "flagship-test",
-    "baptism-by-fire": "flagship-test",
-    "java-action": "flagship-test",
-    "oak-and-copper": "flagship-test",
+    flagship: "flagship",
+    "baptism-by-fire": "baptism-by-fire",
+    "java-action": "java-action",
+    "oak-and-copper": "oak-and-copper",
+    // add others here if needed
   };
 
   // Reset Bean Type selector whenever you navigate to a different roast page
-  useEffect(() => {
-    setBeanType("");
-    setShowBeanError(false);
-  }, [slug]);
-  // Load Shopify product by handle = slug
   useEffect(() => {
     let cancelled = false;
     async function run() {
       try {
         const handle = handleMap[String(slug)] ?? String(slug);
         const p = await getProductByHandle(handle);
+
+        // DEBUG: confirm selling plans are coming through
+        console.log("[DEBUG] FULL PRODUCT for", handle, p);
+        console.log(
+          "[DEBUG] sellingPlanGroups for",
+          handle,
+          p?.sellingPlanGroups
+        );
 
         if (!cancelled) setShopifyProduct(p || null);
       } catch (e) {
@@ -3908,6 +3992,7 @@ function RoastDetailPage() {
       cancelled = true;
     };
   }, [slug]);
+
   useEffect(() => {
     if (!shopifyProduct) {
       setMerchandiseId(null);
@@ -4000,10 +4085,24 @@ function RoastDetailPage() {
       const cart = await ensureCart();
 
       // 2) add to Shopify cart
+      // pick selling plan if subscribing
+      const planId = purchaseMode === "sub" ? planMap[subEvery] : undefined;
+
+      if (purchaseMode === "sub" && !planId) {
+        window.dispatchEvent(
+          new CustomEvent("flash", {
+            detail: "Subscription plan not available yet. Try again.",
+          })
+        );
+        setAdding(false);
+        return;
+      }
+
       await cartLinesAdd({
         cartId: cart.id,
         merchandiseId: merchId,
         quantity: n,
+        ...(planId ? { sellingPlanId: planId } : {}),
         attributes: {
           beanType: variantLabel,
           purchaseMode,
@@ -4011,19 +4110,23 @@ function RoastDetailPage() {
         },
       });
 
-      // 3) mirror to your local cart UI
-      const itemToAdd = {
-        ...card,
-        id: `${card.slug}-12oz-${beanType}`,
-        sku: `${card.slug}-12oz-${beanType}`,
-        title: `${card.title} (${variantLabel})`,
-        price: purchaseMode === "sub" ? discounted : basePrice,
-        beanType,
-        purchaseMode,
-        subEvery: purchaseMode === "sub" ? subEvery : undefined,
-        merchandiseId: merchId,
-      };
-      add(itemToAdd, n);
+          // 3) mirror to your local cart UI
+          const itemToAdd = {
+            ...card,
+            id: `${card.slug}-12oz-${beanType}`,
+            sku: `${card.slug}-12oz-${beanType}`,
+            title: `${card.title} (${variantLabel})`,
+            // store both the regular one-time price and the active price
+            basePrice,
+            price: purchaseMode === "sub" ? discounted : basePrice,
+            beanType,
+            purchaseMode,
+            subEvery: purchaseMode === "sub" ? subEvery : undefined,
+            merchandiseId: merchId,
+            sellingPlanId: planId,
+          };
+          add(itemToAdd, n);
+    
 
       // set mobile toast state so we can render a bottom banner on mobile
       setMobileToast({
@@ -6590,11 +6693,12 @@ function StorePage() {
               {tiles.map((t) => {
                 const slug = String(t.key).toLowerCase();
                 return (
-                  <Link
+                  <div
                     key={`mob-merch-${slug}`}
-                    to={`/store/${slug}`}
-                    className="group overflow-hidden rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/40 shadow-lg shadow-amber-400/10 hover:bg-neutral-900 hover:ring-amber-300 transition"
-                    aria-label={t.label}
+                    role="presentation"
+                    aria-disabled="true"
+                    tabIndex={-1}
+                    className="group overflow-hidden rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/40 shadow-lg shadow-amber-400/10 transition cursor-default select-none"
                   >
                     <div className="aspect-[3/4] w-full overflow-hidden bg-neutral-900">
                       <img
@@ -6626,7 +6730,7 @@ function StorePage() {
                         Coming soon
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
@@ -7399,21 +7503,23 @@ function ContactPage() {
     setSubmitted(true);
   };
   return (
-    <main className="py-16 md:py-24">
-      <Container>
-        <div className="flex items-start justify-between">
+    <main className="pt-0 pb-12 md:pt-24 md:pb-24">
+      <Container className="-mt-4 md:mt-0">
+        <div className="flex items-start justify-between mt-0 md:mt-4">
           <SectionTitle
             title={
               <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
-                Contact — Hail the quarterdeck
+                Hail The Quarterdeck!
               </span>
             }
             subtitle="Questions, wholesale, press – we’ll get back fast."
           />
-          <BackButton size="sm" />
+          <div className="hidden md:block">
+            <BackButton size="sm" />
+          </div>
         </div>
 
-        <div className="mt-8 grid md:grid-cols-3 gap-6 text-sm">
+        <div className="mt-4 md:mt-8 grid md:grid-cols-3 gap-6 text-sm">
           <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
             <div className="flex items-center gap-3">
               <Mail className="h-5 w-5 text-amber-300" />
@@ -7429,32 +7535,42 @@ function ContactPage() {
               6 Liberty Square #2564, Boston, MA 02109
             </div>
           </div>
-          <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
-            <h4 className="font-semibold text-amber-300">RING THAT BELL</h4>
-            <p className="mt-1 text-neutral-400">
-              {" "}
-              Get 20% off your first order. <br /> Join the fleet and save 15%
-              off recurring orders.
+          <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-4 md:p-6 text-center md:text-left">
+            <h4 className="font-semibold text-amber-300 text-xl md:text-lg tracking-wide">
+              RING THAT BELL
+            </h4>
+            <p className="mt-1 text-neutral-400 text-sm md:text-base">
+              Get 20% off your first order.
+              <br className="hidden md:block" />
+              Join the fleet and save 15% on recurring orders.
             </p>
-            <form onSubmit={submit} className="mt-3 flex gap-3">
+
+            <form
+              onSubmit={submit}
+              className="mt-3 flex flex-col items-center gap-2 md:flex-row md:items-stretch md:gap-3"
+            >
               <input
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                className="w-full flex-1 rounded-lg bg-neutral-900/70 border border-neutral-700 !h-[72px] md:h-11 px-5 !text-[20px] md:text-sm !placeholder:text-[20px] md:placeholder:text-sm leading-none appearance-none"
               />
-              <button className="px-5 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+
+              <button className="w-full md:w-auto h-12 md:h-11 px-5 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300">
                 GET 20% OFF
               </button>
             </form>
+
             {submitted && (
-              <p className="mt-3 text-sm text-emerald-400">
+              <p className="mt-2 text-sm text-emerald-400">
                 Welcome aboard! Your discount is on the way!
               </p>
             )}
           </div>
+
           <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
-            <h4 className="font-semibold text-amber-300">Follow</h4>
+            <h4 className="font-semibold text-amber-300">Follow Us</h4>
             <div className="mt-3 flex gap-4 text-neutral-300">
               <button
                 type="button"
@@ -7695,9 +7811,8 @@ function LegalPage() {
                   </h3>
                   <p className="mt-1">
                     Our coffee is roasted to your order and sails out fresh. We
-                    cannot accept returns on roasted coffee. If your order
-                    arrives damaged or something is wrong, we will make it
-                    right.
+                    cannot accept returns on roasted coffee. If there is
+                    something wrong with your order, please contact us.
                   </p>
                 </div>
 
@@ -7714,22 +7829,22 @@ function LegalPage() {
 
                 <div>
                   <h3 className="text-amber-300 font-semibold">
-                    We’ll always make it right
+                    Customer's Satisfaction
                   </h3>
                   <p className="mt-1">
                     If your package is damaged, the coffee is defective in any
-                    way, or we made a mistake, contact us. We will replace it or
-                    refund you.
+                    way, or we made a mistake, contact us. We will make it
+                    right.
                   </p>
                 </div>
 
                 <div>
                   <h3 className="text-amber-300 font-semibold">
-                    If you’re unhappy
+                    If you're unhappy with your purchase
                   </h3>
                   <p className="mt-1">
                     Email us and we will not leave you at the harbor. We can
-                    recommend a better fit, credit your account, or find a fix.
+                    recommend a better roast to your liking or find another fix.
                   </p>
                 </div>
 
@@ -7738,12 +7853,12 @@ function LegalPage() {
                     How to report an issue (quick steps)
                   </h3>
                   <ol className="mt-1 list-decimal list-outside pl-5 space-y-1">
-                    <li>Contact us within 7 days of delivery.</li>
+                    <li>Contact us within 5 days of delivery.</li>
                     <li>
                       Include your order number, a brief note on the issue, and
                       photos if the package or bag is damaged.
                     </li>
-                    <li>We’ll reply with a replacement or refund plan.</li>
+                    <li>We’ll reply quickly with our resolution</li>
                   </ol>
                 </div>
 
@@ -8768,11 +8883,13 @@ function LegalPage() {
     </main>
   );
 }
+// Use the real Shopify product handles now
 const handleMap: Record<string, string> = {
-  flagship: "flagship-test",
-  "baptism-by-fire": "flagship-test",
-  "java-action": "flagship-test",
-  "oak-and-copper": "flagship-test",
+  flagship: "flagship",
+  "baptism-by-fire": "baptism-by-fire",
+  "java-action": "java-action",
+  "oak-and-copper": "oak-and-copper",
+  // add others here if needed
 };
 
 function pickVariantIdByBean(product: any, beanType: "whole" | "ground") {
@@ -8908,12 +9025,10 @@ function CartPage() {
       return false;
     }
   }, []);
-
-  // Checkout: hard reset Shopify cart to match local cart, then go
   // Checkout: gate subs → hard reset Shopify cart to match local → go
   const onCheckoutClick = async (): Promise<void> => {
     try {
-      // ⛔ Gate: require sign-in if any subscription items are in the Chest
+      // Gate: require sign-in if any subscription items are in the Chest
       if (hasSubInCart && !isLoggedIn) {
         setShowAccountGate(true);
         window.dispatchEvent(
@@ -8927,15 +9042,32 @@ function CartPage() {
       // 1) Same persisted Shopify cart
       const { id: cartId } = await ensureCart();
 
-      // 2) Desired state from YOUR local cart (needs merchandiseId on each item)
-      const desired: Array<{ merchandiseId: string; quantity: number }> = [];
+      // 2) Desired state from YOUR local cart (one line per Chest item)
+      type DesiredLine = {
+        merchandiseId: string;
+        quantity: number;
+        sellingPlanId?: string;
+      };
+
+      const desired: DesiredLine[] = [];
       for (const i of cart ?? []) {
-        const v = i?.merchandiseId;
-        const q = Math.max(0, Math.min(99, Number(i?.qty ?? 0)));
-        if (v && q > 0) desired.push({ merchandiseId: v, quantity: q });
+        const merchId = i?.merchandiseId;
+        const qty = Math.max(0, Math.min(99, Number(i?.qty ?? 0)));
+        if (!merchId || qty <= 0) continue;
+
+        const planId =
+          i?.purchaseMode === "sub" && i?.sellingPlanId
+            ? String(i.sellingPlanId)
+            : undefined;
+
+        desired.push({
+          merchandiseId: merchId,
+          quantity: qty,
+          sellingPlanId: planId,
+        });
       }
 
-      // Clear existing Shopify lines
+      // 3) Clear existing Shopify lines
       const sf = await getCart(cartId);
       const existingLineIds =
         sf?.lines?.edges
@@ -8945,26 +9077,24 @@ function CartPage() {
         await cartLinesRemove({ cartId, lineIds: existingLineIds });
       }
 
-      if (desired.length === 0) {
+      if (!desired.length) {
         window.dispatchEvent(
           new CustomEvent("flash", { detail: "Your cart is empty." })
         );
         return;
       }
 
-      // Add exactly what you want (merge by variant first)
-      const byVariant = new Map<string, number>();
-      for (const d of desired) {
-        byVariant.set(
-          d.merchandiseId,
-          (byVariant.get(d.merchandiseId) ?? 0) + d.quantity
-        );
-      }
-      for (const [merchandiseId, quantity] of byVariant.entries()) {
-        await cartLinesAdd({ cartId, merchandiseId, quantity });
+      // 4) Add exactly what you want (one Shopify line per local item, with sellingPlanId when present)
+      for (const line of desired) {
+        await cartLinesAdd({
+          cartId,
+          merchandiseId: line.merchandiseId,
+          quantity: line.quantity,
+          ...(line.sellingPlanId ? { sellingPlanId: line.sellingPlanId } : {}),
+        });
       }
 
-      // 4) Fresh checkout url and go
+      // 5) Fresh checkout url and go
       const fresh = await getCart(cartId);
       const url: string | undefined = fresh?.checkoutUrl;
       if (
@@ -11133,9 +11263,8 @@ function Layout() {
                 </li>
               </ul>
             </div>
-
             {/* Contact */}
-            <div>
+            <div className="hidden md:block">
               <div className="text-neutral-400 font-semibold mb-2">Contact</div>
               <ul className="space-y-1 text-neutral-300">
                 <li>
@@ -11149,10 +11278,11 @@ function Layout() {
                 <li>6 Liberty Square #2564, Boston, MA 02109</li>
               </ul>
             </div>
-
             {/* Follow */}
-            <div>
-              <div className="text-neutral-400 font-semibold mb-2">Follow</div>
+            <div className="hidden md:block">
+              <div className="text-neutral-400 font-semibold mb-2">
+                Follow Us
+              </div>
               <div className="flex gap-4 text-neutral-300">
                 <a
                   href="https://instagram.com/oldironsidescoffee"
@@ -11475,11 +11605,24 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
     try {
       const { id: cartId } = await ensureCart();
 
-      const desired: Array<{ merchandiseId: string; quantity: number }> = [];
+      // Build desired state from local cart, including sellingPlanId if present
+      const desired: Array<{
+        merchandiseId: string;
+        quantity: number;
+        sellingPlanId?: string;
+      }> = [];
+
       for (const i of cart ?? []) {
         const v = i?.merchandiseId;
         const q = Math.max(0, Math.min(99, Number(i?.qty ?? 0)));
-        if (v && q > 0) desired.push({ merchandiseId: v, quantity: q });
+        const sp =
+          typeof i?.sellingPlanId === "string" && i.sellingPlanId.length > 0
+            ? i.sellingPlanId
+            : undefined;
+
+        if (v && q > 0) {
+          desired.push({ merchandiseId: v, quantity: q, sellingPlanId: sp });
+        }
       }
 
       const sf = await getCart(cartId);
@@ -11499,18 +11642,37 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
         return;
       }
 
-      const byVariant = new Map<string, number>();
+      // Merge by (variant, sellingPlanId) so subs and one-time stay distinct
+      const byKey = new Map<
+        string,
+        { merchandiseId: string; sellingPlanId?: string; quantity: number }
+      >();
+
       for (const d of desired) {
-        byVariant.set(
-          d.merchandiseId,
-          (byVariant.get(d.merchandiseId) ?? 0) + d.quantity
-        );
+        const key = `${d.merchandiseId}::${d.sellingPlanId ?? "one"}`;
+        const existing = byKey.get(key);
+        if (existing) {
+          existing.quantity += d.quantity;
+        } else {
+          byKey.set(key, {
+            merchandiseId: d.merchandiseId,
+            sellingPlanId: d.sellingPlanId,
+            quantity: d.quantity,
+          });
+        }
       }
-      for (const [merchandiseId, quantity] of byVariant.entries()) {
-        await cartLinesAdd({ cartId, merchandiseId, quantity });
+
+      for (const { merchandiseId, sellingPlanId, quantity } of byKey.values()) {
+        await cartLinesAdd({
+          cartId,
+          merchandiseId,
+          quantity,
+          ...(sellingPlanId ? { sellingPlanId } : {}),
+        });
       }
 
       const fresh = await getCart(cartId);
+
       const url: string | undefined = fresh?.checkoutUrl;
       if (
         !url ||
@@ -11562,11 +11724,12 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
           <div className="flex items-center justify-between px-4 py-2">
             <button
               onClick={onClose}
-              className="text-amber-300 text-xl font-bold px-1"
+              className="text-amber-300 text-2xl font-bold px-1"
               aria-label="Close cart"
             >
               ✕
             </button>
+
             <div
               className="text-base font-extrabold tracking-wider leading-none text-neutral-100"
               style={{ fontFamily: "'Cinzel', serif" }}
@@ -11577,29 +11740,34 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className="px-4 py-2 bg-amber-400 text-neutral-900">
-          {freeShippingQualified ? (
-            <div className="text-center">
-              <div className="text-[13px] font-extrabold leading-tight">Congratulations!</div>
-              <div className="text-[13px] font-extrabold leading-tight">Free Shipping Unlocked!</div>
+            {freeShippingQualified ? (
+              <div className="text-center">
+                <div className="text-[13px] font-extrabold leading-tight">
+                  Congratulations!
+                </div>
+                <div className="text-[13px] font-extrabold leading-tight">
+                  Free Shipping Unlocked!
+                </div>
+              </div>
+            ) : (
+              <div className="text-[13px] font-extrabold text-center">
+                {`Only ${bagsLeft} more bag${
+                  bagsLeft === 1 ? "" : "s"
+                } to unlock free shipping`}
+              </div>
+            )}
+            <div className="mt-2 h-[6px] w-full bg-neutral-200/60 rounded">
+              <div
+                className="h-[6px] bg-neutral-900 rounded"
+                style={{
+                  width: `${Math.min(
+                    100,
+                    Math.round((coffeeBagCount / freeShippingThreshold) * 100)
+                  )}%`,
+                }}
+              />
             </div>
-          ) : (
-            <div className="text-[13px] font-extrabold text-center">
-              {`Only ${bagsLeft} more bag${bagsLeft === 1 ? "" : "s"} to unlock free shipping`}
-            </div>
-          )}
-          <div className="mt-2 h-[6px] w-full bg-neutral-200/60 rounded">
-            <div
-              className="h-[6px] bg-neutral-900 rounded"
-              style={{
-                width: `${Math.min(
-                  100,
-                  Math.round((coffeeBagCount / freeShippingThreshold) * 100)
-                )}%`,
-              }}
-            />
           </div>
-        </div>
-
         </div>
 
         {/* ITEMS (condensed further; removes big bean tag) */}
@@ -11637,19 +11805,16 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
-                            {/* Title — slightly larger, no big bean badge */}
+                            {/* Title — no bean badge inline */}
                             <div className="font-semibold text-neutral-100 text-[15px] leading-tight line-clamp-2">
                               {it.title || "Coffee"}
                             </div>
-                            {/* Keep the small line only */}
-                            {it.beanType && (
-                              <div className="text-[11px] text-neutral-400">
-                                {it.beanType === "ground"
-                                  ? "Ground"
-                                  : "Whole Bean"}
-                              </div>
-                            )}
-                                                     {isSub && (
+                            {/* Size line only */}
+                            <div className="text-[11px] text-neutral-400">
+                              12oz
+                            </div>
+
+                            {isSub && (
                               <div className="mt-1">
                                 <div className="inline-flex items-center gap-2 text-[10px] text-emerald-400">
                                   <span className="px-1.5 py-[1px] rounded bg-emerald-900/30 ring-1 ring-emerald-700">
@@ -11658,7 +11823,10 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                   <span>Every {it?.subEvery ?? 30}d</span>
                                   <button
                                     onClick={() =>
-                                      setManageSubOpen((prev) => ({ ...prev, [it.id]: !prev[it.id] }))
+                                      setManageSubOpen((prev) => ({
+                                        ...prev,
+                                        [it.id]: !prev[it.id],
+                                      }))
                                     }
                                     className="ml-2 text-[10px] text-amber-300 underline underline-offset-2"
                                   >
@@ -11673,11 +11841,16 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                         <button
                                           key={`${it.id}-manage-${d}`}
                                           onClick={() =>
-                                            setFreq((prev) => ({ ...prev, [it.id]: d }))
+                                            setFreq((prev) => ({
+                                              ...prev,
+                                              [it.id]: d,
+                                            }))
                                           }
                                           className={[
                                             "py-1.5 rounded-md text-[12px] font-semibold ring-1",
-                                            (freq[it.id] ?? it?.subEvery ?? 30) === d
+                                            (freq[it.id] ??
+                                              it?.subEvery ??
+                                              30) === d
                                               ? "bg-amber-400 text-neutral-900 ring-amber-400"
                                               : "bg-neutral-900/60 text-amber-300 ring-amber-400/60",
                                           ].join(" ")}
@@ -11690,14 +11863,21 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                     <div className="flex gap-2">
                                       <button
                                         onClick={() => {
-                                          const newEvery = freq[it.id] ?? it?.subEvery ?? 30;
+                                          const newEvery =
+                                            freq[it.id] ?? it?.subEvery ?? 30;
                                           updateItem(it.id, {
                                             isSubscription: true,
                                             purchaseMode: "sub",
                                             subEvery: newEvery,
-                                            subPrice: getSubPrice({ ...it, subEvery: newEvery }),
+                                            subPrice: getSubPrice({
+                                              ...it,
+                                              subEvery: newEvery,
+                                            }),
                                           });
-                                          setManageSubOpen((prev) => ({ ...prev, [it.id]: false }));
+                                          setManageSubOpen((prev) => ({
+                                            ...prev,
+                                            [it.id]: false,
+                                          }));
                                         }}
                                         className="flex-1 rounded-md bg-amber-400 text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-amber-300 transition"
                                       >
@@ -11706,25 +11886,49 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
 
                                       <button
                                         onClick={() => {
-                                          // convert back to one-time
+                                          // convert back to one-time and restore full price
+                                          const currentPrice = Number(it.price ?? 0);
+
+                                          let newPrice = currentPrice;
+
+                                          // Prefer explicit basePrice if we have it
+                                          if (it.basePrice != null) {
+                                            const bp = Number(it.basePrice);
+                                            if (!Number.isNaN(bp) && bp > 0) {
+                                              newPrice = bp;
+                                            }
+                                          } else if (!it.subPrice && currentPrice > 0) {
+                                            // If it started life as a subscription from the roast page,
+                                            // price is already discounted (no subPrice stored).
+                                            // Reverse the 15% discount to get the original.
+                                            newPrice = Math.round(
+                                              (currentPrice / 0.85) * 100
+                                            ) / 100;
+                                          }
+
                                           updateItem(it.id, {
                                             isSubscription: false,
                                             purchaseMode: "one",
                                             subEvery: undefined,
                                             subPrice: undefined,
+                                            price: newPrice,
                                           });
-                                          setManageSubOpen((prev) => ({ ...prev, [it.id]: false }));
+
+                                          setManageSubOpen((prev) => ({
+                                            ...prev,
+                                            [it.id]: false,
+                                          }));
                                         }}
                                         className="px-3 rounded-md ring-1 ring-amber-400/60 text-amber-300 text-[12px]"
                                       >
                                         One-time
                                       </button>
+
                                     </div>
                                   </div>
                                 )}
                               </div>
                             )}
-
                           </div>
 
                           <button
@@ -11804,13 +12008,16 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                   ))}
                                 </div>
                                 <div className="flex gap-2">
-                                <button
+                                  <button
                                     onClick={() => {
                                       updateItem(it.id, {
                                         isSubscription: true,
                                         purchaseMode: "sub",
                                         subEvery: selFreq,
-                                        subPrice: getSubPrice({ ...it, subEvery: selFreq }),
+                                        subPrice: getSubPrice({
+                                          ...it,
+                                          subEvery: selFreq,
+                                        }),
                                       });
                                       // collapse the chooser after starting
                                       setShowSubChooser((prev) => {

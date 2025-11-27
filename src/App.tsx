@@ -1068,8 +1068,7 @@ function CartProvider({ children }: any) {
         // - otherwise use price (already discounted for subs added from product page)
         if (i?.isSubscription) {
           const explicitSub = Number(i?.subPrice ?? 0);
-          const p =
-            explicitSub > 0 ? explicitSub : Number(i?.price ?? 0);
+          const p = explicitSub > 0 ? explicitSub : Number(i?.price ?? 0);
           return s + p * qty;
         }
 
@@ -1079,7 +1078,6 @@ function CartProvider({ children }: any) {
       }, 0),
     [cart]
   );
-
 
   // === Free shipping logic ===
   const FREE_SHIPPING_THRESHOLD = 3;
@@ -4110,23 +4108,22 @@ function RoastDetailPage() {
         },
       });
 
-          // 3) mirror to your local cart UI
-          const itemToAdd = {
-            ...card,
-            id: `${card.slug}-12oz-${beanType}`,
-            sku: `${card.slug}-12oz-${beanType}`,
-            title: `${card.title} (${variantLabel})`,
-            // store both the regular one-time price and the active price
-            basePrice,
-            price: purchaseMode === "sub" ? discounted : basePrice,
-            beanType,
-            purchaseMode,
-            subEvery: purchaseMode === "sub" ? subEvery : undefined,
-            merchandiseId: merchId,
-            sellingPlanId: planId,
-          };
-          add(itemToAdd, n);
-    
+      // 3) mirror to your local cart UI
+      const itemToAdd = {
+        ...card,
+        id: `${card.slug}-12oz-${beanType}`,
+        sku: `${card.slug}-12oz-${beanType}`,
+        title: `${card.title} (${variantLabel})`,
+        // store both the regular one-time price and the active price
+        basePrice,
+        price: purchaseMode === "sub" ? discounted : basePrice,
+        beanType,
+        purchaseMode,
+        subEvery: purchaseMode === "sub" ? subEvery : undefined,
+        merchandiseId: merchId,
+        sellingPlanId: planId,
+      };
+      add(itemToAdd, n);
 
       // set mobile toast state so we can render a bottom banner on mobile
       setMobileToast({
@@ -5236,6 +5233,31 @@ function OriginImg({
     </>
   );
 }
+function LocalFlashBanner() {
+  const [msg, setMsg] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const handler = (e: any) => {
+      const text = e?.detail;
+      if (!text) return;
+      setMsg(String(text));
+      window.setTimeout(() => setMsg(null), 2500);
+    };
+
+    window.addEventListener("flash", handler as any);
+    return () => window.removeEventListener("flash", handler as any);
+  }, []);
+
+  if (!msg) return null;
+
+  return (
+    <div className="fixed inset-0 z-[2147483647] md:hidden flex items-center justify-center px-4">
+      <div className="w-full max-w-xs rounded-xl bg-amber-400 text-neutral-900 text-sm font-semibold text-center px-4 py-3 shadow-lg shadow-black/40">
+        {msg}
+      </div>
+    </div>
+  );
+}
 
 function RoastLevelAnchors({
   level,
@@ -5287,731 +5309,753 @@ function RoastLevelAnchors({
     setName("");
     setEmail("");
   };
-
   return (
-    <section className="mt-0 md:mt-2">
-      {/* ================= DESKTOP (unchanged from your original) ================= */}
-      <div className="hidden md:block">
-        {/* Header row: title + write button */}
-        {/* Desktop header, BRCC-style layout */}
-        <div className="mb-4 flex flex-col items-center text-center">
-          {/* Title */}
-          <h2 className="text-xl md:text-2xl font-bold tracking-wide text-amber-300">
-            CUSTOMER REVIEWS
-          </h2>
+    <>
+      <LocalFlashBanner />
+      <section className="mt-0 md:mt-2">
+        {/* ================= DESKTOP (unchanged from your original) ================= */}
+        <div className="hidden md:block">
+          {/* Header row: title + write button */}
+          {/* Desktop header, BRCC-style layout */}
+          <div className="mb-4 flex flex-col items-center text-center">
+            {/* Title */}
+            <h2 className="text-xl md:text-2xl font-bold tracking-wide text-amber-300">
+              CUSTOMER REVIEWS
+            </h2>
 
-          {/* Row under title: rating num, stars, count, button */}
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-center">
-            {/* rating number */}
-            <span className="text-amber-300 font-semibold tabular-nums text-base">
-              {(reviewData?.avg ?? 0).toFixed(1)}
-            </span>
-
-            {/* stars */}
-            <div className="inline-flex items-center gap-0.5">
-              {[0, 1, 2, 3, 4].map((i) => {
-                const avg = reviewData?.avg ?? 0;
-                const starFill = Math.max(0, Math.min(1, avg - i));
-                const clipWidth = 24 * starFill;
-                const clipId = `reviewsStarClip-desktop-header-${i}`;
-                return (
-                  <svg
-                    key={i}
-                    viewBox="0 0 24 24"
-                    className="h-6 w-6"
-                    aria-hidden
-                  >
-                    <defs>
-                      <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
-                        <rect x="0" y="0" width={clipWidth} height="24" />
-                      </clipPath>
-                    </defs>
-
-                    {/* base (neutral) */}
-                    <path
-                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                      className="text-neutral-800"
-                      fill="currentColor"
-                    />
-
-                    {/* amber fill clipped */}
-                    <path
-                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                      className="text-amber-400"
-                      fill="currentColor"
-                      clipPath={`url(#${clipId})`}
-                    />
-
-                    {/* outline stroke */}
-                    <path
-                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                      fill="none"
-                      stroke="currentColor"
-                      className="text-neutral-600"
-                      strokeWidth="1.6"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                );
-              })}
-              <span className="sr-only">
-                {(reviewData?.avg ?? 0).toFixed(1)} out of 5 stars
+            {/* Row under title: rating num, stars, count, button */}
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-center">
+              {/* rating number */}
+              <span className="text-amber-300 font-semibold tabular-nums text-base">
+                {(reviewData?.avg ?? 0).toFixed(1)}
               </span>
-            </div>
 
-            {/* review count */}
-            <div className="text-neutral-400 text-lg">{total} REVIEWS</div>
-
-            {/* Write a Review button, now inline and centered */}
-            <button
-              type="button"
-              onClick={() => setShowModal(true)}
-              className="ml-10 px-4 py-2 rounded-lg text-sm font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
-              aria-label="Write a review"
-            >
-              Write a Review
-            </button>
-          </div>
-        </div>
-
-        {/* Histogram box */}
-        <div className="mt-4 mx-auto max-w-[780px] w-full rounded-xl border border-amber-400/40 bg-black/40 p-4 md:p-6">
-          {[5, 4, 3, 2, 1].map((s) => (
-            <div key={s} className="flex items-center gap-3 py-1">
-              <div className="w-8 text-right text-sm text-neutral-300">
-                {s}★
-              </div>
-              <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
-                <div
-                  className="h-full bg-amber-400"
-                  style={{ width: `${pct(b[s] || 0)}%` }}
-                />
-              </div>
-              <div className="w-12 text-left text-sm text-neutral-400">
-                {b[s] || 0}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Testimonials grid */}
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-visible">
-          {pageItems.map((r) => {
-            const isOpen = expandedId === r.id;
-
-            // Format the date to MM/DD/YY
-            const formattedDate = new Date(r.date).toLocaleDateString("en-US", {
-              month: "2-digit",
-              day: "2-digit",
-              year: "2-digit",
-            });
-
-            return (
-              <article
-                key={r.id}
-                role="button"
-                tabIndex={0}
-                onClick={() => {
-                  if (!isOpen) toggleExpand(r.id);
-                }}
-                onKeyDown={(e) => {
-                  if (!isOpen && (e.key === "Enter" || e.key === " "))
-                    toggleExpand(r.id);
-                }}
-                aria-expanded={isOpen}
-                className={
-                  "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-4 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
-                  (isOpen ? "z-[70]" : "")
-                }
-              >
-                {/* Name and Formatted Date */}
-                <div className="flex items-center justify-between">
-                  <div className="font-semibold text-amber-300">{r.name}</div>
-                  <div className="text-xs text-neutral-400">
-                    {formattedDate}
-                  </div>
-                </div>
-
-                {/* Rating Stars */}
-                <div className="mt-1 flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
+              {/* stars */}
+              <div className="inline-flex items-center gap-0.5">
+                {[0, 1, 2, 3, 4].map((i) => {
+                  const avg = reviewData?.avg ?? 0;
+                  const starFill = Math.max(0, Math.min(1, avg - i));
+                  const clipWidth = 24 * starFill;
+                  const clipId = `reviewsStarClip-desktop-header-${i}`;
+                  return (
                     <svg
                       key={i}
                       viewBox="0 0 24 24"
-                      fill={i < r.rating ? "currentColor" : "none"}
-                      className={
-                        "h-4 w-4 " +
-                        (i < r.rating ? "text-amber-400" : "text-neutral-700")
-                      }
-                      stroke="currentColor"
+                      className="h-6 w-6"
+                      aria-hidden
                     >
-                      <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                      <defs>
+                        <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+                          <rect x="0" y="0" width={clipWidth} height="24" />
+                        </clipPath>
+                      </defs>
+
+                      {/* base (neutral) */}
+                      <path
+                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                        className="text-neutral-800"
+                        fill="currentColor"
+                      />
+
+                      {/* amber fill clipped */}
+                      <path
+                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                        className="text-amber-400"
+                        fill="currentColor"
+                        clipPath={`url(#${clipId})`}
+                      />
+
+                      {/* outline stroke */}
+                      <path
+                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                        fill="none"
+                        stroke="currentColor"
+                        className="text-neutral-600"
+                        strokeWidth="1.6"
+                        strokeLinejoin="round"
+                      />
                     </svg>
-                  ))}
-                </div>
-
-                {/* Title for the Review */}
-                {r.title && (
-                  <div className="mt-2 text-sm font-semibold text-neutral-300">
-                    {r.title}
-                  </div>
-                )}
-
-                {/* Review Body */}
-                {r.body ? (
-                  <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
-                    {r.body}
-                  </p>
-                ) : null}
-
-                {/* Verified Buyer */}
-                <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
-                  Verified Buyer
-                </div>
-
-                {/* Expanded View */}
-                {isOpen && (
-                  <div
-                    className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
-                    style={{ minHeight: 280 }}
-                    onClick={() => toggleExpand(r.id)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="font-semibold text-amber-300">
-                        {r.name}
-                      </div>
-                      <div className="text-xs text-neutral-400">
-                        {formattedDate}
-                      </div>
-                    </div>
-
-                    {/* Rating Stars */}
-                    <div className="mt-1 flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <svg
-                          key={i}
-                          viewBox="0 0 24 24"
-                          fill={i < r.rating ? "currentColor" : "none"}
-                          className={
-                            "h-4 w-4 " +
-                            (i < r.rating
-                              ? "text-amber-400"
-                              : "text-neutral-700")
-                          }
-                          stroke="currentColor"
-                        >
-                          <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                        </svg>
-                      ))}
-                    </div>
-
-                    {/* Title and Review Body */}
-                    {r.title && (
-                      <div className="mt-2 text-sm font-semibold text-neutral-300">
-                        {r.title}
-                      </div>
-                    )}
-                    {r.body ? (
-                      <p className="mt-1 text-sm text-neutral-300 leading-relaxed">
-                        {r.body}
-                      </p>
-                    ) : null}
-
-                    {/* Verified Buyer */}
-                    <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
-                      Verified Buyer
-                    </div>
-                  </div>
-                )}
-              </article>
-            );
-          })}
-        </div>
-
-        {/* Pager */}
-        {pageCount > 1 && (
-          <div className="mt-6 flex items-center justify-center gap-2">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className={
-                "px-3 py-1.5 rounded-md border text-sm " +
-                (page === 1
-                  ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-                  : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-              }
-              aria-label="Previous reviews page"
-            >
-              ‹ Prev
-            </button>
-
-            {[...Array(pageCount)].map((_, i) => {
-              const n = i + 1;
-              const active = n === page;
-              return (
-                <button
-                  key={n}
-                  onClick={() => setPage(n)}
-                  className={
-                    "h-8 min-w-[2rem] px-2 rounded-md border text-sm " +
-                    (active
-                      ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
-                      : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-                  }
-                  aria-current={active ? "page" : undefined}
-                  aria-label={`Go to page ${n}`}
-                >
-                  {n}
-                </button>
-              );
-            })}
-
-            <button
-              onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-              disabled={page === pageCount}
-              className={
-                "px-3 py-1.5 rounded-md border text-sm " +
-                (page === pageCount
-                  ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-                  : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-              }
-              aria-label="Next reviews page"
-            >
-              Next ›
-            </button>
-          </div>
-        )}
-      </div>
-      {/* ================= END DESKTOP ================= */}
-
-      {/* ================= MOBILE (tweaked) ================= */}
-      <div className="block md:hidden">
-        {/* Header: stacked, no absolute button */}
-        <div className="mb-4 flex flex-col items-center text-center">
-          <h2 className="text-lg font-bold tracking-wide text-amber-300">
-            CUSTOMER REVIEWS
-          </h2>
-
-          <button
-            type="button"
-            onClick={() => setShowModal(true)}
-            className="mt-3 w-full max-w-[220px] px-3 py-2 rounded-lg text-sm font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
-            aria-label="Write a review"
-          >
-            Write a Review
-          </button>
-        </div>
-
-        {/* Avg / Stars / Count */}
-        <div className="mt-2 flex flex-col items-center justify-center gap-2 mb-4">
-          {/* rating number + stars on same row now */}
-          <div className="flex items-center gap-2">
-            <div className="text-amber-300 font-semibold tabular-nums text-base leading-none">
-              {(reviewData?.avg ?? 0).toFixed(1)}
-            </div>
-
-            <div className="inline-flex items-center gap-0.5">
-              {[0, 1, 2, 3, 4].map((i) => {
-                const avg = reviewData?.avg ?? 0;
-                const starFill = Math.max(0, Math.min(1, avg - i));
-                const clipWidth = 20 * starFill;
-                const clipId = `reviewsStarClip-mobile-${i}`;
-                return (
-                  <svg
-                    key={i}
-                    viewBox="0 0 24 24"
-                    className="h-5 w-5"
-                    aria-hidden
-                  >
-                    <defs>
-                      <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
-                        <rect x="0" y="0" width={clipWidth} height="24" />
-                      </clipPath>
-                    </defs>
-
-                    <path
-                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                      className="text-neutral-800"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                      className="text-amber-400"
-                      fill="currentColor"
-                      clipPath={`url(#${clipId})`}
-                    />
-                    <path
-                      d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                      fill="none"
-                      stroke="currentColor"
-                      className="text-neutral-600"
-                      strokeWidth="1.6"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                );
-              })}
-              <span className="sr-only">
-                {(reviewData?.avg ?? 0).toFixed(1)} out of 5 stars
-              </span>
-            </div>
-          </div>
-
-          {/* review count below */}
-          <div className="text-neutral-400 text-xs tracking-wide">
-            {total} REVIEWS
-          </div>
-        </div>
-
-        {/* Histogram: tighter padding to pull text closer to border */}
-        <div className="mt-2 mx-auto w-full rounded-xl border border-amber-400/40 bg-black/40 p-3">
-          {[5, 4, 3, 2, 1].map((s) => (
-            <div key={s} className="flex items-center gap-3 py-1">
-              <div className="w-8 text-right text-xs text-neutral-300">
-                {s}★
+                  );
+                })}
+                <span className="sr-only">
+                  {(reviewData?.avg ?? 0).toFixed(1)} out of 5 stars
+                </span>
               </div>
-              <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
-                <div
-                  className="h-full bg-amber-400"
-                  style={{ width: `${pct(b[s] || 0)}%` }}
-                />
-              </div>
-              <div className="w-10 text-left text-xs text-neutral-400">
-                {b[s] || 0}
-              </div>
-            </div>
-          ))}
-        </div>
 
-        {/* Testimonials: tighter padding inside each card too */}
-        <div className="mt-6 grid grid-cols-1 gap-4 overflow-visible">
-          {pageItems.map((r) => {
-            const isOpen = expandedId === r.id;
-            const formattedDate = new Date(r.date).toLocaleDateString("en-US", {
-              month: "2-digit",
-              day: "2-digit",
-              year: "2-digit",
-            });
+              {/* review count */}
+              <div className="text-neutral-400 text-lg">{total} REVIEWS</div>
 
-            return (
-              <article
-                key={r.id}
-                role="button"
-                tabIndex={0}
-                onClick={() => {
-                  if (!isOpen) toggleExpand(r.id);
-                }}
-                onKeyDown={(e) => {
-                  if (!isOpen && (e.key === "Enter" || e.key === " "))
-                    toggleExpand(r.id);
-                }}
-                aria-expanded={isOpen}
-                className={
-                  "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-3 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
-                  (isOpen ? "z-[70]" : "")
-                }
-              >
-                {/* Header row */}
-                <div className="flex items-start justify-between">
-                  <div className="font-semibold text-amber-300 text-sm leading-tight">
-                    {r.name}
-                  </div>
-                  <div className="text-[10px] text-neutral-400">
-                    {formattedDate}
-                  </div>
-                </div>
-
-                {/* Rating Stars */}
-                <div className="mt-1 flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      viewBox="0 0 24 24"
-                      fill={i < r.rating ? "currentColor" : "none"}
-                      className={
-                        "h-4 w-4 " +
-                        (i < r.rating ? "text-amber-400" : "text-neutral-700")
-                      }
-                      stroke="currentColor"
-                    >
-                      <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                    </svg>
-                  ))}
-                </div>
-
-                {/* Title */}
-                {r.title && (
-                  <div className="mt-2 text-[0.8rem] font-semibold text-neutral-300 leading-snug">
-                    {r.title}
-                  </div>
-                )}
-
-                {/* Body */}
-                {r.body ? (
-                  <p className="mt-1 text-[0.8rem] text-neutral-300 leading-relaxed overflow-hidden max-h-24">
-                    {r.body}
-                  </p>
-                ) : null}
-
-                {/* Verified Buyer */}
-                <div className="mt-3 text-[10px] uppercase tracking-wide text-amber-300/90">
-                  Verified Buyer
-                </div>
-
-                {/* Expanded View */}
-                {isOpen && (
-                  <div
-                    className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-3"
-                    style={{ minHeight: 240 }}
-                    onClick={() => toggleExpand(r.id)}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="font-semibold text-amber-300 text-sm leading-tight">
-                        {r.name}
-                      </div>
-                      <div className="text-[10px] text-neutral-400">
-                        {formattedDate}
-                      </div>
-                    </div>
-
-                    <div className="mt-1 flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <svg
-                          key={i}
-                          viewBox="0 0 24 24"
-                          fill={i < r.rating ? "currentColor" : "none"}
-                          className={
-                            "h-4 w-4 " +
-                            (i < r.rating
-                              ? "text-amber-400"
-                              : "text-neutral-700")
-                          }
-                          stroke="currentColor"
-                        >
-                          <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                        </svg>
-                      ))}
-                    </div>
-
-                    {r.title && (
-                      <div className="mt-2 text-[0.8rem] font-semibold text-neutral-300 leading-snug">
-                        {r.title}
-                      </div>
-                    )}
-
-                    {r.body ? (
-                      <p className="mt-1 text-[0.8rem] text-neutral-300 leading-relaxed">
-                        {r.body}
-                      </p>
-                    ) : null}
-
-                    <div className="mt-3 text-[10px] uppercase tracking-wide text-amber-300/90">
-                      Verified Buyer
-                    </div>
-                  </div>
-                )}
-              </article>
-            );
-          })}
-        </div>
-
-        {/* Pager (mobile) */}
-        {pageCount > 1 && (
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className={
-                "px-3 py-1.5 rounded-md border text-xs " +
-                (page === 1
-                  ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-                  : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-              }
-              aria-label="Previous reviews page"
-            >
-              ‹ Prev
-            </button>
-
-            {[...Array(pageCount)].map((_, i) => {
-              const n = i + 1;
-              const active = n === page;
-              return (
-                <button
-                  key={n}
-                  onClick={() => setPage(n)}
-                  className={
-                    "h-8 min-w-[2rem] px-2 rounded-md border text-xs " +
-                    (active
-                      ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
-                      : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-                  }
-                  aria-current={active ? "page" : undefined}
-                  aria-label={`Go to page ${n}`}
-                >
-                  {n}
-                </button>
-              );
-            })}
-
-            <button
-              onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-              disabled={page === pageCount}
-              className={
-                "px-3 py-1.5 rounded-md border text-xs " +
-                (page === pageCount
-                  ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-                  : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-              }
-              aria-label="Next reviews page"
-            >
-              Next ›
-            </button>
-          </div>
-        )}
-      </div>
-      {/* ================= END MOBILE ================= */}
-
-      {/* Fullscreen dim behind expanded tile (both views) */}
-      {expandedId && (
-        <div
-          className="fixed inset-0 z-40 bg-black/40"
-          onClick={() => toggleExpand(expandedId)}
-          aria-hidden
-        />
-      )}
-
-      {/* WRITE A REVIEW MODAL */}
-      {showModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className="absolute inset-0 bg-black/70"
-            onClick={() => setShowModal(false)}
-            aria-hidden
-          />
-          <div className="relative z-10 w-[92vw] max-w-[720px] rounded-xl border border-amber-400/60 bg-neutral-950 p-5 md:p-6 shadow-2xl shadow-amber-500/20 text-left">
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-lg md:text-xl font-bold text-amber-300">
-                WRITE A REVIEW
-              </div>
+              {/* Write a Review button, now inline and centered */}
               <button
-                className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-neutral-700 hover:border-amber-400/60"
-                onClick={() => setShowModal(false)}
-                aria-label="Close write a review"
+                type="button"
+                onClick={() => setShowModal(true)}
+                className="ml-10 px-4 py-2 rounded-lg text-sm font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
+                aria-label="Write a review"
               >
-                ×
+                Write a Review
               </button>
             </div>
+          </div>
 
-            <form onSubmit={submitReview} className="space-y-3">
-              {/* SCORE */}
-              <div className="space-y-1">
-                <div className="text-sm text-neutral-300">
-                  SCORE*{" "}
-                  {rating < 1 && (
-                    <span className="text-red-400 text-xs ml-1">required</span>
-                  )}
+          {/* Histogram box */}
+          <div className="mt-4 mx-auto max-w-[780px] w-full rounded-xl border border-amber-400/40 bg-black/40 p-4 md:p-6">
+            {[5, 4, 3, 2, 1].map((s) => (
+              <div key={s} className="flex items-center gap-3 py-1">
+                <div className="w-8 text-right text-sm text-neutral-300">
+                  {s}★
                 </div>
+                <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
+                  <div
+                    className="h-full bg-amber-400"
+                    style={{ width: `${pct(b[s] || 0)}%` }}
+                  />
+                </div>
+                <div className="w-12 text-left text-sm text-neutral-400">
+                  {b[s] || 0}
+                </div>
+              </div>
+            ))}
+          </div>
 
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setRating(n)}
-                      className="p-1"
-                      aria-label={`Rate ${n} star${n > 1 ? "s" : ""}`}
-                    >
+          {/* Testimonials grid */}
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-visible">
+            {pageItems.map((r) => {
+              const isOpen = expandedId === r.id;
+
+              // Format the date to MM/DD/YY
+              const formattedDate = new Date(r.date).toLocaleDateString(
+                "en-US",
+                {
+                  month: "2-digit",
+                  day: "2-digit",
+                  year: "2-digit",
+                }
+              );
+
+              return (
+                <article
+                  key={r.id}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => {
+                    if (!isOpen) toggleExpand(r.id);
+                  }}
+                  onKeyDown={(e) => {
+                    if (!isOpen && (e.key === "Enter" || e.key === " "))
+                      toggleExpand(r.id);
+                  }}
+                  aria-expanded={isOpen}
+                  className={
+                    "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-4 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
+                    (isOpen ? "z-[70]" : "")
+                  }
+                >
+                  {/* Name and Formatted Date */}
+                  <div className="flex items-center justify-between">
+                    <div className="font-semibold text-amber-300">{r.name}</div>
+                    <div className="text-xs text-neutral-400">
+                      {formattedDate}
+                    </div>
+                  </div>
+
+                  {/* Rating Stars */}
+                  <div className="mt-1 flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
                       <svg
+                        key={i}
                         viewBox="0 0 24 24"
-                        fill={n <= rating ? "currentColor" : "none"}
+                        fill={i < r.rating ? "currentColor" : "none"}
                         className={
-                          "h-6 w-6 " +
-                          (n <= rating ? "text-amber-400" : "text-neutral-600")
+                          "h-4 w-4 " +
+                          (i < r.rating ? "text-amber-400" : "text-neutral-700")
                         }
                         stroke="currentColor"
                       >
                         <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
                       </svg>
-                    </button>
-                  ))}
+                    ))}
+                  </div>
+
+                  {/* Title for the Review */}
+                  {r.title && (
+                    <div className="mt-2 text-sm font-semibold text-neutral-300">
+                      {r.title}
+                    </div>
+                  )}
+
+                  {/* Review Body */}
+                  {r.body ? (
+                    <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
+                      {r.body}
+                    </p>
+                  ) : null}
+
+                  {/* Verified Buyer */}
+                  <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
+                    Verified Buyer
+                  </div>
+
+                  {/* Expanded View */}
+                  {isOpen && (
+                    <div
+                      className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
+                      style={{ minHeight: 280 }}
+                      onClick={() => toggleExpand(r.id)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="font-semibold text-amber-300">
+                          {r.name}
+                        </div>
+                        <div className="text-xs text-neutral-400">
+                          {formattedDate}
+                        </div>
+                      </div>
+
+                      {/* Rating Stars */}
+                      <div className="mt-1 flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <svg
+                            key={i}
+                            viewBox="0 0 24 24"
+                            fill={i < r.rating ? "currentColor" : "none"}
+                            className={
+                              "h-4 w-4 " +
+                              (i < r.rating
+                                ? "text-amber-400"
+                                : "text-neutral-700")
+                            }
+                            stroke="currentColor"
+                          >
+                            <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                          </svg>
+                        ))}
+                      </div>
+
+                      {/* Title and Review Body */}
+                      {r.title && (
+                        <div className="mt-2 text-sm font-semibold text-neutral-300">
+                          {r.title}
+                        </div>
+                      )}
+                      {r.body ? (
+                        <p className="mt-1 text-sm text-neutral-300 leading-relaxed">
+                          {r.body}
+                        </p>
+                      ) : null}
+
+                      {/* Verified Buyer */}
+                      <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
+                        Verified Buyer
+                      </div>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+
+          {/* Pager */}
+          {pageCount > 1 && (
+            <div className="mt-6 flex items-center justify-center gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className={
+                  "px-3 py-1.5 rounded-md border text-sm " +
+                  (page === 1
+                    ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+                    : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+                }
+                aria-label="Previous reviews page"
+              >
+                ‹ Prev
+              </button>
+
+              {[...Array(pageCount)].map((_, i) => {
+                const n = i + 1;
+                const active = n === page;
+                return (
+                  <button
+                    key={n}
+                    onClick={() => setPage(n)}
+                    className={
+                      "h-8 min-w-[2rem] px-2 rounded-md border text-sm " +
+                      (active
+                        ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
+                        : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+                    }
+                    aria-current={active ? "page" : undefined}
+                    aria-label={`Go to page ${n}`}
+                  >
+                    {n}
+                  </button>
+                );
+              })}
+
+              <button
+                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                disabled={page === pageCount}
+                className={
+                  "px-3 py-1.5 rounded-md border text-sm " +
+                  (page === pageCount
+                    ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+                    : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+                }
+                aria-label="Next reviews page"
+              >
+                Next ›
+              </button>
+            </div>
+          )}
+        </div>
+        {/* ================= END DESKTOP ================= */}
+
+        {/* ================= MOBILE (tweaked) ================= */}
+        <div className="block md:hidden">
+          {/* Header: stacked, no absolute button */}
+          <div className="mb-4 flex flex-col items-center text-center">
+            <h2 className="text-lg font-bold tracking-wide text-amber-300">
+              CUSTOMER REVIEWS
+            </h2>
+
+            <button
+              type="button"
+              onClick={() => setShowModal(true)}
+              className="mt-3 w-full max-w-[220px] px-3 py-2 rounded-lg text-sm font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
+              aria-label="Write a review"
+            >
+              Write a Review
+            </button>
+          </div>
+
+          {/* Avg / Stars / Count */}
+          <div className="mt-2 flex flex-col items-center justify-center gap-2 mb-4">
+            {/* rating number + stars on same row now */}
+            <div className="flex items-center gap-2">
+              <div className="text-amber-300 font-semibold tabular-nums text-base leading-none">
+                {(reviewData?.avg ?? 0).toFixed(1)}
+              </div>
+
+              <div className="inline-flex items-center gap-0.5">
+                {[0, 1, 2, 3, 4].map((i) => {
+                  const avg = reviewData?.avg ?? 0;
+                  const starFill = Math.max(0, Math.min(1, avg - i));
+                  const clipWidth = 20 * starFill;
+                  const clipId = `reviewsStarClip-mobile-${i}`;
+                  return (
+                    <svg
+                      key={i}
+                      viewBox="0 0 24 24"
+                      className="h-5 w-5"
+                      aria-hidden
+                    >
+                      <defs>
+                        <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+                          <rect x="0" y="0" width={clipWidth} height="24" />
+                        </clipPath>
+                      </defs>
+
+                      <path
+                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                        className="text-neutral-800"
+                        fill="currentColor"
+                      />
+                      <path
+                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                        className="text-amber-400"
+                        fill="currentColor"
+                        clipPath={`url(#${clipId})`}
+                      />
+                      <path
+                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                        fill="none"
+                        stroke="currentColor"
+                        className="text-neutral-600"
+                        strokeWidth="1.6"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  );
+                })}
+                <span className="sr-only">
+                  {(reviewData?.avg ?? 0).toFixed(1)} out of 5 stars
+                </span>
+              </div>
+            </div>
+
+            {/* review count below */}
+            <div className="text-neutral-400 text-xs tracking-wide">
+              {total} REVIEWS
+            </div>
+          </div>
+
+          {/* Histogram: tighter padding to pull text closer to border */}
+          <div className="mt-2 mx-auto w-full rounded-xl border border-amber-400/40 bg-black/40 p-3">
+            {[5, 4, 3, 2, 1].map((s) => (
+              <div key={s} className="flex items-center gap-3 py-1">
+                <div className="w-8 text-right text-xs text-neutral-300">
+                  {s}★
                 </div>
-              </div>
-
-              {/* TITLE */}
-              <div>
-                <div className="text-sm text-neutral-300 mb-1">TITLE*</div>
-                <input
-                  className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                  placeholder="Give your review a title"
-                />
-              </div>
-
-              {/* CONTENT */}
-              <div>
-                <div className="text-sm text-neutral-300 mb-1">
-                  What did you think of {roastTitle}?*
-                </div>
-                <textarea
-                  className="w-full min-h-[120px] rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
-                  value={body}
-                  onChange={(e) => setBody(e.target.value)}
-                  required
-                  placeholder="Write your comments here"
-                />
-              </div>
-
-              {/* NAME / EMAIL */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <div className="text-sm text-neutral-300 mb-1">NAME*</div>
-                  <input
-                    className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    placeholder="Enter your name"
+                <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
+                  <div
+                    className="h-full bg-amber-400"
+                    style={{ width: `${pct(b[s] || 0)}%` }}
                   />
                 </div>
-                <div>
-                  <div className="text-sm text-neutral-300 mb-1">EMAIL*</div>
-                  <input
-                    type="email"
-                    className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 outline-none focus:border-amber-400/70"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    placeholder="Enter your email"
-                  />
+                <div className="w-10 text-left text-xs text-neutral-400">
+                  {b[s] || 0}
                 </div>
               </div>
+            ))}
+          </div>
 
-              {/* POST */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={rating < 1 || !title || !body || !name || !email}
+          {/* Testimonials: tighter padding inside each card too */}
+          <div className="mt-6 grid grid-cols-1 gap-4 overflow-visible">
+            {pageItems.map((r) => {
+              const isOpen = expandedId === r.id;
+              const formattedDate = new Date(r.date).toLocaleDateString(
+                "en-US",
+                {
+                  month: "2-digit",
+                  day: "2-digit",
+                  year: "2-digit",
+                }
+              );
+
+              return (
+                <article
+                  key={r.id}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => {
+                    if (!isOpen) toggleExpand(r.id);
+                  }}
+                  onKeyDown={(e) => {
+                    if (!isOpen && (e.key === "Enter" || e.key === " "))
+                      toggleExpand(r.id);
+                  }}
+                  aria-expanded={isOpen}
                   className={
-                    "w-full px-4 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
-                    (rating < 1 || !title || !body || !name || !email
-                      ? "opacity-60 cursor-not-allowed"
-                      : "hover:bg-amber-400 hover:text-neutral-900")
+                    "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-3 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
+                    (isOpen ? "z-[70]" : "")
                   }
                 >
-                  POST
-                </button>
-              </div>
-            </form>
+                  {/* Header row */}
+                  <div className="flex items-start justify-between">
+                    <div className="font-semibold text-amber-300 text-sm leading-tight">
+                      {r.name}
+                    </div>
+                    <div className="text-[10px] text-neutral-400">
+                      {formattedDate}
+                    </div>
+                  </div>
+
+                  {/* Rating Stars */}
+                  <div className="mt-1 flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        viewBox="0 0 24 24"
+                        fill={i < r.rating ? "currentColor" : "none"}
+                        className={
+                          "h-4 w-4 " +
+                          (i < r.rating ? "text-amber-400" : "text-neutral-700")
+                        }
+                        stroke="currentColor"
+                      >
+                        <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                      </svg>
+                    ))}
+                  </div>
+
+                  {/* Title */}
+                  {r.title && (
+                    <div className="mt-2 text-[0.8rem] font-semibold text-neutral-300 leading-snug">
+                      {r.title}
+                    </div>
+                  )}
+
+                  {/* Body */}
+                  {r.body ? (
+                    <p className="mt-1 text-[0.8rem] text-neutral-300 leading-relaxed overflow-hidden max-h-24">
+                      {r.body}
+                    </p>
+                  ) : null}
+
+                  {/* Verified Buyer */}
+                  <div className="mt-3 text-[10px] uppercase tracking-wide text-amber-300/90">
+                    Verified Buyer
+                  </div>
+
+                  {/* Expanded View */}
+                  {isOpen && (
+                    <div
+                      className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-3"
+                      style={{ minHeight: 240 }}
+                      onClick={() => toggleExpand(r.id)}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="font-semibold text-amber-300 text-sm leading-tight">
+                          {r.name}
+                        </div>
+                        <div className="text-[10px] text-neutral-400">
+                          {formattedDate}
+                        </div>
+                      </div>
+
+                      <div className="mt-1 flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <svg
+                            key={i}
+                            viewBox="0 0 24 24"
+                            fill={i < r.rating ? "currentColor" : "none"}
+                            className={
+                              "h-4 w-4 " +
+                              (i < r.rating
+                                ? "text-amber-400"
+                                : "text-neutral-700")
+                            }
+                            stroke="currentColor"
+                          >
+                            <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                          </svg>
+                        ))}
+                      </div>
+
+                      {r.title && (
+                        <div className="mt-2 text-[0.8rem] font-semibold text-neutral-300 leading-snug">
+                          {r.title}
+                        </div>
+                      )}
+
+                      {r.body ? (
+                        <p className="mt-1 text-[0.8rem] text-neutral-300 leading-relaxed">
+                          {r.body}
+                        </p>
+                      ) : null}
+
+                      <div className="mt-3 text-[10px] uppercase tracking-wide text-amber-300/90">
+                        Verified Buyer
+                      </div>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
           </div>
+
+          {/* Pager (mobile) */}
+          {pageCount > 1 && (
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className={
+                  "px-3 py-1.5 rounded-md border text-xs " +
+                  (page === 1
+                    ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+                    : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+                }
+                aria-label="Previous reviews page"
+              >
+                ‹ Prev
+              </button>
+
+              {[...Array(pageCount)].map((_, i) => {
+                const n = i + 1;
+                const active = n === page;
+                return (
+                  <button
+                    key={n}
+                    onClick={() => setPage(n)}
+                    className={
+                      "h-8 min-w-[2rem] px-2 rounded-md border text-xs " +
+                      (active
+                        ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
+                        : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+                    }
+                    aria-current={active ? "page" : undefined}
+                    aria-label={`Go to page ${n}`}
+                  >
+                    {n}
+                  </button>
+                );
+              })}
+
+              <button
+                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                disabled={page === pageCount}
+                className={
+                  "px-3 py-1.5 rounded-md border text-xs " +
+                  (page === pageCount
+                    ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+                    : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+                }
+                aria-label="Next reviews page"
+              >
+                Next ›
+              </button>
+            </div>
+          )}
         </div>
-      )}
-    </section>
+        {/* ================= END MOBILE ================= */}
+
+        {/* Fullscreen dim behind expanded tile (both views) */}
+        {expandedId && (
+          <div
+            className="fixed inset-0 z-40 bg-black/40"
+            onClick={() => toggleExpand(expandedId)}
+            aria-hidden
+          />
+        )}
+
+        {/* WRITE A REVIEW MODAL */}
+        {showModal &&
+          typeof document !== "undefined" &&
+          createPortal(
+            <div
+              className="fixed inset-0 z-[2147483647] flex items-center justify-center pt-[calc(env(safe-area-inset-top)+40px)] md:pt-0"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Write a review"
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setShowModal(false);
+              }}
+            >
+              {/* Backdrop */}
+              <div className="absolute inset-0 bg-black/70" aria-hidden />
+
+              {/* Modal panel */}
+              <div className="relative z-10 w-[92vw] max-w-[720px] rounded-xl border border-amber-400/60 bg-neutral-950 p-5 md:p-6 shadow-2xl shadow-amber-500/20 text-left max-h-[96vh] overflow-y-auto">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="text-lg md:text-xl font-bold text-amber-300">
+                    WRITE A REVIEW
+                  </div>
+                  <button
+                    className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-neutral-600 bg-black/70 text-neutral-100 hover:border-amber-400/60 hover:text-amber-300"
+                    onClick={() => setShowModal(false)}
+                    aria-label="Close write a review"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <form onSubmit={submitReview} className="space-y-3">
+                  {/* SCORE */}
+                  <div className="space-y-1">
+                    <div className="text-sm text-neutral-300">
+                      SCORE*{" "}
+                      {rating < 1 && (
+                        <span className="text-red-400 text-xs ml-1">
+                          required
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <button
+                          key={n}
+                          type="button"
+                          onClick={() => setRating(n)}
+                          className="p-1"
+                          aria-label={`Rate ${n} star${n > 1 ? "s" : ""}`}
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill={n <= rating ? "currentColor" : "none"}
+                            className={
+                              "h-6 w-6 " +
+                              (n <= rating
+                                ? "text-amber-400"
+                                : "text-neutral-600")
+                            }
+                            stroke="currentColor"
+                          >
+                            <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+                          </svg>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* TITLE */}
+                  <div>
+                    <div className="text-sm text-neutral-300 mb-1">TITLE*</div>
+                    <input
+                      className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 text-[15px] text-neutral-100 placeholder:text-neutral-500 outline-none focus:border-amber-400/70"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      required
+                      placeholder="Give your review a title"
+                    />
+                  </div>
+
+                  {/* CONTENT */}
+                  <div>
+                    <div className="text-sm text-neutral-300 mb-1">
+                      What did you think of {roastTitle}?*
+                    </div>
+                    <textarea
+                      className="w-full min-h-[120px] rounded-md border border-neutral-700 bg-black/70 px-3 py-2 text-[15px] text-neutral-100 placeholder:text-neutral-500 outline-none focus:border-amber-400/70"
+                      value={body}
+                      onChange={(e) => setBody(e.target.value)}
+                      required
+                      placeholder="Write your comments here"
+                    />
+                  </div>
+
+                  {/* NAME / EMAIL */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                      <div className="text-sm text-neutral-300 mb-1">NAME*</div>
+                      <input
+                        className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 text-[15px] text-neutral-100 placeholder:text-neutral-500 outline-none focus:border-amber-400/70"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        placeholder="Enter your name"
+                      />
+                    </div>
+                    <div>
+                      <div className="text-sm text-neutral-300 mb-1">
+                        EMAIL*
+                      </div>
+                      <input
+                        type="email"
+                        className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 text-[15px] text-neutral-100 placeholder:text-neutral-500 outline-none focus:border-amber-400/70"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        placeholder="Enter your email"
+                      />
+                    </div>
+                  </div>
+
+                  {/* POST */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={
+                        rating < 1 || !title || !body || !name || !email
+                      }
+                      className={
+                        "w-full px-4 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
+                        (rating < 1 || !title || !body || !name || !email
+                          ? "opacity-60 cursor-not-allowed"
+                          : "hover:bg-amber-400 hover:text-neutral-900")
+                      }
+                    >
+                      POST
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>,
+            document.body
+          )}
+      </section>
+    </>
   );
 }
 
@@ -11887,7 +11931,9 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                       <button
                                         onClick={() => {
                                           // convert back to one-time and restore full price
-                                          const currentPrice = Number(it.price ?? 0);
+                                          const currentPrice = Number(
+                                            it.price ?? 0
+                                          );
 
                                           let newPrice = currentPrice;
 
@@ -11897,13 +11943,17 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                             if (!Number.isNaN(bp) && bp > 0) {
                                               newPrice = bp;
                                             }
-                                          } else if (!it.subPrice && currentPrice > 0) {
+                                          } else if (
+                                            !it.subPrice &&
+                                            currentPrice > 0
+                                          ) {
                                             // If it started life as a subscription from the roast page,
                                             // price is already discounted (no subPrice stored).
                                             // Reverse the 15% discount to get the original.
-                                            newPrice = Math.round(
-                                              (currentPrice / 0.85) * 100
-                                            ) / 100;
+                                            newPrice =
+                                              Math.round(
+                                                (currentPrice / 0.85) * 100
+                                              ) / 100;
                                           }
 
                                           updateItem(it.id, {
@@ -11923,7 +11973,6 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                       >
                                         One-time
                                       </button>
-
                                     </div>
                                   </div>
                                 )}

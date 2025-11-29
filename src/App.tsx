@@ -8312,49 +8312,8 @@ function SubscribeManagePage({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // These will come from your backend once wired
-  const [subs, setSubs] = useState<any[]>([
-    {
-      id: "sub_1",
-      product: "Flagship Medium Roast",
-      nextCharge: "2025-10-10",
-      originalNextCharge: "2025-10-10",
-      skipped: false,
-      frequency: "Every 14 days",
-      status: "active",
-      shippingAddress: {
-        name: "Greg Quick",
-        line1: "123 Harbor Way",
-        line2: "",
-        city: "Boston",
-        state: "MA",
-        zip: "02129",
-        country: "USA",
-      },
-    },
-  ]);
-
-  const [orders, setOrders] = useState<any[]>([
-    {
-      id: "ORD-10001",
-      date: "2025-08-01",
-      total: 44.0,
-      status: "Delivered",
-      items: [
-        { title: "Flagship Medium Roast", qty: 2 },
-        { title: "Oak & Copper", qty: 1 },
-      ],
-      shippingAddress: {
-        name: "Greg Quick",
-        line1: "123 Harbor Way",
-        line2: "",
-        city: "Boston",
-        state: "MA",
-        zip: "02129",
-        country: "USA",
-      },
-    },
-  ]);
+  const [subs, setSubs] = useState<any[]>([]);
+  const [orders, setOrders] = useState<any[]>([]);
 
   const [defaultAddress, setDefaultAddress] = useState<any>({
     name: "Greg Quick",

@@ -1368,6 +1368,64 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
     fit: "object-cover",
     sideFill: false, // NEW
   };
+  // Live review summaries for each roast card (avg + count from Judge.me)
+  const [summaryBySlug, setSummaryBySlug] = React.useState<
+    Record<string, { avg: number; count: number }>
+  >({});
+
+  React.useEffect(() => {
+    let cancelled = false;
+
+    async function loadAllSummaries() {
+      try {
+        const promises = roastCards.map(async (card) => {
+          const productId = PRODUCT_IDS_BY_SLUG[card.slug];
+          if (!productId) return [card.slug, { avg: 0, count: 0 }] as const;
+
+          const res = await fetch(
+            `/api/get-reviews?shopifyProductId=${encodeURIComponent(productId)}`
+          );
+          if (!res.ok) return [card.slug, { avg: 0, count: 0 }] as const;
+
+          const data = await res.json();
+          const reviews: any[] = Array.isArray(data.reviews)
+            ? data.reviews
+            : [];
+
+          if (!reviews.length)
+            return [card.slug, { avg: 0, count: 0 }] as const;
+
+          const count = reviews.length;
+          const sum = reviews.reduce(
+            (acc, r) => acc + (Number(r.rating) || 0),
+            0
+          );
+          const avg = Math.round((sum / count) * 10) / 10;
+
+          return [card.slug, { avg, count }] as const;
+        });
+
+        const entries = await Promise.all(promises);
+        if (cancelled) return;
+
+        const map: Record<string, { avg: number; count: number }> = {};
+        for (const [slug, stats] of entries) {
+          map[slug] = stats;
+        }
+        setSummaryBySlug(map);
+      } catch (err) {
+        if (!cancelled) {
+          console.error("Error loading review summaries", err);
+        }
+      }
+    }
+
+    loadAllSummaries();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <section
@@ -1564,11 +1622,13 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                       <div className="mt-2 flex flex-col items-center text-[12px] text-neutral-300">
                         <div className="flex items-center gap-2">
                           {(() => {
-                            const summary = DEFAULT_REVIEW_SUMMARY[
-                              card.slug
-                            ] || { avg: 0, count: 0 };
+                            const summary = summaryBySlug[card.slug] || {
+                              avg: 0,
+                              count: 0,
+                            };
                             const avg = summary.avg ?? 0;
                             const count = summary.count ?? 0;
+
                             return (
                               <>
                                 <span className="text-amber-300 font-semibold tabular-nums">
@@ -1602,17 +1662,20 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                                             />
                                           </clipPath>
                                         </defs>
+                                        {/* base */}
                                         <path
                                           d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
                                           className="text-neutral-800"
                                           fill="currentColor"
                                         />
+                                        {/* amber fill */}
                                         <path
                                           d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
                                           className="text-amber-400"
                                           fill="currentColor"
                                           clipPath={`url(#${clipId})`}
                                         />
+                                        {/* outline */}
                                         <path
                                           d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
                                           fill="none"
@@ -1731,12 +1794,13 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     <div className="mt-3 flex flex-col text-[13px] text-neutral-400">
                       <div className="flex items-center gap-2">
                         {(() => {
-                          const summary = DEFAULT_REVIEW_SUMMARY[card.slug] || {
+                          const summary = summaryBySlug[card.slug] || {
                             avg: 0,
                             count: 0,
                           };
                           const avg = summary.avg ?? 0;
                           const count = summary.count ?? 0;
+
                           return (
                             <>
                               <span className="text-amber-300 font-semibold tabular-nums">

@@ -493,16 +493,16 @@ function RoastMegaCard({
 
     async function loadStats() {
       try {
-        console.log("Loading stats for", card.slug, "productId =", productId);
-
         const res = await fetch(
           `/api/get-reviews?shopifyProductId=${encodeURIComponent(productId)}`
         );
+
         if (!res.ok) {
           console.error("Failed to load review stats", await res.text());
           if (!cancelled) setStats(null);
           return;
         }
+
         const data = await res.json();
         const reviews: any[] = Array.isArray(data.reviews) ? data.reviews : [];
 
@@ -564,7 +564,6 @@ function RoastMegaCard({
           {card.subTitle}
         </div>
 
-        {/* Stars + count from Judge.me */}
         {stats && (
           <div className="mt-1 flex items-center gap-1 text-[0.7rem] text-amber-300">
             <span>★ {stats.avg.toFixed(1)}</span>
@@ -2732,7 +2731,6 @@ function RoastDetailPage() {
 
   // review data used for stars + counts beside the subtitle and in the histogram
 
-  // Extend your existing type if needed
   type Review = {
     id: string;
     name: string;
@@ -2742,7 +2740,7 @@ function RoastDetailPage() {
     body?: string;
 
     verified?: boolean; // true when coming from Judge.me or your checkout pipeline
-    source?: "seed" | "judge";
+    source?: "judge";
   };
 
   type ReviewStats = {
@@ -2752,8 +2750,6 @@ function RoastDetailPage() {
   };
 
   const shopifyProductId = PRODUCT_IDS_BY_SLUG[card.slug];
-
-  // ---------- 2) Helpers: compute stats and choose seed vs verified ----------
 
   function computeStats(list: Review[]): ReviewStats {
     const count = list.length;
@@ -2769,7 +2765,6 @@ function RoastDetailPage() {
     return { avg, count, breakdown };
   }
 
-  // ---------- 2) Load reviews from our /api/get-reviews (Judge.me) ----------
   const [reviewList, setReviewList] = useState<Review[]>([]);
   const [reviewData, setReviewData] = useState<ReviewStats>(() =>
     computeStats([])
@@ -2820,100 +2815,8 @@ function RoastDetailPage() {
 
   const hasReviews = reviewData.count > 0;
 
-  const reviews: Review[] = (() => {
-    // Stable per product per day (doesn't reshuffle on every render)
-    const handle = String(card.slug ?? "unknown");
-    const d = new Date();
-    const dayKey = `${d.getUTCFullYear()}-${
-      d.getUTCMonth() + 1
-    }-${d.getUTCDate()}`;
-
-    // Tiny seeded RNG + shuffle (scoped here so we don't touch the rest of your file)
-    function cyrb53(str: string, seed = 0) {
-      let h1 = 0xdeadbeef ^ seed,
-        h2 = 0x41c6ce57 ^ seed;
-      for (let i = 0, ch; i < str.length; i++) {
-        ch = str.charCodeAt(i);
-        h1 = Math.imul(h1 ^ ch, 2654435761);
-        h2 = Math.imul(h2 ^ ch, 1597334677);
-      }
-      h1 =
-        Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^
-        Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-      h2 =
-        Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^
-        Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-      return 4294967296 * (2097151 & h2) + (h1 >>> 0);
-    }
-    function mulberry32(a: number) {
-      return function () {
-        a |= 0;
-        a = (a + 0x6d2b79f5) | 0;
-        let t = Math.imul(a ^ (a >>> 15), 1 | a);
-        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-      };
-    }
-    function seededShuffle<T>(arr: T[], rng: () => number): T[] {
-      const a = arr.slice();
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(rng() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-    function interleaveNatural<T>(
-      commented: T[],
-      starsOnly: T[],
-      rng: () => number,
-      maxRun = 3
-    ): T[] {
-      const out: T[] = [];
-      let c = 0,
-        s = 0,
-        last: "c" | "s" | null = null,
-        run = 0;
-      while (c < commented.length || s < starsOnly.length) {
-        const cLeft = commented.length - c;
-        const sLeft = starsOnly.length - s;
-        let pComment = cLeft / Math.max(1, cLeft + sLeft);
-        if (last === "c" && run >= maxRun) pComment = 0.15;
-        if (last === "s" && run >= maxRun) pComment = 0.85;
-        const pickComment =
-          cLeft > 0 && sLeft > 0 ? rng() < pComment : cLeft > 0 ? true : false;
-        if (pickComment && cLeft > 0) {
-          out.push(commented[c++]);
-          last === "c" ? run++ : ((last = "c"), (run = 1));
-        } else if (sLeft > 0) {
-          out.push(starsOnly[s++]);
-          last === "s" ? run++ : ((last = "s"), (run = 1));
-        } else {
-          out.push(commented[c++]);
-          last === "c" ? run++ : ((last = "c"), (run = 1));
-        }
-      }
-      return out;
-    }
-
-    const seed = cyrb53(`${handle}:${dayKey}`);
-    const rng = mulberry32(seed);
-
-    const commented = reviewList.filter(
-      (r) => r.body && r.body.trim().length > 0
-    );
-    const starsOnly = reviewList.filter(
-      (r) => !r.body || r.body.trim().length === 0
-    );
-
-    const mix = interleaveNatural(
-      seededShuffle(commented, rng),
-      seededShuffle(starsOnly, rng),
-      rng,
-      3
-    );
-
-    return mix;
-  })();
+  // Order used in the UI - currently just raw Judge.me list
+  const reviews: Review[] = reviewList;
 
   const { add } = useCart();
   const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("one");

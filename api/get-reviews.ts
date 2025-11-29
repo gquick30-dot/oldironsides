@@ -59,20 +59,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const reviewsJson = await reviewsResp.json();
 
     // Normalize a bit
-    const normalized = (reviewsJson?.reviews ?? []).map((r: any) => ({
-      id: String(r.id),
-      name:
-        r.reviewer_name || // common field from Judge.me API
-        r.reviewer?.name || // some endpoints nest it
-        r.name || // fallback if they already format it
-        "Verified Buyer", // last-resort default
-      date: r.created_at,
-      rating: r.rating,
-      title: r.title,
-      body: r.body,
-      verified: true,
-      source: "judge" as const,
-    }));
+    const normalized = (reviewsJson?.reviews ?? []).map((r: any) => {
+      const rawName =
+        r.reviewer_name || r.reviewer?.name || r.name || "Verified Buyer";
+
+      // Format as "First L."
+      let displayName = rawName;
+      if (rawName && rawName !== "Verified Buyer") {
+        const parts = String(rawName).trim().split(/\s+/);
+        if (parts.length === 1) {
+          displayName = parts[0];
+        } else {
+          const first = parts[0];
+          const last = parts[parts.length - 1];
+          displayName = `${first} ${last[0]}.`;
+        }
+      }
+
+      return {
+        id: String(r.id),
+        name: displayName,
+        date: r.created_at,
+        rating: r.rating,
+        title: r.title,
+        body: r.body,
+        verified: true,
+        source: "judge" as const,
+      };
+    });
 
     return res.status(200).json({ reviews: normalized });
   } catch (err: any) {

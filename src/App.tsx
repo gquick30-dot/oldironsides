@@ -8399,38 +8399,43 @@ function SubscribeManagePage({
     e.preventDefault();
     setError("");
     setLoading(true);
+
     const fd = new FormData(e.currentTarget);
     const email = String(fd.get("email") || "");
     const password = String(fd.get("password") || "");
 
     try {
-      if (!emailOk(email) || !password)
+      if (!emailOk(email) || !password) {
         throw new Error("Check your email and password.");
+      }
 
-      // REAL INTEGRATION:
-      // const resp = await fetch("/api/account/login", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ email, password }),
-      // });
-      // if (!resp.ok) throw new Error("Login failed.");
-      // const data = await resp.json();
-      // localStorage.setItem("oi_user", JSON.stringify(data.customer));
-      // localStorage.setItem("oi_token", data.accessToken);
-      // setUser(data.customer);
+      const resp = await fetch("/api/account-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-      // TEMP MOCK
-      await new Promise((r) => setTimeout(r, 400));
-      const mockCustomer = {
-        id: "c1",
-        email,
-        name: email.split("@")[0],
-      };
-      localStorage.setItem("oi_user", JSON.stringify(mockCustomer));
-      localStorage.setItem("oi_token", "mock_token");
-      setUser(mockCustomer);
+      const text = await resp.text();
+      console.log("[account-login] raw response:", text);
 
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error("Login server returned invalid response.");
+      }
+
+      if (!resp.ok) {
+        throw new Error(data?.error || "Login failed.");
+      }
+
+      // data: { accessToken, user }
+      localStorage.setItem("oi_user", JSON.stringify(data.user));
+      localStorage.setItem("oi_token", data.accessToken);
+
+      setUser(data.user);
       setTab("overview");
+
       window.dispatchEvent(
         new CustomEvent("flash", { detail: "Welcome back." })
       );
@@ -8806,7 +8811,7 @@ function SubscribeManagePage({
                     {s.product}
                   </div>
                   <div className="text-sm text-neutral-400">
-                    • Next delivery: {s.nextCharge}
+                    • Next ship date: {s.nextCharge}
                   </div>
                   <div className="text-sm text-neutral-400">
                     • {s.frequency}

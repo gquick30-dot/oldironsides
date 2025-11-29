@@ -2636,549 +2636,14 @@ function RoastDetailPage() {
     count: number;
     breakdown: Record<number, number>;
   };
-
-  // ---------- 1) Seeded reviews (5–20 per product), written to sound human ----------
-
-  // ---------- 1) Seeded reviews (mixed order, ~30–40% with text) ----------
-  const SEEDED: Record<string, Review[]> = {
-    // FLAGSHIP
-    flagship: [
-      {
-        id: "f8",
-        name: "Ryan C.",
-        date: "September 28, 2025",
-        rating: 5,
-        title: "Perfect Morning Brew",
-        body: "Perfect morning coffee.",
-        source: "seed",
-      },
-      {
-        id: "f3",
-        name: "Paul",
-        date: "October 7, 2025",
-        rating: 4,
-        title: "Solid Medium Roast",
-        body: "Really balanced cup. I’d order it again. Only thing is I wish shipping was a little faster but the roast itself is great.",
-        source: "seed",
-      },
-      {
-        id: "f14",
-        name: "S.R.",
-        date: "September 16, 2025",
-        rating: 5,
-        title: "Love This Roast!",
-        body: "Love this roast!",
-        source: "seed",
-      },
-      {
-        id: "f1",
-        name: "Jacob S.",
-        date: "October 12, 2025",
-        rating: 5,
-        title: "Steady and Smooth",
-        body: "Smooth every single time. No bitterness at all. I drink it black and it goes down clean.",
-        source: "seed",
-      },
-      {
-        id: "f10",
-        name: "Chris",
-        date: "September 25, 2025",
-        rating: 5,
-        title: "Great Every Morning",
-        body: "Great coffee.",
-        source: "seed",
-      },
-      {
-        id: "f6",
-        name: "K.W.",
-        date: "October 2, 2025",
-        rating: 5,
-        title: "Best Coffee for Work",
-        body: "I brew this at work and people literally come by my desk asking what it is. Smells amazing and tastes even better.",
-        source: "seed",
-      },
-      {
-        id: "f12",
-        name: "Derek",
-        date: "September 20, 2025",
-        rating: 5,
-        title: "Excellent Flavor",
-        body: "Really smooth with cream or without. Flavor holds up and doesn’t go watery.",
-        source: "seed",
-      },
-      {
-        id: "f2",
-        name: "Megan T.",
-        date: "October 9, 2025",
-        rating: 5,
-        title: "Nice Aroma",
-        body: "The smell when you open the bag is insane. Taste is smooth and not acidic at all.",
-        source: "seed",
-      },
-      {
-        id: "f7",
-        name: "V.H.",
-        date: "September 30, 2025",
-        rating: 5,
-        title: "Clean Finish",
-        body: "Super clean finish. No weird aftertaste. This is my new daily coffee.",
-        source: "seed",
-      },
-      {
-        id: "f4",
-        name: "Nate",
-        date: "October 5, 2025",
-        rating: 5,
-        title: "Perfect for the Office",
-        body: "Total hit at work.",
-        source: "seed",
-      },
-      {
-        id: "f11",
-        name: "L.K.",
-        date: "September 23, 2025",
-        rating: 5,
-        title: "Great Taste, Great Price",
-        body: "Smooth, not too acidic, great taste. Way better than grocery store coffee and honestly cheaper than what I was overpaying for before.",
-        source: "seed",
-      },
-      {
-        id: "f16",
-        name: "Trent",
-        date: "September 12, 2025",
-        rating: 5,
-        title: "Always Delicious",
-        body: "Always good.",
-        source: "seed",
-      },
-      {
-        id: "f5",
-        name: "Erika L.",
-        date: "October 4, 2025",
-        rating: 5,
-        title: "Great Taste, No Complaints",
-        body: "No bitterness at all. I drink it black and it’s just smooth and easy. Zero aftertaste.",
-        source: "seed",
-      },
-      {
-        id: "f15",
-        name: "A.M.",
-        date: "September 14, 2025",
-        rating: 4,
-        title: "The Best Medium Roast",
-        body: "This is my go-to medium roast now. Really balanced and not harsh. I’d love to see them add a light roast too.",
-        source: "seed",
-      },
-      {
-        id: "f13",
-        name: "Owen",
-        date: "September 18, 2025",
-        rating: 5,
-        title: "Excellent All-Around",
-        body: "New favorite.",
-        source: "seed",
-      },
-      {
-        id: "f9",
-        name: "Amanda G.",
-        date: "September 27, 2025",
-        rating: 4,
-        title: "A Great Classic",
-        body: "This one became my normal morning cup fast. Super consistent. Only complaint is I wish the bag was bigger.",
-        source: "seed",
-      },
-    ],
-
-    // BAPTISM BY FIRE
-    "baptism-by-fire": [
-      {
-        id: "b8",
-        name: "Helen",
-        date: "September 27, 2025",
-        rating: 5,
-        title: "Bold and Smooth",
-        body: "Was not a dark roast person until this. Bold but not burnt tasting. I actually drink this black.",
-        source: "seed",
-      },
-      {
-        id: "b3",
-        name: "N.F.",
-        date: "October 6, 2025",
-        rating: 4,
-        title: "Perfect Dark Roast",
-        body: "Best dark roast I’ve had.",
-        source: "seed",
-      },
-      {
-        id: "b10",
-        name: "Zack",
-        date: "September 24, 2025",
-        rating: 5,
-        title: "Best Dark Roast",
-        body: "Dark, rich, smooth. No bitterness at all. This is exactly what I want in a dark roast.",
-        source: "seed",
-      },
-      {
-        id: "b6",
-        name: "Cara S.",
-        date: "October 1, 2025",
-        rating: 5,
-        title: "Smooth and Bold",
-        body: "Crazy smooth.",
-        source: "seed",
-      },
-      {
-        id: "b1",
-        name: "Tom",
-        date: "October 10, 2025",
-        rating: 5,
-        title: "Deep, Rich Flavor",
-        body: "Strong without going bitter. You get that heavy, rich taste but it still finishes smooth. Wakes me up fast.",
-        source: "seed",
-      },
-      {
-        id: "b12",
-        name: "P.Q.",
-        date: "September 20, 2025",
-        rating: 4,
-        title: "Perfectly Dark",
-        body: "Really nice deep roast. Bold, kind of chocolatey, and not burnt. I’d buy again.",
-        source: "seed",
-      },
-      {
-        id: "b2",
-        name: "Sarah",
-        date: "October 8, 2025",
-        rating: 5,
-        title: "Love the Richness",
-        body: "That dark chocolate note is legit. I drink this after dinner like dessert.",
-        source: "seed",
-      },
-      {
-        id: "b13",
-        name: "G.L.",
-        date: "September 18, 2025",
-        rating: 5,
-        title: "Great Dark Roast",
-        body: "Super smooth dark roast.",
-        source: "seed",
-      },
-      {
-        id: "b4",
-        name: "Jose M.",
-        date: "October 4, 2025",
-        rating: 5,
-        title: "Rich and Flavorful",
-        body: "Deep roast flavor without that burnt taste you get in a lot of dark coffee. Very clean finish.",
-        source: "seed",
-      },
-      {
-        id: "b7",
-        name: "Walt",
-        date: "September 29, 2025",
-        rating: 4,
-        title: "Amazing Dark Roast",
-        body: "I add a splash of milk and it’s perfect. Bold but not harsh. I’ll keep buying this one.",
-        source: "seed",
-      },
-      {
-        id: "b14",
-        name: "Mike B.",
-        date: "September 16, 2025",
-        rating: 5,
-        title: "Fantastic Dark Roast",
-        body: "So smooth.",
-        source: "seed",
-      },
-      {
-        id: "b11",
-        name: "Anna",
-        date: "September 22, 2025",
-        rating: 5,
-        title: "Perfect for Dark Roast Lovers",
-        body: "If you’re into dark coffee, this is it. Rich, smooth, zero bitterness. I’m getting more.",
-        source: "seed",
-      },
-      {
-        id: "b5",
-        name: "E.J.",
-        date: "October 3, 2025",
-        rating: 5,
-        title: "Not Too Bitter",
-        body: "Bold but not bitter.",
-        source: "seed",
-      },
-      {
-        id: "b9",
-        name: "Ivy",
-        date: "September 26, 2025",
-        rating: 5,
-        title: "Love This Roast",
-        body: "Best dark roast ever.",
-        source: "seed",
-      },
-    ],
-
-    // JAVA ACTION
-    "java-action": [
-      {
-        id: "j10",
-        name: "Rae",
-        date: "September 25, 2025",
-        rating: 5,
-        title: "Great for the Morning",
-        body: "Light caramel taste, super smooth, easy first cup. Not harsh at all.",
-        source: "seed",
-      },
-      {
-        id: "j4",
-        name: "T.B.",
-        date: "October 5, 2025",
-        rating: 5,
-        title: "Love the Hazelnut Taste",
-        body: "Love this flavor.",
-        source: "seed",
-      },
-      {
-        id: "j7",
-        name: "Iris",
-        date: "September 29, 2025",
-        rating: 5,
-        title: "Full Body, Smooth Finish",
-        body: "Full body but still smooth. You get a tiny caramel note at the end that’s actually really nice.",
-        source: "seed",
-      },
-      {
-        id: "j3",
-        name: "O.H.",
-        date: "October 6, 2025",
-        rating: 4,
-        title: "Easy to Drink",
-        body: "Easy to drink.",
-        source: "seed",
-      },
-      {
-        id: "j13",
-        name: "Tim",
-        date: "September 19, 2025",
-        rating: 4,
-        title: "Great for Sharing",
-        body: "I made a pot when people were over and everyone asked what coffee it was. Zero leftovers. That kinda sold me.",
-        source: "seed",
-      },
-      {
-        id: "j2",
-        name: "Jen L.",
-        date: "October 7, 2025",
-        rating: 5,
-        title: "Smooth and Delicious",
-        body: "No bitterness at all. Just smooth and a little caramel at the end. Super easy cup.",
-        source: "seed",
-      },
-      {
-        id: "j11",
-        name: "L.V.",
-        date: "September 23, 2025",
-        rating: 5,
-        title: "A Perfect Cup",
-        body: "Perfect morning coffee.",
-        source: "seed",
-      },
-      {
-        id: "j8",
-        name: "Caleb D.",
-        date: "September 28, 2025",
-        rating: 5,
-        title: "Great Flavor!",
-        body: "Hazelnut and caramel are there but not fake or syrupy. Just smooth, good coffee.",
-        source: "seed",
-      },
-      {
-        id: "j1",
-        name: "Mark",
-        date: "October 9, 2025",
-        rating: 5,
-        title: "Easy Favorite",
-        body: "My favorite one.",
-        source: "seed",
-      },
-      {
-        id: "j6",
-        name: "S.W.",
-        date: "October 1, 2025",
-        rating: 4,
-        title: "Perfect Balance",
-        body: "Right in the middle for me. Not too light, not too strong. Very steady cup and not acidic.",
-        source: "seed",
-      },
-      {
-        id: "j15",
-        name: "Cole",
-        date: "September 15, 2025",
-        rating: 5,
-        title: "Very Pleasant",
-        body: "Really smooth.",
-        source: "seed",
-      },
-      {
-        id: "j5",
-        name: "G.P.",
-        date: "October 3, 2025",
-        rating: 5,
-        title: "Smooth and Tasty",
-        body: "Great taste.",
-        source: "seed",
-      },
-      {
-        id: "j14",
-        name: "Maya",
-        date: "September 17, 2025",
-        rating: 5,
-        title: "Great Cup",
-        body: "No weird aftertaste. Just clean and easy. I’ve been drinking this every day.",
-        source: "seed",
-      },
-      {
-        id: "j12",
-        name: "Becca Y.",
-        date: "September 21, 2025",
-        rating: 5,
-        title: "Crowd Favorite",
-        body: "Everyone loves this one at my house. No complaints from anybody.",
-        source: "seed",
-      },
-      {
-        id: "j9",
-        name: "N.M.",
-        date: "September 26, 2025",
-        rating: 4,
-        title: "Balanced and Smooth",
-        body: "Really smooth cup. Could be a touch stronger, but still super drinkable.",
-        source: "seed",
-      },
-    ],
-
-    // OAK & COPPER
-    "oak-and-copper": [
-      {
-        id: "o10",
-        name: "I.D.",
-        date: "September 28, 2025",
-        rating: 5,
-        title: "Love the Oak Flavor",
-        body: "Oak and caramel come through and it’s still smooth. Slightly sweet finish, not fake sweet. I’m into it.",
-        source: "seed",
-      },
-      {
-        id: "o3",
-        name: "Harper",
-        date: "October 8, 2025",
-        rating: 4,
-        title: "Bourbon Barrel Taste",
-        body: "Great barrel flavor.",
-        source: "seed",
-      },
-      {
-        id: "o6",
-        name: "S.R.",
-        date: "October 4, 2025",
-        rating: 5,
-        title: "Great for Weekend Mornings",
-        body: "Weekend coffee for sure. Just smooth, little vanilla note, little oak at the end. Chill and slow kind of cup.",
-        source: "seed",
-      },
-      {
-        id: "o1",
-        name: "Quinn P.",
-        date: "October 11, 2025",
-        rating: 5,
-        title: "Smooth with a Kick",
-        body: "Super smooth.",
-        source: "seed",
-      },
-      {
-        id: "o12",
-        name: "Zoe",
-        date: "September 24, 2025",
-        rating: 5,
-        title: "Amazing Flavor",
-        body: "I drink this after dinner. Slight sweetness, oak finish, really calm and warm cup. I love it at night.",
-        source: "seed",
-      },
-      {
-        id: "o4",
-        name: "Kurt E.",
-        date: "October 7, 2025",
-        rating: 5,
-        title: "Subtle Bourbon Flavor",
-        body: "Not fake sweet, not overpowering. You can tell it was barrel aged in a good way.",
-        source: "seed",
-      },
-      {
-        id: "o9",
-        name: "Mia C.",
-        date: "September 30, 2025",
-        rating: 4,
-        title: "Smooth and Balanced",
-        body: "Smooth and mellow.",
-        source: "seed",
-      },
-      {
-        id: "o2",
-        name: "Dana",
-        date: "October 9, 2025",
-        rating: 5,
-        title: "Wonderful Oak Finish",
-        body: "That oak note at the end is perfect. Super smooth even with a splash of cream.",
-        source: "seed",
-      },
-      {
-        id: "o7",
-        name: "Y.T.",
-        date: "October 3, 2025",
-        rating: 5,
-        title: "Great for Coffee Lovers",
-        body: "So smooth.",
-        source: "seed",
-      },
-      {
-        id: "o11",
-        name: "Nora",
-        date: "September 26, 2025",
-        rating: 5,
-        title: "Rich and Flavorful",
-        body: "Little vanilla, little oak, just super rich and warming. Honestly kind of addicting.",
-        source: "seed",
-      },
-      {
-        id: "o5",
-        name: "E.F.",
-        date: "October 6, 2025",
-        rating: 5,
-        title: "Perfectly Aged",
-        body: "Really well balanced.",
-        source: "seed",
-      },
-      {
-        id: "o13",
-        name: "Eli",
-        date: "September 22, 2025",
-        rating: 4,
-        title: "Nice Oak Note",
-        body: "Smooth, a little sweet, not bitter. Super easy drinker.",
-        source: "seed",
-      },
-      {
-        id: "o8",
-        name: "V.K.",
-        date: "October 2, 2025",
-        rating: 5,
-        title: "Great for Coffee Enthusiasts",
-        body: "New favorite.",
-        source: "seed",
-      },
-    ],
+  // Map roast slugs to Shopify product IDs (numeric IDs are fine)
+  const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
+    flagship: "1234567890", // TODO: replace with real Shopify product ID
+    "baptism-by-fire": "1234567891", // "
+    "java-action": "1234567892", // "
+    "oak-and-copper": "1234567893", // "
   };
+  const shopifyProductId = PRODUCT_IDS_BY_SLUG[card.slug];
 
   // ---------- 2) Helpers: compute stats and choose seed vs verified ----------
 
@@ -3196,54 +2661,56 @@ function RoastDetailPage() {
     return { avg, count, breakdown };
   }
 
-  // Use Judge.me injected reviews if present. No more seeded fallback.
-  const injected = useMemo(
-    () =>
-      (typeof window !== "undefined"
-        ? window.__REVIEWS__?.[card.slug]
-        : undefined) ?? {},
-    [card.slug]
+  // ---------- 2) Load reviews from our /api/get-reviews (Judge.me) ----------
+  const [reviewList, setReviewList] = useState<Review[]>([]);
+  const [reviewData, setReviewData] = useState<ReviewStats>(() =>
+    computeStats([])
   );
 
-  const injectedList: Review[] = Array.isArray(injected.list)
-    ? injected.list
-    : [];
+  useEffect(() => {
+    if (!shopifyProductId) {
+      setReviewList([]);
+      setReviewData(computeStats([]));
+      return;
+    }
 
-  const injectedStats: ReviewStats | undefined = injected.stats;
+    const controller = new AbortController();
 
-  const hasInjected = injectedList.length > 0 && !!injectedStats;
+    async function loadReviews() {
+      try {
+        const res = await fetch(
+          `/api/get-reviews?shopifyProductId=${encodeURIComponent(
+            shopifyProductId
+          )}`,
+          { signal: controller.signal }
+        );
 
-  // Final list and stats the UI will render (Judge.me only)
-  const reviewList: Review[] = hasInjected ? injectedList : [];
+        if (!res.ok) {
+          console.error("Failed to load reviews", await res.text());
+          setReviewList([]);
+          setReviewData(computeStats([]));
+          return;
+        }
 
-  const reviewData: ReviewStats = hasInjected
-    ? injectedStats!
-    : { avg: 0, count: 0, breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } };
+        const data = await res.json();
+        const list: Review[] = Array.isArray(data.reviews) ? data.reviews : [];
+
+        setReviewList(list);
+        setReviewData(computeStats(list));
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        console.error("Error loading reviews", err);
+        setReviewList([]);
+        setReviewData(computeStats([]));
+      }
+    }
+
+    loadReviews();
+
+    return () => controller.abort();
+  }, [shopifyProductId]);
 
   const hasReviews = reviewData.count > 0;
-
-  // ---------- 3) Optional: listen for Judge.me updates and re-render ----------
-
-  useEffect(() => {
-    const onUpdate = () => {
-      // If your app dispatches this after writing window.__REVIEWS__, React will re-run useMemo hooks.
-      // If you store these in state instead of consts, call setState here.
-      // This no-op triggers a state change by updating a dummy key if you need it.
-    };
-    window.addEventListener("reviews:updated", onUpdate);
-    return () => window.removeEventListener("reviews:updated", onUpdate);
-  }, []);
-
-  // ---------- 4) Mount point Judge.me can target (place near your reviews section) ----------
-  // <div id="reviews-widget" data-product-handle={card.slug} className="mt-6" />
-  //
-  // Your Judge.me loader should:
-  // 1) read data-product-handle
-  // 2) fetch verified reviews
-  // 3) set window.__REVIEWS__[handle] = { stats: {...}, list: [...] } with verified:true on each
-  // 4) dispatchEvent(new Event("reviews:updated"))
-  //
-  // Until then, the seeded reviews above render so your pages are not empty.
 
   const reviews: Review[] = (() => {
     // Stable per product per day (doesn't reshuffle on every render)

@@ -60,12 +60,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Normalize a bit
     const normalized = (reviewsJson?.reviews ?? []).map((r: any) => ({
-      id: r.id,
+      id: String(r.id),
+      name: r.reviewer_name,
+      date: r.created_at, // <-- this feeds r.date in your UI
       rating: r.rating,
       title: r.title,
       body: r.body,
-      reviewer_name: r.reviewer_name,
-      created_at: r.created_at,
+      verified: true,
+      source: "judge" as const,
     }));
 
     return res.status(200).json({ reviews: normalized });

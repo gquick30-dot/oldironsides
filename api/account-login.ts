@@ -88,9 +88,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const accessToken = createResult?.customerAccessToken?.accessToken;
 
     if (!accessToken || errors.length) {
-      res
-        .status(401)
-        .json({ error: errors[0]?.message || "Invalid email or password." });
+      res.status(401).json({
+        error: errors[0]?.message || "Invalid email or password.",
+        debug: loginJson,
+      });
       return;
     }
 

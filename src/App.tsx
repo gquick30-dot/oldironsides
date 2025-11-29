@@ -479,10 +479,10 @@ function RoastMegaCard({
 
   // USE THE SAME IDS YOU PUT IN RoastDetailPage
   const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
-    flagship: "FLAGSHIP_ID_HERE",
-    "baptism-by-fire": "BAPTISM_ID_HERE",
-    "java-action": "JAVA_ID_HERE",
-    "oak-and-copper": "OAK_ID_HERE",
+    flagship: "9141081276637",
+    "baptism-by-fire": "9192531853533",
+    "java-action": "9192548663517",
+    "oak-and-copper": "9192552104157",
   };
 
   React.useEffect(() => {

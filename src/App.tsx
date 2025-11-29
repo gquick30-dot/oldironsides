@@ -9443,7 +9443,7 @@ function CartPage() {
           </div>
         ) : (
           <div className="mt-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-10 text-center">
-            <p className="text-neutral-400">
+            <p className="text-neutral-400 text-xl">
               No items yet. Sail back to the{" "}
               <Link to="/store" className="text-amber-300 hover:underline">
                 Harbor
@@ -10499,10 +10499,19 @@ function Layout() {
   >(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileCartOpen, setMobileCartOpen] = useState(false);
+  const [desktopCartOpen, setDesktopCartOpen] = useState(false);
 
   // Open the cart drawer when other code dispatches 'oi-open-cart'
   useEffect(() => {
-    const onOpen = () => setMobileCartOpen(true);
+    const onOpen = () => {
+      if (typeof window !== "undefined" && window.innerWidth < 768) {
+        // mobile
+        setMobileCartOpen(true);
+      } else {
+        // desktop / tablet
+        setDesktopCartOpen(true);
+      }
+    };
     window.addEventListener("oi-open-cart", onOpen);
     return () => window.removeEventListener("oi-open-cart", onOpen);
   }, []);
@@ -10515,12 +10524,13 @@ function Layout() {
   useEffect(() => {
     setOpenMega(null);
   }, [location.pathname, location.search, location.hash]);
-  // lock body scroll when mobile menu is open
+
+  // lock body scroll when any drawer is open (mobile menu, mobile cart, desktop cart)
   useEffect(() => {
-    const lock = mobileOpen || mobileCartOpen; // include cart drawer
+    const lock = mobileOpen || mobileCartOpen || desktopCartOpen;
     document.body.style.overflow = lock ? "hidden" : "";
     document.body.style.touchAction = lock ? "none" : "";
-  }, [mobileOpen, mobileCartOpen]);
+  }, [mobileOpen, mobileCartOpen, desktopCartOpen]);
 
   // Inline subscribe state for Origins mega panel
   const [mmEmail, setMmEmail] = useState("");
@@ -10801,9 +10811,10 @@ function Layout() {
                 onMouseEnter={cancelClose}
                 onMouseLeave={scheduleClose}
               >
-                {/* CHEST pinned right */}
-                <Link
-                  to="/cart"
+                {/* CHEST pinned right (desktop drawer trigger) */}
+                <button
+                  type="button"
+                  onClick={() => setDesktopCartOpen(true)}
                   className="hidden md:flex items-center gap-3 h-11 px-4 rounded-xl
           ring-1 ring-amber-400/60 bg-neutral-900/60 text-amber-300
           hover:bg-amber-400 hover:text-neutral-900 transition shadow-lg
@@ -10820,7 +10831,7 @@ function Layout() {
                   <span className="pl-3 font-bold tabular-nums text-lg">
                     {count ?? 0}
                   </span>
-                </Link>
+                </button>
 
                 {/* desktop nav */}
                 <nav className="hidden md:flex justify-center">
@@ -11201,7 +11212,13 @@ function Layout() {
           />
         </div>
       )}
-      {/* Mobile Cart Drawer mounted on /cart only */}
+
+      {/* Desktop Cart Drawer */}
+      {desktopCartOpen && (
+        <DesktopCartSheet onClose={() => setDesktopCartOpen(false)} />
+      )}
+
+      {/* Mobile Cart Drawer */}
       {mobileCartOpen && (
         <MobileCartSheet onClose={() => setMobileCartOpen(false)} />
       )}
@@ -11566,6 +11583,707 @@ function AppShell() {
     </>
   );
 }
+// ===== DESKTOP CART SLIDE-OVER (right -> left, 420px) =====
+function DesktopCartSheet({ onClose }: { onClose: () => void }) {
+  const {
+    cart,
+    inc,
+    dec,
+    remove,
+    updateItem,
+    getSubPrice,
+    subtotal,
+    total,
+    coffeeBagCount,
+    freeShippingThreshold,
+    freeShippingQualified,
+    shippingLabel,
+  } = useCart();
+
+  const navigate = useNavigate();
+
+  const isLoggedIn = React.useMemo(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return !!localStorage.getItem("oi_user");
+    } catch {
+      return false;
+    }
+  }, []);
+
+  const hasSubscription = cart.some((i: any) => !!i.isSubscription);
+
+  // drawer open/close
+  const [open, setOpen] = React.useState(false);
+  React.useEffect(() => setOpen(true), []);
+
+  // per-item sub frequency (14/30/60)
+  const [freq, setFreq] = React.useState<Record<string, number>>({});
+  const [showSubChooser, setShowSubChooser] = React.useState<
+    Record<string, boolean>
+  >({});
+  const [manageSubOpen, setManageSubOpen] = React.useState<
+    Record<string, boolean>
+  >({});
+
+  const getFreq = (id: string, fallback?: number) => freq[id] ?? fallback ?? 30;
+
+  // modals / banners
+  const [showRoastInfo, setShowRoastInfo] = React.useState(false);
+  const [checkingOut, setCheckingOut] = React.useState(false);
+  const [showSubGate, setShowSubGate] = React.useState(false);
+
+  // roast timer (reuse ET helpers)
+  const nowET = useEtNow(45000);
+  const { state, roastMonday, cutoff } = getRoastState(nowET);
+  const dateLabel = formatEtDate(roastMonday);
+  let left = "";
+  if (state === "countdown" && cutoff) {
+    const diff = cutoff.diff(nowET, ["days", "hours", "minutes"]).toObject();
+    const d = Math.max(0, Math.floor(diff.days ?? 0));
+    const h = Math.max(0, Math.floor(diff.hours ?? 0));
+    const m = Math.max(0, Math.floor(diff.minutes ?? 0));
+    left = `${d}d ${h}h ${m}m`;
+  }
+
+  const bagsLeft = Math.max(0, freeShippingThreshold - coffeeBagCount);
+
+  const handleCheckout = async () => {
+    if (checkingOut) return;
+    setCheckingOut(true);
+
+    if (hasSubscription && !isLoggedIn) {
+      setShowSubGate(true);
+      setCheckingOut(false);
+      return;
+    }
+
+    try {
+      const { id: cartId } = await ensureCart();
+
+      // Build desired state from local cart, including sellingPlanId if present
+      const desired: Array<{
+        merchandiseId: string;
+        quantity: number;
+        sellingPlanId?: string;
+      }> = [];
+
+      for (const i of cart ?? []) {
+        const v = i?.merchandiseId;
+        const q = Math.max(0, Math.min(99, Number(i?.qty ?? 0)));
+        const sp =
+          typeof i?.sellingPlanId === "string" && i.sellingPlanId.length > 0
+            ? i.sellingPlanId
+            : undefined;
+
+        if (v && q > 0) {
+          desired.push({ merchandiseId: v, quantity: q, sellingPlanId: sp });
+        }
+      }
+
+      const sf = await getCart(cartId);
+      const existingLineIds =
+        sf?.lines?.edges
+          ?.map((e: any) => String(e?.node?.id))
+          .filter(Boolean) ?? [];
+      if (existingLineIds.length) {
+        await cartLinesRemove({ cartId, lineIds: existingLineIds });
+      }
+
+      if (desired.length === 0) {
+        window.dispatchEvent(
+          new CustomEvent("flash", { detail: "Your cart is empty." })
+        );
+        setCheckingOut(false);
+        return;
+      }
+
+      // Merge by (variant, sellingPlanId)
+      const byKey = new Map<
+        string,
+        { merchandiseId: string; sellingPlanId?: string; quantity: number }
+      >();
+
+      for (const d of desired) {
+        const key = `${d.merchandiseId}::${d.sellingPlanId ?? "one"}`;
+        const existing = byKey.get(key);
+        if (existing) {
+          existing.quantity += d.quantity;
+        } else {
+          byKey.set(key, {
+            merchandiseId: d.merchandiseId,
+            sellingPlanId: d.sellingPlanId,
+            quantity: d.quantity,
+          });
+        }
+      }
+
+      for (const { merchandiseId, sellingPlanId, quantity } of byKey.values()) {
+        await cartLinesAdd({
+          cartId,
+          merchandiseId,
+          quantity,
+          ...(sellingPlanId ? { sellingPlanId } : {}),
+        });
+      }
+
+      const fresh = await getCart(cartId);
+
+      const url: string | undefined = fresh?.checkoutUrl;
+      if (
+        !url ||
+        !/^https?:\/\/[^\/]+\.myshopify\.com\/(cart|checkouts)\b/i.test(url)
+      ) {
+        console.error("Invalid checkoutUrl:", url, fresh);
+        window.dispatchEvent(
+          new CustomEvent("flash", {
+            detail: "Couldn’t get a valid checkout link. Try again.",
+          })
+        );
+        setCheckingOut(false);
+        return;
+      }
+
+      window.location.assign(url);
+    } catch (e) {
+      console.error(e);
+      window.dispatchEvent(
+        new CustomEvent("flash", { detail: "Checkout failed. See console." })
+      );
+      setCheckingOut(false);
+    }
+  };
+
+  return (
+    <div className="hidden md:flex fixed inset-0 z-[1000002] justify-end items-stretch">
+      {/* BACKDROP */}
+      <button
+        className="flex-1 bg-black/65"
+        onClick={onClose}
+        aria-label="Close cart backdrop"
+      />
+
+      {/* PANEL */}
+      <div
+        className={[
+          "h-full w-full max-w-[420px]",
+          "bg-neutral-950 ring-1 ring-neutral-800 shadow-2xl",
+          "transition-transform duration-200 ease-out",
+          open ? "translate-x-0" : "translate-x-full",
+          "flex flex-col overscroll-contain",
+        ].join(" ")}
+      >
+        {/* HEADER + FREE-SHIPPING BANNER */}
+        <div className="border-b border-neutral-800">
+          <div className="flex items-center justify-between px-4 py-2">
+            <button
+              onClick={onClose}
+              className="text-amber-300 text-2xl font-bold px-1"
+              aria-label="Close cart"
+            >
+              ✕
+            </button>
+
+            <div
+              className="text-base font-extrabold tracking-wider leading-none text-neutral-100"
+              style={{ fontFamily: "'Cinzel', serif" }}
+            >
+              Chest
+            </div>
+            <span className="w-6" />
+          </div>
+
+          <div className="px-4 py-2 bg-amber-400 text-neutral-900">
+            {freeShippingQualified ? (
+              <div className="text-center">
+                <div className="text-[13px] font-extrabold leading-tight">
+                  Congratulations!
+                </div>
+                <div className="text-[13px] font-extrabold leading-tight">
+                  Free Shipping Unlocked!
+                </div>
+              </div>
+            ) : (
+              <div className="text-[13px] font-extrabold text-center">
+                {`Only ${bagsLeft} more bag${
+                  bagsLeft === 1 ? "" : "s"
+                } to unlock free shipping`}
+              </div>
+            )}
+            <div className="mt-2 h-[6px] w-full bg-neutral-200/60 rounded">
+              <div
+                className="h-[6px] bg-neutral-900 rounded"
+                style={{
+                  width: `${Math.min(
+                    100,
+                    Math.round((coffeeBagCount / freeShippingThreshold) * 100)
+                  )}%`,
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* ITEMS */}
+        <div className="flex-1 overflow-y-auto overscroll-contain">
+          {cart.length === 0 ? (
+            <div className="px-6 py-8 text-center text-neutral-400 text-sm">
+              Your chest is empty.
+            </div>
+          ) : (
+            <ul className="divide-y divide-neutral-800">
+              {cart.map((it: any) => {
+                const isSub = !!it?.isSubscription;
+                const price = Number(it.price ?? 0);
+                const selFreq = getFreq(it.id, Number(it?.subEvery ?? 30));
+                const subPrice = getSubPrice({ ...it, subEvery: selFreq });
+
+                return (
+                  <li key={it.id} className="p-3">
+                    <div className="flex items-start gap-3">
+                      <img
+                        src={
+                          it.img &&
+                          (it.img.startsWith("/") || it.img.startsWith("http"))
+                            ? it.img
+                            : "/bag.png"
+                        }
+                        alt=""
+                        width={44}
+                        height={44}
+                        loading="eager"
+                        decoding="async"
+                        fetchPriority="high"
+                        className="w-11 h-11 rounded-md ring-1 ring-neutral-800 object-cover flex-shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <div className="font-semibold text-neutral-100 text-[15px] leading-tight line-clamp-2">
+                              {it.title || "Coffee"}
+                            </div>
+                            <div className="text-[11px] text-neutral-400">
+                              12oz
+                            </div>
+
+                            {isSub && (
+                              <div className="mt-1">
+                                <div className="inline-flex items-center gap-2 text-[10px] text-emerald-400">
+                                  <span className="px-1.5 py-[1px] rounded bg-emerald-900/30 ring-1 ring-emerald-700">
+                                    Subscription
+                                  </span>
+                                  <span>Every {it?.subEvery ?? 30}d</span>
+                                  <button
+                                    onClick={() =>
+                                      setManageSubOpen((prev) => ({
+                                        ...prev,
+                                        [it.id]: !prev[it.id],
+                                      }))
+                                    }
+                                    className="ml-2 text-[10px] text-amber-300 underline underline-offset-2"
+                                  >
+                                    Manage
+                                  </button>
+                                </div>
+
+                                {manageSubOpen[it.id] && (
+                                  <div className="mt-2">
+                                    <div className="mb-2 grid grid-cols-3 gap-2">
+                                      {[14, 30, 60].map((d) => (
+                                        <button
+                                          key={`${it.id}-manage-${d}`}
+                                          onClick={() =>
+                                            setFreq((prev) => ({
+                                              ...prev,
+                                              [it.id]: d,
+                                            }))
+                                          }
+                                          className={[
+                                            "py-1.5 rounded-md text-[12px] font-semibold ring-1",
+                                            (freq[it.id] ??
+                                              it?.subEvery ??
+                                              30) === d
+                                              ? "bg-amber-400 text-neutral-900 ring-amber-400"
+                                              : "bg-neutral-900/60 text-amber-300 ring-amber-400/60",
+                                          ].join(" ")}
+                                        >
+                                          {d} days
+                                        </button>
+                                      ))}
+                                    </div>
+
+                                    <div className="flex gap-2">
+                                      <button
+                                        onClick={() => {
+                                          const newEvery =
+                                            freq[it.id] ?? it?.subEvery ?? 30;
+                                          updateItem(it.id, {
+                                            isSubscription: true,
+                                            purchaseMode: "sub",
+                                            subEvery: newEvery,
+                                            subPrice: getSubPrice({
+                                              ...it,
+                                              subEvery: newEvery,
+                                            }),
+                                          });
+                                          setManageSubOpen((prev) => ({
+                                            ...prev,
+                                            [it.id]: false,
+                                          }));
+                                        }}
+                                        className="flex-1 rounded-md bg-amber-400 text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-amber-300 transition"
+                                      >
+                                        Update
+                                      </button>
+
+                                      <button
+                                        onClick={() => {
+                                          const currentPrice = Number(
+                                            it.price ?? 0
+                                          );
+
+                                          let newPrice = currentPrice;
+
+                                          if (it.basePrice != null) {
+                                            const bp = Number(it.basePrice);
+                                            if (!Number.isNaN(bp) && bp > 0) {
+                                              newPrice = bp;
+                                            }
+                                          } else if (
+                                            !it.subPrice &&
+                                            currentPrice > 0
+                                          ) {
+                                            newPrice =
+                                              Math.round(
+                                                (currentPrice / 0.85) * 100
+                                              ) / 100;
+                                          }
+
+                                          updateItem(it.id, {
+                                            isSubscription: false,
+                                            purchaseMode: "one",
+                                            subEvery: undefined,
+                                            subPrice: undefined,
+                                            price: newPrice,
+                                          });
+
+                                          setManageSubOpen((prev) => ({
+                                            ...prev,
+                                            [it.id]: false,
+                                          }));
+                                        }}
+                                        className="px-3 rounded-md ring-1 ring-amber-400/60 text-amber-300 text-[12px]"
+                                      >
+                                        One-time
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+
+                          <button
+                            onClick={() => remove(it.id)}
+                            className="text-neutral-400 hover:text-amber-300 text-[11px] flex-shrink-0"
+                            aria-label="Remove"
+                          >
+                            Remove
+                          </button>
+                        </div>
+
+                        <div className="mt-1.5 flex items-center justify-between">
+                          <div className="text-amber-300 font-bold text-[13px]">
+                            {isSub
+                              ? `$${subPrice.toFixed(2)}`
+                              : `$${price.toFixed(2)}`}
+                          </div>
+
+                          <div className="inline-flex items-center ring-1 ring-neutral-700 rounded-lg overflow-hidden">
+                            <button
+                              onClick={() => dec(it.id)}
+                              className="px-2 py-1 text-base text-neutral-200"
+                              aria-label="Decrease"
+                            >
+                              −
+                            </button>
+                            <div className="px-2 py-1 text-neutral-100 tabular-nums text-[13px]">
+                              {it.qty}
+                            </div>
+                            <button
+                              onClick={() => inc(it.id)}
+                              className="px-2 py-1 text-base text-neutral-200"
+                              aria-label="Increase"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        {!isSub && (
+                          <div className="mt-2">
+                            {!showSubChooser[it.id] ? (
+                              <button
+                                onClick={() =>
+                                  setShowSubChooser((prev) => ({
+                                    ...prev,
+                                    [it.id]: true,
+                                  }))
+                                }
+                                className="w-full rounded-md ring-1 ring-amber-400/60 bg-neutral-900/60 text-amber-300 font-semibold py-1.5 text-[12px] hover:bg-amber-400 hover:text-neutral-900 transition"
+                              >
+                                Join The Fleet &amp; Save 15%
+                              </button>
+                            ) : (
+                              <>
+                                <div className="mb-2 grid grid-cols-3 gap-2">
+                                  {[14, 30, 60].map((d) => (
+                                    <button
+                                      key={`${it.id}-freq-${d}`}
+                                      onClick={() =>
+                                        setFreq((prev) => ({
+                                          ...prev,
+                                          [it.id]: d,
+                                        }))
+                                      }
+                                      className={[
+                                        "py-1.5 rounded-md text-[12px] font-semibold ring-1",
+                                        selFreq === d
+                                          ? "bg-amber-400 text-neutral-900 ring-amber-400"
+                                          : "bg-neutral-900/60 text-amber-300 ring-amber-400/60",
+                                      ].join(" ")}
+                                    >
+                                      {d} days
+                                    </button>
+                                  ))}
+                                </div>
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={() => {
+                                      updateItem(it.id, {
+                                        isSubscription: true,
+                                        purchaseMode: "sub",
+                                        subEvery: selFreq,
+                                        subPrice: getSubPrice({
+                                          ...it,
+                                          subEvery: selFreq,
+                                        }),
+                                      });
+                                      setShowSubChooser((prev) => {
+                                        const next = { ...prev };
+                                        delete next[it.id];
+                                        return next;
+                                      });
+                                    }}
+                                    className="flex-1 rounded-md bg-amber-400 text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-amber-300 transition"
+                                  >
+                                    Start Subscription
+                                  </button>
+
+                                  <button
+                                    onClick={() =>
+                                      setShowSubChooser((prev) => {
+                                        const next = { ...prev };
+                                        delete next[it.id];
+                                        return next;
+                                      })
+                                    }
+                                    className="px-3 rounded-md ring-1 ring-amber-400/60 text-amber-300 text-[12px]"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+
+        {/* FOOTER */}
+        <div className="border-t border-neutral-800 px-4 pt-3 pb-2 space-y-2">
+          <div className="flex items-center justify-between text-[12px] text-neutral-400">
+            <span>Shipping</span>
+            <span>{shippingLabel}</span>
+          </div>
+
+          {/* Primary actions row */}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={checkingOut ? undefined : handleCheckout}
+              disabled={checkingOut}
+              className={[
+                "flex-1 font-extrabold py-2.5 text-center text-[15px]",
+                "rounded-md",
+                checkingOut
+                  ? "bg-amber-300/70 text-neutral-800 cursor-not-allowed"
+                  : "bg-amber-400 text-neutral-900",
+              ].join(" ")}
+              aria-busy={checkingOut}
+            >
+              {checkingOut
+                ? "Syncing cart…"
+                : `Checkout • $${total.toFixed(2)}`}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                navigate("/cart");
+              }}
+              className="flex-1 rounded-md border border-neutral-600 bg-neutral-900 text-[15px] font-extrabold text-neutral-100 py-2.5 text-center hover:bg-neutral-800"
+            >
+              View Chest
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="block w-full text-center text-[16px] text-neutral-300 underline underline-offset-4"
+          >
+            Continue shopping
+          </button>
+
+          <a
+            href="https://www.govx.com/govx-id/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full rounded-lg ring-1 ring-emerald-600 bg-emerald-900/30 py-2 text-emerald-300 text-[13px] font-semibold"
+          >
+            <span className="text-lg">✔</span>
+            <span>Verify with GovX ID</span>
+          </a>
+
+          <button
+            type="button"
+            onClick={() => setShowRoastInfo(true)}
+            className="block w-full text-center text-[14px] text-red-300 underline underline-offset-4"
+          >
+            Please read before checking out
+          </button>
+
+          <div className="mt-1 mb-1 rounded-md bg-neutral-900/60 ring-1 ring-neutral-800 px-3 py-2 text-center">
+            {state === "countdown" ? (
+              <div className="text-[12px] text-neutral-300">
+                Time left to make the next roast:{" "}
+                <span className="text-amber-300 font-semibold">{left}</span>
+              </div>
+            ) : state === "closed" ? (
+              <div className="text-[12px] text-neutral-300">
+                Next batch roasts:{" "}
+                <span className="text-amber-300">{dateLabel}</span>
+              </div>
+            ) : (
+              <div className="text-[12px] text-neutral-300">
+                Next batch roasts:{" "}
+                <span className="text-amber-300">{dateLabel}</span>{" "}
+                <span className="text-neutral-500">(ET)</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* SUBSCRIBE GATE */}
+        {showSubGate && (
+          <div className="absolute inset-x-0 bottom-0 z-[1000003] p-3">
+            <div className="rounded-xl ring-1 ring-amber-400 bg-neutral-900 text-amber-300 px-3 py-3 text-sm text-center shadow-2xl">
+              Join or sign in to manage your Fleet subscription before checkout.
+              <div className="mt-2 flex gap-2 justify-center">
+                <a
+                  href="/account/login"
+                  className="px-3 py-1.5 rounded-md bg-amber-400 text-neutral-900 font-bold"
+                >
+                  Sign in / Join
+                </a>
+                <button
+                  onClick={() => setShowSubGate(false)}
+                  className="px-3 py-1.5 rounded-md ring-1 ring-amber-400/60 text-amber-300"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ROAST INFO MODAL */}
+        {showRoastInfo && (
+          <div className="absolute inset-0 z-[1000004] flex items-center justify-center p-4">
+            <button
+              className="absolute inset-0 bg-black/70"
+              onClick={() => setShowRoastInfo(false)}
+              aria-label="Close roast info backdrop"
+            />
+            <div className="relative w-full max-w-md rounded-2xl bg-neutral-950 ring-1 ring-neutral-800 shadow-2xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div
+                  className="text-sm font-extrabold text-neutral-100"
+                  style={{ fontFamily: "'Cinzel', serif" }}
+                >
+                  Roast & Shipping Schedule
+                </div>
+                <button
+                  onClick={() => setShowRoastInfo(false)}
+                  className="text-amber-300 text-lg font-bold px-1"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="text-[13px] text-neutral-300 space-y-2">
+                <p>
+                  We roast to order. All orders are roasted on Monday/Tuesday.
+                  Please be sure to place your order before{" "}
+                  <span className="text-amber-300 font-semibold">
+                    Sunday 5:00 PM ET
+                  </span>{" "}
+                  to get on the roast schedule. All orders made after the cut
+                  off time will be roasted the following week.
+                </p>
+                <p>
+                  <span className="text-amber-300 font-semibold">
+                    Roast Day:
+                  </span>{" "}
+                  Monday <br />
+                  <span className="text-amber-300 font-semibold">
+                    Ship:
+                  </span>{" "}
+                  Wednesday.
+                </p>
+                <p>
+                  Coffee is bagged immediately after roasting and rests briefly
+                  to preserve peak flavor. Tracking is emailed once your order
+                  leaves the roastery.
+                </p>
+                <p className="text-blue-300">
+                  If you missed the order cut off time, please contact us and we
+                  will see what we can do to still get your order roasted.
+                </p>
+                <p className="text-amber-300">
+                  Questions?{" "}
+                  <a href="/contact" className="underline text-amber-300">
+                    Contact the crew
+                  </a>
+                  .
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ===== MOBILE CART SLIDE-OVER (right -> left, 80% width) =====
 function MobileCartSheet({ onClose }: { onClose: () => void }) {
   const {

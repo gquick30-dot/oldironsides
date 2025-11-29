@@ -2638,10 +2638,10 @@ function RoastDetailPage() {
   };
   // Map roast slugs to Shopify product IDs (numeric IDs are fine)
   const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
-    flagship: "1234567890", // TODO: replace with real Shopify product ID
-    "baptism-by-fire": "1234567891", // "
-    "java-action": "1234567892", // "
-    "oak-and-copper": "1234567893", // "
+    flagship: "9141081276637", // TODO: replace with real Shopify product ID
+    "baptism-by-fire": "9192531853533", // "
+    "java-action": "9192548663517", // "
+    "oak-and-copper": "9192552104157", // "
   };
   const shopifyProductId = PRODUCT_IDS_BY_SLUG[card.slug];
 

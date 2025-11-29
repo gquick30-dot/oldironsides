@@ -464,7 +464,12 @@ const roastCards = [
   },
 ];
 type RoastCardConfig = (typeof roastCards)[number];
-
+const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
+  flagship: "9141081276637",
+  "baptism-by-fire": "9192531853533",
+  "java-action": "9192548663517",
+  "oak-and-copper": "9192552104157",
+};
 function RoastMegaCard({
   card,
   onClick,
@@ -477,13 +482,7 @@ function RoastMegaCard({
     count: number;
   } | null>(null);
 
-  // USE THE SAME IDS YOU PUT IN RoastDetailPage
-  const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
-    flagship: "9141081276637",
-    "baptism-by-fire": "9192531853533",
-    "java-action": "9192548663517",
-    "oak-and-copper": "9192552104157",
-  };
+
 
   React.useEffect(() => {
     const productId = PRODUCT_IDS_BY_SLUG[card.slug];
@@ -496,6 +495,8 @@ function RoastMegaCard({
 
     async function loadStats() {
       try {
+        console.log("Loading stats for", card.slug, "productId =", productId);
+
         const res = await fetch(
           `/api/get-reviews?shopifyProductId=${encodeURIComponent(productId)}`
         );
@@ -505,7 +506,9 @@ function RoastMegaCard({
           return;
         }
         const data = await res.json();
-        const reviews: any[] = Array.isArray(data.reviews) ? data.reviews : [];
+        const reviews: any[] = Array.isArray(data.reviews)
+          ? data.reviews
+          : [];
 
         if (!reviews.length) {
           if (!cancelled) setStats(null);
@@ -533,6 +536,7 @@ function RoastMegaCard({
       cancelled = true;
     };
   }, [card.slug]);
+
 
   return (
     <Link
@@ -567,13 +571,14 @@ function RoastMegaCard({
 
         {/* Stars + count from Judge.me */}
         {stats && (
-          <div className="mt-1 flex items-center gap-1 text-[0.7rem] text-amber-300">
-            <span>★ {stats.avg.toFixed(1)}</span>
-            <span className="text-neutral-400">
-              ({stats.count} review{stats.count === 1 ? "" : "s"})
-            </span>
-          </div>
-        )}
+  <div className="mt-1 flex items-center gap-1 text-[0.7rem] text-amber-300">
+    <span>★ {stats.avg.toFixed(1)}</span>
+    <span className="text-neutral-400">
+      ({stats.count} review{stats.count === 1 ? "" : "s"})
+    </span>
+  </div>
+)}
+
       </div>
     </Link>
   );
@@ -2751,13 +2756,7 @@ function RoastDetailPage() {
     count: number;
     breakdown: Record<number, number>;
   };
-  // Map roast slugs to Shopify product IDs (numeric IDs are fine)
-  const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
-    flagship: "9141081276637", // TODO: replace with real Shopify product ID
-    "baptism-by-fire": "9192531853533", // "
-    "java-action": "9192548663517", // "
-    "oak-and-copper": "9192552104157", // "
-  };
+ 
   const shopifyProductId = PRODUCT_IDS_BY_SLUG[card.slug];
 
   // ---------- 2) Helpers: compute stats and choose seed vs verified ----------

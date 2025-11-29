@@ -44,13 +44,6 @@ export type Review = {
   verified?: boolean;
   source?: "seed" | "judge";
 };
-// GLOBAL: Shopify Product IDs for all roast slugs
-export const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
-  flagship: "9140180126763",
-  "baptism-by-fire": "9196231855333",
-  "java-action": "9195248663517",
-  "oak-and-copper": "9192559214157",
-};
 
 export type ReviewStats = {
   avg: number;
@@ -471,7 +464,12 @@ const roastCards = [
   },
 ];
 type RoastCardConfig = (typeof roastCards)[number];
-
+const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
+  flagship: "9141081276637",
+  "baptism-by-fire": "9192531853533",
+  "java-action": "9192548663517",
+  "oak-and-copper": "9192552104157",
+};
 function RoastMegaCard({
   card,
   onClick,

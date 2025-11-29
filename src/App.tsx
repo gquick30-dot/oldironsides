@@ -463,6 +463,121 @@ const roastCards = [
     mainStory: "", // Full story
   },
 ];
+type RoastCardConfig = (typeof roastCards)[number];
+
+function RoastMegaCard({
+  card,
+  onClick,
+}: {
+  card: RoastCardConfig;
+  onClick: () => void;
+}) {
+  const [stats, setStats] = React.useState<{
+    avg: number;
+    count: number;
+  } | null>(null);
+
+  // USE THE SAME IDS YOU PUT IN RoastDetailPage
+  const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
+    flagship: "FLAGSHIP_ID_HERE",
+    "baptism-by-fire": "BAPTISM_ID_HERE",
+    "java-action": "JAVA_ID_HERE",
+    "oak-and-copper": "OAK_ID_HERE",
+  };
+
+  React.useEffect(() => {
+    const productId = PRODUCT_IDS_BY_SLUG[card.slug];
+    if (!productId) {
+      setStats(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadStats() {
+      try {
+        const res = await fetch(
+          `/api/get-reviews?shopifyProductId=${encodeURIComponent(productId)}`
+        );
+        if (!res.ok) {
+          console.error("Failed to load review stats", await res.text());
+          if (!cancelled) setStats(null);
+          return;
+        }
+        const data = await res.json();
+        const reviews: any[] = Array.isArray(data.reviews) ? data.reviews : [];
+
+        if (!reviews.length) {
+          if (!cancelled) setStats(null);
+          return;
+        }
+
+        const count = reviews.length;
+        const sum = reviews.reduce(
+          (acc, r) => acc + (Number(r.rating) || 0),
+          0
+        );
+        const avg = Math.round((sum / count) * 10) / 10;
+
+        if (!cancelled) setStats({ avg, count });
+      } catch (err) {
+        if (!cancelled) {
+          console.error("Error loading review stats", err);
+          setStats(null);
+        }
+      }
+    }
+
+    loadStats();
+    return () => {
+      cancelled = true;
+    };
+  }, [card.slug]);
+
+  return (
+    <Link
+      to={`/roast/${card.slug}`}
+      onClick={onClick}
+      className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
+    >
+      <img
+        src={
+          card.img?.startsWith("/") || card.img?.startsWith("http")
+            ? card.img
+            : `/${card.img}`
+        }
+        alt={card.title}
+        className="h-52 sm:h-60 lg:h-60 w-full object-cover"
+      />
+
+      <div className="p-3">
+        <div
+          className="text-lg font-extrabold text-amber-300"
+          style={{
+            fontFamily: "'Cinzel', serif",
+            fontWeight: 800,
+          }}
+        >
+          {card.title}
+        </div>
+        <div className="text-xs text-neutral-400">{card.variant}</div>
+        <div className="text-xs md:text-sm text-neutral-300">
+          {card.subTitle}
+        </div>
+
+        {/* Stars + count from Judge.me */}
+        {stats && (
+          <div className="mt-1 flex items-center gap-1 text-[0.7rem] text-amber-300">
+            <span>★ {stats.avg.toFixed(1)}</span>
+            <span className="text-neutral-400">
+              ({stats.count} review{stats.count === 1 ? "" : "s"})
+            </span>
+          </div>
+        )}
+      </div>
+    </Link>
+  );
+}
 
 /* ================= Cart Context ================= */
 const CartCtx = createContext<any | null>(null);
@@ -9858,41 +9973,11 @@ function Layout() {
                             <div className="grid lg:grid-cols-[1fr,auto] gap-8 items-start">
                               <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {roastCards.map((card) => (
-                                  <Link
+                                  <RoastMegaCard
                                     key={`mega-roast-${card.id}`}
-                                    to={`/roast/${card.slug}`}
+                                    card={card}
                                     onClick={() => setOpenMega(null)}
-                                    className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
-                                  >
-                                    <img
-                                      src={
-                                        card.img?.startsWith("/") ||
-                                        card.img?.startsWith("http")
-                                          ? card.img
-                                          : `/${card.img}`
-                                      }
-                                      alt={card.title}
-                                      className="h-52 sm:h-60 lg:h-60 w-full object-cover"
-                                    />
-
-                                    <div className="p-3">
-                                      <div
-                                        className="text-lg font-extrabold text-amber-300"
-                                        style={{
-                                          fontFamily: "'Cinzel', serif",
-                                          fontWeight: 800,
-                                        }}
-                                      >
-                                        {card.title}
-                                      </div>
-                                      <div className="text-xs text-neutral-400">
-                                        {card.variant}
-                                      </div>
-                                      <div className="text-xs md:text-sm text-neutral-300">
-                                        {card.subTitle}
-                                      </div>
-                                    </div>
-                                  </Link>
+                                  />
                                 ))}
                               </div>
 

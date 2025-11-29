@@ -8271,13 +8271,32 @@ function CartPage() {
     </main>
   );
 }
+function getDisplayName(user: any) {
+  if (!user) return "";
+  const raw =
+    user.name && user.name.trim().length > 0
+      ? user.name
+      : user.firstName && user.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : user.firstName
+      ? user.firstName
+      : user.email
+      ? String(user.email).split("@")[0]
+      : "";
+
+  return String(raw)
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+}
+
 /* ===================== Account / Subscribe & Manage ===================== */
 function SubscribeManagePage({
   initialTab = "overview",
 }: {
   initialTab?: "overview" | "login";
 }) {
-  // super-light “auth” using localStorage (swap later)
   const [user, setUser] = useState<any>(() => {
     try {
       return JSON.parse(localStorage.getItem("oi_user") || "null");
@@ -8285,36 +8304,97 @@ function SubscribeManagePage({
       return null;
     }
   });
+
   const [tab, setTab] = useState<
     "overview" | "login" | "subscriptions" | "orders" | "profile"
   >(initialTab ?? (user ? "overview" : "login"));
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Mock data so the UI works now
+  // These will come from your backend once wired
   const [subs, setSubs] = useState<any[]>([
     {
       id: "sub_1",
       product: "Flagship Medium Roast",
       nextCharge: "2025-10-10",
-      frequency: "Monthly",
+      originalNextCharge: "2025-10-10",
+      skipped: false,
+      frequency: "Every 14 days",
       status: "active",
+      shippingAddress: {
+        name: "Greg Quick",
+        line1: "123 Harbor Way",
+        line2: "",
+        city: "Boston",
+        state: "MA",
+        zip: "02129",
+        country: "USA",
+      },
     },
   ]);
+
   const [orders, setOrders] = useState<any[]>([
     {
       id: "ORD-10001",
       date: "2025-08-01",
       total: 44.0,
-      items: [{ title: "Flagship Medium Roast", qty: 2 }],
+      status: "Delivered",
+      items: [
+        { title: "Flagship Medium Roast", qty: 2 },
+        { title: "Oak & Copper", qty: 1 },
+      ],
+      shippingAddress: {
+        name: "Greg Quick",
+        line1: "123 Harbor Way",
+        line2: "",
+        city: "Boston",
+        state: "MA",
+        zip: "02129",
+        country: "USA",
+      },
     },
   ]);
+
+  const [defaultAddress, setDefaultAddress] = useState<any>({
+    name: "Greg Quick",
+    line1: "123 Harbor Way",
+    line2: "",
+    city: "Boston",
+    state: "MA",
+    zip: "02129",
+    country: "USA",
+  });
 
   useEffect(() => {
     if (!user) setTab("login");
   }, [user]);
 
-  // ---------- Auth (mock today) ----------
+  // On real backend: fetch customer, orders, subs, addresses here
+  useEffect(() => {
+    async function bootstrap() {
+      if (!user) return;
+      const token = localStorage.getItem("oi_token");
+      if (!token) return;
+
+      try {
+        // Example:
+        // const resp = await fetch("/api/account/overview", {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // });
+        // const data = await resp.json();
+        // setSubs(data.subscriptions);
+        // setOrders(data.orders);
+        // setDefaultAddress(data.defaultAddress);
+      } catch (err) {
+        console.error("Failed to load account data", err);
+      }
+    }
+    bootstrap();
+  }, [user]);
+
+  // ---------- Auth ----------
+
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
@@ -8322,17 +8402,37 @@ function SubscribeManagePage({
     const fd = new FormData(e.currentTarget);
     const email = String(fd.get("email") || "");
     const password = String(fd.get("password") || "");
+
     try {
       if (!emailOk(email) || !password)
         throw new Error("Check your email and password.");
-      // INTEGRATE HERE: call Shopify Storefront (customerAccessTokenCreate) or Jack's backend login.
+
+      // REAL INTEGRATION:
+      // const resp = await fetch("/api/account/login", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ email, password }),
+      // });
+      // if (!resp.ok) throw new Error("Login failed.");
+      // const data = await resp.json();
+      // localStorage.setItem("oi_user", JSON.stringify(data.customer));
+      // localStorage.setItem("oi_token", data.accessToken);
+      // setUser(data.customer);
+
+      // TEMP MOCK
       await new Promise((r) => setTimeout(r, 400));
-      const u = { id: "c1", email, name: email.split("@")[0] };
-      localStorage.setItem("oi_user", JSON.stringify(u));
-      setUser(u);
+      const mockCustomer = {
+        id: "c1",
+        email,
+        name: email.split("@")[0],
+      };
+      localStorage.setItem("oi_user", JSON.stringify(mockCustomer));
+      localStorage.setItem("oi_token", "mock_token");
+      setUser(mockCustomer);
+
       setTab("overview");
       window.dispatchEvent(
-        new CustomEvent("flash", { detail: "Welcome back!" })
+        new CustomEvent("flash", { detail: "Welcome back." })
       );
     } catch (err: any) {
       setError(err?.message || "Login failed.");
@@ -8349,17 +8449,33 @@ function SubscribeManagePage({
     const name = String(fd.get("name") || "");
     const email = String(fd.get("email") || "");
     const password = String(fd.get("password") || "");
+
     try {
       if (!name || !emailOk(email) || !password)
         throw new Error("Fill all fields.");
-      // INTEGRATE HERE: call Shopify Storefront customerCreate OR Jack's signup endpoint.
+
+      // REAL INTEGRATION:
+      // const resp = await fetch("/api/account/register", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ name, email, password }),
+      // });
+      // if (!resp.ok) throw new Error("Registration failed.");
+      // const data = await resp.json();
+      // localStorage.setItem("oi_user", JSON.stringify(data.customer));
+      // localStorage.setItem("oi_token", data.accessToken);
+      // setUser(data.customer);
+
+      // TEMP MOCK
       await new Promise((r) => setTimeout(r, 500));
-      const u = { id: "c1", email, name };
-      localStorage.setItem("oi_user", JSON.stringify(u));
-      setUser(u);
+      const mockCustomer = { id: "c1", email, name };
+      localStorage.setItem("oi_user", JSON.stringify(mockCustomer));
+      localStorage.setItem("oi_token", "mock_token");
+      setUser(mockCustomer);
+
       setTab("overview");
       window.dispatchEvent(
-        new CustomEvent("flash", { detail: "Account created!" })
+        new CustomEvent("flash", { detail: "Account created." })
       );
     } catch (err: any) {
       setError(err?.message || "Registration failed.");
@@ -8370,21 +8486,47 @@ function SubscribeManagePage({
 
   function handleLogout() {
     localStorage.removeItem("oi_user");
+    localStorage.removeItem("oi_token");
     setUser(null);
     setTab("login");
   }
 
-  // ---------- Subscription actions (mock today) ----------
+  // ---------- Subscription actions (wired later) ----------
+
   async function skipNextCharge(subId: string) {
-    // INTEGRATE HERE: call Recharge/Skio/Bold or Jack’s subscription API.
+    // REAL: POST /api/account/subscriptions/:id/skip or /undo
     setSubs((list) =>
-      list.map((s) => (s.id === subId ? { ...s, nextCharge: "2025-11-10" } : s))
+      list.map((s) => {
+        if (s.id !== subId) return s;
+
+        // If already skipped, restore original date
+        if (s.skipped) {
+          return {
+            ...s,
+            skipped: false,
+            nextCharge: s.originalNextCharge ?? s.nextCharge,
+          };
+        }
+
+        // First time skipping: move date and mark as skipped
+        return {
+          ...s,
+          skipped: true,
+          originalNextCharge: s.originalNextCharge ?? s.nextCharge,
+          nextCharge: "2025-11-10", // placeholder, real API will send this
+        };
+      })
     );
+
     window.dispatchEvent(
-      new CustomEvent("flash", { detail: "Next delivery skipped." })
+      new CustomEvent("flash", {
+        detail: "Next delivery updated.",
+      })
     );
   }
+
   async function pauseSub(subId: string) {
+    // REAL: POST /api/account/subscriptions/:id/pause
     setSubs((list) =>
       list.map((s) => (s.id === subId ? { ...s, status: "paused" } : s))
     );
@@ -8392,7 +8534,19 @@ function SubscribeManagePage({
       new CustomEvent("flash", { detail: "Subscription paused." })
     );
   }
+
+  async function resumeSub(subId: string) {
+    // REAL: POST /api/account/subscriptions/:id/resume
+    setSubs((list) =>
+      list.map((s) => (s.id === subId ? { ...s, status: "active" } : s))
+    );
+    window.dispatchEvent(
+      new CustomEvent("flash", { detail: "Subscription resumed." })
+    );
+  }
+
   async function cancelSub(subId: string) {
+    // REAL: POST /api/account/subscriptions/:id/cancel
     setSubs((list) => list.filter((s) => s.id !== subId));
     window.dispatchEvent(
       new CustomEvent("flash", { detail: "Subscription canceled." })
@@ -8413,6 +8567,8 @@ function SubscribeManagePage({
     </button>
   );
 
+  // ---------- Login / Register view ----------
+
   if (!user && tab === "login") {
     return (
       <main className="py-16 md:py-24">
@@ -8424,7 +8580,7 @@ function SubscribeManagePage({
                   Account
                 </span>
               }
-              subtitle="Log in or create an account to manage subscriptions and orders."
+              subtitle="Log in or create an account to manage your subscriptions and orders."
             />
             <BackButton size="sm" />
           </div>
@@ -8442,13 +8598,13 @@ function SubscribeManagePage({
                 <input
                   name="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="Email address"
                   className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
                 />
                 <input
                   name="password"
                   type="password"
-                  placeholder="password"
+                  placeholder="Password"
                   className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
                 />
                 {error && <div className="text-sm text-red-300">{error}</div>}
@@ -8456,8 +8612,18 @@ function SubscribeManagePage({
                   disabled={loading}
                   className="w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
                 >
-                  {loading ? "…" : "Log in"}
+                  {loading ? "Signing in..." : "Log in"}
                 </button>
+              </div>
+              <div className="mt-3 text-xs text-neutral-500">
+                Trouble signing in? Email{" "}
+                <a
+                  href="mailto:support@oldironsidescoffee.com"
+                  className="text-amber-300"
+                >
+                  support@oldironsidescoffee.com
+                </a>
+                .
               </div>
             </form>
 
@@ -8472,27 +8638,31 @@ function SubscribeManagePage({
               <div className="space-y-3">
                 <input
                   name="name"
-                  placeholder="Your name"
+                  placeholder="Full name"
                   className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
                 />
                 <input
                   name="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="Email address"
                   className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
                 />
                 <input
                   name="password"
                   type="password"
-                  placeholder="password"
+                  placeholder="Create a password"
                   className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
                 />
                 <button
                   disabled={loading}
                   className="w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
                 >
-                  {loading ? "…" : "Create account"}
+                  {loading ? "Creating..." : "Create account"}
                 </button>
+              </div>
+              <div className="mt-3 text-xs text-neutral-500">
+                Your account is used to view orders, manage subscriptions and
+                update your shipping details.
               </div>
             </form>
           </div>
@@ -8501,26 +8671,21 @@ function SubscribeManagePage({
     );
   }
 
-  // ---------- Logged-in view ----------
+  // ---------- Logged in view ----------
+
   return (
     <main className="py-16 md:py-24">
       <Container>
         <div className="flex items-start justify-between">
-          <SectionTitle
-            title={
-              <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
-                Account
+          {
+            <span className="text-neutral-300">
+              Welcome,{" "}
+              <span className="text-amber-300 font-semibold">
+                {getDisplayName(user) || user?.email}
               </span>
-            }
-            subtitle={
-              <span className="text-neutral-300">
-                Welcome,{" "}
-                <span className="text-amber-300 font-semibold">
-                  {user?.name || user?.email}
-                </span>
-              </span>
-            }
-          />
+              . Manage your subscriptions, orders and shipping details here.
+            </span>
+          }
           <BackButton size="sm" />
         </div>
 
@@ -8539,56 +8704,97 @@ function SubscribeManagePage({
           </div>
         </div>
 
-        {/* PANELS */}
+        {/* OVERVIEW */}
         {tab === "overview" && (
           <div className="mt-6 grid md:grid-cols-3 gap-6">
-            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-              <div className="text-amber-300 font-semibold">Next Delivery</div>
-              <div className="mt-2 text-neutral-300 text-sm">
-                {subs[0]
-                  ? `${subs[0].product} — ${subs[0].nextCharge}`
-                  : "No active subscriptions."}
+            {/* Next delivery / subscription summary */}
+            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
+              <div>
+                <div className="text-amber-300 font-semibold">
+                  Next delivery
+                </div>
+                <div className="mt-2 text-neutral-300 text-sm">
+                  {subs[0] ? (
+                    <>
+                      <div>{subs[0].product}</div>
+                      <div className="text-neutral-400">
+                        Ships around {subs[0].nextCharge} • {subs[0].frequency}
+                      </div>
+                    </>
+                  ) : (
+                    "No active subscriptions."
+                  )}
+                </div>
               </div>
-              <Link
-                to="#"
+              <button
                 onClick={() => setTab("subscriptions")}
-                className="mt-3 inline-block text-amber-300 text-sm"
+                className="mt-4 text-amber-300 text-sm text-left"
               >
-                Manage subscription →
-              </Link>
+                Manage subscriptions →
+              </button>
             </div>
-            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-              <div className="text-amber-300 font-semibold">Recent Order</div>
-              <div className="mt-2 text-neutral-300 text-sm">
-                {orders[0]
-                  ? `${orders[0].id} — ${orders[0].date}`
-                  : "No orders yet."}
+
+            {/* Recent order */}
+            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
+              <div>
+                <div className="text-amber-300 font-semibold">Recent order</div>
+                <div className="mt-2 text-neutral-300 text-sm">
+                  {orders[0] ? (
+                    <>
+                      <div>{orders[0].id}</div>
+                      <div className="text-neutral-400">
+                        {orders[0].date} • {orders[0].status} •{" "}
+                        {fmt(orders[0].total)}
+                      </div>
+                    </>
+                  ) : (
+                    "No orders yet."
+                  )}
+                </div>
               </div>
-              <Link
-                to="#"
+              <button
                 onClick={() => setTab("orders")}
-                className="mt-3 inline-block text-amber-300 text-sm"
+                className="mt-4 text-amber-300 text-sm text-left"
               >
-                View orders →
-              </Link>
+                View order history →
+              </button>
             </div>
-            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-              <div className="text-amber-300 font-semibold">Payment Method</div>
-              <div className="mt-2 text-neutral-300 text-sm">
-                Update your card securely.
+
+            {/* Default shipping */}
+            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
+              <div>
+                <div className="text-amber-300 font-semibold">
+                  Default shipping address
+                </div>
+                <div className="mt-2 text-neutral-300 text-sm space-y-0.5">
+                  <div>{defaultAddress?.name}</div>
+                  <div>{defaultAddress?.line1}</div>
+                  {defaultAddress?.line2 && <div>{defaultAddress.line2}</div>}
+                  <div>
+                    {defaultAddress?.city}, {defaultAddress?.state}{" "}
+                    {defaultAddress?.zip}
+                  </div>
+                  <div>{defaultAddress?.country}</div>
+                </div>
               </div>
-              {/* INTEGRATE HERE: link to hosted card update (Recharge/Skio/Bold) or Jack’s PCI-compliant page */}
-              <button className="mt-3 px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold">
-                Update card
+              <button
+                onClick={() => setTab("profile")}
+                className="mt-4 text-amber-300 text-sm text-left"
+              >
+                Manage addresses →
               </button>
             </div>
           </div>
         )}
 
+        {/* SUBSCRIPTIONS */}
         {tab === "subscriptions" && (
-          <div className="mt-6 grid gap-4">
+          <div className="mt-6 space-y-4">
             {subs.length === 0 && (
-              <div className="text-neutral-400">No active subscriptions.</div>
+              <div className="text-neutral-400">
+                No active subscriptions. Add Subscribe & Save from the store to
+                start.
+              </div>
             )}
             {subs.map((s) => (
               <div
@@ -8600,33 +8806,70 @@ function SubscribeManagePage({
                     {s.product}
                   </div>
                   <div className="text-sm text-neutral-400">
-                    • Next: {s.nextCharge}
+                    • Next delivery: {s.nextCharge}
                   </div>
                   <div className="text-sm text-neutral-400">
                     • {s.frequency}
                   </div>
-                  <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300">
+                  <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
                     {s.status}
                   </div>
                 </div>
+
+                <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-neutral-300">
+                  <div>
+                    <div className="text-neutral-400 text-xs uppercase tracking-wide mb-1">
+                      Ships to
+                    </div>
+                    <div>{s.shippingAddress?.name}</div>
+                    <div>{s.shippingAddress?.line1}</div>
+                    {s.shippingAddress?.line2 && (
+                      <div>{s.shippingAddress.line2}</div>
+                    )}
+                    <div>
+                      {s.shippingAddress?.city}, {s.shippingAddress?.state}{" "}
+                      {s.shippingAddress?.zip}
+                    </div>
+                    <div>{s.shippingAddress?.country}</div>
+                  </div>
+                  <div className="space-y-1 text-neutral-400">
+                    <div className="text-xs uppercase tracking-wide">Notes</div>
+                    <p>
+                      Change roast, quantity, frequency or address in your
+                      subscription portal once connected.
+                    </p>
+                  </div>
+                </div>
+
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button
                     onClick={() => skipNextCharge(s.id)}
-                    className="px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/50 text-sm"
+                    className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
                   >
-                    Skip next
+                    {s.skipped ? "Undo skip" : "Skip next delivery"}
                   </button>
-                  <button
-                    onClick={() => pauseSub(s.id)}
-                    className="px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/50 text-sm"
-                  >
-                    Pause
-                  </button>
+
+                  {s.status === "paused" ? (
+                    <button
+                      onClick={() => resumeSub(s.id)}
+                      className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+                    >
+                      Resume subscription
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => pauseSub(s.id)}
+                      className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+                    >
+                      Pause subscription
+                    </button>
+                  )}
+
                   <button
                     onClick={() => cancelSub(s.id)}
                     className="px-3 py-2 rounded-lg border border-red-800 text-red-300 hover:border-red-600 text-sm"
                   >
-                    Cancel
+                    Cancel subscription
                   </button>
                 </div>
               </div>
@@ -8634,8 +8877,12 @@ function SubscribeManagePage({
           </div>
         )}
 
+        {/* ORDERS */}
         {tab === "orders" && (
-          <div className="mt-6 grid gap-4">
+          <div className="mt-6 space-y-4">
+            {orders.length === 0 && (
+              <div className="text-neutral-400">No orders yet.</div>
+            )}
             {orders.map((o) => (
               <div
                 key={o.id}
@@ -8647,37 +8894,120 @@ function SubscribeManagePage({
                   <div className="text-sm text-neutral-400">
                     • {fmt(o.total)}
                   </div>
+                  <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
+                    {o.status}
+                  </div>
                 </div>
-                <ul className="mt-2 text-sm text-neutral-300 list-disc list-inside">
+
+                <ul className="mt-3 text-sm text-neutral-300 list-disc list-inside">
                   {o.items.map((it: any, i: number) => (
                     <li key={i}>
                       {it.title} × {it.qty}
                     </li>
                   ))}
                 </ul>
+
+                <div className="mt-3 grid md:grid-cols-2 gap-4 text-xs text-neutral-400">
+                  <div>
+                    <div className="uppercase tracking-wide mb-1">Ships to</div>
+                    <div>{o.shippingAddress?.name}</div>
+                    <div>{o.shippingAddress?.line1}</div>
+                    {o.shippingAddress?.line2 && (
+                      <div>{o.shippingAddress.line2}</div>
+                    )}
+                    <div>
+                      {o.shippingAddress?.city}, {o.shippingAddress?.state}{" "}
+                      {o.shippingAddress?.zip}
+                    </div>
+                    <div>{o.shippingAddress?.country}</div>
+                  </div>
+                  <div>
+                    <div className="uppercase tracking-wide mb-1">
+                      Help with this order
+                    </div>
+                    <div>
+                      Email{" "}
+                      <a
+                        href="mailto:support@oldironsidescoffee.com"
+                        className="text-amber-300"
+                      >
+                        support@oldironsidescoffee.com
+                      </a>{" "}
+                      with your order number.
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         )}
 
+        {/* PROFILE */}
         {tab === "profile" && (
           <div className="mt-6 grid md:grid-cols-2 gap-6">
+            {/* Contact + address */}
             <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-              <div className="text-amber-300 font-semibold">Contact</div>
-              <div className="mt-2 text-sm text-neutral-300">
-                Email: {user?.email}
+              <div className="text-amber-300 font-semibold mb-3">
+                Contact and shipping
               </div>
-              {/* INTEGRATE HERE: addresses from Shopify Storefront API or Jack's backend */}
-              <div className="mt-4 text-sm text-neutral-400">
-                Addresses coming soon.
+              <div className="text-sm text-neutral-300 space-y-4">
+                <div>
+                  <div className="text-xs uppercase tracking-wide text-neutral-400 mb-1">
+                    Email
+                  </div>
+                  <div>{user?.email}</div>
+                </div>
+                <div>
+                  <div className="text-xs uppercase tracking-wide text-neutral-400 mb-1">
+                    Default shipping address
+                  </div>
+                  <div className="space-y-0.5">
+                    <div>{defaultAddress?.name}</div>
+                    <div>{defaultAddress?.line1}</div>
+                    {defaultAddress?.line2 && <div>{defaultAddress.line2}</div>}
+                    <div>
+                      {defaultAddress?.city}, {defaultAddress?.state}{" "}
+                      {defaultAddress?.zip}
+                    </div>
+                    <div>{defaultAddress?.country}</div>
+                  </div>
+                </div>
               </div>
+              <button
+                // REAL: open address edit modal or redirect to address page
+                className="mt-4 px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/50 text-sm text-neutral-200"
+              >
+                Edit shipping address
+              </button>
             </div>
+
+            {/* Security */}
             <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-              <div className="text-amber-300 font-semibold">Security</div>
-              <div className="mt-2 text-sm text-neutral-300">
-                Change password (coming soon).
+              <div className="text-amber-300 font-semibold mb-3">
+                Security and password
               </div>
-              {/* INTEGRATE HERE: password update via backend */}
+              <div className="text-sm text-neutral-300 space-y-3">
+                <p>
+                  You can change your password and update login details from
+                  your secure account portal once connected.
+                </p>
+                <p className="text-neutral-400 text-xs">
+                  For now, email{" "}
+                  <a
+                    href="mailto:support@oldironsidescoffee.com"
+                    className="text-amber-300"
+                  >
+                    support@oldironsidescoffee.com
+                  </a>{" "}
+                  if you need help updating your login.
+                </p>
+              </div>
+              <button
+                // REAL: link to password reset flow
+                className="mt-4 px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+              >
+                Request password reset
+              </button>
             </div>
           </div>
         )}

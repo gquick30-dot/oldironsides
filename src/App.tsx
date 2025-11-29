@@ -8365,6 +8365,12 @@ function SubscribeManagePage({
     zip: "02129",
     country: "USA",
   });
+  useEffect(() => {
+    const u: any = user;
+    if (u && u.defaultAddress) {
+      setDefaultAddress(u.defaultAddress);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!user) setTab("login");
@@ -8766,26 +8772,51 @@ function SubscribeManagePage({
             </div>
 
             {/* Default shipping */}
-            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
-              <div>
-                <div className="text-amber-300 font-semibold">
-                  Default shipping address
-                </div>
-                <div className="mt-2 text-neutral-300 text-sm space-y-0.5">
-                  <div>{defaultAddress?.name}</div>
-                  <div>{defaultAddress?.line1}</div>
-                  {defaultAddress?.line2 && <div>{defaultAddress.line2}</div>}
-                  <div>
-                    {defaultAddress?.city}, {defaultAddress?.state}{" "}
-                    {defaultAddress?.zip}
-                  </div>
-                  <div>{defaultAddress?.country}</div>
-                </div>
+            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+              <div className="text-amber-300 font-semibold">
+                Default shipping address
               </div>
-              <button
-                onClick={() => setTab("profile")}
-                className="mt-4 text-amber-300 text-sm text-left"
-              >
+
+              {defaultAddress ? (
+                <div className="mt-2 text-neutral-300 text-sm">
+                  {defaultAddress.name && (
+                    <>
+                      {defaultAddress.name}
+                      <br />
+                    </>
+                  )}
+                  {defaultAddress.line1 && (
+                    <>
+                      {defaultAddress.line1}
+                      <br />
+                    </>
+                  )}
+                  {defaultAddress.line2 && (
+                    <>
+                      {defaultAddress.line2}
+                      <br />
+                    </>
+                  )}
+                  {(defaultAddress.city ||
+                    defaultAddress.state ||
+                    defaultAddress.zip) && (
+                    <>
+                      {defaultAddress.city && `${defaultAddress.city}, `}
+                      {defaultAddress.state && `${defaultAddress.state} `}
+                      {defaultAddress.zip}
+                      <br />
+                    </>
+                  )}
+                  {defaultAddress.country}
+                </div>
+              ) : (
+                <div className="mt-2 text-neutral-400 text-sm">
+                  No default address on file yet. Update it in your Shopify
+                  account.
+                </div>
+              )}
+
+              <button className="mt-3 px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/40 text-sm text-neutral-300">
                 Manage addresses →
               </button>
             </div>

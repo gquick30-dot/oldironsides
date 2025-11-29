@@ -61,8 +61,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Normalize a bit
     const normalized = (reviewsJson?.reviews ?? []).map((r: any) => ({
       id: String(r.id),
-      name: r.reviewer_name,
-      date: r.created_at, // <-- this feeds r.date in your UI
+      name:
+        r.reviewer_name || // common field from Judge.me API
+        r.reviewer?.name || // some endpoints nest it
+        r.name || // fallback if they already format it
+        "Verified Buyer", // last-resort default
+      date: r.created_at,
       rating: r.rating,
       title: r.title,
       body: r.body,

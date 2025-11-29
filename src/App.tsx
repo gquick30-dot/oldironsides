@@ -3114,8 +3114,16 @@ function RoastDetailPage() {
         purchaseMode,
         subEvery: purchaseMode === "sub" ? subEvery : undefined,
         merchandiseId: merchId,
+        // active plan used right now
         sellingPlanId: planId,
+        // map of frequency -> planId so drawers can swap correctly
+        sellingPlans: {
+          ...(planMap[14] ? { 14: planMap[14] } : {}),
+          ...(planMap[30] ? { 30: planMap[30] } : {}),
+          ...(planMap[60] ? { 60: planMap[60] } : {}),
+        },
       };
+
       add(itemToAdd, n);
 
       // set mobile toast state so we can render a bottom banner on mobile
@@ -10689,6 +10697,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                         onClick={() => {
                                           const newEvery =
                                             freq[it.id] ?? it?.subEvery ?? 30;
+
                                           updateItem(it.id, {
                                             isSubscription: true,
                                             purchaseMode: "sub",
@@ -10697,7 +10706,13 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                               ...it,
                                               subEvery: newEvery,
                                             }),
+                                            sellingPlanId:
+                                              it.sellingPlans &&
+                                              it.sellingPlans[newEvery]
+                                                ? it.sellingPlans[newEvery]
+                                                : it.sellingPlanId,
                                           });
+
                                           setManageSubOpen((prev) => ({
                                             ...prev,
                                             [it.id]: false,
@@ -10737,6 +10752,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                             subEvery: undefined,
                                             subPrice: undefined,
                                             price: newPrice,
+                                            sellingPlanId: undefined,
                                           });
 
                                           setManageSubOpen((prev) => ({
@@ -10840,6 +10856,11 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                           ...it,
                                           subEvery: selFreq,
                                         }),
+                                        sellingPlanId:
+                                          it.sellingPlans &&
+                                          it.sellingPlans[selFreq]
+                                            ? it.sellingPlans[selFreq]
+                                            : it.sellingPlanId,
                                       });
                                       setShowSubChooser((prev) => {
                                         const next = { ...prev };
@@ -11399,6 +11420,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                         onClick={() => {
                                           const newEvery =
                                             freq[it.id] ?? it?.subEvery ?? 30;
+
                                           updateItem(it.id, {
                                             isSubscription: true,
                                             purchaseMode: "sub",
@@ -11407,7 +11429,14 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                               ...it,
                                               subEvery: newEvery,
                                             }),
+                                            // make sure Shopify gets the matching plan for this frequency
+                                            sellingPlanId:
+                                              it.sellingPlans &&
+                                              it.sellingPlans[newEvery]
+                                                ? it.sellingPlans[newEvery]
+                                                : it.sellingPlanId,
                                           });
+
                                           setManageSubOpen((prev) => ({
                                             ...prev,
                                             [it.id]: false,
@@ -11452,6 +11481,8 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                             subEvery: undefined,
                                             subPrice: undefined,
                                             price: newPrice,
+                                            // clear any plan ID so Shopify treats it as one-time
+                                            sellingPlanId: undefined,
                                           });
 
                                           setManageSubOpen((prev) => ({
@@ -11557,6 +11588,11 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                           ...it,
                                           subEvery: selFreq,
                                         }),
+                                        sellingPlanId:
+                                          it.sellingPlans &&
+                                          it.sellingPlans[selFreq]
+                                            ? it.sellingPlans[selFreq]
+                                            : it.sellingPlanId,
                                       });
                                       // collapse the chooser after starting
                                       setShowSubChooser((prev) => {

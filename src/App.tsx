@@ -4256,7 +4256,7 @@ function RoastLevelAnchors({
   level,
   reviewData,
   reviews,
-  roastTitle,
+  roastTitle: _roastTitle, // kept for callsites, unused now
 }: {
   level: 1 | 2 | 3 | 4 | 5;
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
@@ -4277,46 +4277,20 @@ function RoastLevelAnchors({
   const toggleExpand = (id: string) =>
     setExpandedId((prev) => (prev === id ? null : id));
 
-  const [showModal, setShowModal] = useState(false);
-  const [rating, setRating] = useState<number>(0);
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-
-  const submitReview = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (rating < 1) {
-      window.dispatchEvent(
-        new CustomEvent("flash", { detail: "Please select a star rating." })
-      );
-      return;
-    }
-    window.dispatchEvent(
-      new CustomEvent("flash", { detail: "Thanks for your review!" })
-    );
-    setShowModal(false);
-    setRating(0);
-    setTitle("");
-    setBody("");
-    setName("");
-    setEmail("");
-  };
   return (
     <>
       <LocalFlashBanner />
       <section className="mt-0 md:mt-2">
         {/* ================= DESKTOP (unchanged from your original) ================= */}
         <div className="hidden md:block">
-          {/* Header row: title + write button */}
-          {/* Desktop header, BRCC-style layout */}
+          {/* Desktop header */}
           <div className="mb-4 flex flex-col items-center text-center">
             {/* Title */}
             <h2 className="text-xl md:text-2xl font-bold tracking-wide text-amber-300">
               CUSTOMER REVIEWS
             </h2>
 
-            {/* Row under title: rating num, stars, count, button */}
+            {/* Row under title: rating num, stars, count */}
             <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-center">
               {/* rating number */}
               <span className="text-amber-300 font-semibold tabular-nums text-base">
@@ -4377,16 +4351,6 @@ function RoastLevelAnchors({
 
               {/* review count */}
               <div className="text-neutral-400 text-lg">{total} REVIEWS</div>
-
-              {/* Write a Review button, now inline and centered */}
-              <button
-                type="button"
-                onClick={() => setShowModal(true)}
-                className="ml-10 px-4 py-2 rounded-lg text-sm font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
-                aria-label="Write a review"
-              >
-                Write a Review
-              </button>
             </div>
           </div>
 
@@ -4605,20 +4569,11 @@ function RoastLevelAnchors({
 
         {/* ================= MOBILE (tweaked) ================= */}
         <div className="block md:hidden">
-          {/* Header: stacked, no absolute button */}
+          {/* Header: title only */}
           <div className="mb-4 flex flex-col items-center text-center">
             <h2 className="text-lg font-bold tracking-wide text-amber-300">
               CUSTOMER REVIEWS
             </h2>
-
-            <button
-              type="button"
-              onClick={() => setShowModal(true)}
-              className="mt-3 w-full max-w-[220px] px-3 py-2 rounded-lg text-sm font-semibold border border-amber-400/70 text-amber-300 bg-black hover:bg-amber-400 hover:text-neutral-900 transition shadow-md shadow-amber-400/10"
-              aria-label="Write a review"
-            >
-              Write a Review
-            </button>
           </div>
 
           {/* Avg / Stars / Count */}
@@ -4901,152 +4856,6 @@ function RoastLevelAnchors({
             aria-hidden
           />
         )}
-
-        {/* WRITE A REVIEW MODAL */}
-        {showModal &&
-          typeof document !== "undefined" &&
-          createPortal(
-            <div
-              className="fixed inset-0 z-[2147483647] flex items-center justify-center pt-[calc(env(safe-area-inset-top)+40px)] md:pt-0"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Write a review"
-              onClick={(e) => {
-                if (e.target === e.currentTarget) setShowModal(false);
-              }}
-            >
-              {/* Backdrop */}
-              <div className="absolute inset-0 bg-black/70" aria-hidden />
-
-              {/* Modal panel */}
-              <div className="relative z-10 w-[92vw] max-w-[720px] rounded-xl border border-amber-400/60 bg-neutral-950 p-5 md:p-6 shadow-2xl shadow-amber-500/20 text-left max-h-[96vh] overflow-y-auto">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="text-lg md:text-xl font-bold text-amber-300">
-                    WRITE A REVIEW
-                  </div>
-                  <button
-                    className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-neutral-600 bg-black/70 text-neutral-100 hover:border-amber-400/60 hover:text-amber-300"
-                    onClick={() => setShowModal(false)}
-                    aria-label="Close write a review"
-                  >
-                    ×
-                  </button>
-                </div>
-
-                <form onSubmit={submitReview} className="space-y-3">
-                  {/* SCORE */}
-                  <div className="space-y-1">
-                    <div className="text-sm text-neutral-300">
-                      SCORE*{" "}
-                      {rating < 1 && (
-                        <span className="text-red-400 text-xs ml-1">
-                          required
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-1">
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        <button
-                          key={n}
-                          type="button"
-                          onClick={() => setRating(n)}
-                          className="p-1"
-                          aria-label={`Rate ${n} star${n > 1 ? "s" : ""}`}
-                        >
-                          <svg
-                            viewBox="0 0 24 24"
-                            fill={n <= rating ? "currentColor" : "none"}
-                            className={
-                              "h-6 w-6 " +
-                              (n <= rating
-                                ? "text-amber-400"
-                                : "text-neutral-600")
-                            }
-                            stroke="currentColor"
-                          >
-                            <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                          </svg>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* TITLE */}
-                  <div>
-                    <div className="text-sm text-neutral-300 mb-1">TITLE*</div>
-                    <input
-                      className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 text-[15px] text-neutral-100 placeholder:text-neutral-500 outline-none focus:border-amber-400/70"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      required
-                      placeholder="Give your review a title"
-                    />
-                  </div>
-
-                  {/* CONTENT */}
-                  <div>
-                    <div className="text-sm text-neutral-300 mb-1">
-                      What did you think of {roastTitle}?*
-                    </div>
-                    <textarea
-                      className="w-full min-h-[120px] rounded-md border border-neutral-700 bg-black/70 px-3 py-2 text-[15px] text-neutral-100 placeholder:text-neutral-500 outline-none focus:border-amber-400/70"
-                      value={body}
-                      onChange={(e) => setBody(e.target.value)}
-                      required
-                      placeholder="Write your comments here"
-                    />
-                  </div>
-
-                  {/* NAME / EMAIL */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                      <div className="text-sm text-neutral-300 mb-1">NAME*</div>
-                      <input
-                        className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 text-[15px] text-neutral-100 placeholder:text-neutral-500 outline-none focus:border-amber-400/70"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                        placeholder="Enter your name"
-                      />
-                    </div>
-                    <div>
-                      <div className="text-sm text-neutral-300 mb-1">
-                        EMAIL*
-                      </div>
-                      <input
-                        type="email"
-                        className="w-full rounded-md border border-neutral-700 bg-black/70 px-3 py-2 text-[15px] text-neutral-100 placeholder:text-neutral-500 outline-none focus:border-amber-400/70"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        placeholder="Enter your email"
-                      />
-                    </div>
-                  </div>
-
-                  {/* POST */}
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      disabled={
-                        rating < 1 || !title || !body || !name || !email
-                      }
-                      className={
-                        "w-full px-4 py-3 rounded-lg text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
-                        (rating < 1 || !title || !body || !name || !email
-                          ? "opacity-60 cursor-not-allowed"
-                          : "hover:bg-amber-400 hover:text-neutral-900")
-                      }
-                    >
-                      POST
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>,
-            document.body
-          )}
       </section>
     </>
   );

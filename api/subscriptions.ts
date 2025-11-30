@@ -50,18 +50,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Log raw Seal response so you can see the exact shape in Vercel logs
     console.log("[Seal] raw subscriptions response:", JSON.stringify(data));
 
-    // Handle common Seal shapes: [], { payload: [...] }, { subscriptions: [...] }, { data: [...] }
+    // Handle common Seal shapes:
+    // [], { payload: [...] }, { payload: { subscriptions: [...] } }, { subscriptions: [...] }, { data: [...] }
     let rawList: any[] = [];
 
     if (Array.isArray(data)) {
       rawList = data;
     } else if (Array.isArray((data as any).payload)) {
       rawList = (data as any).payload;
+    } else if (Array.isArray((data as any).payload?.subscriptions)) {
+      rawList = (data as any).payload.subscriptions;
     } else if (Array.isArray((data as any).subscriptions)) {
       rawList = (data as any).subscriptions;
     } else if (Array.isArray((data as any).data)) {
       rawList = (data as any).data;
     }
+
+    console.log("[Seal] normalized rawList length:", rawList.length);
 
     const subs = rawList.map((s: any) => ({
       // base identifiers

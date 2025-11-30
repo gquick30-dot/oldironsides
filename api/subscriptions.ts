@@ -55,7 +55,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ? (data as any).payload
       : [];
 
-    // Normalize to a simple shape for the frontend
     const subs = rawList.map((s) => ({
       id: s.id,
       status: s.status,
@@ -76,7 +75,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         : [],
     }));
 
-    res.status(200).json({ subs });
+    // Match what the frontend expects
+    res.status(200).json({ subscriptions: subs });
   } catch (err) {
     console.error("Seal /subscriptions handler error:", err);
     res.status(500).json({ error: "Unexpected server error." });

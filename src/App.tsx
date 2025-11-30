@@ -8377,8 +8377,9 @@ function SubscribeManagePage({
         }
 
         const json = await resp.json();
-        // Seal usually returns { success, payload: [...] }
-        const payload = json.payload ?? json.subscriptions ?? [];
+        // Seal usually returns { success, payload: [...] } or { subscriptions: [...] }
+        const payload = json.payload ?? json.subscriptions ?? json.subs ?? [];
+
         setSubs(Array.isArray(payload) ? payload : []);
       } catch (err) {
         console.error("Failed to fetch subscriptions", err);

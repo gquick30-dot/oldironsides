@@ -8373,17 +8373,17 @@ function SubscribeManagePage({
         });
 
         const text = await resp.text();
-        console.log("[/api/subscriptions] raw response:", text);
+        console.log("[/api/account-subscriptions] raw response:", text);
 
         if (!resp.ok) {
-          throw new Error(`HTTP ${resp.status} – ${text}`);
+          throw new Error(`HTTP ${resp.status} -> ${text}`);
         }
 
         let json: any = {};
         try {
           json = text ? JSON.parse(text) : {};
         } catch (e) {
-          console.error("Failed to parse /api/subscriptions JSON:", e);
+          console.error("Failed to parse /api/account-subscriptions JSON:", e);
           setSubs([]);
           setSubsError("Subscriptions server returned invalid JSON.");
           return;
@@ -8396,9 +8396,10 @@ function SubscribeManagePage({
           json.subs ??
           (Array.isArray(json) ? json : []);
 
-        console.log("[/api/subscriptions] parsed payload:", payload);
+        console.log("[/api/account-subscriptions] parsed payload:", payload);
 
         setSubs(Array.isArray(payload) ? payload : []);
+        setSubsError(null);
       } catch (err) {
         console.error("Failed to fetch subscriptions", err);
         setSubs([]);

@@ -8348,30 +8348,68 @@ function SubscribeManagePage({
   useEffect(() => {
     if (!user) setTab("login");
   }, [user]);
-  // For now, don't fetch subs; just mirror whatever is on the user object
+
+  // on real backend: fetch customer, orders, subs, addresses here
   useEffect(() => {
-    if (!user) {
-      setSubs([]);
-      setSubsLoading(false);
-      setSubsError(null);
-      return;
+    async function bootstrap() {
+      if (!user) return;
+
+      try {
+        // you already have the customer info coming back from /api/account-login
+        // so we just reuse the email here
+        const email = user?.email;
+        if (!email) {
+          setSubs([]);
+          return;
+        }
+
+        setSubsLoading(true);
+        setSubsError(null);
+
+        const resp = await fetch("/api/account-subscriptions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+
+        const text = await resp.text();
+        console.log("[/api/account-subscriptions] raw response:", text);
+
+        if (!resp.ok) {
+          throw new Error(`HTTP ${resp.status} -> ${text}`);
+        }
+
+        let json: any = {};
+        try {
+          json = text ? JSON.parse(text) : {};
+        } catch (e) {
+          console.error("Failed to parse /api/account-subscriptions JSON:", e);
+          setSubs([]);
+          setSubsError("Subscriptions server returned invalid JSON.");
+          return;
+        }
+
+        // Expecting { subscriptions: [...] } from our API
+        const payload =
+          json.subscriptions ??
+          json.payload ??
+          json.subs ??
+          (Array.isArray(json) ? json : []);
+
+        console.log("[/api/account-subscriptions] parsed payload:", payload);
+
+        setSubs(Array.isArray(payload) ? payload : []);
+        setSubsError(null);
+      } catch (err) {
+        console.error("Failed to fetch subscriptions", err);
+        setSubs([]);
+        setSubsError("Couldn't load subscriptions right now.");
+      } finally {
+        setSubsLoading(false);
+      }
     }
 
-    try {
-      const u: any = user;
-      const subsFromUser = Array.isArray(u.subscriptions)
-        ? u.subscriptions
-        : [];
-
-      setSubs(subsFromUser);
-      setSubsLoading(false);
-      setSubsError(null);
-    } catch (e) {
-      console.error("Error mapping subscriptions from user:", e);
-      setSubs([]);
-      setSubsLoading(false);
-      setSubsError("Couldn't load subscriptions right now.");
-    }
+    bootstrap();
   }, [user]);
 
   // ---------- Auth ----------

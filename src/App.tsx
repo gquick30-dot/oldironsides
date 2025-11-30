@@ -8718,11 +8718,26 @@ function SubscribeManagePage({
                   Next delivery
                 </div>
                 <div className="mt-2 text-neutral-300 text-sm">
-                  {subs[0] ? (
+                  {subsLoading ? (
+                    "Loading subscriptions…"
+                  ) : Array.isArray(subs) && subs.length > 0 ? (
                     <>
-                      <div>{subs[0].product}</div>
+                      <div>
+                        {subs[0].product ||
+                          subs[0].subscription_name ||
+                          subs[0].rule_name ||
+                          "Coffee subscription"}
+                      </div>
                       <div className="text-neutral-400">
-                        Ships around {subs[0].nextCharge} • {subs[0].frequency}
+                        Ships around{" "}
+                        {subs[0].nextCharge ||
+                          subs[0].next_billing ||
+                          "upcoming date"}{" "}
+                        •{" "}
+                        {subs[0].frequency ||
+                          subs[0].delivery_interval ||
+                          subs[0].billing_interval ||
+                          "custom interval"}
                       </div>
                     </>
                   ) : (

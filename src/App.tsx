@@ -8372,13 +8372,31 @@ function SubscribeManagePage({
           body: JSON.stringify({ email }),
         });
 
+        const text = await resp.text();
+        console.log("[/api/subscriptions] raw response:", text);
+
         if (!resp.ok) {
-          throw new Error(`HTTP ${resp.status}`);
+          throw new Error(`HTTP ${resp.status} – ${text}`);
         }
 
-        const json = await resp.json();
-        // Seal usually returns { success, payload: [...] } or { subscriptions: [...] }
-        const payload = json.payload ?? json.subscriptions ?? json.subs ?? [];
+        let json: any = {};
+        try {
+          json = text ? JSON.parse(text) : {};
+        } catch (e) {
+          console.error("Failed to parse /api/subscriptions JSON:", e);
+          setSubs([]);
+          setSubsError("Subscriptions server returned invalid JSON.");
+          return;
+        }
+
+        // Expecting { subscriptions: [...] } from our API
+        const payload =
+          json.subscriptions ??
+          json.payload ??
+          json.subs ??
+          (Array.isArray(json) ? json : []);
+
+        console.log("[/api/subscriptions] parsed payload:", payload);
 
         setSubs(Array.isArray(payload) ? payload : []);
       } catch (err) {

@@ -6366,7 +6366,7 @@ function ContactPage() {
                 Hail The Quarterdeck!
               </span>
             }
-            subtitle="Questions, wholesale, press – we’ll get back fast."
+            subtitle="Questions, comments, press – we’ll get back fast."
           />
           <div className="hidden md:block">
             <BackButton size="sm" />

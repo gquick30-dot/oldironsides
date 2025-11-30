@@ -1,47 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const SHOPIFY_DOMAIN = process.env.VITE_SHOPIFY_STORE_DOMAIN;
-const API_VERSION = process.env.VITE_SHOPIFY_API_VERSION || "2024-04";
-const STOREFRONT_TOKEN = process.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
-
-const STOREFRONT_URL = `https://${SHOPIFY_DOMAIN}/api/${API_VERSION}/graphql.json`;
-
-const LOGIN_MUTATION = `
-  mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
-    customerAccessTokenCreate(input: $input) {
-      customerAccessToken {
-        accessToken
-        expiresAt
-      }
-      customerUserErrors {
-        code
-        field
-        message
-      }
-    }
-  }
-`;
-
-const CUSTOMER_QUERY = `
-  query customerQuery($accessToken: String!) {
-    customer(customerAccessToken: $accessToken) {
-      id
-      firstName
-      lastName
-      email
-      defaultAddress {
-        id
-        name
-        address1
-        address2
-        city
-        province
-        zip
-        country
-      }
-    }
-  }
-`;
+const SEAL_TOKEN = process.env.SEAL_API_TOKEN;
+const SEAL_BASE =
+  "https://app.sealsubscriptions.com/shopify/merchant/api/subscriptions";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
@@ -49,102 +10,101 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  if (!STOREFRONT_URL || !STOREFRONT_TOKEN) {
-    res
-      .status(500)
-      .json({ error: "Missing Shopify storefront env vars on server." });
+  if (!SEAL_TOKEN) {
+    res.status(500).json({ error: "Missing SEAL_API_TOKEN on server." });
     return;
   }
 
   try {
     const body =
       typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
-    const { email, password } = body;
+    const { email } = body;
 
-    if (!email || !password) {
-      res.status(400).json({ error: "Missing email or password." });
+    if (!email) {
+      res.status(400).json({ error: "Missing email." });
       return;
     }
 
-    // 1) Login -> get customer access token
-    const loginResp = await fetch(STOREFRONT_URL, {
-      method: "POST",
+    // NOTE: we are NOT filtering by email in the URL anymore.
+    // We just pull all active subs and filter by email in code.
+    const url = SEAL_BASE + `?active-only=true&with-items=true`;
+
+    const r = await fetch(url, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Storefront-Access-Token": STOREFRONT_TOKEN,
+        "X-Seal-Token": SEAL_TOKEN,
       },
-      body: JSON.stringify({
-        query: LOGIN_MUTATION,
-        variables: {
-          input: { email, password },
-        },
-      }),
     });
 
-    const loginJson = await loginResp.json();
-    const createResult = loginJson?.data?.customerAccessTokenCreate;
-
-    const errors = createResult?.customerUserErrors ?? [];
-    const accessToken = createResult?.customerAccessToken?.accessToken;
-
-    if (!accessToken || errors.length) {
-      res.status(401).json({
-        error: errors[0]?.message || "Invalid email or password.",
-        debug: loginJson,
-      });
+    if (!r.ok) {
+      const text = await r.text();
+      console.error("Seal /subscriptions error:", r.status, text);
+      res
+        .status(502)
+        .json({ error: "Failed to load subscriptions from Seal." });
       return;
     }
 
-    // 2) Load customer profile + default address
-    const customerResp = await fetch(STOREFRONT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Shopify-Storefront-Access-Token": STOREFRONT_TOKEN,
-      },
-      body: JSON.stringify({
-        query: CUSTOMER_QUERY,
-        variables: { accessToken },
-      }),
-    });
+    const data = await r.json();
+    console.log("[Seal] raw subscriptions response:", JSON.stringify(data));
 
-    const customerJson = await customerResp.json();
-    const customer = customerJson?.data?.customer;
+    // Handle common Seal shapes: [], { payload: [...] }, { subscriptions: [...] }, { data: [...] }
+    let rawList: any[] = [];
 
-    if (!customer) {
-      res.status(500).json({ error: "Could not load customer from Shopify." });
-      return;
+    if (Array.isArray(data)) {
+      rawList = data;
+    } else if (Array.isArray((data as any).payload)) {
+      rawList = (data as any).payload;
+    } else if (Array.isArray((data as any).subscriptions)) {
+      rawList = (data as any).subscriptions;
+    } else if (Array.isArray((data as any).data)) {
+      rawList = (data as any).data;
     }
 
-    const user = {
-      id: customer.id,
-      email: customer.email,
-      firstName: customer.firstName,
-      lastName: customer.lastName,
-      name:
-        customer.firstName && customer.lastName
-          ? `${customer.firstName} ${customer.lastName}`
-          : customer.firstName || customer.email,
-      defaultAddress: customer.defaultAddress
-        ? {
-            id: customer.defaultAddress.id,
-            name: customer.defaultAddress.name,
-            line1: customer.defaultAddress.address1,
-            line2: customer.defaultAddress.address2,
-            city: customer.defaultAddress.city,
-            state: customer.defaultAddress.province,
-            zip: customer.defaultAddress.zip,
-            country: customer.defaultAddress.country,
-          }
-        : null,
-    };
-
-    res.status(200).json({
-      accessToken,
-      user,
+    // Filter by the email we got from the account login
+    const filtered = rawList.filter((s: any) => {
+      const e = (s.email || s.customer_email || "").toLowerCase();
+      return e === String(email).toLowerCase();
     });
+
+    const source = filtered.length > 0 ? filtered : rawList;
+
+    const subs = source.map((s: any) => ({
+      id: s.id,
+      status: s.status,
+      email: s.email || s.customer_email,
+      firstName: s.first_name,
+      lastName: s.last_name,
+
+      subscription_name:
+        s.subscription_name || s.rule_name || s.product_title || s.title,
+      rule_name: s.rule_name,
+
+      next_billing:
+        s.next_billing ||
+        s.next_payment_date ||
+        s.next_order_date ||
+        s.order_placed ||
+        null,
+
+      delivery_interval: s.delivery_interval,
+      billing_interval: s.billing_interval,
+
+      totalValue: s.total_value,
+      items: Array.isArray(s.items)
+        ? s.items.map((it: any) => ({
+            id: it.id,
+            title: it.title || it.product_title,
+            quantity: it.quantity,
+            price: it.price,
+          }))
+        : [],
+    }));
+
+    res.status(200).json({ subscriptions: subs });
   } catch (err) {
-    console.error(err);
+    console.error("Seal /subscriptions handler error:", err);
     res.status(500).json({ error: "Unexpected server error." });
   }
 }

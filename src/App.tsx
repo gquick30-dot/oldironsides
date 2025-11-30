@@ -7947,7 +7947,6 @@ function CartPage() {
           ...(line.sellingPlanId ? { sellingPlanId: line.sellingPlanId } : {}),
         });
       }
-
       // 5) Fresh checkout url and go
       const fresh = await getCart(cartId);
       const url: string | undefined = fresh?.checkoutUrl;
@@ -7962,6 +7961,16 @@ function CartPage() {
           })
         );
         return;
+      }
+
+      // clear local Chest before sending to Shopify checkout
+      try {
+        clear(); // from useCart()
+        localStorage.removeItem("oi_cart");
+        localStorage.removeItem("oi_cart_v1");
+        localStorage.removeItem("oi_cart_v2");
+      } catch {
+        /* ignore */
       }
 
       window.location.assign(url);
@@ -8312,7 +8321,11 @@ function SubscribeManagePage({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const [subs, setSubs] = useState<any[]>([]);
+  // Seal subscriptions state
+  const [subs, setSubs] = useState<any[] | null>(null);
+  const [subsLoading, setSubsLoading] = useState(false);
+  const [subsError, setSubsError] = useState<string | null>(null);
+
   const [orders, setOrders] = useState<any[]>([]);
 
   const [defaultAddress, setDefaultAddress] = useState<any>({
@@ -8324,6 +8337,7 @@ function SubscribeManagePage({
     zip: "02129",
     country: "USA",
   });
+
   useEffect(() => {
     const u: any = user;
     if (u && u.defaultAddress) {
@@ -8335,26 +8349,46 @@ function SubscribeManagePage({
     if (!user) setTab("login");
   }, [user]);
 
-  // On real backend: fetch customer, orders, subs, addresses here
+  // on real backend: fetch customer, orders, subs, addresses here
   useEffect(() => {
     async function bootstrap() {
       if (!user) return;
-      const token = localStorage.getItem("oi_token");
-      if (!token) return;
 
       try {
-        // Example:
-        // const resp = await fetch("/api/account/overview", {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // });
-        // const data = await resp.json();
-        // setSubs(data.subscriptions);
-        // setOrders(data.orders);
-        // setDefaultAddress(data.defaultAddress);
+        // you already have the customer info coming back from /api/account-login
+        // so we just reuse the email here
+        const email = user?.email;
+        if (!email) {
+          setSubs([]);
+          return;
+        }
+
+        setSubsLoading(true);
+        setSubsError(null);
+
+        const resp = await fetch("/api/subscriptions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+
+        if (!resp.ok) {
+          throw new Error(`HTTP ${resp.status}`);
+        }
+
+        const json = await resp.json();
+        // Seal usually returns { success, payload: [...] }
+        const payload = json.payload ?? json.subscriptions ?? [];
+        setSubs(Array.isArray(payload) ? payload : []);
       } catch (err) {
-        console.error("Failed to load account data", err);
+        console.error("Failed to fetch subscriptions", err);
+        setSubs([]);
+        setSubsError("Couldn't load subscriptions right now.");
+      } finally {
+        setSubsLoading(false);
       }
     }
+
     bootstrap();
   }, [user]);
 
@@ -8782,93 +8816,58 @@ function SubscribeManagePage({
           </div>
         )}
 
-        {/* SUBSCRIPTIONS */}
         {tab === "subscriptions" && (
-          <div className="mt-6 space-y-4">
-            {subs.length === 0 && (
-              <div className="text-neutral-400">
-                No active subscriptions. Add Subscribe & Save from the store to
-                start.
+          <div className="space-y-4">
+            {subsLoading && (
+              <div className="text-sm text-neutral-400">
+                Loading subscriptions…
               </div>
             )}
-            {subs.map((s) => (
-              <div
-                key={s.id}
-                className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
-              >
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="font-semibold text-amber-300">
-                    {s.product}
-                  </div>
-                  <div className="text-sm text-neutral-400">
-                    • Next ship date: {s.nextCharge}
-                  </div>
-                  <div className="text-sm text-neutral-400">
-                    • {s.frequency}
-                  </div>
-                  <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
-                    {s.status}
-                  </div>
-                </div>
 
-                <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-neutral-300">
-                  <div>
-                    <div className="text-neutral-400 text-xs uppercase tracking-wide mb-1">
-                      Ships to
-                    </div>
-                    <div>{s.shippingAddress?.name}</div>
-                    <div>{s.shippingAddress?.line1}</div>
-                    {s.shippingAddress?.line2 && (
-                      <div>{s.shippingAddress.line2}</div>
-                    )}
-                    <div>
-                      {s.shippingAddress?.city}, {s.shippingAddress?.state}{" "}
-                      {s.shippingAddress?.zip}
-                    </div>
-                    <div>{s.shippingAddress?.country}</div>
-                  </div>
-                  <div className="space-y-1 text-neutral-400">
-                    <div className="text-xs uppercase tracking-wide">Notes</div>
-                    <p>
-                      Change roast, quantity, frequency or address in your
-                      subscription portal once connected.
-                    </p>
-                  </div>
-                </div>
+            {!subsLoading && subsError && (
+              <div className="text-sm text-red-400">{subsError}</div>
+            )}
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <button
-                    onClick={() => skipNextCharge(s.id)}
-                    className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
-                  >
-                    {s.skipped ? "Undo skip" : "Skip next delivery"}
-                  </button>
-
-                  {s.status === "paused" ? (
-                    <button
-                      onClick={() => resumeSub(s.id)}
-                      className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
-                    >
-                      Resume subscription
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => pauseSub(s.id)}
-                      className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
-                    >
-                      Pause subscription
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => cancelSub(s.id)}
-                    className="px-3 py-2 rounded-lg border border-red-800 text-red-300 hover:border-red-600 text-sm"
-                  >
-                    Cancel subscription
-                  </button>
-                </div>
+            {!subsLoading && !subsError && (!subs || subs.length === 0) && (
+              <div className="text-sm text-neutral-400">
+                You don’t have any active subscriptions yet.
               </div>
-            ))}
+            )}
+
+            {!subsLoading &&
+              !subsError &&
+              subs &&
+              subs.length > 0 &&
+              subs.map((s: any) => (
+                <div
+                  key={s.id}
+                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/60 p-4 space-y-1"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="text-amber-300 font-semibold">
+                      {s.subscription_name ||
+                        s.rule_name ||
+                        "Coffee subscription"}
+                    </div>
+                    <span className="px-2 py-1 text-[11px] rounded-full bg-neutral-800 text-neutral-200 uppercase tracking-wide">
+                      {s.status || "UNKNOWN"}
+                    </span>
+                  </div>
+
+                  <div className="text-sm text-neutral-300">
+                    Every{" "}
+                    {s.delivery_interval ||
+                      s.billing_interval ||
+                      "custom interval"}
+                  </div>
+
+                  {s.next_billing && (
+                    <div className="text-xs text-neutral-400">
+                      Next billing: {s.next_billing}
+                    </div>
+                  )}
+                </div>
+              ))}
           </div>
         )}
 
@@ -10849,6 +10848,15 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
         return;
       }
 
+      // clear local cart so it’s empty next time you open it
+      try {
+        localStorage.removeItem("oi_cart");
+        localStorage.removeItem("oi_cart_v1");
+        localStorage.removeItem("oi_cart_v2");
+      } catch {
+        /* ignore */
+      }
+
       window.location.assign(url);
     } catch (e) {
       console.error(e);
@@ -11566,6 +11574,15 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
         );
         setCheckingOut(false);
         return;
+      }
+
+      // clear local cart before sending to Shopify checkout
+      try {
+        localStorage.removeItem("oi_cart");
+        localStorage.removeItem("oi_cart_v1");
+        localStorage.removeItem("oi_cart_v2");
+      } catch {
+        /* ignore */
       }
 
       window.location.assign(url);

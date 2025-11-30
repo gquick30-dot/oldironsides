@@ -1,3 +1,7 @@
-src/.env.local
+dist/
+node_modules/
+.vercel/
+.devbox/
+.env.local
 .env
 .env.*

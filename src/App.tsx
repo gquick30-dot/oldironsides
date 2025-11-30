@@ -8366,7 +8366,7 @@ function SubscribeManagePage({
         setSubsLoading(true);
         setSubsError(null);
 
-        const resp = await fetch("/api/subscriptions", {
+        const resp = await fetch("/api/account-subscriptions", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),

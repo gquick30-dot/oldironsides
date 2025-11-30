@@ -1,8 +1,7 @@
-// api/subscriptions.ts
+// api/account-subscriptions.ts
 
 export default function handler(req: any, res: any) {
-  // Simple sanity check so we know it's our code
-  console.log("[TEST] /api/subscriptions hit");
+  console.log("[TEST] /api/account-subscriptions hit");
 
   res.status(200).json({
     subscriptions: [

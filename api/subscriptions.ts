@@ -25,9 +25,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    const url =
-      SEAL_BASE +
-      `?query=${encodeURIComponent(email)}&active-only=true&with-items=true`;
+    // Just pull all active subs with items – no query filter.
+    const url = SEAL_BASE + "?active-only=true&with-items=true";
 
     const r = await fetch(url, {
       method: "GET",
@@ -45,43 +44,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .json({ error: "Failed to load subscriptions from Seal." });
       return;
     }
-    const data = await r.json();
 
-    // Log raw Seal response so you can see the exact shape in Vercel logs
+    const data = await r.json();
     console.log("[Seal] raw subscriptions response:", JSON.stringify(data));
 
-    // Handle common Seal shapes:
-    // [], { payload: [...] }, { payload: { subscriptions: [...] } }, { subscriptions: [...] }, { data: [...] }
-    let rawList: any[] = [];
+    // We know from your logs that Seal returns:
+    // { success: true, payload: { subscriptions: [...] } }
+    const rawList: any[] =
+      data?.payload && Array.isArray(data.payload.subscriptions)
+        ? data.payload.subscriptions
+        : [];
 
-    if (Array.isArray(data)) {
-      rawList = data;
-    } else if (Array.isArray((data as any).payload)) {
-      rawList = (data as any).payload;
-    } else if (Array.isArray((data as any).payload?.subscriptions)) {
-      rawList = (data as any).payload.subscriptions;
-    } else if (Array.isArray((data as any).subscriptions)) {
-      rawList = (data as any).subscriptions;
-    } else if (Array.isArray((data as any).data)) {
-      rawList = (data as any).data;
-    }
-
-    console.log("[Seal] normalized rawList length:", rawList.length);
+    console.log("[Seal] mapped subscriptions count:", rawList.length);
 
     const subs = rawList.map((s: any) => ({
-      // base identifiers
       id: s.id,
       status: s.status,
       email: s.email || s.customer_email,
-      firstName: s.first_name,
-      lastName: s.last_name,
 
-      // names the frontend already looks for
       subscription_name:
         s.subscription_name || s.rule_name || s.product_title || s.title,
       rule_name: s.rule_name,
 
-      // dates the frontend already looks for
       next_billing:
         s.next_billing ||
         s.next_payment_date ||
@@ -89,12 +73,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         s.order_placed ||
         null,
 
-      // intervals the frontend already looks for
       delivery_interval: s.delivery_interval,
       billing_interval: s.billing_interval,
 
-      // keep some extra info too
-      totalValue: s.total_value,
       items: Array.isArray(s.items)
         ? s.items.map((it: any) => ({
             id: it.id,
@@ -105,7 +86,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         : [],
     }));
 
-    // Shape the frontend expects: { subscriptions: [...] }
+    // No filtering by email for now – we just return what Seal gave us.
     res.status(200).json({ subscriptions: subs });
   } catch (err) {
     console.error("Seal /subscriptions handler error:", err);

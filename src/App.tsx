@@ -8411,6 +8411,22 @@ function SubscribeManagePage({
 
     bootstrap();
   }, [user]);
+  // When subscriptions load, use the first sub's shipping address
+  // to update the default shipping address (from Seal).
+  useEffect(() => {
+    if (!subs || subs.length === 0) return;
+
+    const first: any = subs[0];
+    if (!first.shippingAddress) return;
+
+    setDefaultAddress((prev: any) => {
+      // If we're still on the fake Harbor Way or empty, override it.
+      if (!prev || prev.line1 === "123 Harbor Way" || !prev.line1) {
+        return first.shippingAddress;
+      }
+      return prev;
+    });
+  }, [subs]);
 
   // ---------- Auth ----------
 

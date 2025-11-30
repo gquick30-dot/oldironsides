@@ -8321,11 +8321,7 @@ function SubscribeManagePage({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Seal subscriptions state
-  const [subs, setSubs] = useState<any[] | null>(null);
-  const [subsLoading, setSubsLoading] = useState(false);
-  const [subsError, setSubsError] = useState<string | null>(null);
-
+  const [subs, setSubs] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
 
   const [defaultAddress, setDefaultAddress] = useState<any>({
@@ -8337,7 +8333,6 @@ function SubscribeManagePage({
     zip: "02129",
     country: "USA",
   });
-
   useEffect(() => {
     const u: any = user;
     if (u && u.defaultAddress) {
@@ -8349,84 +8344,28 @@ function SubscribeManagePage({
     if (!user) setTab("login");
   }, [user]);
 
-  // on real backend: fetch customer, orders, subs, addresses here
+  // On real backend: fetch customer, orders, subs, addresses here
   useEffect(() => {
     async function bootstrap() {
       if (!user) return;
+      const token = localStorage.getItem("oi_token");
+      if (!token) return;
 
       try {
-        // you already have the customer info coming back from /api/account-login
-        // so we just reuse the email here
-        const email = user?.email;
-        if (!email) {
-          setSubs([]);
-          return;
-        }
-
-        setSubsLoading(true);
-        setSubsError(null);
-
-        const resp = await fetch("/api/account-subscriptions", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        });
-
-        const text = await resp.text();
-        console.log("[/api/account-subscriptions] raw response:", text);
-
-        if (!resp.ok) {
-          throw new Error(`HTTP ${resp.status} -> ${text}`);
-        }
-
-        let json: any = {};
-        try {
-          json = text ? JSON.parse(text) : {};
-        } catch (e) {
-          console.error("Failed to parse /api/account-subscriptions JSON:", e);
-          setSubs([]);
-          setSubsError("Subscriptions server returned invalid JSON.");
-          return;
-        }
-
-        // Expecting { subscriptions: [...] } from our API
-        const payload =
-          json.subscriptions ??
-          json.payload ??
-          json.subs ??
-          (Array.isArray(json) ? json : []);
-
-        console.log("[/api/account-subscriptions] parsed payload:", payload);
-
-        setSubs(Array.isArray(payload) ? payload : []);
-        setSubsError(null);
+        // Example:
+        // const resp = await fetch("/api/account/overview", {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // });
+        // const data = await resp.json();
+        // setSubs(data.subscriptions);
+        // setOrders(data.orders);
+        // setDefaultAddress(data.defaultAddress);
       } catch (err) {
-        console.error("Failed to fetch subscriptions", err);
-        setSubs([]);
-        setSubsError("Couldn't load subscriptions right now.");
-      } finally {
-        setSubsLoading(false);
+        console.error("Failed to load account data", err);
       }
     }
-
     bootstrap();
   }, [user]);
-  // When subscriptions load, use the first sub's shipping address
-  // to update the default shipping address (from Seal).
-  useEffect(() => {
-    if (!subs || subs.length === 0) return;
-
-    const first: any = subs[0];
-    if (!first.shippingAddress) return;
-
-    setDefaultAddress((prev: any) => {
-      // If we're still on the fake Harbor Way or empty, override it.
-      if (!prev || prev.line1 === "123 Harbor Way" || !prev.line1) {
-        return first.shippingAddress;
-      }
-      return prev;
-    });
-  }, [subs]);
 
   // ---------- Auth ----------
 
@@ -8754,26 +8693,11 @@ function SubscribeManagePage({
                   Next delivery
                 </div>
                 <div className="mt-2 text-neutral-300 text-sm">
-                  {subsLoading ? (
-                    "Loading subscriptions…"
-                  ) : Array.isArray(subs) && subs.length > 0 ? (
+                  {subs[0] ? (
                     <>
-                      <div>
-                        {subs[0].product ||
-                          subs[0].subscription_name ||
-                          subs[0].rule_name ||
-                          "Coffee subscription"}
-                      </div>
+                      <div>{subs[0].product}</div>
                       <div className="text-neutral-400">
-                        Ships around{" "}
-                        {subs[0].nextCharge ||
-                          subs[0].next_billing ||
-                          "upcoming date"}{" "}
-                        •{" "}
-                        {subs[0].frequency ||
-                          subs[0].delivery_interval ||
-                          subs[0].billing_interval ||
-                          "custom interval"}
+                        Ships around {subs[0].nextCharge} • {subs[0].frequency}
                       </div>
                     </>
                   ) : (
@@ -8867,58 +8791,93 @@ function SubscribeManagePage({
           </div>
         )}
 
+        {/* SUBSCRIPTIONS */}
         {tab === "subscriptions" && (
-          <div className="space-y-4">
-            {subsLoading && (
-              <div className="text-sm text-neutral-400">
-                Loading subscriptions…
+          <div className="mt-6 space-y-4">
+            {subs.length === 0 && (
+              <div className="text-neutral-400">
+                No active subscriptions. Add Subscribe & Save from the store to
+                start.
               </div>
             )}
-
-            {!subsLoading && subsError && (
-              <div className="text-sm text-red-400">{subsError}</div>
-            )}
-
-            {!subsLoading && !subsError && (!subs || subs.length === 0) && (
-              <div className="text-sm text-neutral-400">
-                You don’t have any active subscriptions yet.
-              </div>
-            )}
-
-            {!subsLoading &&
-              !subsError &&
-              subs &&
-              subs.length > 0 &&
-              subs.map((s: any) => (
-                <div
-                  key={s.id}
-                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/60 p-4 space-y-1"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="text-amber-300 font-semibold">
-                      {s.subscription_name ||
-                        s.rule_name ||
-                        "Coffee subscription"}
-                    </div>
-                    <span className="px-2 py-1 text-[11px] rounded-full bg-neutral-800 text-neutral-200 uppercase tracking-wide">
-                      {s.status || "UNKNOWN"}
-                    </span>
+            {subs.map((s) => (
+              <div
+                key={s.id}
+                className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
+              >
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="font-semibold text-amber-300">
+                    {s.product}
                   </div>
-
-                  <div className="text-sm text-neutral-300">
-                    Every{" "}
-                    {s.delivery_interval ||
-                      s.billing_interval ||
-                      "custom interval"}
+                  <div className="text-sm text-neutral-400">
+                    • Next ship date: {s.nextCharge}
                   </div>
-
-                  {s.next_billing && (
-                    <div className="text-xs text-neutral-400">
-                      Next billing: {s.next_billing}
-                    </div>
-                  )}
+                  <div className="text-sm text-neutral-400">
+                    • {s.frequency}
+                  </div>
+                  <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
+                    {s.status}
+                  </div>
                 </div>
-              ))}
+
+                <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-neutral-300">
+                  <div>
+                    <div className="text-neutral-400 text-xs uppercase tracking-wide mb-1">
+                      Ships to
+                    </div>
+                    <div>{s.shippingAddress?.name}</div>
+                    <div>{s.shippingAddress?.line1}</div>
+                    {s.shippingAddress?.line2 && (
+                      <div>{s.shippingAddress.line2}</div>
+                    )}
+                    <div>
+                      {s.shippingAddress?.city}, {s.shippingAddress?.state}{" "}
+                      {s.shippingAddress?.zip}
+                    </div>
+                    <div>{s.shippingAddress?.country}</div>
+                  </div>
+                  <div className="space-y-1 text-neutral-400">
+                    <div className="text-xs uppercase tracking-wide">Notes</div>
+                    <p>
+                      Change roast, quantity, frequency or address in your
+                      subscription portal once connected.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    onClick={() => skipNextCharge(s.id)}
+                    className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+                  >
+                    {s.skipped ? "Undo skip" : "Skip next delivery"}
+                  </button>
+
+                  {s.status === "paused" ? (
+                    <button
+                      onClick={() => resumeSub(s.id)}
+                      className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+                    >
+                      Resume subscription
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => pauseSub(s.id)}
+                      className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+                    >
+                      Pause subscription
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => cancelSub(s.id)}
+                    className="px-3 py-2 rounded-lg border border-red-800 text-red-300 hover:border-red-600 text-sm"
+                  >
+                    Cancel subscription
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

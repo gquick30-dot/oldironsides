@@ -1,4 +1,3 @@
-// api/account-subscriptions.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const SEAL_TOKEN = process.env.SEAL_API_TOKEN;
@@ -11,130 +10,116 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  if (!SEAL_TOKEN) {
-    res.status(500).json({ error: "Missing SEAL_API_TOKEN on server." });
-    return;
-  }
-
   try {
     const body =
       typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
     const email = String(body.email || "").trim();
+    const password = String(body.password || "").trim();
 
-    if (!email) {
-      res.status(400).json({ error: "Missing email." });
+    if (!email || !password) {
+      res.status(400).json({ error: "Missing email or password." });
       return;
     }
 
-    // Pull all active subs, filter by email in code
-    const url = `${SEAL_BASE}?active-only=true&with-items=true`;
+    // --- Default user shape ---
+    let defaultAddress: any = null;
+    let name: string = email;
 
-    const r = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Seal-Token": SEAL_TOKEN,
-      },
-    });
+    // --- If we have Seal, try to pull address from the subscription ---
+    if (SEAL_TOKEN) {
+      try {
+        const url = `${SEAL_BASE}?active-only=true&with-items=true`;
 
-    if (!r.ok) {
-      const text = await r.text();
-      console.error("Seal /subscriptions error:", r.status, text);
-      res
-        .status(502)
-        .json({ error: "Failed to load subscriptions from Seal." });
-      return;
-    }
+        const r = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Seal-Token": SEAL_TOKEN,
+          },
+        });
 
-    const data = await r.json();
-    console.log(
-      "[Seal] raw subscriptions response:",
-      JSON.stringify(data, null, 2)
-    );
+        if (r.ok) {
+          const data = await r.json();
+          console.log(
+            "[account-login] Seal raw response:",
+            JSON.stringify(data)
+          );
 
-    // Handle Seal shapes: [], { payload: [...] }, { subscriptions: [...] }, { data: [...] }
-    let rawList: any[] = [];
+          let rawList: any[] = [];
 
-    if (Array.isArray(data)) {
-      rawList = data;
-    } else if (Array.isArray((data as any).payload)) {
-      rawList = (data as any).payload;
-    } else if (Array.isArray((data as any).subscriptions)) {
-      rawList = (data as any).subscriptions;
-    } else if (Array.isArray((data as any).data)) {
-      rawList = (data as any).data;
-    }
-
-    // Filter by email
-    const filtered = rawList.filter((s: any) => {
-      const e = String(s.email || s.customer_email || "").toLowerCase();
-      return e === email.toLowerCase();
-    });
-
-    const source = filtered.length > 0 ? filtered : rawList;
-
-    const subs = source.map((s: any) => {
-      const addr =
-        s.shipping_address ||
-        s.shippingAddress ||
-        s.address ||
-        s.customer_address ||
-        null;
-
-      const shippingAddress = addr
-        ? {
-            name:
-              addr.name ||
-              [addr.first_name, addr.last_name].filter(Boolean).join(" ") ||
-              "",
-            line1: addr.address1 || addr.line1 || "",
-            line2: addr.address2 || addr.line2 || "",
-            city: addr.city || "",
-            state: addr.province || addr.state || "",
-            zip: addr.zip || addr.postal_code || "",
-            country: addr.country || addr.country_code || "",
+          if (Array.isArray(data)) {
+            rawList = data;
+          } else if (Array.isArray((data as any).payload)) {
+            rawList = (data as any).payload;
+          } else if (Array.isArray((data as any).subscriptions)) {
+            rawList = (data as any).subscriptions;
+          } else if (Array.isArray((data as any).data)) {
+            rawList = (data as any).data;
           }
-        : null;
 
-      return {
-        id: s.id,
-        status: s.status,
-        email: s.email || s.customer_email,
-        firstName: s.first_name,
-        lastName: s.last_name,
+          const match = rawList.find((s: any) => {
+            const e = String(s.email || s.customer_email || "").toLowerCase();
+            return e === email.toLowerCase();
+          });
 
-        subscription_name:
-          s.subscription_name || s.rule_name || s.product_title || s.title,
-        rule_name: s.rule_name,
+          if (match) {
+            // Try to build name
+            const firstName = match.first_name || match.customer_first_name;
+            const lastName = match.last_name || match.customer_last_name;
+            if (firstName || lastName) {
+              name = [firstName, lastName].filter(Boolean).join(" ");
+            }
 
-        next_billing:
-          s.next_billing ||
-          s.next_payment_date ||
-          s.next_order_date ||
-          s.order_placed ||
-          null,
+            const addr =
+              match.shipping_address ||
+              match.shippingAddress ||
+              match.address ||
+              match.customer_address ||
+              null;
 
-        delivery_interval: s.delivery_interval,
-        billing_interval: s.billing_interval,
+            if (addr) {
+              defaultAddress = {
+                name:
+                  addr.name ||
+                  [addr.first_name, addr.last_name].filter(Boolean).join(" ") ||
+                  name,
+                line1: addr.address1 || addr.line1 || "",
+                line2: addr.address2 || addr.line2 || "",
+                city: addr.city || "",
+                state: addr.province || addr.state || "",
+                zip: addr.zip || addr.postal_code || "",
+                country: addr.country || addr.country_code || "",
+              };
+            }
+          }
+        } else {
+          const text = await r.text();
+          console.error("[account-login] Seal error:", r.status, text);
+        }
+      } catch (sealErr) {
+        console.error("[account-login] Seal lookup failed:", sealErr);
+      }
+    } else {
+      console.warn(
+        "[account-login] SEAL_API_TOKEN missing, skipping Seal lookup"
+      );
+    }
 
-        totalValue: s.total_value,
-        items: Array.isArray(s.items)
-          ? s.items.map((it: any) => ({
-              id: it.id,
-              title: it.title || it.product_title,
-              quantity: it.quantity,
-              price: it.price,
-            }))
-          : [],
+    // --- Build user object expected by frontend ---
+    const user = {
+      id: email,
+      email,
+      name,
+      defaultAddress,
+    };
 
-        // NEW: normalized shipping address from Seal
-        shippingAddress,
-      };
+    // Frontend expects { accessToken, user }
+    res.status(200).json({
+      accessToken: "mock_access_token",
+      user,
     });
-
-    res.status(200).json({ subscriptions: subs });
   } catch (err) {
-    console.error("Seal /subscriptions handler error:", err);
+    console.error("account-login handler error:", err);
     res.status(500).json({ error: "Unexpected server error." });
   }
 }

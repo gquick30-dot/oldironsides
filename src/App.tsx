@@ -1733,349 +1733,203 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
           </div>
         </div>
 
-        {/* ===== DESKTOP / TABLET: CORE + SEASONAL (CENTERED, SAME CARD SIZE) ===== */}
-        <div className="hidden md:block">
-          {/* CORE FLEET */}
-          <div className="mt-8">
-            <div className="mb-4 text-center text-amber-300 text-sm font-semibold tracking-[0.22em]">
-              THE CORE FLEET
-            </div>
+        {/* desktop / tablet: horizontal slider (all roasts) */}
+        <div className="hidden md:block relative">
+          {/* scroll row */}
+          <div
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar scroll-smooth px-2"
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
+            {roastCards.map((card) => {
+              const base =
+                card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
+              const sub = Math.round(base * 0.85 * 100) / 100;
 
-            <div className="grid grid-cols-3 gap-6 justify-items-center">
-              {roastCards
-                .filter((c) =>
-                  ["flagship", "baptism-by-fire", "java-action"].includes(
-                    c.slug
-                  )
-                )
-                .map((card) => {
-                  const base =
-                    card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
-                  const sub = Math.round(base * 0.85 * 100) / 100;
+              return (
+                <Link
+                  key={card.id}
+                  to={`/roast/${card.slug}`}
+                  aria-label={`${card.title} details`}
+                  className="snap-center shrink-0 w-[360px] rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col overflow-hidden"
+                >
+                  <img
+                    src={
+                      card.img?.startsWith("/") || card.img?.startsWith("http")
+                        ? card.img
+                        : `/${card.img}`
+                    }
+                    alt={card.title}
+                    className="w-full h-[28rem] object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      if (!el.src.includes("/placeholder.png"))
+                        el.src = "/placeholder.png";
+                    }}
+                  />
 
-                  return (
-                    <Link
-                      key={card.id}
-                      to={`/roast/${card.slug}`}
-                      aria-label={`${card.title} details`}
-                      className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col w-full max-w-[350px]"
+                  <div className="p-5 flex flex-col flex-1 text-left">
+                    <h3
+                      className="text-4xl font-extrabold text-amber-300"
+                      style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
                     >
-                      <img
-                        src={
-                          card.img?.startsWith("/") ||
-                          card.img?.startsWith("http")
-                            ? card.img
-                            : `/${card.img}`
-                        }
-                        alt={card.title}
-                        className="w-full h-[28rem] object-cover"
-                        loading="lazy"
-                        decoding="async"
-                        onError={(e) => {
-                          const el = e.currentTarget as HTMLImageElement;
-                          if (!el.src.includes("/placeholder.png"))
-                            el.src = "/placeholder.png";
-                        }}
-                      />
+                      {card.title}
+                    </h3>
 
-                      <div className="p-5 flex flex-col flex-1 text-left">
-                        <h3
-                          className="text-4xl font-extrabold text-amber-300"
-                          style={{
-                            fontFamily: "'Cinzel', serif",
-                            fontWeight: 800,
-                          }}
-                        >
-                          {card.title}
-                        </h3>
+                    <p className="text-[1.15rem] italic text-neutral-500">
+                      {card.subTitle}
+                      <span className="mx-1.5 text-amber-300/80" aria-hidden>
+                        -
+                      </span>
+                      <span className="not-italic">12 oz</span>
+                    </p>
 
-                        <p className="text-[1.15rem] italic text-neutral-500">
-                          {card.subTitle}
-                          <span
-                            className="mx-1.5 text-amber-300/80"
-                            aria-hidden
-                          >
-                            -
-                          </span>
-                          <span className="not-italic">12 oz</span>
-                        </p>
+                    {/* Clamp ONLY Brass Monkey so it can't make the card taller */}
+                    <p
+                      className={
+                        "text-base text-neutral-400 leading-snug " +
+                        (card.slug === "brass-monkey"
+                          ? "line-clamp-1"
+                          : "line-clamp-2")
+                      }
+                    >
+                      {card.note}
+                    </p>
 
-                        <p className="text-lg text-neutral-400 flex-1">
-                          {card.note}
-                        </p>
+                    {/* PRICE ROW */}
+                    <div className="mt-2 flex items-center gap-3 text-sm">
+                      <span className="text-neutral-200 whitespace-nowrap">
+                        From {fmt(base)}
+                      </span>
 
-                        <div className="mt-4 text-base flex flex-col md:flex-row md:items-center md:gap-3 gap-2">
-                          <span className="text-neutral-200">
-                            From {fmt(base)}
-                          </span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
+                        Subscribe &amp; Save 15%
+                        <span className="mx-1.5 opacity-60" aria-hidden>
+                          •
+                        </span>
+                        <span className="font-semibold">{fmt(sub)}</span>
+                      </span>
+                    </div>
 
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
-                            Subscribe &amp; Save 15%
-                            <span className="mx-1.5 opacity-60" aria-hidden>
-                              •
-                            </span>
-                            <span className="font-semibold">{fmt(sub)}</span>
-                          </span>
-                        </div>
+                    {/* STARS (same as your desktop grid) */}
+                    <div className="mt-3 flex flex-col text-[13px] text-neutral-400">
+                      <div className="flex items-center gap-2">
+                        {(() => {
+                          const summary = summaryBySlug[card.slug] || {
+                            avg: 0,
+                            count: 0,
+                          };
+                          const avg = summary.avg ?? 0;
+                          const count = summary.count ?? 0;
 
-                        {/* STARS (UNCHANGED) */}
-                        <div className="mt-3 flex flex-col text-[13px] text-neutral-400">
-                          <div className="flex items-center gap-2">
-                            {(() => {
-                              const summary = summaryBySlug[card.slug] || {
-                                avg: 0,
-                                count: 0,
-                              };
-                              const avg = summary.avg ?? 0;
-                              const count = summary.count ?? 0;
+                          return (
+                            <>
+                              <span className="text-amber-300 font-semibold tabular-nums">
+                                {avg.toFixed(1)}
+                              </span>
 
-                              return (
-                                <>
-                                  <span className="text-amber-300 font-semibold tabular-nums">
-                                    {avg.toFixed(1)}
-                                  </span>
+                              <div className="inline-flex items-center gap-0.5">
+                                {[0, 1, 2, 3, 4].map((i) => {
+                                  const starFill = Math.max(
+                                    0,
+                                    Math.min(1, avg - i)
+                                  );
+                                  const clipWidth = 24 * starFill;
+                                  const clipId = `cardStarClipDesk-${card.slug}-${i}`;
 
-                                  <div className="inline-flex items-center gap-0.5">
-                                    {[0, 1, 2, 3, 4].map((i) => {
-                                      const starFill = Math.max(
-                                        0,
-                                        Math.min(1, avg - i)
-                                      );
-                                      const clipWidth = 24 * starFill;
-                                      const clipId = `cardStarClipDesk-${card.slug}-${i}`;
-                                      return (
-                                        <svg
-                                          key={i}
-                                          viewBox="0 0 24 24"
-                                          className="h-4 w-4"
-                                          aria-hidden
+                                  return (
+                                    <svg
+                                      key={i}
+                                      viewBox="0 0 24 24"
+                                      className="h-4 w-4"
+                                      aria-hidden
+                                    >
+                                      <defs>
+                                        <clipPath
+                                          id={clipId}
+                                          clipPathUnits="userSpaceOnUse"
                                         >
-                                          <defs>
-                                            <clipPath
-                                              id={clipId}
-                                              clipPathUnits="userSpaceOnUse"
-                                            >
-                                              <rect
-                                                x="0"
-                                                y="0"
-                                                width={clipWidth}
-                                                height="24"
-                                              />
-                                            </clipPath>
-                                          </defs>
+                                          <rect
+                                            x="0"
+                                            y="0"
+                                            width={clipWidth}
+                                            height="24"
+                                          />
+                                        </clipPath>
+                                      </defs>
 
-                                          <path
-                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                            className="text-neutral-800"
-                                            fill="currentColor"
-                                          />
-                                          <path
-                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                            className="text-amber-400"
-                                            fill="currentColor"
-                                            clipPath={`url(#${clipId})`}
-                                          />
-                                          <path
-                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            className="text-neutral-600"
-                                            strokeWidth="1.4"
-                                            strokeLinejoin="round"
-                                          />
-                                        </svg>
-                                      );
-                                    })}
-                                  </div>
+                                      <path
+                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                        className="text-neutral-800"
+                                        fill="currentColor"
+                                      />
+                                      <path
+                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                        className="text-amber-400"
+                                        fill="currentColor"
+                                        clipPath={`url(#${clipId})`}
+                                      />
+                                      <path
+                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        className="text-neutral-600"
+                                        strokeWidth="1.4"
+                                        strokeLinejoin="round"
+                                      />
+                                    </svg>
+                                  );
+                                })}
+                              </div>
 
-                                  <span className="text-[11px] text-neutral-400/80 tracking-wide whitespace-nowrap">
-                                    {count} REVIEWS
-                                  </span>
-                                </>
-                              );
-                            })()}
-                          </div>
-                        </div>
+                              <span className="text-[11px] text-neutral-400/80 tracking-wide whitespace-nowrap">
+                                {count} REVIEWS
+                              </span>
+                            </>
+                          );
+                        })()}
                       </div>
-                    </Link>
-                  );
-                })}
-            </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
 
-          {/* SEASONAL AND LIMITED */}
-          <div className="mt-14">
-            <div className="mb-4 text-center text-amber-300 text-sm font-semibold tracking-[0.22em]">
-              SEASONAL AND LIMITED RELEASES
-            </div>
+          {/* left/right arrows */}
+          <div className="absolute inset-y-1/2 -translate-y-1/2 left-2 flex items-center pointer-events-none">
+            <button
+              type="button"
+              onClick={() => {
+                const scroller = document.querySelector(
+                  "#fleet .hidden.md\\:block.relative .flex.overflow-x-auto"
+                ) as HTMLDivElement | null;
+                if (scroller)
+                  scroller.scrollBy({ left: -420, behavior: "smooth" });
+              }}
+              className="pointer-events-auto h-14 w-14 rounded-full bg-amber-400 text-neutral-900 font-bold text-3xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
+              aria-label="Previous roast"
+            >
+              ‹
+            </button>
+          </div>
 
-            <div className="grid grid-cols-2 gap-6 justify-items-center">
-              {roastCards
-                .filter(
-                  (c) =>
-                    !["flagship", "baptism-by-fire", "java-action"].includes(
-                      c.slug
-                    )
-                )
-                .map((card) => {
-                  const base =
-                    card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
-                  const sub = Math.round(base * 0.85 * 100) / 100;
-
-                  return (
-                    <Link
-                      key={card.id}
-                      to={`/roast/${card.slug}`}
-                      aria-label={`${card.title} details`}
-                      className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col w-full max-w-[350px]"
-                    >
-                      <img
-                        src={
-                          card.img?.startsWith("/") ||
-                          card.img?.startsWith("http")
-                            ? card.img
-                            : `/${card.img}`
-                        }
-                        alt={card.title}
-                        className="w-full h-[28rem] object-cover"
-                        loading="lazy"
-                        decoding="async"
-                        onError={(e) => {
-                          const el = e.currentTarget as HTMLImageElement;
-                          if (!el.src.includes("/placeholder.png"))
-                            el.src = "/placeholder.png";
-                        }}
-                      />
-
-                      <div className="p-5 flex flex-col flex-1 text-left">
-                        <h3
-                          className="text-4xl font-extrabold text-amber-300"
-                          style={{
-                            fontFamily: "'Cinzel', serif",
-                            fontWeight: 800,
-                          }}
-                        >
-                          {card.title}
-                        </h3>
-
-                        <p className="text-[1.15rem] italic text-neutral-500">
-                          {card.subTitle}
-                          <span
-                            className="mx-1.5 text-amber-300/80"
-                            aria-hidden
-                          >
-                            -
-                          </span>
-                          <span className="not-italic">12 oz</span>
-                        </p>
-
-                        {/* ONLY Brass Monkey gets clamped so it cannot make the card taller */}
-                        <p
-                          className={
-                            "text-lg text-neutral-400 flex-1 " +
-                            (card.slug === "brass-monkey" ? "line-clamp-1" : "")
-                          }
-                        >
-                          {card.note}
-                        </p>
-
-                        <div className="mt-4 text-base flex flex-col md:flex-row md:items-center md:gap-3 gap-2">
-                          <span className="text-neutral-200">
-                            From {fmt(base)}
-                          </span>
-
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
-                            Subscribe &amp; Save 15%
-                            <span className="mx-1.5 opacity-60" aria-hidden>
-                              •
-                            </span>
-                            <span className="font-semibold">{fmt(sub)}</span>
-                          </span>
-                        </div>
-
-                        {/* STARS (UNCHANGED) */}
-                        <div className="mt-3 flex flex-col text-[13px] text-neutral-400">
-                          <div className="flex items-center gap-2">
-                            {(() => {
-                              const summary = summaryBySlug[card.slug] || {
-                                avg: 0,
-                                count: 0,
-                              };
-                              const avg = summary.avg ?? 0;
-                              const count = summary.count ?? 0;
-
-                              return (
-                                <>
-                                  <span className="text-amber-300 font-semibold tabular-nums">
-                                    {avg.toFixed(1)}
-                                  </span>
-
-                                  <div className="inline-flex items-center gap-0.5">
-                                    {[0, 1, 2, 3, 4].map((i) => {
-                                      const starFill = Math.max(
-                                        0,
-                                        Math.min(1, avg - i)
-                                      );
-                                      const clipWidth = 24 * starFill;
-                                      const clipId = `cardStarClipDesk-${card.slug}-${i}`;
-                                      return (
-                                        <svg
-                                          key={i}
-                                          viewBox="0 0 24 24"
-                                          className="h-4 w-4"
-                                          aria-hidden
-                                        >
-                                          <defs>
-                                            <clipPath
-                                              id={clipId}
-                                              clipPathUnits="userSpaceOnUse"
-                                            >
-                                              <rect
-                                                x="0"
-                                                y="0"
-                                                width={clipWidth}
-                                                height="24"
-                                              />
-                                            </clipPath>
-                                          </defs>
-
-                                          <path
-                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                            className="text-neutral-800"
-                                            fill="currentColor"
-                                          />
-                                          <path
-                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                            className="text-amber-400"
-                                            fill="currentColor"
-                                            clipPath={`url(#${clipId})`}
-                                          />
-                                          <path
-                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            className="text-neutral-600"
-                                            strokeWidth="1.4"
-                                            strokeLinejoin="round"
-                                          />
-                                        </svg>
-                                      );
-                                    })}
-                                  </div>
-
-                                  <span className="text-[11px] text-neutral-400/80 tracking-wide whitespace-nowrap">
-                                    {count} REVIEWS
-                                  </span>
-                                </>
-                              );
-                            })()}
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-            </div>
+          <div className="absolute inset-y-1/2 -translate-y-1/2 right-2 flex items-center pointer-events-none">
+            <button
+              type="button"
+              onClick={() => {
+                const scroller = document.querySelector(
+                  "#fleet .hidden.md\\:block.relative .flex.overflow-x-auto"
+                ) as HTMLDivElement | null;
+                if (scroller)
+                  scroller.scrollBy({ left: 420, behavior: "smooth" });
+              }}
+              className="pointer-events-auto h-14 w-14 rounded-full bg-amber-400 text-neutral-900 font-bold text-3xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
+              aria-label="Next roast"
+            >
+              ›
+            </button>
           </div>
         </div>
       </Container>

@@ -1503,31 +1503,31 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         </div>
 
         {/* tighten gap before cards */}
-        <div className="mt-1 md:mt-4">
-          {/* mobile: 1-card swipe carousel with arrows */}
-          <div className="relative md:hidden">
-            {/* scroll row */}
-            <div
-              ref={scrollRef}
-              onScroll={handleScroll}
-              className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pl-3 pr-3 no-scrollbar scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none]"
-              style={{ WebkitOverflowScrolling: "touch" }}
-            >
-              {roastCards.map((card, idx) => {
-                const base =
-                  card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
-                const sub = Math.round(base * 0.85 * 100) / 100; // 15% off
-                const t = MOBILE_TUNE[card.slug] ?? DEFAULT_MOBILE_TUNE;
+        <div className="mt-1 md:mt-4"></div>
+        {/* mobile: 1-card swipe carousel with arrows */}
+        <div className="relative md:hidden">
+          {/* scroll row */}
+          <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pl-3 pr-3 no-scrollbar scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none]"
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
+            {roastCards.map((card, idx) => {
+              const base =
+                card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
+              const sub = Math.round(base * 0.85 * 100) / 100; // 15% off
+              const t = MOBILE_TUNE[card.slug] ?? DEFAULT_MOBILE_TUNE;
 
-                return (
-                  <Link
-                    key={card.id}
-                    to={`/roast/${card.slug}`}
-                    aria-label={`${card.title} details`}
-                    ref={(el) => {
-                      cardRefs.current[idx] = el;
-                    }}
-                    className="
+              return (
+                <Link
+                  key={card.id}
+                  to={`/roast/${card.slug}`}
+                  aria-label={`${card.title} details`}
+                  ref={(el) => {
+                    cardRefs.current[idx] = el;
+                  }}
+                  className="
                     mt-2 snap-center shrink-0
                     w-[88vw] max-w-[88vw]
                     rounded-2xl ring-1 ring-amber-400/60
@@ -1535,29 +1535,15 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     hover:ring-amber-300 hover:bg-neutral-900
                     transition flex flex-col
                   "
+                >
+                  {/* ===== IMAGE (no overlay text) ===== */}
+                  {/* Tweak these two numbers if needed */}
+                  {/* IMG_HEIGHT ↓ and OBJECT_Y ↓ */}
+                  <div
+                    className={`relative ${t.imgH} ${t.shift} ${t.overlap} rounded-t-2xl overflow-hidden bg-black`}
                   >
-                    {/* ===== IMAGE (no overlay text) ===== */}
-                    {/* Tweak these two numbers if needed */}
-                    {/* IMG_HEIGHT ↓ and OBJECT_Y ↓ */}
-                    <div
-                      className={`relative ${t.imgH} ${t.shift} ${t.overlap} rounded-t-2xl overflow-hidden bg-black`}
-                    >
-                      {/* FILLER LAYER: covers side bars when using object-contain */}
-                      {t.sideFill && (
-                        <img
-                          src={
-                            card.img?.startsWith("/") ||
-                            card.img?.startsWith("http")
-                              ? card.img
-                              : `/${card.img}`
-                          }
-                          alt=""
-                          aria-hidden
-                          className={`absolute inset-0 w-full ${t.imgH} object-cover scale-110 blur-sm opacity-60 z-0`}
-                        />
-                      )}
-
-                      {/* MAIN IMAGE */}
+                    {/* FILLER LAYER: covers side bars when using object-contain */}
+                    {t.sideFill && (
                       <img
                         src={
                           card.img?.startsWith("/") ||
@@ -1565,217 +1551,55 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                             ? card.img
                             : `/${card.img}`
                         }
-                        alt={card.title}
-                        className={`relative z-[1] w-full ${t.imgH} ${t.fit} ${t.objY}`}
-                        loading="lazy"
-                        decoding="async"
-                        onError={(e) => {
-                          const el = e.currentTarget as HTMLImageElement;
-                          if (!el.src.includes("/placeholder.png"))
-                            el.src = "/placeholder.png";
-                        }}
+                        alt=""
+                        aria-hidden
+                        className={`absolute inset-0 w-full ${t.imgH} object-cover scale-110 blur-sm opacity-60 z-0`}
                       />
+                    )}
 
-                      {/* GRADIENT */}
-                      <div
-                        className={`pointer-events-none absolute inset-x-0 bottom-0 ${t.gradH} bg-gradient-to-t from-black/80 via-black/45 to-transparent z-[2]`}
-                      />
-                    </div>
-
-                    {/* ===== CONTENT BELOW IMAGE (tight stack) ===== */}
-                    <div
-                      className={`relative z-10 px-4 pt-0 pb-4 flex flex-col text-center ${t.stack}`}
-                    >
-                      <h3
-                        className={`text-[26px] leading-[1.1] font-extrabold text-amber-300 ${t.title}`}
-                        style={{
-                          fontFamily: "'Cinzel', serif",
-                          fontWeight: 800,
-                        }}
-                      >
-                        {card.title}
-                      </h3>
-
-                      {/* SUBTITLE — ensure this exists ONLY ONCE in mobile */}
-                      <p
-                        className={`text-[13px] italic text-neutral-400 ${t.subtitle}`}
-                      >
-                        {card.subTitle}
-                        <span className="mx-1.5 text-amber-300/80" aria-hidden>
-                          -
-                        </span>
-                        <span className="not-italic">12 oz</span>
-                      </p>
-
-                      {/* NOTE */}
-                      <p
-                        className={`text-sm text-neutral-400 line-clamp-1 ${t.note}`}
-                      >
-                        {card.note}
-                      </p>
-
-                      {/* PRICE */}
-
-                      <div className="mt-2 text-[15px] flex flex-row flex-wrap items-center justify-center gap-2">
-                        <span className="text-neutral-100">
-                          From {fmt(base)}
-                        </span>
-                        <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] bg-amber-400/10 text-amber-300 ring-1 ring-amber-400/30 whitespace-nowrap">
-                          <span className="font-semibold">{fmt(sub)}</span>
-                          <span className="opacity-140">
-                            Subscribe &amp; Save 15%
-                          </span>
-                        </span>
-                      </div>
-
-                      {/* STARS */}
-                      <div className="mt-2 flex flex-col items-center text-[12px] text-neutral-300">
-                        <div className="flex items-center gap-2">
-                          {(() => {
-                            const summary = summaryBySlug[card.slug] || {
-                              avg: 0,
-                              count: 0,
-                            };
-                            const avg = summary.avg ?? 0;
-                            const count = summary.count ?? 0;
-
-                            return (
-                              <>
-                                <span className="text-amber-300 font-semibold tabular-nums">
-                                  {avg.toFixed(1)}
-                                </span>
-                                <div className="inline-flex items-center gap-0.5">
-                                  {[0, 1, 2, 3, 4].map((i) => {
-                                    const starFill = Math.max(
-                                      0,
-                                      Math.min(1, avg - i)
-                                    );
-                                    const clipWidth = 24 * starFill;
-                                    const clipId = `cardStarClip-${card.slug}-${i}`;
-                                    return (
-                                      <svg
-                                        key={i}
-                                        viewBox="0 0 24 24"
-                                        className="h-4 w-4"
-                                        aria-hidden
-                                      >
-                                        <defs>
-                                          <clipPath
-                                            id={clipId}
-                                            clipPathUnits="userSpaceOnUse"
-                                          >
-                                            <rect
-                                              x="0"
-                                              y="0"
-                                              width={clipWidth}
-                                              height="24"
-                                            />
-                                          </clipPath>
-                                        </defs>
-                                        {/* base */}
-                                        <path
-                                          d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                          className="text-neutral-800"
-                                          fill="currentColor"
-                                        />
-                                        {/* amber fill */}
-                                        <path
-                                          d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                          className="text-amber-400"
-                                          fill="currentColor"
-                                          clipPath={`url(#${clipId})`}
-                                        />
-                                        {/* outline */}
-                                        <path
-                                          d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                          fill="none"
-                                          stroke="currentColor"
-                                          className="text-neutral-600"
-                                          strokeWidth="1.4"
-                                          strokeLinejoin="round"
-                                        />
-                                      </svg>
-                                    );
-                                  })}
-                                </div>
-                                <span className="text-[11px] text-neutral-300/85 tracking-wide whitespace-nowrap">
-                                  {count} REVIEWS
-                                </span>
-                              </>
-                            );
-                          })()}
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-
-            {/* left/right hint arrows - clickable */}
-            <div className="absolute inset-y-1/2 -translate-y-1/2 left-1 flex items-center pl-1 pointer-events-none">
-              <button
-                type="button"
-                onClick={handlePrev}
-                className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
-                aria-label="Previous roast"
-              >
-                ‹
-              </button>
-            </div>
-            <div className="absolute inset-y-1/2 -translate-y-1/2 right-1 flex items-center pr-1 pointer-events-none">
-              <button
-                type="button"
-                onClick={handleNext}
-                className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
-                aria-label="Next roast"
-              >
-                ›
-              </button>
-            </div>
-          </div>
-
-          {/* desktop / tablet: original grid BUT stars moved under price */}
-          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {roastCards.map((card) => {
-              const base =
-                card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
-              const sub = Math.round(base * 0.85 * 100) / 100;
-
-              return (
-                <Link
-                  key={card.id}
-                  to={`/roast/${card.slug}`}
-                  aria-label={`${card.title} details`}
-                  className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col"
-                >
-                  <img
-                    src={
-                      card.img?.startsWith("/") || card.img?.startsWith("http")
-                        ? card.img
-                        : `/${card.img}`
-                    }
-                    alt={card.title}
-                    className="w-full h-[28rem] object-cover"
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => {
-                      const el = e.currentTarget as HTMLImageElement;
-                      if (!el.src.includes("/placeholder.png")) {
-                        el.src = "/placeholder.png";
+                    {/* MAIN IMAGE */}
+                    <img
+                      src={
+                        card.img?.startsWith("/") ||
+                        card.img?.startsWith("http")
+                          ? card.img
+                          : `/${card.img}`
                       }
-                    }}
-                  />
+                      alt={card.title}
+                      className={`relative z-[1] w-full ${t.imgH} ${t.fit} ${t.objY}`}
+                      loading="lazy"
+                      decoding="async"
+                      onError={(e) => {
+                        const el = e.currentTarget as HTMLImageElement;
+                        if (!el.src.includes("/placeholder.png"))
+                          el.src = "/placeholder.png";
+                      }}
+                    />
 
-                  <div className="p-5 flex flex-col flex-1 text-left">
+                    {/* GRADIENT */}
+                    <div
+                      className={`pointer-events-none absolute inset-x-0 bottom-0 ${t.gradH} bg-gradient-to-t from-black/80 via-black/45 to-transparent z-[2]`}
+                    />
+                  </div>
+
+                  {/* ===== CONTENT BELOW IMAGE (tight stack) ===== */}
+                  <div
+                    className={`relative z-10 px-4 pt-0 pb-4 flex flex-col text-center ${t.stack}`}
+                  >
                     <h3
-                      className="text-4xl font-extrabold text-amber-300"
-                      style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                      className={`text-[26px] leading-[1.1] font-extrabold text-amber-300 ${t.title}`}
+                      style={{
+                        fontFamily: "'Cinzel', serif",
+                        fontWeight: 800,
+                      }}
                     >
                       {card.title}
                     </h3>
 
-                    <p className="text-[1.15rem] italic text-neutral-500">
+                    {/* SUBTITLE — ensure this exists ONLY ONCE in mobile */}
+                    <p
+                      className={`text-[13px] italic text-neutral-400 ${t.subtitle}`}
+                    >
                       {card.subTitle}
                       <span className="mx-1.5 text-amber-300/80" aria-hidden>
                         -
@@ -1783,25 +1607,27 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                       <span className="not-italic">12 oz</span>
                     </p>
 
-                    <p className="text-lg text-neutral-400 flex-1">
+                    {/* NOTE */}
+                    <p
+                      className={`text-sm text-neutral-400 line-clamp-1 ${t.note}`}
+                    >
                       {card.note}
                     </p>
 
-                    {/* PRICE ROW (desktop) now ABOVE stars */}
-                    <div className="mt-4 text-base flex flex-col md:flex-row md:items-center md:gap-3 gap-2">
-                      <span className="text-neutral-200">From {fmt(base)}</span>
+                    {/* PRICE */}
 
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
-                        Subscribe &amp; Save 15%
-                        <span className="mx-1.5 opacity-60" aria-hidden>
-                          •
-                        </span>
+                    <div className="mt-2 text-[15px] flex flex-row flex-wrap items-center justify-center gap-2">
+                      <span className="text-neutral-100">From {fmt(base)}</span>
+                      <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] bg-amber-400/10 text-amber-300 ring-1 ring-amber-400/30 whitespace-nowrap">
                         <span className="font-semibold">{fmt(sub)}</span>
+                        <span className="opacity-140">
+                          Subscribe &amp; Save 15%
+                        </span>
                       </span>
                     </div>
 
-                    {/* STARS ROW (desktop) moved UNDER price row */}
-                    <div className="mt-3 flex flex-col text-[13px] text-neutral-400">
+                    {/* STARS */}
+                    <div className="mt-2 flex flex-col items-center text-[12px] text-neutral-300">
                       <div className="flex items-center gap-2">
                         {(() => {
                           const summary = summaryBySlug[card.slug] || {
@@ -1816,7 +1642,6 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                               <span className="text-amber-300 font-semibold tabular-nums">
                                 {avg.toFixed(1)}
                               </span>
-
                               <div className="inline-flex items-center gap-0.5">
                                 {[0, 1, 2, 3, 4].map((i) => {
                                   const starFill = Math.max(
@@ -1824,7 +1649,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                                     Math.min(1, avg - i)
                                   );
                                   const clipWidth = 24 * starFill;
-                                  const clipId = `cardStarClipDesk-${card.slug}-${i}`;
+                                  const clipId = `cardStarClip-${card.slug}-${i}`;
                                   return (
                                     <svg
                                       key={i}
@@ -1845,7 +1670,6 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                                           />
                                         </clipPath>
                                       </defs>
-
                                       {/* base */}
                                       <path
                                         d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
@@ -1872,8 +1696,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                                   );
                                 })}
                               </div>
-
-                              <span className="text-[11px] text-neutral-400/80 tracking-wide whitespace-nowrap">
+                              <span className="text-[11px] text-neutral-300/85 tracking-wide whitespace-nowrap">
                                 {count} REVIEWS
                               </span>
                             </>
@@ -1885,6 +1708,374 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                 </Link>
               );
             })}
+          </div>
+
+          {/* left/right hint arrows - clickable */}
+          <div className="absolute inset-y-1/2 -translate-y-1/2 left-1 flex items-center pl-1 pointer-events-none">
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
+              aria-label="Previous roast"
+            >
+              ‹
+            </button>
+          </div>
+          <div className="absolute inset-y-1/2 -translate-y-1/2 right-1 flex items-center pr-1 pointer-events-none">
+            <button
+              type="button"
+              onClick={handleNext}
+              className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
+              aria-label="Next roast"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+
+        {/* ===== DESKTOP / TABLET: CORE + SEASONAL (CENTERED, SAME CARD SIZE) ===== */}
+        <div className="hidden md:block">
+          {/* CORE FLEET */}
+          <div className="mt-8">
+            <div className="mb-4 text-center text-amber-300 text-sm font-semibold tracking-[0.22em]">
+              THE CORE FLEET
+            </div>
+
+            <div className="grid grid-cols-3 gap-6 justify-items-center">
+              {roastCards
+                .filter((c) =>
+                  ["flagship", "baptism-by-fire", "java-action"].includes(
+                    c.slug
+                  )
+                )
+                .map((card) => {
+                  const base =
+                    card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
+                  const sub = Math.round(base * 0.85 * 100) / 100;
+
+                  return (
+                    <Link
+                      key={card.id}
+                      to={`/roast/${card.slug}`}
+                      aria-label={`${card.title} details`}
+                      className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col w-full max-w-[350px]"
+                    >
+                      <img
+                        src={
+                          card.img?.startsWith("/") ||
+                          card.img?.startsWith("http")
+                            ? card.img
+                            : `/${card.img}`
+                        }
+                        alt={card.title}
+                        className="w-full h-[28rem] object-cover"
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => {
+                          const el = e.currentTarget as HTMLImageElement;
+                          if (!el.src.includes("/placeholder.png"))
+                            el.src = "/placeholder.png";
+                        }}
+                      />
+
+                      <div className="p-5 flex flex-col flex-1 text-left">
+                        <h3
+                          className="text-4xl font-extrabold text-amber-300"
+                          style={{
+                            fontFamily: "'Cinzel', serif",
+                            fontWeight: 800,
+                          }}
+                        >
+                          {card.title}
+                        </h3>
+
+                        <p className="text-[1.15rem] italic text-neutral-500">
+                          {card.subTitle}
+                          <span
+                            className="mx-1.5 text-amber-300/80"
+                            aria-hidden
+                          >
+                            -
+                          </span>
+                          <span className="not-italic">12 oz</span>
+                        </p>
+
+                        <p className="text-lg text-neutral-400 flex-1">
+                          {card.note}
+                        </p>
+
+                        <div className="mt-4 text-base flex flex-col md:flex-row md:items-center md:gap-3 gap-2">
+                          <span className="text-neutral-200">
+                            From {fmt(base)}
+                          </span>
+
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
+                            Subscribe &amp; Save 15%
+                            <span className="mx-1.5 opacity-60" aria-hidden>
+                              •
+                            </span>
+                            <span className="font-semibold">{fmt(sub)}</span>
+                          </span>
+                        </div>
+
+                        {/* STARS (UNCHANGED) */}
+                        <div className="mt-3 flex flex-col text-[13px] text-neutral-400">
+                          <div className="flex items-center gap-2">
+                            {(() => {
+                              const summary = summaryBySlug[card.slug] || {
+                                avg: 0,
+                                count: 0,
+                              };
+                              const avg = summary.avg ?? 0;
+                              const count = summary.count ?? 0;
+
+                              return (
+                                <>
+                                  <span className="text-amber-300 font-semibold tabular-nums">
+                                    {avg.toFixed(1)}
+                                  </span>
+
+                                  <div className="inline-flex items-center gap-0.5">
+                                    {[0, 1, 2, 3, 4].map((i) => {
+                                      const starFill = Math.max(
+                                        0,
+                                        Math.min(1, avg - i)
+                                      );
+                                      const clipWidth = 24 * starFill;
+                                      const clipId = `cardStarClipDesk-${card.slug}-${i}`;
+                                      return (
+                                        <svg
+                                          key={i}
+                                          viewBox="0 0 24 24"
+                                          className="h-4 w-4"
+                                          aria-hidden
+                                        >
+                                          <defs>
+                                            <clipPath
+                                              id={clipId}
+                                              clipPathUnits="userSpaceOnUse"
+                                            >
+                                              <rect
+                                                x="0"
+                                                y="0"
+                                                width={clipWidth}
+                                                height="24"
+                                              />
+                                            </clipPath>
+                                          </defs>
+
+                                          <path
+                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                            className="text-neutral-800"
+                                            fill="currentColor"
+                                          />
+                                          <path
+                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                            className="text-amber-400"
+                                            fill="currentColor"
+                                            clipPath={`url(#${clipId})`}
+                                          />
+                                          <path
+                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            className="text-neutral-600"
+                                            strokeWidth="1.4"
+                                            strokeLinejoin="round"
+                                          />
+                                        </svg>
+                                      );
+                                    })}
+                                  </div>
+
+                                  <span className="text-[11px] text-neutral-400/80 tracking-wide whitespace-nowrap">
+                                    {count} REVIEWS
+                                  </span>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+            </div>
+          </div>
+
+          {/* SEASONAL AND LIMITED */}
+          <div className="mt-14">
+            <div className="mb-4 text-center text-amber-300 text-sm font-semibold tracking-[0.22em]">
+              SEASONAL AND LIMITED RELEASES
+            </div>
+
+            <div className="grid grid-cols-2 gap-6 justify-items-center">
+              {roastCards
+                .filter(
+                  (c) =>
+                    !["flagship", "baptism-by-fire", "java-action"].includes(
+                      c.slug
+                    )
+                )
+                .map((card) => {
+                  const base =
+                    card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
+                  const sub = Math.round(base * 0.85 * 100) / 100;
+
+                  return (
+                    <Link
+                      key={card.id}
+                      to={`/roast/${card.slug}`}
+                      aria-label={`${card.title} details`}
+                      className="group relative overflow-hidden rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col w-full max-w-[350px]"
+                    >
+                      <img
+                        src={
+                          card.img?.startsWith("/") ||
+                          card.img?.startsWith("http")
+                            ? card.img
+                            : `/${card.img}`
+                        }
+                        alt={card.title}
+                        className="w-full h-[28rem] object-cover"
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => {
+                          const el = e.currentTarget as HTMLImageElement;
+                          if (!el.src.includes("/placeholder.png"))
+                            el.src = "/placeholder.png";
+                        }}
+                      />
+
+                      <div className="p-5 flex flex-col flex-1 text-left">
+                        <h3
+                          className="text-4xl font-extrabold text-amber-300"
+                          style={{
+                            fontFamily: "'Cinzel', serif",
+                            fontWeight: 800,
+                          }}
+                        >
+                          {card.title}
+                        </h3>
+
+                        <p className="text-[1.15rem] italic text-neutral-500">
+                          {card.subTitle}
+                          <span
+                            className="mx-1.5 text-amber-300/80"
+                            aria-hidden
+                          >
+                            -
+                          </span>
+                          <span className="not-italic">12 oz</span>
+                        </p>
+
+                        {/* ONLY Brass Monkey gets clamped so it cannot make the card taller */}
+                        <p
+                          className={
+                            "text-lg text-neutral-400 flex-1 " +
+                            (card.slug === "brass-monkey" ? "line-clamp-1" : "")
+                          }
+                        >
+                          {card.note}
+                        </p>
+
+                        <div className="mt-4 text-base flex flex-col md:flex-row md:items-center md:gap-3 gap-2">
+                          <span className="text-neutral-200">
+                            From {fmt(base)}
+                          </span>
+
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
+                            Subscribe &amp; Save 15%
+                            <span className="mx-1.5 opacity-60" aria-hidden>
+                              •
+                            </span>
+                            <span className="font-semibold">{fmt(sub)}</span>
+                          </span>
+                        </div>
+
+                        {/* STARS (UNCHANGED) */}
+                        <div className="mt-3 flex flex-col text-[13px] text-neutral-400">
+                          <div className="flex items-center gap-2">
+                            {(() => {
+                              const summary = summaryBySlug[card.slug] || {
+                                avg: 0,
+                                count: 0,
+                              };
+                              const avg = summary.avg ?? 0;
+                              const count = summary.count ?? 0;
+
+                              return (
+                                <>
+                                  <span className="text-amber-300 font-semibold tabular-nums">
+                                    {avg.toFixed(1)}
+                                  </span>
+
+                                  <div className="inline-flex items-center gap-0.5">
+                                    {[0, 1, 2, 3, 4].map((i) => {
+                                      const starFill = Math.max(
+                                        0,
+                                        Math.min(1, avg - i)
+                                      );
+                                      const clipWidth = 24 * starFill;
+                                      const clipId = `cardStarClipDesk-${card.slug}-${i}`;
+                                      return (
+                                        <svg
+                                          key={i}
+                                          viewBox="0 0 24 24"
+                                          className="h-4 w-4"
+                                          aria-hidden
+                                        >
+                                          <defs>
+                                            <clipPath
+                                              id={clipId}
+                                              clipPathUnits="userSpaceOnUse"
+                                            >
+                                              <rect
+                                                x="0"
+                                                y="0"
+                                                width={clipWidth}
+                                                height="24"
+                                              />
+                                            </clipPath>
+                                          </defs>
+
+                                          <path
+                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                            className="text-neutral-800"
+                                            fill="currentColor"
+                                          />
+                                          <path
+                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                            className="text-amber-400"
+                                            fill="currentColor"
+                                            clipPath={`url(#${clipId})`}
+                                          />
+                                          <path
+                                            d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            className="text-neutral-600"
+                                            strokeWidth="1.4"
+                                            strokeLinejoin="round"
+                                          />
+                                        </svg>
+                                      );
+                                    })}
+                                  </div>
+
+                                  <span className="text-[11px] text-neutral-400/80 tracking-wide whitespace-nowrap">
+                                    {count} REVIEWS
+                                  </span>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+            </div>
           </div>
         </div>
       </Container>

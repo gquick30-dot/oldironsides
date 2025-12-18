@@ -462,6 +462,16 @@ const roastCards = [
       "Inspired by the rugged oak and copper that defined the USS Constitution, Oak & Copper is a bourbon barrel-aged seasonal roast that celebrates American craftsmanship.", // Blurb (short version)
     mainStory: "", // Full story
   },
+  {
+    id: "brass-monkey",
+    slug: "brass-monkey",
+    title: "BRASS MONKEY",
+    subTitle: "Southern Pecan Winter Seasonal",
+    note: "Seasonal winter roast with rich southern pecan flavor.",
+    img: "/Brass-Monkey-web.png", // change to your actual filename
+    price: 22, // change if needed
+    canBuy: true, // or false if you want it visible but not purchasable yet
+  },
 ];
 type RoastCardConfig = (typeof roastCards)[number];
 const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
@@ -2729,7 +2739,9 @@ function RoastDetailPage() {
     "java-action": 3,
     "oak-and-copper": 3,
     "baptism-by-fire": 4,
+    "brass-monkey": 3,
   };
+
   const [mobileToast, setMobileToast] = useState<null | {
     title: string;
     qty: number;
@@ -2773,6 +2785,13 @@ function RoastDetailPage() {
         roast with deep oak richness and a smooth, bourbon-kissed finish.
       </>
     ),
+    "brass-monkey": (
+      <>
+        {/* TODO: write your Craft in the Cup copy here */}
+        Southern Pecan winter seasonal roast crafted to be smooth, cozy, and
+        dangerously easy to drink.
+      </>
+    ),
   };
   const craftSubtitle = craftSubtitleMap[card.slug] ?? null;
 
@@ -2781,6 +2800,7 @@ function RoastDetailPage() {
   const isBaptism = card.slug === "baptism-by-fire";
   const isJava = card.slug === "java-action";
   const isOak = card.slug === "oak-and-copper";
+  const isBrass = card.slug === "brass-monkey";
 
   // ⬇️ INSERT THIS BLOCK RIGHT HERE ⬇️
   const AMBER_DESC = isFlagship
@@ -2791,6 +2811,8 @@ function RoastDetailPage() {
     ? "Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!"
     : isOak
     ? "Oak & Copper pours a steady bourbon barrel aged cup of caramel, warm vanilla, and toasted oak with a calm finish you’ll want every morning."
+    : isBrass
+    ? "Brass Monkey is a winter seasonal Southern Pecan roast built for cold mornings and bad decisions."
     : "";
 
   // review data used for stars + counts beside the subtitle and in the histogram
@@ -2953,7 +2975,7 @@ function RoastDetailPage() {
     "baptism-by-fire": "baptism-by-fire",
     "java-action": "java-action",
     "oak-and-copper": "oak-and-copper",
-    // add others here if needed
+    "brass-monkey": "brass-monkey",
   };
 
   // Reset Bean Type selector whenever you navigate to a different roast page
@@ -4026,6 +4048,31 @@ function RoastDetailPage() {
                       </p>
                     </div>
                   )}
+                  {isBrass && (
+                    <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                      <p className="text-amber-300 text-base md:text-lg">
+                        Brass Monkey - Southern Pecan Winter Seasonal
+                      </p>
+
+                      <p>{/* TODO: your Brass Monkey story paragraph 1 */}</p>
+                      <p>{/* TODO: your Brass Monkey story paragraph 2 */}</p>
+
+                      {/* Desktop version */}
+                      <p className="hidden md:block text-left text-xl font-normal text-amber-300 break-words md:font-semibold">
+                        Old Ironsides Coffee - Ignite the Spirit, Savor the
+                        Victory!
+                      </p>
+
+                      {/* Mobile version */}
+                      <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words">
+                        Old Ironsides Coffee
+                        <br />
+                        <span className="block text-sm">
+                          Ignite the Spirit, Savor the Victory!
+                        </span>
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
               {/* ===== END STORY ===== */}
@@ -4102,6 +4149,16 @@ function RoastCoffeeSection({
           anchorLevel={anchorLevel}
         />
       );
+    case "brass-monkey":
+      return (
+        <TheCoffeeBrass
+          craftSubtitle={craftSubtitle}
+          reviewData={reviewData}
+          reviews={reviews}
+          anchorLevel={anchorLevel}
+        />
+      );
+
     default:
       return null;
   }
@@ -5490,6 +5547,165 @@ function TheCoffeeOak({
               reviewData={reviewData}
               reviews={reviews}
               roastTitle="Oak & Copper"
+            />
+          </Container>
+        </div>
+      </div>
+    </section>
+  );
+}
+function TheCoffeeBrass({
+  craftSubtitle,
+  reviewData,
+  reviews,
+  anchorLevel,
+}: {
+  craftSubtitle: React.ReactNode | null;
+  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
+  reviews: Review[];
+  anchorLevel?: 1 | 2 | 3 | 4 | 5;
+}) {
+  // TODO: set your real notes + origins
+  const notes = ["Southern Pecan", "Brown Sugar", "Warm Spice"];
+  const origins = ["Colombia"]; // change if needed
+  const level: 1 | 2 | 3 | 4 | 5 = 3;
+
+  const GRID =
+    origins.length === 2
+      ? "grid-cols-[auto_auto]"
+      : "grid-cols-[auto_auto_auto]";
+
+  const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
+
+  return (
+    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
+      <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
+      <div className="bg-neutral-950 mt-[-1px]">
+        <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] md:gap-10 items-start">
+            {/* LEFT: Title + content */}
+            <div className="max-w-[80ch]">
+              <h2 className="text-xl md:text-2xl font-bold text-amber-300">
+                THE CRAFT IN THE CUP
+              </h2>
+
+              {craftSubtitle && (
+                <div className="mt-1 text-neutral-300 text-base md:text-lg leading-relaxed max-w-[68ch]">
+                  {craftSubtitle}
+                </div>
+              )}
+
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
+
+              <div className="mt-1">
+                <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+                  Signature Notes
+                </h3>
+                <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
+                  {notes.join(", ")}
+                </div>
+              </div>
+
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
+
+              <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4 text-center md:text-left">
+                Bean Origins
+              </h3>
+
+              <div
+                className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center md:justify-start`}
+              >
+                {origins.map((name) => (
+                  <OriginImg key={name} name={name} />
+                ))}
+              </div>
+
+              <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
+
+              {typeof anchors === "number" && (
+                <div className="mt-4 flex items-center justify-start">
+                  <span className="mr-3 text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase">
+                    Roast Level
+                  </span>
+
+                  <div className="relative flex items-center gap-3">
+                    <div
+                      className="pointer-events-none absolute top-1/2 left-0 right-0 -z-10 h-[2px]
+              bg-[repeating-linear-gradient(90deg,rgba(214,158,46,0.35)_0,rgba(214,158,46,0.35)_6px,transparent_6px,transparent_10px)]"
+                      aria-hidden
+                    />
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <div key={n} className="relative">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={
+                            "relative z-10 h-6 w-6 md:h-7 md:w-7 align-middle select-none transition-transform " +
+                            (n <= anchors
+                              ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                              : "text-neutral-600")
+                          }
+                          aria-hidden
+                        >
+                          <rect
+                            x="11"
+                            y="0"
+                            width="2"
+                            height="24"
+                            fill="currentColor"
+                            className="text-neutral-950"
+                          />
+                          <circle
+                            cx="12"
+                            cy="4"
+                            r="1.6"
+                            fill="currentColor"
+                            className="text-neutral-950"
+                          />
+                          <circle cx="12" cy="4" r="2" />
+                          <path d="M12 6v11" />
+                          <path d="M8 10h8" />
+                          <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+                          <path d="M7 17l-2 2" />
+                          <path d="M17 17l2 2" />
+                        </svg>
+                        <span className="sr-only">{`Roast level ${n} of 5`}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* RIGHT: CareCard desktop */}
+            <aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
+              <CareCard />
+            </aside>
+          </div>
+        </Container>
+
+        {/* MOBILE CareCard */}
+        <div className="block md:hidden bg-neutral-950">
+          <Container className="pt-2 pb-0">
+            <div className="mt-0">
+              <CareCard />
+            </div>
+          </Container>
+        </div>
+
+        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
+
+        <div className="bg-neutral-950">
+          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
+            <RoastLevelAnchors
+              level={level}
+              reviewData={reviewData}
+              reviews={reviews}
+              roastTitle="Brass Monkey"
             />
           </Container>
         </div>

@@ -1991,7 +1991,7 @@ function HomePage() {
         <div className="absolute inset-0 md:hidden bg-neutral-950">
           {/* bean image as background, less zoom */}
           <img
-            src="officer-window.png"
+            src="officer-window2.png"
             alt=""
             className="w-full h-full object-contain object-center"
           />
@@ -2100,7 +2100,7 @@ function HomePage() {
             <div className="hidden md:block md:col-span-5 self-start">
               <div className="inline-block ml-0 md:ml-[12%] w-full max-w-[420px] sm:max-w-[520px] md:max-w-[700px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
-                  src="officer-window.png"
+                  src="officer-window2.png"
                   alt="Old Ironsides hero"
                   className="
                   block

@@ -2828,8 +2828,9 @@ function RoastDetailPage() {
     ),
     "oak-and-copper": (
       <>
-        Aged in American bourbon barrels, Oak &amp; Copper is a full-bodied
-        roast with deep oak richness and a smooth, bourbon-kissed finish.
+        Every limited release is aged in a single American bourbon barrel,
+        producing a uniquely rich profile shaped by that barrel alone. Each
+        batch and barrel is numbered. No two releases will ever taste the same.
       </>
     ),
     "brass-monkey": (
@@ -4069,13 +4070,13 @@ function RoastDetailPage() {
                       </p>
                       <p>
                         Born for speed, for maneuver, and for glory, she cut the
-                        waves, mastered the cannons, and sailed her name into
-                        history.
+                        waves, mastered the cannons, and earned her place upon
+                        the sea.
                       </p>
                       <p>
-                        Aged in bourbon barrels, this roast honors the
-                        shipwrights that built her, with notes of smooth
-                        caramel, warm vanilla, and toasted oak.
+                        This bourbon barrel aged roast honors the shipwrights
+                        whose craft carried her through storms, battle, and into
+                        legend.
                       </p>
 
                       {/* Desktop version */}
@@ -4095,13 +4096,39 @@ function RoastDetailPage() {
                     </div>
                   )}
                   {isBrass && (
-                    <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                    <div className="space-y-2 text-neutral-300 text-base md:text-lg leading-relaxed">
                       <p className="text-amber-300 text-base md:text-lg">
-                        Brass Monkey - Southern Pecan Winter Seasonal
+                        The "Brass Monkey" Myth
                       </p>
 
-                      <p>{/* TODO: your Brass Monkey story paragraph 1 */}</p>
-                      <p>{/* TODO: your Brass Monkey story paragraph 2 */}</p>
+                      <p>
+                        For Generations sailors have joked about weather so cold
+                        it could “freeze the balls off a brass monkey.” Great
+                        line. Terrible story.
+                      </p>
+                      <p>
+                        Despite the legend, the Royal Navy never stored
+                        cannonballs on a brass tray, and nothing on Old
+                        Ironsides ever dumped its shot into the snow like
+                        spilled marbles. Cannonballs were kept in wooden racks
+                        or below deck, far from the frost and spray.
+                      </p>
+                      <p>
+                        So why did the saying stick? Because sailors spent half
+                        their lives freezing their asses off. Iced-over rigging,
+                        frozen canvas, breath hanging in the lantern light. That
+                        was the real winter at sea.
+                      </p>
+                      <p>
+                        This roast salutes that folklore with a grin and a
+                        shiver. Bold, warming, and cold-weather approved. This
+                        roast cuts through the cold and hits with rich,
+                        comforting flavor.
+                      </p>
+                      <p>
+                        Perfect for mornings so cold you question every choice
+                        that brought you outside.
+                      </p>
 
                       {/* Desktop version */}
                       <p className="hidden md:block text-left text-xl font-normal text-amber-300 break-words md:font-semibold">

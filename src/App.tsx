@@ -1223,7 +1223,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
   const mobileMerch = [
     { key: "tees", label: "Tees", img: "shirts-web.png" },
     { key: "hats", label: "Hats", img: "hat1-web.png" },
-    { key: "mugs", label: "Mugs", img: "Mugs-deck.png" },
+    { key: "mugs", label: "Mugs", img: "coffee-deck2.png" },
     { key: "accessories", label: "Accessories", img: "canister-web.png" },
   ];
 
@@ -5818,7 +5818,7 @@ function StorePage() {
       key: "Mugs",
       label: "Mugs",
       icon: <span className="text-sm">◼︎</span>,
-      img: "Mugs-deck.png",
+      img: "coffee-deck2.png",
     },
     {
       key: "accessories",
@@ -10022,7 +10022,7 @@ function Layout() {
   const merchTiles = [
     { key: "tees", label: "Tees", img: "shirts-web.png" },
     { key: "hats", label: "Hats", img: "hat1-web.png" },
-    { key: "mugs", label: "Mugs", img: "Mugs-deck.png" },
+    { key: "mugs", label: "Mugs", img: "coffee-deck2.png" },
     {
       key: "accessories",
       label: "Coffee Accessories",

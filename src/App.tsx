@@ -441,9 +441,9 @@ const roastCards = [
   {
     id: "oak-copper-coming-soon",
     slug: "oak-and-copper",
-    title: "Oak & Copper",
+    title: "OAK & COPPER",
     subTitle: "Medium Roast",
-    note: "Bourbon barrel-aged seasonal.",
+    note: "Bourbon Barrel-Aged Micro-Batch",
     img: "oak-copper-deck.png", // Main image for hero section
     imgLeft: "ship-hull.avif", // New property for left image in duel
     imgRight: "ship-restore.jpg", // New property for right image in duel
@@ -1517,7 +1517,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
           >
             {roastCards.map((card, idx) => {
               const base =
-                card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
+                card.slug === "oak-and-copper" ? 27 : card.price ?? 22;
               const sub = Math.round(base * 0.85 * 100) / 100; // 15% off
               const t = MOBILE_TUNE[card.slug] ?? DEFAULT_MOBILE_TUNE;
 
@@ -1744,7 +1744,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
           >
             {roastCards.map((card) => {
               const base =
-                card.slug === "oak-and-copper" ? 25 : card.price ?? 22;
+                card.slug === "oak-and-copper" ? 27 : card.price ?? 22;
               const sub = Math.round(base * 0.85 * 100) / 100;
 
               return (
@@ -2834,9 +2834,8 @@ function RoastDetailPage() {
     ),
     "brass-monkey": (
       <>
-        {/* TODO: write your Craft in the Cup copy here */}
-        Southern Pecan winter seasonal roast crafted to be smooth, cozy, and
-        dangerously easy to drink.
+        A Southern pecan roast crafted for pure winter comfort, smooth and
+        full-bodied with a warmth that carries you through the cold.
       </>
     ),
   };
@@ -3104,7 +3103,7 @@ function RoastDetailPage() {
     };
   }, []);
 
-  const basePrice = isOak ? 25 : card.price; // Oak & Copper single price
+  const basePrice = isOak ? 27 : card.price; // Oak & Copper single price
   const discounted = Number((basePrice * 0.85).toFixed(2));
 
   const addToChest = async () => {

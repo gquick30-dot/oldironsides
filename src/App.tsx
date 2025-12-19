@@ -466,9 +466,9 @@ const roastCards = [
     id: "brass-monkey",
     slug: "brass-monkey",
     title: "BRASS MONKEY",
-    subTitle: "Southern Pecan Winter Seasonal",
-    note: "Seasonal winter roast with rich southern pecan flavor.",
-    img: "/Brass-Monkey-web.png", // change to your actual filename
+    subTitle: "COLD AS BALLS!",
+    note: "Southern Pecan Seasonal Winter Roast",
+    img: "/brass monkey 4.png", // change to your actual filename
     price: 22, // change if needed
     canBuy: true, // or false if you want it visible but not purchasable yet
   },

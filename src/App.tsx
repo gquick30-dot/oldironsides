@@ -1365,6 +1365,19 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
       fit: "object-cover", // full-width; no side bars
       sideFill: false, // no filler needed when using cover
     },
+    "brass-monkey": {
+      imgH: "h-[24rem]",
+      objY: "object-[center_35%]",
+      shift: "",
+      gradH: "h-24",
+      overlap: "-mb-16",
+      stack: "",
+      title: "text-[28px]",
+      subtitle: "text-[16px]",
+      note: "",
+      fit: "object-contain", // zoom out
+      sideFill: true, // blurred filler behind to hide side bars
+    },
   };
 
   const DEFAULT_MOBILE_TUNE = {

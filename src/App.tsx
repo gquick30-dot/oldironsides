@@ -479,7 +479,9 @@ const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
   "baptism-by-fire": "9192531853533",
   "java-action": "9192548663517",
   "oak-and-copper": "9192552104157",
+  "brass-monkey": "9236587315421",
 };
+
 function RoastMegaCard({
   card,
   onClick,
@@ -8004,6 +8006,8 @@ const handleMap: Record<string, string> = {
   "baptism-by-fire": "baptism-by-fire",
   "java-action": "java-action",
   "oak-and-copper": "oak-and-copper",
+  "brass-monkey": "brass-monkey",
+
   // add others here if needed
 };
 

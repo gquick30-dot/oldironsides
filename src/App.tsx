@@ -5686,9 +5686,10 @@ function TheCoffeeBrass({
               <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
 
               <div className="mt-1">
-                <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                  Signature Notes
+                <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-0 text-center md:text-left">
+                  Bean Origins
                 </h3>
+
                 <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
                   {notes.join(", ")}
                 </div>
@@ -5696,12 +5697,12 @@ function TheCoffeeBrass({
 
               <div className="w-full max-w-4xl h-px bg-amber-400/30 my-3" />
 
-              <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-4 text-center md:text-left">
+              <h3 className="text-base md:text-lg font-semibold text-amber-300/90 mb-1 text-center md:text-left">
                 Bean Origins
               </h3>
 
               <div
-                className={`inline-grid ${GRID} gap-4 md:gap-6 items-end justify-center md:justify-start`}
+                className={`inline-grid ${GRID} gap-0 md:gap-1 items-end justify-center md:justify-start`}
               >
                 {origins.map((name) => (
                   <OriginImg key={name} name={name} />

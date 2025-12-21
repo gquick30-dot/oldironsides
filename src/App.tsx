@@ -4326,6 +4326,7 @@ function OriginImg({
     Ethiopia: "ethiopia",
     Guatemala: "guatemala",
     Indonesia: "indonesia",
+    Brazil: "Brazil amber",
   };
 
   const SCALE_BY_COUNTRY: Record<string, string> = {
@@ -4334,6 +4335,7 @@ function OriginImg({
     Ethiopia: "scale-[0.82] md:scale-[0.78]",
     Colombia: "scale-[0.85] md:scale-[0.82]",
     Indonesia: "scale-[0.90]",
+    Brazil: "scale-[0.6375] md:scale-[0.615]",
   };
 
   const fileKey = FILE_ALIAS[name] || name.toLowerCase().replace(/\s+/g, "-");
@@ -5652,8 +5654,8 @@ function TheCoffeeBrass({
   anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
   // TODO: set your real notes + origins
-  const notes = ["Southern Pecan", "Brown Sugar", "Warm Spice"];
-  const origins = ["Colombia"]; // change if needed
+  const notes = ["Pecan, obviously"];
+  const origins = ["Brazil"]; // change if needed
   const level: 1 | 2 | 3 | 4 | 5 = 3;
 
   const GRID =

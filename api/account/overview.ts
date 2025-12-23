@@ -119,7 +119,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 s.next_delivery_date ||
                 s.nextDeliveryDate ||
                 null,
-
+              nextInDays:
+                s.next_order_in_days ??
+                s.nextOrderInDays ??
+                s.next_order_in ??
+                null,
               frequency:
                 s.interval ||
                 s.interval_frequency ||

@@ -9121,7 +9121,12 @@ function SubscribeManagePage({
                     {s.product}
                   </div>
                   <div className="text-sm text-neutral-400">
-                    • Next ship date: {s.nextCharge}
+                    • Next ship date:{" "}
+                    {s.nextCharge ||
+                      (s.nextInDays != null
+                        ? `in ${s.nextInDays} days`
+                        : "—")}{" "}
+                    • {s.frequency}
                   </div>
                   <div className="text-sm text-neutral-400">
                     • {s.frequency}

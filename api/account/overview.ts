@@ -89,22 +89,59 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               String(s.email || "").toLowerCase() === email.toLowerCase()
           )
 
-          .map((s: any) => ({
-            id: s.id,
-            product: s.items?.[0]?.product_title || "Subscription",
-            nextCharge: s.next_billing_date,
-            frequency: s.interval,
-            status: s.status,
-            shippingAddress: s.shipping_address && {
-              name: s.shipping_address.name,
-              line1: s.shipping_address.address1,
-              line2: s.shipping_address.address2,
-              city: s.shipping_address.city,
-              state: s.shipping_address.province,
-              zip: s.shipping_address.zip,
-              country: s.shipping_address.country,
-            },
-          }));
+          .map((s: any) => {
+            const item0 =
+              s.items?.[0] ||
+              s.subscription_items?.[0] ||
+              s.order_items?.[0] ||
+              null;
+
+            const addr =
+              s.shipping_address ||
+              s.shippingAddress ||
+              s.address ||
+              s.customer_address ||
+              null;
+
+            return {
+              id: String(s.id),
+              product:
+                item0?.product_title ||
+                item0?.title ||
+                item0?.product_name ||
+                s.product_title ||
+                "Subscription",
+              nextCharge:
+                s.next_billing_date ||
+                s.next_order_date ||
+                s.next_charge_date ||
+                s.nextOrderDate ||
+                null,
+              frequency:
+                s.interval ||
+                s.interval_frequency ||
+                s.delivery_interval ||
+                s.frequency ||
+                null,
+              status: s.status || s.subscription_status || "active",
+              shippingAddress: addr
+                ? {
+                    name:
+                      addr.name ||
+                      [addr.first_name, addr.last_name]
+                        .filter(Boolean)
+                        .join(" ") ||
+                      null,
+                    line1: addr.address1 || addr.line1 || null,
+                    line2: addr.address2 || addr.line2 || null,
+                    city: addr.city || null,
+                    state: addr.province || addr.state || null,
+                    zip: addr.zip || addr.postal_code || null,
+                    country: addr.country || addr.country_code || null,
+                  }
+                : null,
+            };
+          });
       }
     }
 

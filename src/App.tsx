@@ -8655,10 +8655,10 @@ function SubscribeManagePage({
   useEffect(() => {
     async function bootstrap() {
       if (!user) return;
-  
+
       const token = localStorage.getItem("oi_token");
       if (!token) return;
-  
+
       const resp = await fetch(
         `/api/account/overview?email=${encodeURIComponent(user.email)}`,
         {
@@ -8667,17 +8667,16 @@ function SubscribeManagePage({
           },
         }
       );
-  
+
       if (!resp.ok) return;
-  
+
       const data = await resp.json();
       setOrders(data.orders || []);
       setSubs(data.subscriptions || []);
     }
-  
+
     bootstrap();
   }, [user]);
-  
 
   // ---------- Auth ----------
 

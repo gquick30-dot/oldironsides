@@ -71,14 +71,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       if (subResp.ok) {
         const data = await subResp.json();
-        const list =
-          data.payload || data.subscriptions || data.data || [];
+        console.log("SEAL RAW SUBS:", JSON.stringify(data, null, 2));
+        const list = data.payload || data.subscriptions || data.data || [];
+
+        subscriptions = list;
+        const shopifyCustomerId = req.query.customerId as string;
 
         subscriptions = list
           .filter(
             (s: any) =>
               String(s.email || "").toLowerCase() === email.toLowerCase()
           )
+
           .map((s: any) => ({
             id: s.id,
             product: s.items?.[0]?.product_title || "Subscription",

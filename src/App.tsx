@@ -8655,24 +8655,29 @@ function SubscribeManagePage({
   useEffect(() => {
     async function bootstrap() {
       if (!user) return;
+  
       const token = localStorage.getItem("oi_token");
       if (!token) return;
-
-      try {
-        // Example:
-        // const resp = await fetch("/api/account/overview", {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // });
-        // const data = await resp.json();
-        // setSubs(data.subscriptions);
-        // setOrders(data.orders);
-        // setDefaultAddress(data.defaultAddress);
-      } catch (err) {
-        console.error("Failed to load account data", err);
-      }
+  
+      const resp = await fetch(
+        `/api/account/overview?email=${encodeURIComponent(user.email)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (!resp.ok) return;
+  
+      const data = await resp.json();
+      setOrders(data.orders || []);
+      setSubs(data.subscriptions || []);
     }
+  
     bootstrap();
   }, [user]);
+  
 
   // ---------- Auth ----------
 

@@ -112,11 +112,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 s.product_title ||
                 "Subscription",
               nextCharge:
-                s.next_billing_date ||
                 s.next_order_date ||
-                s.next_charge_date ||
                 s.nextOrderDate ||
+                s.next_billing_date ||
+                s.next_charge_date ||
+                s.next_delivery_date ||
+                s.nextDeliveryDate ||
                 null,
+
               frequency:
                 s.interval ||
                 s.interval_frequency ||

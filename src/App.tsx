@@ -110,6 +110,17 @@ function ShopButton({ slug, title }: { slug: string; title: string }) {
     </Link>
   );
 }
+function formatDate(d?: string | null) {
+  if (!d) return "—";
+  const date = new Date(d);
+  if (Number.isNaN(date.getTime())) return "—";
+
+  return date.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
 
 /* ================= Flash Toast (global 2s banner) ================= */
 function FlashToast() {
@@ -9122,15 +9133,14 @@ function SubscribeManagePage({
                   </div>
                   <div className="text-sm text-neutral-400">
                     • Next ship date:{" "}
-                    {s.nextCharge ||
-                      (s.nextInDays != null
-                        ? `in ${s.nextInDays} days`
-                        : "—")}{" "}
+                    {s.nextCharge
+                      ? formatDate(s.nextCharge)
+                      : s.nextInDays != null
+                      ? `in ${s.nextInDays} days`
+                      : "—"}{" "}
                     • {s.frequency}
                   </div>
-                  <div className="text-sm text-neutral-400">
-                    • {s.frequency}
-                  </div>
+
                   <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
                     {s.status}
                   </div>

@@ -112,14 +112,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 item0?.product_name ||
                 s.product_title ||
                 "Subscription",
-              nextCharge:
-                s.next_order_date ||
-                s.nextOrderDate ||
-                s.next_billing_date ||
-                s.next_charge_date ||
-                s.next_delivery_date ||
-                s.nextDeliveryDate ||
-                null,
+              nextCharge: (() => {
+                const placed = s.order_placed || s.orderPlaced;
+                const interval =
+                  s.delivery_interval || s.billing_interval || s.interval;
+
+                if (!placed || !interval) return null;
+
+                const n = parseInt(String(interval), 10); // "30 day" -> 30
+                if (!Number.isFinite(n)) return null;
+
+                const d = new Date(placed);
+                if (Number.isNaN(d.getTime())) return null;
+
+                d.setDate(d.getDate() + n);
+                return d.toISOString().slice(0, 10); // YYYY-MM-DD
+              })(),
+
               nextInDays:
                 s.next_order_in_days ??
                 s.nextOrderInDays ??

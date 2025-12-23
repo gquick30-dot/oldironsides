@@ -72,7 +72,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (subResp.ok) {
         const data = await subResp.json();
         console.log("SEAL RAW SUBS:", JSON.stringify(data, null, 2));
-        const list = data.payload || data.subscriptions || data.data || [];
+        const raw = data.payload || data.subscriptions || data.data || [];
+
+        const list = Array.isArray(raw)
+          ? raw
+          : Array.isArray(raw?.subscriptions)
+          ? raw.subscriptions
+          : [];
 
         subscriptions = list;
         const shopifyCustomerId = req.query.customerId as string;

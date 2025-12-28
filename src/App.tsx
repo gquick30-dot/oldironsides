@@ -9367,7 +9367,7 @@ function SubscribeManagePage({
                         detail: "Shipping address saved.",
                       })
                     );
-                    (e.currentTarget as HTMLFormElement).reset();
+                    (e.target as HTMLFormElement)?.reset?.();
                   } catch (err: any) {
                     setError(err?.message || "Address update failed.");
                   } finally {

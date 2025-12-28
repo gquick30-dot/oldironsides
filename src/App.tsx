@@ -8614,21 +8614,11 @@ function SubscribeManagePage({
 
   const [subs, setSubs] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
+  const [defaultAddress, setDefaultAddress] = useState<any>(null);
 
-  const [defaultAddress, setDefaultAddress] = useState<any>({
-    name: "Greg Quick",
-    line1: "123 Harbor Way",
-    line2: "",
-    city: "Boston",
-    state: "MA",
-    zip: "02129",
-    country: "USA",
-  });
   useEffect(() => {
     const u: any = user;
-    if (u && u.defaultAddress) {
-      setDefaultAddress(u.defaultAddress);
-    }
+    setDefaultAddress(u?.defaultAddress ?? null);
   }, [user]);
 
   useEffect(() => {
@@ -9286,12 +9276,174 @@ function SubscribeManagePage({
                   </div>
                 </div>
               </div>
-              <button
-                // REAL: open address edit modal or redirect to address page
-                className="mt-4 px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/50 text-sm text-neutral-200"
+
+              <form
+                className="mt-4 grid gap-3"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  setError("");
+                  setLoading(true);
+
+                  try {
+                    const token = localStorage.getItem("oi_token");
+                    if (!token) {
+                      setError("Please log in again.");
+                      return;
+                    }
+
+                    const fd = new FormData(e.currentTarget as HTMLFormElement);
+
+                    const address = {
+                      firstName: String(fd.get("firstName") || "").trim(),
+                      lastName: String(fd.get("lastName") || "").trim(),
+                      address1: String(fd.get("address1") || "").trim(),
+                      address2: String(fd.get("address2") || "").trim(),
+                      city: String(fd.get("city") || "").trim(),
+                      province: String(fd.get("province") || "").trim(),
+                      zip: String(fd.get("zip") || "").trim(),
+                      country: String(fd.get("country") || "").trim(),
+                      phone: String(fd.get("phone") || "").trim(),
+                    };
+
+                    if (
+                      !address.address1 ||
+                      !address.city ||
+                      !address.zip ||
+                      !address.country
+                    ) {
+                      setError("Address, city, zip, and country are required.");
+                      return;
+                    }
+
+                    const resp = await fetch("/api/account/address-create", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify({ address }),
+                    });
+
+                    const text = await resp.text();
+                    console.log("[address-create] raw response:", text);
+
+                    let data: any = {};
+                    try {
+                      data = text ? JSON.parse(text) : {};
+                    } catch {
+                      setError("Address server returned invalid response.");
+                      return;
+                    }
+
+                    if (!resp.ok) {
+                      setError(data?.error || "Address update failed.");
+                      return;
+                    }
+
+                    // Update local UI immediately
+                    const newDefault = {
+                      name: [address.firstName, address.lastName]
+                        .filter(Boolean)
+                        .join(" ")
+                        .trim(),
+                      line1: address.address1,
+                      line2: address.address2,
+                      city: address.city,
+                      state: address.province,
+                      zip: address.zip,
+                      country: address.country,
+                    };
+
+                    setDefaultAddress(newDefault);
+                    setUser((u: any) => {
+                      if (!u) return u;
+                      const next = { ...u, defaultAddress: newDefault };
+                      localStorage.setItem("oi_user", JSON.stringify(next));
+                      return next;
+                    });
+
+                    window.dispatchEvent(
+                      new CustomEvent("flash", {
+                        detail: "Shipping address saved.",
+                      })
+                    );
+                    (e.currentTarget as HTMLFormElement).reset();
+                  } catch (err: any) {
+                    setError(err?.message || "Address update failed.");
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
               >
-                Edit shipping address
-              </button>
+                <div className="text-amber-300 font-semibold">
+                  Add shipping address
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-3">
+                  <input
+                    name="firstName"
+                    placeholder="First name"
+                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                  />
+                  <input
+                    name="lastName"
+                    placeholder="Last name"
+                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                  />
+                </div>
+
+                <input
+                  name="address1"
+                  placeholder="Address line 1"
+                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                />
+                <input
+                  name="address2"
+                  placeholder="Address line 2 (optional)"
+                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                />
+
+                <div className="grid md:grid-cols-2 gap-3">
+                  <input
+                    name="city"
+                    placeholder="City"
+                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                  />
+                  <input
+                    name="province"
+                    placeholder="State / Province"
+                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-3">
+                  <input
+                    name="zip"
+                    placeholder="ZIP / Postal code"
+                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                  />
+                  <input
+                    name="country"
+                    placeholder="Country"
+                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                  />
+                </div>
+
+                <input
+                  name="phone"
+                  placeholder="Phone (optional)"
+                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                />
+
+                {error && <div className="text-sm text-red-300">{error}</div>}
+
+                <button
+                  disabled={loading}
+                  className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300 disabled:opacity-60"
+                >
+                  {loading ? "Saving..." : "Save address"}
+                </button>
+              </form>
             </div>
 
             {/* Security */}

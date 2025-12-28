@@ -8604,6 +8604,8 @@ function SubscribeManagePage({
       return null;
     }
   });
+  const [addresses, setAddresses] = useState<any[]>([]);
+  const [defaultAddressId, setDefaultAddressId] = useState<string | null>(null);
 
   const [tab, setTab] = useState<
     "overview" | "login" | "subscriptions" | "orders" | "profile"
@@ -8615,6 +8617,24 @@ function SubscribeManagePage({
   const [subs, setSubs] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [defaultAddress, setDefaultAddress] = useState<any>(null);
+  useEffect(() => {
+    if (tab !== "profile") return;
+
+    const token = localStorage.getItem("oi_token");
+    if (!token) return;
+
+    fetch("/api/account/addresses", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        setAddresses(data.addresses || []);
+        setDefaultAddressId(data.defaultId || null);
+      })
+      .catch(() => {});
+  }, [tab]);
 
   useEffect(() => {
     const u: any = user;
@@ -9378,6 +9398,32 @@ function SubscribeManagePage({
                   }
                 }}
               >
+                {addresses.length > 0 && (
+                  <div className="mb-6 space-y-3">
+                    {addresses.map((a) => (
+                      <div
+                        key={a.id}
+                        className="rounded-lg border border-neutral-700 p-3 text-sm text-neutral-300"
+                      >
+                        <div className="font-semibold">
+                          {a.firstName} {a.lastName}
+                          {a.id === defaultAddressId && (
+                            <span className="ml-2 text-xs text-amber-300">
+                              (Default)
+                            </span>
+                          )}
+                        </div>
+                        <div>{a.address1}</div>
+                        {a.address2 && <div>{a.address2}</div>}
+                        <div>
+                          {a.city}, {a.province} {a.zip}
+                        </div>
+                        <div>{a.country}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <div className="text-amber-300 font-semibold">
                   Add shipping address
                 </div>

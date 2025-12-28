@@ -9414,94 +9414,167 @@ function SubscribeManagePage({
                   }
                 }}
               >
-                {addresses.length > 0 && (
-                  <div className="mb-6 space-y-3">
-                    {addresses.map((a) => {
-                      const isDefault = a.id === defaultAddressId;
+                {addresses.map((a) => {
+                  const isDefault = a.id === defaultAddressId;
 
-                      return (
+                  return (
+                    <div
+                      key={a.id}
+                      className={[
+                        "w-full text-left rounded-lg border p-3 transition relative",
+                        isDefault
+                          ? "border-amber-400 bg-amber-400/10"
+                          : "border-neutral-700 hover:border-amber-400/60",
+                      ].join(" ")}
+                    >
+                      {/* Clickable body sets default */}
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          if (isDefault) return;
+
+                          const token = localStorage.getItem("oi_token");
+                          if (!token) return;
+
+                          setLoading(true);
+                          setError("");
+
+                          try {
+                            const resp = await fetch(
+                              "/api/account/address-set-default",
+                              {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                  Authorization: `Bearer ${token}`,
+                                },
+                                body: JSON.stringify({ addressId: a.id }),
+                              }
+                            );
+
+                            const data = await resp.json();
+                            if (!resp.ok) {
+                              setError(
+                                data?.error ||
+                                  "Failed to update shipping address."
+                              );
+                              return;
+                            }
+
+                            setDefaultAddressId(a.id);
+                            setDefaultAddress({
+                              name: [a.firstName, a.lastName]
+                                .filter(Boolean)
+                                .join(" "),
+                              line1: a.address1,
+                              line2: a.address2,
+                              city: a.city,
+                              state: a.province,
+                              zip: a.zip,
+                              country: a.country,
+                            });
+
+                            window.dispatchEvent(
+                              new CustomEvent("flash", {
+                                detail: "Default shipping address updated.",
+                              })
+                            );
+                          } finally {
+                            setLoading(false);
+                          }
+                        }}
+                        className="block w-full text-left pr-24"
+                      >
+                        <div className="font-semibold text-neutral-200">
+                          {a.firstName} {a.lastName}
+                          {isDefault && (
+                            <span className="ml-2 text-xs text-amber-300">
+                              (Default)
+                            </span>
+                          )}
+                        </div>
+                        <div>{a.address1}</div>
+                        {a.address2 && <div>{a.address2}</div>}
+                        <div>
+                          {a.city}, {a.province} {a.zip}
+                        </div>
+                        <div>{a.country}</div>
+                      </button>
+
+                      {/* Actions (top-right) */}
+                      <div className="absolute top-3 right-3 flex gap-2">
                         <button
-                          key={a.id}
+                          type="button"
+                          onClick={() => {
+                            // next step will wire this to fill the form + enter edit mode
+                            window.dispatchEvent(
+                              new CustomEvent("flash", {
+                                detail: "Edit mode coming next.",
+                              })
+                            );
+                          }}
+                          className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
+                        >
+                          Edit
+                        </button>
+
+                        <button
                           type="button"
                           onClick={async () => {
-                            if (isDefault) return;
-
                             const token = localStorage.getItem("oi_token");
                             if (!token) return;
+
+                            if (!confirm("Delete this address?")) return;
 
                             setLoading(true);
                             setError("");
 
                             try {
                               const resp = await fetch(
-                                "/api/account/address-set-default",
+                                "/api/account/address-delete",
                                 {
                                   method: "POST",
                                   headers: {
                                     "Content-Type": "application/json",
                                     Authorization: `Bearer ${token}`,
                                   },
-                                  body: JSON.stringify({ addressId: a.id }),
+                                  body: JSON.stringify({ id: a.id }),
                                 }
                               );
 
                               const data = await resp.json();
                               if (!resp.ok) {
-                                setError(
-                                  data?.error ||
-                                    "Failed to set default address."
-                                );
+                                setError(data?.error || "Delete failed.");
                                 return;
                               }
 
-                              setDefaultAddressId(a.id);
-                              setDefaultAddress({
-                                name: [a.firstName, a.lastName]
-                                  .filter(Boolean)
-                                  .join(" "),
-                                line1: a.address1,
-                                line2: a.address2,
-                                city: a.city,
-                                state: a.province,
-                                zip: a.zip,
-                                country: a.country,
-                              });
+                              // Remove from UI list
+                              setAddresses((list) =>
+                                list.filter((x) => x.id !== a.id)
+                              );
+
+                              // If we deleted the default, clear it (next step will auto-pick another)
+                              if (defaultAddressId === a.id) {
+                                setDefaultAddressId(null);
+                              }
 
                               window.dispatchEvent(
                                 new CustomEvent("flash", {
-                                  detail: "Default shipping address updated.",
+                                  detail: "Address deleted.",
                                 })
                               );
                             } finally {
                               setLoading(false);
                             }
                           }}
-                          className={[
-                            "w-full text-left rounded-lg border p-3 transition",
-                            isDefault
-                              ? "border-amber-400 bg-amber-400/10"
-                              : "border-neutral-700 hover:border-amber-400/60",
-                          ].join(" ")}
+                          className="px-2 py-1 text-xs rounded border border-red-800 text-red-300 hover:border-red-600"
                         >
-                          <div className="font-semibold text-neutral-200">
-                            {a.firstName} {a.lastName}
-                            {isDefault && (
-                              <span className="ml-2 text-xs text-amber-300">
-                                (Default)
-                              </span>
-                            )}
-                          </div>
-                          <div>{a.address1}</div>
-                          {a.address2 && <div>{a.address2}</div>}
-                          <div>
-                            {a.city}, {a.province} {a.zip}
-                          </div>
-                          <div>{a.country}</div>
+                          Delete
                         </button>
-                      );
-                    })}
-                  </div>
-                )}
+                      </div>
+                    </div>
+                  );
+                })}
 
                 <div className="text-amber-300 font-semibold">
                   Add shipping address

@@ -9079,7 +9079,10 @@ function SubscribeManagePage({
                 </div>
               )}
 
-              <button className="mt-3 px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/40 text-sm text-neutral-300">
+              <button
+                onClick={() => setTab("profile")}
+                className="mt-3 px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/40 text-sm text-neutral-300"
+              >
                 Manage addresses →
               </button>
             </div>

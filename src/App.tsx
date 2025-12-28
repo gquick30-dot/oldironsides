@@ -2002,7 +2002,7 @@ function HomePage() {
         <div className="absolute inset-0 md:hidden bg-neutral-950">
           {/* bean image as background, less zoom */}
           <img
-            src="officer-window2.png"
+            src="officer-window3.tif"
             alt=""
             className="w-full h-full object-contain object-center"
           />
@@ -2014,7 +2014,7 @@ function HomePage() {
         <img
           src="emblem-black.png"
           alt="Stormy sea"
-          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[900px] object-contain opacity-30 pointer-events-none select-none"
+          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[62vw] max-w-[780px] object-contain opacity-30 pointer-events-none select-none"
         />
         <div className="hidden md:block absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,193,7,0.10),transparent_60%)]" />
         <div className="hidden md:block absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
@@ -2022,109 +2022,107 @@ function HomePage() {
         {/* content wrapper sits on top */}
         <Container className="relative desktopHeroPad pt-[26rem] pb-10 sm:pt-[24rem] sm:pb-14">
           <style>{`
-            @media (min-width: 768px) {
-              #top .desktopHeroPad {
-                padding-top: 4.5rem;
-                padding-bottom: 4.5rem;
-              }
-            }
-          `}</style>
+  @media (min-width: 768px) {
+    #top .desktopHeroPad {
+      padding-top: 4.5rem;
+      padding-bottom: 4.5rem;
+    }
+    #top .heroCenter {
+      transform: translateY(72px);
+    }
+  }
+`}</style>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start text-center md:text-left">
-            {/* LEFT COLUMN */}
-            <div className="md:col-span-7 flex flex-col items-center text-center md:items-start md:text-left">
-              <div className="space-y-0">
-                <div className="relative z-0 md:transform md:scale-110 md:origin-center">
-                  <div className="inline-flex flex-col items-center md:items-start">
-                    {/* product / lifestyle photo */}
-                    {/* product / lifestyle photo (hidden on mobile because it's now the bg) */}
-                    <div
-                      className="hidden md:block self-center md:self-start translate-y-4 md:translate-y-8
-                w-[14rem] h-[18rem] sm:w-[16rem] sm:h-[20.5rem]
-                md:w-[21.5rem] md:h-[27rem]
-                rounded-xl ring-1 ring-amber-500 shadow-2xl shadow-black/30 overflow-hidden"
-                    >
-                      <img
-                        src="bean-smell.png"
-                        alt="Smelling beans"
-                        className="w-full h-full object-cover origin-center"
-                      />
-                    </div>
-
-                    {/* spacer between image + headline */}
-                    <div aria-hidden className="h-6 sm:h-8 md:h-10" />
-
-                    {/* HEADLINE */}
-                    <h2
-                      className="text-amber-400 font-extrabold leading-snug tracking-tight
-                text-[1.25rem] sm:text-[1.5rem] md:text-[2.1rem]"
-                      style={{ fontFamily: "'Cinzel', serif" }}
-                    >
-                      PREMIUM, SMALL-BATCH COFFEE
-                    </h2>
-
-                    {/* bullet line */}
-                    <div className="mt-0 text-neutral-300 text-[12px] sm:text-sm md:text-lg">
-                      <span>Roasted To Order</span>
-                      <span className="mx-1.5 text-amber-400/70" aria-hidden>
-                        •
-                      </span>
-                      <span>Ethically Sourced</span>
-                      <span className="mx-1.5 text-amber-400/70" aria-hidden>
-                        •
-                      </span>
-                      <a
-                        href="https://www.govx.com/govx-id/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-amber-200 underline-offset-2 hover:underline"
-                      >
-                        GovX Partner
-                      </a>
-                    </div>
-
-                    {/* CTA */}
-                    <div aria-hidden className="h-2 md:h-3" />
-                    <div className="w-full max-w-[24rem] mx-auto md:mx-0">
-                      <Link
-                        to="/store"
-                        className="w-full inline-flex items-center justify-center gap-2
-  px-6 py-3 sm:px-8 sm:py-4
-  rounded-xl bg-neutral-900 text-amber-400 font-extrabold
-  text-2xl sm:text-lg md:text-2xl tracking-wide
-  border border-amber-500 shadow-xl shadow-amber-500/20
-  hover:bg-amber-400 hover:text-neutral-900
-  transition-all duration-200"
-                      >
-                        <span aria-hidden>⚓</span>
-                        SHOP COFFEE NOW
-                      </Link>
-
-                      <RoastCTAInfo />
-                    </div>
-                  </div>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-12 md:gap-12 items-center text-center md:text-left md:-mx-16 lg:-mx-24">
+            {/* LEFT HERO IMAGE (desktop only) */}
+            <div className="hidden md:flex md:col-span-3 justify-start">
+              <div className="w-full max-w-[420px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
+                <img
+                  src="smell-beans.png"
+                  alt="Smelling beans"
+                  className="
+          block
+          w-full
+          h-auto
+          max-h-[60vh]
+          sm:max-h-[70vh]
+          md:max-h-[calc(100vh-300px)]
+          object-cover
+        "
+                />
               </div>
             </div>
 
-            {/* RIGHT COLUMN (officer art) */}
-            <div className="hidden md:block md:col-span-5 self-start">
-              <div className="inline-block ml-0 md:ml-[12%] w-full max-w-[420px] sm:max-w-[520px] md:max-w-[700px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
+            {/* CENTER TEXT + CTA (desktop only) */}
+            <div className="md:col-span-6 flex flex-col items-center text-center heroCenter">
+              <div aria-hidden className="hidden md:block h-12 lg:h-16" />
+
+              <h2
+                className="text-amber-400 font-extrabold leading-snug tracking-tight
+      text-[1.25rem] sm:text-[1.5rem] md:text-[2.1rem]"
+                style={{ fontFamily: "'Cinzel', serif" }}
+              >
+                PREMIUM, SMALL-BATCH COFFEE
+              </h2>
+
+              <div className="mt-1 text-neutral-300 text-[12px] sm:text-sm md:text-lg">
+                <span>Roasted To Order</span>
+                <span className="mx-1.5 text-amber-400/70" aria-hidden>
+                  •
+                </span>
+                <span>Ethically Sourced</span>
+                <span className="mx-1.5 text-amber-400/70" aria-hidden>
+                  •
+                </span>
+                <a
+                  href="https://www.govx.com/govx-id/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-200 underline-offset-2 hover:underline"
+                >
+                  GovX Partner
+                </a>
+              </div>
+
+              <div aria-hidden className="h-2 md:h-3" />
+
+              <div className="w-full max-w-[28rem]">
+                <Link
+                  to="/store"
+                  className="w-full inline-flex items-center justify-center gap-2
+                  px-8 py-4 sm:px-10 sm:py-5
+
+          rounded-xl bg-neutral-900 text-amber-400 font-extrabold
+          text-2xl sm:text-lg md:text-2xl tracking-wide
+          border-2 border-amber-400 shadow-2xl shadow-amber-500/35
+
+
+          hover:bg-amber-400 hover:text-neutral-900
+          transition-all duration-200"
+                >
+                  <span aria-hidden>⚓</span>
+                  SHOP COFFEE NOW
+                </Link>
+
+                <RoastCTAInfo />
+              </div>
+            </div>
+
+            {/* RIGHT HERO IMAGE (desktop only) */}
+            <div className="hidden md:flex md:col-span-3 justify-end">
+              <div className="w-full max-w-[420px] ml-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
                   src="officer-window2.png"
                   alt="Old Ironsides hero"
                   className="
-                  block
-                  w-auto
-                  h-auto
-                  max-w-full
-                  max-h-[60vh]
-                  sm:max-h-[70vh]
-                  md:max-h-[calc(100vh-300px)]
-                  object-contain
-                  relative
-                  z-0
-                "
+          block
+          w-full
+          h-auto
+          max-h-[60vh]
+          sm:max-h-[70vh]
+          md:max-h-[calc(100vh-300px)]
+          object-cover
+        "
                 />
               </div>
             </div>
@@ -10919,11 +10917,11 @@ function RoastCTAInfo() {
         {state === "countdown" ? (
           // countdown phase (Thu morning -> Sun 5pm ET)
           <div className="space-y-1">
-            <div className="text-m text-neutral-300">
+            <div className="text-m text-neutral-200">
               Time left to make the next roast:{" "}
               <span className="text-amber-300">{left}</span>
             </div>
-            <div className="text-[14px] text-neutral-400">
+            <div className="text-[14px] text-neutral-200">
               Secure your fresh order now.
             </div>
           </div>
@@ -10959,7 +10957,7 @@ function RoastCTAInfo() {
               <span className="text-amber-300">{dateLabel}</span>{" "}
               <span className="text-neutral-400"></span>
             </div>
-            <div className="text-m md:text-m text-neutral-400">
+            <div className="text-m md:text-m text-neutral-200">
               Time left to make the next roast:{" "}
               <span className="text-amber-300">{left}</span> <br />
               Secure your fresh order now.

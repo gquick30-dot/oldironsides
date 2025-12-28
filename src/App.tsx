@@ -8628,6 +8628,27 @@ function SubscribeManagePage({
         Authorization: `Bearer ${token}`,
       },
     })
+      .then((res) => res.json())
+      .then((data) => {
+        setAddresses(data.addresses || []);
+        setDefaultAddressId(data.defaultId || null);
+      })
+      .catch(() => {
+        // ignore for now
+      });
+  }, [tab]);
+
+  useEffect(() => {
+    if (tab !== "profile") return;
+
+    const token = localStorage.getItem("oi_token");
+    if (!token) return;
+
+    fetch("/api/account/addresses", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((r) => r.json())
       .then((data) => {
         setAddresses(data.addresses || []);
@@ -8927,7 +8948,7 @@ function SubscribeManagePage({
               className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
             >
               <div className="text-lg font-semibold text-amber-300 mb-3">
-                Create account
+                Create account & send activation email
               </div>
               <div className="space-y-3">
                 <input
@@ -8941,12 +8962,7 @@ function SubscribeManagePage({
                   placeholder="Email address"
                   className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
                 />
-                <input
-                  name="password"
-                  type="password"
-                  placeholder="Create a password"
-                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                />
+
                 <button
                   disabled={loading}
                   className="w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
@@ -9400,27 +9416,90 @@ function SubscribeManagePage({
               >
                 {addresses.length > 0 && (
                   <div className="mb-6 space-y-3">
-                    {addresses.map((a) => (
-                      <div
-                        key={a.id}
-                        className="rounded-lg border border-neutral-700 p-3 text-sm text-neutral-300"
-                      >
-                        <div className="font-semibold">
-                          {a.firstName} {a.lastName}
-                          {a.id === defaultAddressId && (
-                            <span className="ml-2 text-xs text-amber-300">
-                              (Default)
-                            </span>
-                          )}
-                        </div>
-                        <div>{a.address1}</div>
-                        {a.address2 && <div>{a.address2}</div>}
-                        <div>
-                          {a.city}, {a.province} {a.zip}
-                        </div>
-                        <div>{a.country}</div>
-                      </div>
-                    ))}
+                    {addresses.map((a) => {
+                      const isDefault = a.id === defaultAddressId;
+
+                      return (
+                        <button
+                          key={a.id}
+                          type="button"
+                          onClick={async () => {
+                            if (isDefault) return;
+
+                            const token = localStorage.getItem("oi_token");
+                            if (!token) return;
+
+                            setLoading(true);
+                            setError("");
+
+                            try {
+                              const resp = await fetch(
+                                "/api/account/address-set-default",
+                                {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${token}`,
+                                  },
+                                  body: JSON.stringify({ addressId: a.id }),
+                                }
+                              );
+
+                              const data = await resp.json();
+                              if (!resp.ok) {
+                                setError(
+                                  data?.error ||
+                                    "Failed to set default address."
+                                );
+                                return;
+                              }
+
+                              setDefaultAddressId(a.id);
+                              setDefaultAddress({
+                                name: [a.firstName, a.lastName]
+                                  .filter(Boolean)
+                                  .join(" "),
+                                line1: a.address1,
+                                line2: a.address2,
+                                city: a.city,
+                                state: a.province,
+                                zip: a.zip,
+                                country: a.country,
+                              });
+
+                              window.dispatchEvent(
+                                new CustomEvent("flash", {
+                                  detail: "Default shipping address updated.",
+                                })
+                              );
+                            } finally {
+                              setLoading(false);
+                            }
+                          }}
+                          className={[
+                            "w-full text-left rounded-lg border p-3 transition",
+                            isDefault
+                              ? "border-amber-400 bg-amber-400/10"
+                              : "border-neutral-700 hover:border-amber-400/60",
+                          ].join(" ")}
+                        >
+                          <div className="font-semibold text-neutral-200">
+                            {a.firstName} {a.lastName}
+                            {isDefault && (
+                              <span className="ml-2 text-xs text-amber-300">
+                                (Default)
+                              </span>
+                            )}
+                          </div>
+                          <div>{a.address1}</div>
+                          {a.address2 && <div>{a.address2}</div>}
+                          <div>
+                            {a.city}, {a.province} {a.zip}
+                          </div>
+                          <div>{a.country}</div>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
 

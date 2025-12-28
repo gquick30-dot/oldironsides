@@ -148,7 +148,7 @@ function FlashToast() {
 
   return (
     <div
-      className={`fixed top-6 left-1/2 -translate-x-1/2 z-[100] transition-all duration-200 ${
+      className={`fixed left-1/2 -translate-x-1/2 z-[100] transition-all duration-200 top-[calc(env(safe-area-inset-top)+8px)] ${
         show
           ? "opacity-100 scale-100"
           : "opacity-0 scale-95 pointer-events-none"
@@ -764,12 +764,9 @@ function CartProvider({ children }: any) {
         return copy;
       });
 
-      // Auto-open cart on mobile (stays independent of route)
-      try {
-        if (typeof window !== "undefined" && window.innerWidth < 768) {
-          window.dispatchEvent(new Event("oi-open-cart"));
-        }
-      } catch {}
+      // Do NOT auto-open the cart drawer on add (mobile included).
+      // We only show the flash banner + cart count update.
+      // Drawer opens only when the user taps the chest icon or a dedicated "View cart" CTA.
     },
     [persist]
   );
@@ -4330,12 +4327,12 @@ function OriginImg({
   bumpIndonesia?: boolean;
 }) {
   const FILE_ALIAS: Record<string, string> = {
-    Colombia: "columbia",
-    "El Salvador": "el-salvador",
-    Ethiopia: "ethiopia",
-    Guatemala: "guatemala",
-    Indonesia: "indonesia",
-    Brazil: "Brazil amber",
+    Colombia: "columbia filled2",
+    "El Salvador": "el salvador filled2",
+    Ethiopia: "ethiopia filled2",
+    Guatemala: "guatemala filled2",
+    Indonesia: "indonesia filled2",
+    Brazil: "Brazil amber filled2",
   };
 
   const SCALE_BY_COUNTRY: Record<string, string> = {
@@ -4389,29 +4386,7 @@ function OriginImg({
   );
 }
 function LocalFlashBanner() {
-  const [msg, setMsg] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    const handler = (e: any) => {
-      const text = e?.detail;
-      if (!text) return;
-      setMsg(String(text));
-      window.setTimeout(() => setMsg(null), 2500);
-    };
-
-    window.addEventListener("flash", handler as any);
-    return () => window.removeEventListener("flash", handler as any);
-  }, []);
-
-  if (!msg) return null;
-
-  return (
-    <div className="fixed inset-0 z-[2147483647] md:hidden flex items-center justify-center px-4">
-      <div className="w-full max-w-xs rounded-xl bg-amber-400 text-neutral-900 text-sm font-semibold text-center px-4 py-3 shadow-lg shadow-black/40">
-        {msg}
-      </div>
-    </div>
-  );
+  return null;
 }
 
 function RoastLevelAnchors({

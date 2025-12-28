@@ -8693,7 +8693,7 @@ function SubscribeManagePage({
       localStorage.setItem("oi_token", data.accessToken);
 
       setUser(data.user);
-      setTab("overview");
+      setTab("profile");
 
       window.dispatchEvent(
         new CustomEvent("flash", { detail: "Welcome back." })
@@ -8748,7 +8748,7 @@ function SubscribeManagePage({
       localStorage.setItem("oi_token", data.accessToken);
 
       setUser(data.user);
-      setTab("overview");
+      setTab("profile");
 
       window.dispatchEvent(
         new CustomEvent("flash", { detail: "Account created." })

@@ -5851,7 +5851,7 @@ function StorePage() {
       >
         <Container>
           <SectionTitle
-            title="Launching Winter 2025!"
+            title="Coming soon!"
             subtitle="Apparel, mugs, hats, and gear for the Fleet."
           />
 

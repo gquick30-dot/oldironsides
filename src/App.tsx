@@ -8719,40 +8719,50 @@ function SubscribeManagePage({
     e.preventDefault();
     setError("");
     setLoading(true);
+
     const fd = new FormData(e.currentTarget);
     const name = String(fd.get("name") || "");
     const email = String(fd.get("email") || "");
     const password = String(fd.get("password") || "");
 
     try {
-      if (!name || !emailOk(email) || !password)
-        throw new Error("Fill all fields.");
+      if (!name || !emailOk(email) || !password) {
+        setError("Fill all fields.");
+        return;
+      }
 
-      // REAL INTEGRATION:
-      // const resp = await fetch("/api/account/register", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ name, email, password }),
-      // });
-      // if (!resp.ok) throw new Error("Registration failed.");
-      // const data = await resp.json();
-      // localStorage.setItem("oi_user", JSON.stringify(data.customer));
-      // localStorage.setItem("oi_token", data.accessToken);
-      // setUser(data.customer);
+      const resp = await fetch("/api/account-register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-      // TEMP MOCK
-      await new Promise((r) => setTimeout(r, 500));
-      const mockCustomer = { id: "c1", email, name };
-      localStorage.setItem("oi_user", JSON.stringify(mockCustomer));
-      localStorage.setItem("oi_token", "mock_token");
-      setUser(mockCustomer);
+      const text = await resp.text();
+      console.log("[account-register] raw response:", text);
 
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        setError("Register server returned invalid response.");
+        return;
+      }
+
+      if (!resp.ok) {
+        setError(data?.error || "Registration failed.");
+        return;
+      }
+
+      // data: { accessToken, user }
+      localStorage.setItem("oi_user", JSON.stringify(data.user));
+      localStorage.setItem("oi_token", data.accessToken);
+
+      setUser(data.user);
       setTab("overview");
+
       window.dispatchEvent(
         new CustomEvent("flash", { detail: "Account created." })
       );
-    } catch (err: any) {
-      setError(err?.message || "Registration failed.");
     } finally {
       setLoading(false);
     }

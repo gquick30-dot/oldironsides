@@ -9538,52 +9538,24 @@ function SubscribeManagePage({
 
                             if (!f) return;
 
-                            // Fill the existing inputs by name
-                            (
-                              f.elements.namedItem(
-                                "firstName"
-                              ) as HTMLInputElement | null
-                            )?.setAttribute("value", a.firstName || "");
-                            (
-                              f.elements.namedItem(
-                                "lastName"
-                              ) as HTMLInputElement | null
-                            )?.setAttribute("value", a.lastName || "");
-                            (
-                              f.elements.namedItem(
-                                "address1"
-                              ) as HTMLInputElement | null
-                            )?.setAttribute("value", a.address1 || "");
-                            (
-                              f.elements.namedItem(
-                                "address2"
-                              ) as HTMLInputElement | null
-                            )?.setAttribute("value", a.address2 || "");
-                            (
-                              f.elements.namedItem(
-                                "city"
-                              ) as HTMLInputElement | null
-                            )?.setAttribute("value", a.city || "");
-                            (
-                              f.elements.namedItem(
-                                "province"
-                              ) as HTMLInputElement | null
-                            )?.setAttribute("value", a.province || "");
-                            (
-                              f.elements.namedItem(
-                                "zip"
-                              ) as HTMLInputElement | null
-                            )?.setAttribute("value", a.zip || "");
-                            (
-                              f.elements.namedItem(
-                                "country"
-                              ) as HTMLInputElement | null
-                            )?.setAttribute("value", a.country || "");
-                            (
-                              f.elements.namedItem(
-                                "phone"
-                              ) as HTMLInputElement | null
-                            )?.setAttribute("value", a.phone || "");
+                            // Fill the existing inputs by name (use .value so reset() actually clears)
+                            const setVal = (name: string, val: string) => {
+                              const el = f.elements.namedItem(
+                                name
+                              ) as HTMLInputElement | null;
+                              if (!el) return;
+                              el.value = val ?? "";
+                            };
+
+                            setVal("firstName", a.firstName);
+                            setVal("lastName", a.lastName);
+                            setVal("address1", a.address1);
+                            setVal("address2", a.address2);
+                            setVal("city", a.city);
+                            setVal("province", a.province);
+                            setVal("zip", a.zip);
+                            setVal("country", a.country);
+                            setVal("phone", a.phone);
 
                             window.dispatchEvent(
                               new CustomEvent("flash", {

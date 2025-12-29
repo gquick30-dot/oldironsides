@@ -9574,7 +9574,8 @@ function SubscribeManagePage({
                             const token = localStorage.getItem("oi_token");
                             if (!token) return;
 
-                            if (!confirm("Delete this address?")) return;
+                            setEditingId(a.id);
+                            setConfirmDelete(true);
 
                             setLoading(true);
                             setError("");
@@ -9758,6 +9759,82 @@ function SubscribeManagePage({
                 />
 
                 {error && <div className="text-sm text-red-300">{error}</div>}
+
+                {editingId && confirmDelete && (
+                  <div className="mt-4 rounded-lg border border-red-800 bg-red-900/30 p-4">
+                    <div className="text-red-300 font-semibold mb-2">
+                      Delete this address?
+                    </div>
+                    <div className="text-sm text-neutral-300 mb-3">
+                      This action cannot be undone.
+                    </div>
+
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setConfirmDelete(false)}
+                        className="px-3 py-2 rounded-lg border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
+                      >
+                        Cancel
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          const token = localStorage.getItem("oi_token");
+                          if (!token || !editingId) return;
+
+                          setLoading(true);
+                          setError("");
+
+                          try {
+                            const resp = await fetch(
+                              "/api/account/address-delete",
+                              {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                  Authorization: `Bearer ${token}`,
+                                },
+                                body: JSON.stringify({ id: editingId }),
+                              }
+                            );
+
+                            const data = await resp.json();
+                            if (!resp.ok) {
+                              setError(data?.error || "Delete failed.");
+                              return;
+                            }
+
+                            setAddresses((list) =>
+                              list.filter((x) => x.id !== editingId)
+                            );
+
+                            setEditingId(null);
+                            setConfirmDelete(false);
+
+                            (
+                              document.querySelector(
+                                'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
+                              ) as HTMLFormElement | null
+                            )?.reset?.();
+
+                            window.dispatchEvent(
+                              new CustomEvent("flash", {
+                                detail: "Address deleted.",
+                              })
+                            );
+                          } finally {
+                            setLoading(false);
+                          }
+                        }}
+                        className="px-3 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-500"
+                      >
+                        Confirm delete
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 <button
                   disabled={loading}

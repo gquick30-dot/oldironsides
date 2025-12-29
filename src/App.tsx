@@ -8606,6 +8606,7 @@ function SubscribeManagePage({
   });
   const [addresses, setAddresses] = useState<any[]>([]);
   const [defaultAddressId, setDefaultAddressId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const [tab, setTab] = useState<
     "overview" | "login" | "subscriptions" | "orders" | "profile"
@@ -8638,25 +8639,6 @@ function SubscribeManagePage({
       .catch(() => {
         // ignore for now
       });
-  }, [tab]);
-
-  useEffect(() => {
-    if (tab !== "profile") return;
-
-    const token = localStorage.getItem("oi_token");
-    if (!token) return;
-
-    fetch("/api/account/addresses", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        setAddresses(data.addresses || []);
-        setDefaultAddressId(data.defaultId || null);
-      })
-      .catch(() => {});
   }, [tab]);
 
   useEffect(() => {
@@ -9427,6 +9409,7 @@ function SubscribeManagePage({
                       })
                     );
                     setEditingId(null);
+                    setDeleteId(null);
                     setConfirmDelete(false);
 
                     form.reset();
@@ -9530,6 +9513,7 @@ function SubscribeManagePage({
                           type="button"
                           onClick={() => {
                             setEditingId(a.id);
+                            setDeleteId(null);
                             setConfirmDelete(false);
 
                             const f = document.querySelector(
@@ -9570,101 +9554,9 @@ function SubscribeManagePage({
 
                         <button
                           type="button"
-                          onClick={async () => {
-                            const token = localStorage.getItem("oi_token");
-                            if (!token) return;
-
-                            setEditingId(a.id);
+                          onClick={() => {
+                            setDeleteId(a.id);
                             setConfirmDelete(true);
-
-                            setLoading(true);
-                            setError("");
-
-                            try {
-                              const resp = await fetch(
-                                "/api/account/address-delete",
-                                {
-                                  method: "POST",
-                                  headers: {
-                                    "Content-Type": "application/json",
-                                    Authorization: `Bearer ${token}`,
-                                  },
-                                  body: JSON.stringify({ id: a.id }),
-                                }
-                              );
-
-                              const data = await resp.json();
-                              if (!resp.ok) {
-                                setError(data?.error || "Delete failed.");
-                                return;
-                              }
-
-                              // Remove from UI list
-                              setAddresses((list) =>
-                                list.filter((x) => x.id !== a.id)
-                              );
-
-                              if (defaultAddressId === a.id) {
-                                // pick the first remaining address and set it as default in Shopify
-                                const remaining = addresses.filter(
-                                  (x) => x.id !== a.id
-                                );
-                                const next = remaining[0];
-
-                                if (next) {
-                                  try {
-                                    const resp2 = await fetch(
-                                      "/api/account/address-set-default",
-                                      {
-                                        method: "POST",
-                                        headers: {
-                                          "Content-Type": "application/json",
-                                          Authorization: `Bearer ${token}`,
-                                        },
-                                        body: JSON.stringify({
-                                          addressId: next.id,
-                                        }),
-                                      }
-                                    );
-
-                                    const data2 = await resp2.json();
-                                    if (resp2.ok) {
-                                      setDefaultAddressId(next.id);
-                                      setDefaultAddress({
-                                        name: [next.firstName, next.lastName]
-                                          .filter(Boolean)
-                                          .join(" "),
-                                        line1: next.address1,
-                                        line2: next.address2,
-                                        city: next.city,
-                                        state: next.province,
-                                        zip: next.zip,
-                                        country: next.country,
-                                      });
-                                    } else {
-                                      setError(
-                                        data2?.error ||
-                                          "Deleted default, but couldn't set a new default."
-                                      );
-                                      setDefaultAddressId(null);
-                                    }
-                                  } catch {
-                                    setDefaultAddressId(null);
-                                  }
-                                } else {
-                                  setDefaultAddressId(null);
-                                  setDefaultAddress(null);
-                                }
-                              }
-
-                              window.dispatchEvent(
-                                new CustomEvent("flash", {
-                                  detail: "Address deleted.",
-                                })
-                              );
-                            } finally {
-                              setLoading(false);
-                            }
                           }}
                           className="px-2 py-1 text-xs rounded border border-red-800 text-red-300 hover:border-red-600"
                         >
@@ -9687,7 +9579,9 @@ function SubscribeManagePage({
                       type="button"
                       onClick={() => {
                         setEditingId(null);
+                        setDeleteId(null);
                         setConfirmDelete(false);
+
                         (
                           document.querySelector(
                             'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
@@ -9759,8 +9653,7 @@ function SubscribeManagePage({
                 />
 
                 {error && <div className="text-sm text-red-300">{error}</div>}
-
-                {editingId && confirmDelete && (
+                {deleteId && confirmDelete && (
                   <div className="mt-4 rounded-lg border border-red-800 bg-red-900/30 p-4">
                     <div className="text-red-300 font-semibold mb-2">
                       Delete this address?
@@ -9772,7 +9665,10 @@ function SubscribeManagePage({
                     <div className="flex gap-3">
                       <button
                         type="button"
-                        onClick={() => setConfirmDelete(false)}
+                        onClick={() => {
+                          setConfirmDelete(false);
+                          setDeleteId(null);
+                        }}
                         className="px-3 py-2 rounded-lg border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
                       >
                         Cancel
@@ -9782,10 +9678,12 @@ function SubscribeManagePage({
                         type="button"
                         onClick={async () => {
                           const token = localStorage.getItem("oi_token");
-                          if (!token || !editingId) return;
+                          if (!token || !deleteId) return;
 
                           setLoading(true);
                           setError("");
+
+                          const deletingId = deleteId;
 
                           try {
                             const resp = await fetch(
@@ -9796,7 +9694,7 @@ function SubscribeManagePage({
                                   "Content-Type": "application/json",
                                   Authorization: `Bearer ${token}`,
                                 },
-                                body: JSON.stringify({ id: editingId }),
+                                body: JSON.stringify({ id: deletingId }),
                               }
                             );
 
@@ -9806,18 +9704,78 @@ function SubscribeManagePage({
                               return;
                             }
 
-                            setAddresses((list) =>
-                              list.filter((x) => x.id !== editingId)
+                            // Remove from UI list
+                            setAddresses((prev) =>
+                              prev.filter((x) => x.id !== deletingId)
                             );
 
-                            setEditingId(null);
-                            setConfirmDelete(false);
+                            // If we deleted the default, promote another one
+                            if (defaultAddressId === deletingId) {
+                              const remaining = addresses.filter(
+                                (x) => x.id !== deletingId
+                              );
+                              const next = remaining[0];
 
-                            (
-                              document.querySelector(
-                                'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
-                              ) as HTMLFormElement | null
-                            )?.reset?.();
+                              if (next) {
+                                try {
+                                  const resp2 = await fetch(
+                                    "/api/account/address-set-default",
+                                    {
+                                      method: "POST",
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Bearer ${token}`,
+                                      },
+                                      body: JSON.stringify({
+                                        addressId: next.id,
+                                      }),
+                                    }
+                                  );
+                                  const data2 = await resp2.json();
+
+                                  if (!resp2.ok) {
+                                    setError(
+                                      data2?.error ||
+                                        "Deleted default, but couldn't set a new default."
+                                    );
+                                    setDefaultAddressId(null);
+                                    setDefaultAddress(null);
+                                  } else {
+                                    setDefaultAddressId(next.id);
+                                    setDefaultAddress({
+                                      name: [next.firstName, next.lastName]
+                                        .filter(Boolean)
+                                        .join(" "),
+                                      line1: next.address1,
+                                      line2: next.address2,
+                                      city: next.city,
+                                      state: next.province,
+                                      zip: next.zip,
+                                      country: next.country,
+                                    });
+                                  }
+                                } catch {
+                                  setDefaultAddressId(null);
+                                  setDefaultAddress(null);
+                                }
+                              } else {
+                                setDefaultAddressId(null);
+                                setDefaultAddress(null);
+                              }
+                            }
+
+                            // Defensive cleanup so UI never sticks
+                            if (editingId === deletingId) {
+                              setEditingId(null);
+                              (
+                                document.querySelector(
+                                  'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
+                                ) as HTMLFormElement | null
+                              )?.reset?.();
+                            }
+
+                            setConfirmDelete(false);
+                            setDeleteId(null);
 
                             window.dispatchEvent(
                               new CustomEvent("flash", {

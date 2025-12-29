@@ -8931,7 +8931,7 @@ function SubscribeManagePage({
 
   if (!user && tab === "login") {
     return (
-      <main className="py-16 md:py-24">
+      <main className="pt-0 pb-8 md:py-24">
         <Container>
           <div className="flex items-start justify-between">
             <SectionTitle
@@ -8942,7 +8942,9 @@ function SubscribeManagePage({
               }
               subtitle="Log in or create an account to manage your subscriptions and orders."
             />
-            <BackButton size="sm" />
+            <div className="hidden md:block">
+              <BackButton size="sm" />
+            </div>
           </div>
 
           <div className="mt-6 grid md:grid-cols-2 gap-6">
@@ -8985,16 +8987,16 @@ function SubscribeManagePage({
                 </a>
                 .
               </div>
-            </form>
-
+            </form>{" "}
             {/* Register */}
             <form
               onSubmit={handleRegister}
               className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
             >
               <div className="text-lg font-semibold text-amber-300 mb-3">
-                Create account & send activation email
+                JOIN THE FLEET & SAVE
               </div>
+
               <div className="space-y-3">
                 <input
                   name="name"
@@ -9010,11 +9012,12 @@ function SubscribeManagePage({
 
                 <button
                   disabled={loading}
-                  className="w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
+                  className="w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300 disabled:opacity-60"
                 >
                   {loading ? "Creating..." : "Create account"}
                 </button>
               </div>
+
               <div className="mt-3 text-xs text-neutral-500">
                 Your account is used to view orders, manage subscriptions and
                 update your shipping details.
@@ -9029,10 +9032,10 @@ function SubscribeManagePage({
   // ---------- Logged in view ----------
 
   return (
-    <main className="py-16 md:py-24">
+    <main className="pt-0 pb-8 md:py-24">
       <Container>
-        <div className="flex items-start justify-between">
-          {
+        <div className="-mt-28 md:mt-0">
+          <div className="flex items-start justify-between">
             <span className="text-neutral-300">
               Welcome,{" "}
               <span className="text-amber-300 font-semibold">
@@ -9040,782 +9043,510 @@ function SubscribeManagePage({
               </span>
               . Manage your subscriptions, orders and shipping details here.
             </span>
-          }
-          <BackButton size="sm" />
-        </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          <TabBtn id="overview">Overview</TabBtn>
-          <TabBtn id="subscriptions">Subscriptions</TabBtn>
-          <TabBtn id="orders">Orders</TabBtn>
-          <TabBtn id="profile">Profile</TabBtn>
-          <div className="ml-auto">
-            <button
-              onClick={handleLogout}
-              className="px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/40 text-neutral-300 text-sm"
-            >
-              Log out
-            </button>
+            <div className="hidden md:block">
+              <BackButton size="sm" />
+            </div>
           </div>
-        </div>
 
-        {/* OVERVIEW */}
-        {tab === "overview" && (
-          <div className="mt-6 grid md:grid-cols-3 gap-6">
-            {/* Next delivery / subscription summary */}
-            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
-              <div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <TabBtn id="overview">Overview</TabBtn>
+            <TabBtn id="subscriptions">Subscriptions</TabBtn>
+            <TabBtn id="orders">Orders</TabBtn>
+            <TabBtn id="profile">Profile</TabBtn>
+            <div className="ml-auto">
+              <button
+                onClick={handleLogout}
+                className="px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/40 text-neutral-300 text-sm"
+              >
+                Log out
+              </button>
+            </div>
+          </div>
+
+          {/* OVERVIEW */}
+          {tab === "overview" && (
+            <div className="mt-6 grid md:grid-cols-3 gap-6">
+              {/* Next delivery / subscription summary */}
+              <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
+                <div>
+                  <div className="text-amber-300 font-semibold">
+                    Next delivery
+                  </div>
+                  <div className="mt-2 text-neutral-300 text-sm">
+                    {subs[0] ? (
+                      <>
+                        <div>{subs[0].product}</div>
+                        <div className="text-neutral-400">
+                          Ships around {subs[0].nextCharge} •{" "}
+                          {subs[0].frequency}
+                        </div>
+                      </>
+                    ) : (
+                      "No active subscriptions."
+                    )}
+                  </div>
+                </div>
+                <button
+                  onClick={() => setTab("subscriptions")}
+                  className="mt-4 text-amber-300 text-sm text-left"
+                >
+                  Manage subscriptions →
+                </button>
+              </div>
+
+              {/* Recent order */}
+              <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
+                <div>
+                  <div className="text-amber-300 font-semibold">
+                    Recent order
+                  </div>
+                  <div className="mt-2 text-neutral-300 text-sm">
+                    {orders[0] ? (
+                      <>
+                        <div>{orders[0].id}</div>
+                        <div className="text-neutral-400">
+                          {orders[0].date} • {orders[0].status} •{" "}
+                          {fmt(orders[0].total)}
+                        </div>
+                      </>
+                    ) : (
+                      "No orders yet."
+                    )}
+                  </div>
+                </div>
+                <button
+                  onClick={() => setTab("orders")}
+                  className="mt-4 text-amber-300 text-sm text-left"
+                >
+                  View order history →
+                </button>
+              </div>
+
+              {/* Default shipping */}
+              <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
                 <div className="text-amber-300 font-semibold">
-                  Next delivery
+                  Default shipping address
                 </div>
-                <div className="mt-2 text-neutral-300 text-sm">
-                  {subs[0] ? (
-                    <>
-                      <div>{subs[0].product}</div>
-                      <div className="text-neutral-400">
-                        Ships around {subs[0].nextCharge} • {subs[0].frequency}
-                      </div>
-                    </>
-                  ) : (
-                    "No active subscriptions."
-                  )}
-                </div>
+
+                {defaultAddress ? (
+                  <div className="mt-2 text-neutral-300 text-sm">
+                    {defaultAddress.name && (
+                      <>
+                        {defaultAddress.name}
+                        <br />
+                      </>
+                    )}
+                    {defaultAddress.line1 && (
+                      <>
+                        {defaultAddress.line1}
+                        <br />
+                      </>
+                    )}
+                    {defaultAddress.line2 && (
+                      <>
+                        {defaultAddress.line2}
+                        <br />
+                      </>
+                    )}
+                    {(defaultAddress.city ||
+                      defaultAddress.state ||
+                      defaultAddress.zip) && (
+                      <>
+                        {defaultAddress.city && `${defaultAddress.city}, `}
+                        {defaultAddress.state && `${defaultAddress.state} `}
+                        {defaultAddress.zip}
+                        <br />
+                      </>
+                    )}
+                    {defaultAddress.country}
+                  </div>
+                ) : (
+                  <div className="mt-2 text-neutral-400 text-sm">
+                    No default address on file yet. Update it in your Shopify
+                    account.
+                  </div>
+                )}
+
+                <button
+                  onClick={() => setTab("profile")}
+                  className="mt-3 px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/40 text-sm text-neutral-300"
+                >
+                  Manage addresses →
+                </button>
               </div>
-              <button
-                onClick={() => setTab("subscriptions")}
-                className="mt-4 text-amber-300 text-sm text-left"
-              >
-                Manage subscriptions →
-              </button>
             </div>
+          )}
 
-            {/* Recent order */}
-            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
-              <div>
-                <div className="text-amber-300 font-semibold">Recent order</div>
-                <div className="mt-2 text-neutral-300 text-sm">
-                  {orders[0] ? (
-                    <>
-                      <div>{orders[0].id}</div>
-                      <div className="text-neutral-400">
-                        {orders[0].date} • {orders[0].status} •{" "}
-                        {fmt(orders[0].total)}
-                      </div>
-                    </>
-                  ) : (
-                    "No orders yet."
-                  )}
-                </div>
-              </div>
-              <button
-                onClick={() => setTab("orders")}
-                className="mt-4 text-amber-300 text-sm text-left"
-              >
-                View order history →
-              </button>
-            </div>
-
-            {/* Default shipping */}
-            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-              <div className="text-amber-300 font-semibold">
-                Default shipping address
-              </div>
-
-              {defaultAddress ? (
-                <div className="mt-2 text-neutral-300 text-sm">
-                  {defaultAddress.name && (
-                    <>
-                      {defaultAddress.name}
-                      <br />
-                    </>
-                  )}
-                  {defaultAddress.line1 && (
-                    <>
-                      {defaultAddress.line1}
-                      <br />
-                    </>
-                  )}
-                  {defaultAddress.line2 && (
-                    <>
-                      {defaultAddress.line2}
-                      <br />
-                    </>
-                  )}
-                  {(defaultAddress.city ||
-                    defaultAddress.state ||
-                    defaultAddress.zip) && (
-                    <>
-                      {defaultAddress.city && `${defaultAddress.city}, `}
-                      {defaultAddress.state && `${defaultAddress.state} `}
-                      {defaultAddress.zip}
-                      <br />
-                    </>
-                  )}
-                  {defaultAddress.country}
-                </div>
-              ) : (
-                <div className="mt-2 text-neutral-400 text-sm">
-                  No default address on file yet. Update it in your Shopify
-                  account.
+          {/* SUBSCRIPTIONS */}
+          {tab === "subscriptions" && (
+            <div className="mt-6 space-y-4">
+              {subs.length === 0 && (
+                <div className="text-neutral-400">
+                  No active subscriptions. Add Subscribe & Save from the store
+                  to start.
                 </div>
               )}
-
-              <button
-                onClick={() => setTab("profile")}
-                className="mt-3 px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/40 text-sm text-neutral-300"
-              >
-                Manage addresses →
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* SUBSCRIPTIONS */}
-        {tab === "subscriptions" && (
-          <div className="mt-6 space-y-4">
-            {subs.length === 0 && (
-              <div className="text-neutral-400">
-                No active subscriptions. Add Subscribe & Save from the store to
-                start.
-              </div>
-            )}
-            {subs.map((s) => (
-              <div
-                key={s.id}
-                className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
-              >
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="font-semibold text-amber-300">
-                    {s.product}
-                  </div>
-                  <div className="text-sm text-neutral-400">
-                    • Next ship date:{" "}
-                    {s.nextCharge
-                      ? formatDate(s.nextCharge)
-                      : s.nextInDays != null
-                      ? `in ${s.nextInDays} days`
-                      : "—"}{" "}
-                    • {s.frequency}
-                  </div>
-
-                  <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
-                    {s.status}
-                  </div>
-                </div>
-
-                <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-neutral-300">
-                  <div>
-                    <div className="text-neutral-400 text-xs uppercase tracking-wide mb-1">
-                      Ships to
+              {subs.map((s) => (
+                <div
+                  key={s.id}
+                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
+                >
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="font-semibold text-amber-300">
+                      {s.product}
                     </div>
-                    <div>{s.shippingAddress?.name}</div>
-                    <div>{s.shippingAddress?.line1}</div>
-                    {s.shippingAddress?.line2 && (
-                      <div>{s.shippingAddress.line2}</div>
-                    )}
+                    <div className="text-sm text-neutral-400">
+                      • Next ship date:{" "}
+                      {s.nextCharge
+                        ? formatDate(s.nextCharge)
+                        : s.nextInDays != null
+                        ? `in ${s.nextInDays} days`
+                        : "—"}{" "}
+                      • {s.frequency}
+                    </div>
+
+                    <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
+                      {s.status}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-neutral-300">
                     <div>
-                      {s.shippingAddress?.city}, {s.shippingAddress?.state}{" "}
-                      {s.shippingAddress?.zip}
+                      <div className="text-neutral-400 text-xs uppercase tracking-wide mb-1">
+                        Ships to
+                      </div>
+                      <div>{s.shippingAddress?.name}</div>
+                      <div>{s.shippingAddress?.line1}</div>
+                      {s.shippingAddress?.line2 && (
+                        <div>{s.shippingAddress.line2}</div>
+                      )}
+                      <div>
+                        {s.shippingAddress?.city}, {s.shippingAddress?.state}{" "}
+                        {s.shippingAddress?.zip}
+                      </div>
+                      <div>{s.shippingAddress?.country}</div>
                     </div>
-                    <div>{s.shippingAddress?.country}</div>
+                    <div className="space-y-1 text-neutral-400">
+                      <div className="text-xs uppercase tracking-wide">
+                        Notes
+                      </div>
+                      <p>
+                        Change roast, quantity, frequency or address in your
+                        subscription portal once connected.
+                      </p>
+                    </div>
                   </div>
-                  <div className="space-y-1 text-neutral-400">
-                    <div className="text-xs uppercase tracking-wide">Notes</div>
-                    <p>
-                      Change roast, quantity, frequency or address in your
-                      subscription portal once connected.
-                    </p>
-                  </div>
-                </div>
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <button
-                    onClick={() => skipNextCharge(s.id)}
-                    className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
-                  >
-                    {s.skipped ? "Undo skip" : "Skip next delivery"}
-                  </button>
-
-                  {s.status === "paused" ? (
+                  <div className="mt-4 flex flex-wrap gap-2">
                     <button
-                      onClick={() => resumeSub(s.id)}
+                      onClick={() => skipNextCharge(s.id)}
                       className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
                     >
-                      Resume subscription
+                      {s.skipped ? "Undo skip" : "Skip next delivery"}
                     </button>
-                  ) : (
-                    <button
-                      onClick={() => pauseSub(s.id)}
-                      className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
-                    >
-                      Pause subscription
-                    </button>
-                  )}
 
-                  <button
-                    onClick={() => cancelSub(s.id)}
-                    className="px-3 py-2 rounded-lg border border-red-800 text-red-300 hover:border-red-600 text-sm"
-                  >
-                    Cancel subscription
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* ORDERS */}
-        {tab === "orders" && (
-          <div className="mt-6 space-y-4">
-            {orders.length === 0 && (
-              <div className="text-neutral-400">No orders yet.</div>
-            )}
-            {orders.map((o) => (
-              <div
-                key={o.id}
-                className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
-              >
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="font-semibold text-amber-300">{o.id}</div>
-                  <div className="text-sm text-neutral-400">• {o.date}</div>
-                  <div className="text-sm text-neutral-400">
-                    • {fmt(o.total)}
-                  </div>
-                  <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
-                    {o.status}
-                  </div>
-                </div>
-
-                <ul className="mt-3 text-sm text-neutral-300 list-disc list-inside">
-                  {o.items.map((it: any, i: number) => (
-                    <li key={i}>
-                      {it.title} × {it.qty}
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-3 grid md:grid-cols-2 gap-4 text-xs text-neutral-400">
-                  <div>
-                    <div className="uppercase tracking-wide mb-1">Ships to</div>
-                    <div>{o.shippingAddress?.name}</div>
-                    <div>{o.shippingAddress?.line1}</div>
-                    {o.shippingAddress?.line2 && (
-                      <div>{o.shippingAddress.line2}</div>
-                    )}
-                    <div>
-                      {o.shippingAddress?.city}, {o.shippingAddress?.state}{" "}
-                      {o.shippingAddress?.zip}
-                    </div>
-                    <div>{o.shippingAddress?.country}</div>
-                  </div>
-                  <div>
-                    <div className="uppercase tracking-wide mb-1">
-                      Help with this order
-                    </div>
-                    <div>
-                      Email{" "}
-                      <a
-                        href="mailto:support@oldironsidescoffee.org"
-                        className="text-amber-300"
-                      >
-                        support@oldironsidescoffee.org
-                      </a>{" "}
-                      with your order number.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* PROFILE */}
-        {tab === "profile" && (
-          <div className="mt-6 grid md:grid-cols-2 gap-6">
-            {/* Contact + address */}
-            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-              <div className="text-amber-300 font-semibold mb-3">
-                Contact and shipping
-              </div>
-              <div className="text-sm text-neutral-300 space-y-4">
-                <div>
-                  <div className="text-xs uppercase tracking-wide text-neutral-400 mb-1">
-                    Email
-                  </div>
-                  <div>{user?.email}</div>
-                </div>
-                <div>
-                  <div className="text-xs uppercase tracking-wide text-neutral-400 mb-1">
-                    Default shipping address
-                  </div>
-                  <div className="space-y-0.5">
-                    <div>{defaultAddress?.name}</div>
-                    <div>{defaultAddress?.line1}</div>
-                    {defaultAddress?.line2 && <div>{defaultAddress.line2}</div>}
-                    <div>
-                      {defaultAddress?.city}, {defaultAddress?.state}{" "}
-                      {defaultAddress?.zip}
-                    </div>
-                    <div>{defaultAddress?.country}</div>
-                  </div>
-                </div>
-              </div>
-
-              <form
-                className="mt-4 grid gap-3"
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  const form = e.currentTarget as HTMLFormElement;
-                  setError("");
-                  setLoading(true);
-
-                  try {
-                    const token = localStorage.getItem("oi_token");
-                    if (!token) {
-                      setError("Please log in again.");
-                      return;
-                    }
-
-                    const fd = new FormData(e.currentTarget as HTMLFormElement);
-
-                    const address = {
-                      firstName: String(fd.get("firstName") || "").trim(),
-                      lastName: String(fd.get("lastName") || "").trim(),
-                      address1: String(fd.get("address1") || "").trim(),
-                      address2: String(fd.get("address2") || "").trim(),
-                      city: String(fd.get("city") || "").trim(),
-                      province: String(fd.get("province") || "").trim(),
-                      zip: String(fd.get("zip") || "").trim(),
-                      country: "United States",
-
-                      phone: String(fd.get("phone") || "").trim(),
-                    };
-
-                    if (
-                      !address.address1 ||
-                      !address.city ||
-                      !address.province ||
-                      !address.zip ||
-                      !address.country
-                    ) {
-                      setError(
-                        "Address, city, state, zip, and country are required."
-                      );
-                      return;
-                    }
-
-                    const endpoint = editingId
-                      ? "/api/account/address-update"
-                      : "/api/account/address-create";
-
-                    const payload = editingId
-                      ? { id: editingId, address }
-                      : { address };
-
-                    const resp = await fetch(endpoint, {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                      },
-                      body: JSON.stringify(payload),
-                    });
-
-                    const text = await resp.text();
-                    console.log("[address-create] raw response:", text);
-
-                    let data: any = {};
-                    try {
-                      data = text ? JSON.parse(text) : {};
-                    } catch {
-                      setError("Address server returned invalid response.");
-                      return;
-                    }
-
-                    if (!resp.ok) {
-                      setError(data?.error || "Address update failed.");
-                      return;
-                    }
-                    // Refresh addresses from Shopify so UI matches reality
-                    try {
-                      const r2 = await fetch("/api/account/addresses", {
-                        headers: { Authorization: `Bearer ${token}` },
-                      });
-                      const d2 = await r2.json();
-                      setAddresses(d2.addresses || []);
-                      setDefaultAddressId(d2.defaultId || null);
-                    } catch {}
-
-                    // Update local UI immediately
-                    const newDefault = {
-                      name: [address.firstName, address.lastName]
-                        .filter(Boolean)
-                        .join(" ")
-                        .trim(),
-                      line1: address.address1,
-                      line2: address.address2,
-                      city: address.city,
-                      state: address.province,
-                      zip: address.zip,
-                      country: address.country,
-                    };
-
-                    setDefaultAddress(newDefault);
-                    setUser((u: any) => {
-                      if (!u) return u;
-                      const next = { ...u, defaultAddress: newDefault };
-                      localStorage.setItem("oi_user", JSON.stringify(next));
-                      return next;
-                    });
-
-                    window.dispatchEvent(
-                      new CustomEvent("flash", {
-                        detail: "Shipping address saved.",
-                      })
-                    );
-                    setEditingId(null);
-                    setDeleteId(null);
-                    setConfirmDelete(false);
-
-                    form.reset();
-                  } catch (err: any) {
-                    setError(err?.message || "Address update failed.");
-                  } finally {
-                    setLoading(false);
-                  }
-                }}
-              >
-                {addresses.map((a) => {
-                  const isDefault = a.id === defaultAddressId;
-
-                  return (
-                    <div
-                      key={a.id}
-                      className={[
-                        "w-full text-left rounded-lg border p-3 transition relative",
-                        isDefault
-                          ? "border-amber-400 bg-amber-400/10"
-                          : "border-neutral-700 hover:border-amber-400/60",
-                      ].join(" ")}
-                    >
-                      {/* Address display (no click-to-set-default) */}
-                      <div className="block w-full text-left pr-24">
-                        <div className="font-semibold text-neutral-200">
-                          {a.firstName} {a.lastName}
-                          {isDefault && (
-                            <span className="ml-2 text-xs text-amber-300">
-                              (Default)
-                            </span>
-                          )}
-                        </div>
-                        <div>{a.address1}</div>
-                        {a.address2 && <div>{a.address2}</div>}
-                        <div>
-                          {a.city}, {a.province} {a.zip}
-                        </div>
-                        <div>{a.country}</div>
-                      </div>
-
-                      {/* Actions (top-right) */}
-                      <div className="absolute top-3 right-3 flex gap-2">
-                        {!isDefault && (
-                          <button
-                            type="button"
-                            disabled={loading}
-                            onClick={async () => {
-                              const token = localStorage.getItem("oi_token");
-                              if (!token) return;
-
-                              setLoading(true);
-                              setError("");
-
-                              try {
-                                const resp = await fetch(
-                                  "/api/account/address-set-default",
-                                  {
-                                    method: "POST",
-                                    headers: {
-                                      "Content-Type": "application/json",
-                                      Authorization: `Bearer ${token}`,
-                                    },
-                                    body: JSON.stringify({ addressId: a.id }),
-                                  }
-                                );
-
-                                const data = await resp.json();
-                                if (!resp.ok) {
-                                  setError(
-                                    data?.error ||
-                                      "Failed to update default address."
-                                  );
-                                  return;
-                                }
-
-                                setDefaultAddressId(a.id);
-                                setDefaultAddress({
-                                  name: [a.firstName, a.lastName]
-                                    .filter(Boolean)
-                                    .join(" "),
-                                  line1: a.address1,
-                                  line2: a.address2,
-                                  city: a.city,
-                                  state: a.province,
-                                  zip: a.zip,
-                                  country: a.country,
-                                });
-
-                                window.dispatchEvent(
-                                  new CustomEvent("flash", {
-                                    detail: "Default shipping address updated.",
-                                  })
-                                );
-                              } finally {
-                                setLoading(false);
-                              }
-                            }}
-                            className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-amber-400/60 disabled:opacity-60"
-                          >
-                            Set default
-                          </button>
-                        )}
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditingId(a.id);
-                            setDeleteId(null);
-                            setConfirmDelete(false);
-
-                            const f = document.querySelector(
-                              'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
-                            ) as HTMLFormElement | null;
-
-                            if (!f) return;
-
-                            const setVal = (name: string, val: string) => {
-                              const el = f.elements.namedItem(name) as
-                                | HTMLInputElement
-                                | HTMLSelectElement
-                                | null;
-                              if (!el) return;
-                              (el as any).value = val ?? "";
-                            };
-
-                            setVal("firstName", a.firstName);
-                            setVal("lastName", a.lastName);
-                            setVal("address1", a.address1);
-                            setVal("address2", a.address2);
-                            setVal("city", a.city);
-                            setVal("province", a.province);
-                            setVal("zip", a.zip);
-                            setVal("country", a.country);
-                            setVal("phone", a.phone);
-
-                            window.dispatchEvent(
-                              new CustomEvent("flash", {
-                                detail: "Editing address.",
-                              })
-                            );
-                          }}
-                          className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
-                        >
-                          Edit
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditingId(null);
-                            setDeleteId(a.id);
-                            setConfirmDelete(true);
-                          }}
-                          className="px-2 py-1 text-xs rounded border border-red-800 text-red-300 hover:border-red-600"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-
-                <div className="flex items-center justify-between">
-                  <div className="text-amber-300 font-semibold">
-                    {editingId
-                      ? "Edit shipping address"
-                      : "Add shipping address"}
-                  </div>
-
-                  {editingId && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingId(null);
-                        setDeleteId(null);
-                        setConfirmDelete(false);
-
-                        (
-                          document.querySelector(
-                            'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
-                          ) as HTMLFormElement | null
-                        )?.reset?.();
-                        setError("");
-                      }}
-                      className="px-3 py-1 text-xs rounded border border-amber-400 text-amber-300 hover:bg-amber-400/10 font-semibold"
-                    >
-                      Cancel
-                    </button>
-                  )}
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-3">
-                  <input
-                    name="firstName"
-                    placeholder="First name"
-                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                  />
-                  <input
-                    name="lastName"
-                    placeholder="Last name"
-                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                  />
-                </div>
-
-                <input
-                  name="address1"
-                  placeholder="Address line 1"
-                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                />
-                <input
-                  name="address2"
-                  placeholder="Address line 2 (optional)"
-                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                />
-
-                <div className="grid md:grid-cols-2 gap-3">
-                  <input
-                    name="city"
-                    placeholder="City"
-                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                  />
-                  <select
-                    name="province"
-                    required
-                    defaultValue=""
-                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                  >
-                    <option value="" disabled>
-                      State
-                    </option>
-                    {US_STATES.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-3">
-                  <input
-                    name="zip"
-                    placeholder="ZIP / Postal code"
-                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                  />
-                  <div className="space-y-2">
-                    <select
-                      name="country"
-                      required
-                      defaultValue="United States"
-                      disabled
-                      className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm opacity-80"
-                    >
-                      <option value="United States">United States</option>
-                    </select>
-
-                    <div className="text-xs text-neutral-400">
-                      International? Contact us:{" "}
-                      <a
-                        href="mailto:support@oldironsidescoffee.org"
-                        className="text-amber-300 font-medium"
-                      >
-                        support@oldironsidescoffee.org
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <input
-                  name="phone"
-                  placeholder="Phone (optional)"
-                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                />
-
-                {error && <div className="text-sm text-red-300">{error}</div>}
-                {deleteId && confirmDelete && (
-                  <div className="mt-4 rounded-lg border border-red-800 bg-red-900/30 p-4">
-                    <div className="text-red-300 font-semibold mb-2">
-                      Delete this address?
-                    </div>
-                    <div className="text-sm text-neutral-300 mb-3">
-                      This action cannot be undone.
-                    </div>
-
-                    <div className="flex gap-3">
+                    {s.status === "paused" ? (
                       <button
-                        type="button"
-                        onClick={() => {
-                          setConfirmDelete(false);
-                          setDeleteId(null);
-                        }}
-                        className="px-3 py-2 rounded-lg border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
+                        onClick={() => resumeSub(s.id)}
+                        className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
                       >
-                        Cancel
+                        Resume subscription
                       </button>
-
+                    ) : (
                       <button
-                        type="button"
-                        disabled={loading}
-                        onClick={async () => {
-                          const token = localStorage.getItem("oi_token");
-                          if (!token || !deleteId) return;
+                        onClick={() => pauseSub(s.id)}
+                        className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+                      >
+                        Pause subscription
+                      </button>
+                    )}
 
-                          setLoading(true);
-                          setError("");
+                    <button
+                      onClick={() => cancelSub(s.id)}
+                      className="px-3 py-2 rounded-lg border border-red-800 text-red-300 hover:border-red-600 text-sm"
+                    >
+                      Cancel subscription
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
-                          const deletingId = deleteId;
+          {/* ORDERS */}
+          {tab === "orders" && (
+            <div className="mt-6 space-y-4">
+              {orders.length === 0 && (
+                <div className="text-neutral-400">No orders yet.</div>
+              )}
+              {orders.map((o) => (
+                <div
+                  key={o.id}
+                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
+                >
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="font-semibold text-amber-300">{o.id}</div>
+                    <div className="text-sm text-neutral-400">• {o.date}</div>
+                    <div className="text-sm text-neutral-400">
+                      • {fmt(o.total)}
+                    </div>
+                    <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
+                      {o.status}
+                    </div>
+                  </div>
 
-                          try {
-                            const resp = await fetch(
-                              "/api/account/address-delete",
-                              {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                  Authorization: `Bearer ${token}`,
-                                },
-                                body: JSON.stringify({ id: deletingId }),
-                              }
-                            );
+                  <ul className="mt-3 text-sm text-neutral-300 list-disc list-inside">
+                    {o.items.map((it: any, i: number) => (
+                      <li key={i}>
+                        {it.title} × {it.qty}
+                      </li>
+                    ))}
+                  </ul>
 
-                            const data = await resp.json();
-                            if (!resp.ok) {
-                              setError(data?.error || "Delete failed.");
-                              return;
-                            }
+                  <div className="mt-3 grid md:grid-cols-2 gap-4 text-xs text-neutral-400">
+                    <div>
+                      <div className="uppercase tracking-wide mb-1">
+                        Ships to
+                      </div>
+                      <div>{o.shippingAddress?.name}</div>
+                      <div>{o.shippingAddress?.line1}</div>
+                      {o.shippingAddress?.line2 && (
+                        <div>{o.shippingAddress.line2}</div>
+                      )}
+                      <div>
+                        {o.shippingAddress?.city}, {o.shippingAddress?.state}{" "}
+                        {o.shippingAddress?.zip}
+                      </div>
+                      <div>{o.shippingAddress?.country}</div>
+                    </div>
+                    <div>
+                      <div className="uppercase tracking-wide mb-1">
+                        Help with this order
+                      </div>
+                      <div>
+                        Email{" "}
+                        <a
+                          href="mailto:support@oldironsidescoffee.org"
+                          className="text-amber-300"
+                        >
+                          support@oldironsidescoffee.org
+                        </a>{" "}
+                        with your order number.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
-                            // Compute remaining BEFORE state updates (so default promotion is correct)
-                            const remaining = addresses.filter(
-                              (x) => x.id !== deletingId
-                            );
-                            const nextDefault = remaining[0] || null;
+          {/* PROFILE */}
+          {tab === "profile" && (
+            <div className="mt-6 grid md:grid-cols-2 gap-6">
+              {/* Contact + address */}
+              <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+                <div className="text-amber-300 font-semibold mb-3">
+                  Contact and shipping
+                </div>
+                <div className="text-sm text-neutral-300 space-y-4">
+                  <div>
+                    <div className="text-xs uppercase tracking-wide text-neutral-400 mb-1">
+                      Email
+                    </div>
+                    <div>{user?.email}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs uppercase tracking-wide text-neutral-400 mb-1">
+                      Default shipping address
+                    </div>
+                    <div className="space-y-0.5">
+                      <div>{defaultAddress?.name}</div>
+                      <div>{defaultAddress?.line1}</div>
+                      {defaultAddress?.line2 && (
+                        <div>{defaultAddress.line2}</div>
+                      )}
+                      <div>
+                        {defaultAddress?.city}, {defaultAddress?.state}{" "}
+                        {defaultAddress?.zip}
+                      </div>
+                      <div>{defaultAddress?.country}</div>
+                    </div>
+                  </div>
+                </div>
 
-                            // Update list UI
-                            setAddresses(remaining);
+                <form
+                  className="mt-4 grid gap-3"
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const form = e.currentTarget as HTMLFormElement;
+                    setError("");
+                    setLoading(true);
 
-                            // If we deleted the default, promote another one in Shopify
-                            if (defaultAddressId === deletingId) {
-                              if (nextDefault) {
+                    try {
+                      const token = localStorage.getItem("oi_token");
+                      if (!token) {
+                        setError("Please log in again.");
+                        return;
+                      }
+
+                      const fd = new FormData(
+                        e.currentTarget as HTMLFormElement
+                      );
+
+                      const address = {
+                        firstName: String(fd.get("firstName") || "").trim(),
+                        lastName: String(fd.get("lastName") || "").trim(),
+                        address1: String(fd.get("address1") || "").trim(),
+                        address2: String(fd.get("address2") || "").trim(),
+                        city: String(fd.get("city") || "").trim(),
+                        province: String(fd.get("province") || "").trim(),
+                        zip: String(fd.get("zip") || "").trim(),
+                        country: "United States",
+
+                        phone: String(fd.get("phone") || "").trim(),
+                      };
+
+                      if (
+                        !address.address1 ||
+                        !address.city ||
+                        !address.province ||
+                        !address.zip ||
+                        !address.country
+                      ) {
+                        setError(
+                          "Address, city, state, zip, and country are required."
+                        );
+                        return;
+                      }
+
+                      const endpoint = editingId
+                        ? "/api/account/address-update"
+                        : "/api/account/address-create";
+
+                      const payload = editingId
+                        ? { id: editingId, address }
+                        : { address };
+
+                      const resp = await fetch(endpoint, {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(payload),
+                      });
+
+                      const text = await resp.text();
+                      console.log("[address-create] raw response:", text);
+
+                      let data: any = {};
+                      try {
+                        data = text ? JSON.parse(text) : {};
+                      } catch {
+                        setError("Address server returned invalid response.");
+                        return;
+                      }
+
+                      if (!resp.ok) {
+                        setError(data?.error || "Address update failed.");
+                        return;
+                      }
+                      // Refresh addresses from Shopify so UI matches reality
+                      try {
+                        const r2 = await fetch("/api/account/addresses", {
+                          headers: { Authorization: `Bearer ${token}` },
+                        });
+                        const d2 = await r2.json();
+                        setAddresses(d2.addresses || []);
+                        setDefaultAddressId(d2.defaultId || null);
+                      } catch {}
+
+                      // Update local UI immediately
+                      const newDefault = {
+                        name: [address.firstName, address.lastName]
+                          .filter(Boolean)
+                          .join(" ")
+                          .trim(),
+                        line1: address.address1,
+                        line2: address.address2,
+                        city: address.city,
+                        state: address.province,
+                        zip: address.zip,
+                        country: address.country,
+                      };
+
+                      setDefaultAddress(newDefault);
+                      setUser((u: any) => {
+                        if (!u) return u;
+                        const next = { ...u, defaultAddress: newDefault };
+                        localStorage.setItem("oi_user", JSON.stringify(next));
+                        return next;
+                      });
+
+                      window.dispatchEvent(
+                        new CustomEvent("flash", {
+                          detail: "Shipping address saved.",
+                        })
+                      );
+                      setEditingId(null);
+                      setDeleteId(null);
+                      setConfirmDelete(false);
+
+                      form.reset();
+                    } catch (err: any) {
+                      setError(err?.message || "Address update failed.");
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
+                >
+                  {addresses.map((a) => {
+                    const isDefault = a.id === defaultAddressId;
+
+                    return (
+                      <div
+                        key={a.id}
+                        className={[
+                          "w-full text-left rounded-lg border p-3 transition relative",
+                          isDefault
+                            ? "border-amber-400 bg-amber-400/10"
+                            : "border-neutral-700 hover:border-amber-400/60",
+                        ].join(" ")}
+                      >
+                        {/* Address display (no click-to-set-default) */}
+                        <div className="block w-full text-left pr-24">
+                          <div className="font-semibold text-neutral-200">
+                            {a.firstName} {a.lastName}
+                            {isDefault && (
+                              <span className="ml-2 text-xs text-amber-300">
+                                (Default)
+                              </span>
+                            )}
+                          </div>
+                          <div>{a.address1}</div>
+                          {a.address2 && <div>{a.address2}</div>}
+                          <div>
+                            {a.city}, {a.province} {a.zip}
+                          </div>
+                          <div>{a.country}</div>
+                        </div>
+
+                        {/* Actions (top-right) */}
+                        <div className="absolute top-3 right-3 flex gap-2">
+                          {!isDefault && (
+                            <button
+                              type="button"
+                              disabled={loading}
+                              onClick={async () => {
+                                const token = localStorage.getItem("oi_token");
+                                if (!token) return;
+
+                                setLoading(true);
+                                setError("");
+
                                 try {
-                                  const resp2 = await fetch(
+                                  const resp = await fetch(
                                     "/api/account/address-set-default",
                                     {
                                       method: "POST",
@@ -9823,116 +9554,403 @@ function SubscribeManagePage({
                                         "Content-Type": "application/json",
                                         Authorization: `Bearer ${token}`,
                                       },
-                                      body: JSON.stringify({
-                                        addressId: nextDefault.id,
-                                      }),
+                                      body: JSON.stringify({ addressId: a.id }),
                                     }
                                   );
-                                  const data2 = await resp2.json();
 
-                                  if (!resp2.ok) {
+                                  const data = await resp.json();
+                                  if (!resp.ok) {
                                     setError(
-                                      data2?.error ||
-                                        "Deleted default, but couldn't set a new default."
+                                      data?.error ||
+                                        "Failed to update default address."
                                     );
+                                    return;
+                                  }
+
+                                  setDefaultAddressId(a.id);
+                                  setDefaultAddress({
+                                    name: [a.firstName, a.lastName]
+                                      .filter(Boolean)
+                                      .join(" "),
+                                    line1: a.address1,
+                                    line2: a.address2,
+                                    city: a.city,
+                                    state: a.province,
+                                    zip: a.zip,
+                                    country: a.country,
+                                  });
+
+                                  window.dispatchEvent(
+                                    new CustomEvent("flash", {
+                                      detail:
+                                        "Default shipping address updated.",
+                                    })
+                                  );
+                                } finally {
+                                  setLoading(false);
+                                }
+                              }}
+                              className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-amber-400/60 disabled:opacity-60"
+                            >
+                              Set default
+                            </button>
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingId(a.id);
+                              setDeleteId(null);
+                              setConfirmDelete(false);
+
+                              const f = document.querySelector(
+                                'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
+                              ) as HTMLFormElement | null;
+
+                              if (!f) return;
+
+                              const setVal = (name: string, val: string) => {
+                                const el = f.elements.namedItem(name) as
+                                  | HTMLInputElement
+                                  | HTMLSelectElement
+                                  | null;
+                                if (!el) return;
+                                (el as any).value = val ?? "";
+                              };
+
+                              setVal("firstName", a.firstName);
+                              setVal("lastName", a.lastName);
+                              setVal("address1", a.address1);
+                              setVal("address2", a.address2);
+                              setVal("city", a.city);
+                              setVal("province", a.province);
+                              setVal("zip", a.zip);
+                              setVal("country", a.country);
+                              setVal("phone", a.phone);
+
+                              window.dispatchEvent(
+                                new CustomEvent("flash", {
+                                  detail: "Editing address.",
+                                })
+                              );
+                            }}
+                            className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingId(null);
+                              setDeleteId(a.id);
+                              setConfirmDelete(true);
+                            }}
+                            className="px-2 py-1 text-xs rounded border border-red-800 text-red-300 hover:border-red-600"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  <div className="flex items-center justify-between">
+                    <div className="text-amber-300 font-semibold">
+                      {editingId
+                        ? "Edit shipping address"
+                        : "Add shipping address"}
+                    </div>
+
+                    {editingId && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingId(null);
+                          setDeleteId(null);
+                          setConfirmDelete(false);
+
+                          (
+                            document.querySelector(
+                              'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
+                            ) as HTMLFormElement | null
+                          )?.reset?.();
+                          setError("");
+                        }}
+                        className="px-3 py-1 text-xs rounded border border-amber-400 text-amber-300 hover:bg-amber-400/10 font-semibold"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-3">
+                    <input
+                      name="firstName"
+                      placeholder="First name"
+                      className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                    />
+                    <input
+                      name="lastName"
+                      placeholder="Last name"
+                      className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                    />
+                  </div>
+
+                  <input
+                    name="address1"
+                    placeholder="Address line 1"
+                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                  />
+                  <input
+                    name="address2"
+                    placeholder="Address line 2 (optional)"
+                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                  />
+
+                  <div className="grid md:grid-cols-2 gap-3">
+                    <input
+                      name="city"
+                      placeholder="City"
+                      className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                    />
+                    <select
+                      name="province"
+                      required
+                      defaultValue=""
+                      className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                    >
+                      <option value="" disabled>
+                        State
+                      </option>
+                      {US_STATES.map((s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-3">
+                    <input
+                      name="zip"
+                      placeholder="ZIP / Postal code"
+                      className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                    />
+                    <div className="space-y-2">
+                      <select
+                        name="country"
+                        required
+                        defaultValue="United States"
+                        disabled
+                        className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm opacity-80"
+                      >
+                        <option value="United States">United States</option>
+                      </select>
+
+                      <div className="text-xs text-neutral-400">
+                        International? Contact us:{" "}
+                        <a
+                          href="mailto:support@oldironsidescoffee.org"
+                          className="text-amber-300 font-medium"
+                        >
+                          support@oldironsidescoffee.org
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <input
+                    name="phone"
+                    placeholder="Phone (optional)"
+                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+                  />
+
+                  {error && <div className="text-sm text-red-300">{error}</div>}
+                  {deleteId && confirmDelete && (
+                    <div className="mt-4 rounded-lg border border-red-800 bg-red-900/30 p-4">
+                      <div className="text-red-300 font-semibold mb-2">
+                        Delete this address?
+                      </div>
+                      <div className="text-sm text-neutral-300 mb-3">
+                        This action cannot be undone.
+                      </div>
+
+                      <div className="flex gap-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setConfirmDelete(false);
+                            setDeleteId(null);
+                          }}
+                          className="px-3 py-2 rounded-lg border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
+                        >
+                          Cancel
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={loading}
+                          onClick={async () => {
+                            const token = localStorage.getItem("oi_token");
+                            if (!token || !deleteId) return;
+
+                            setLoading(true);
+                            setError("");
+
+                            const deletingId = deleteId;
+
+                            try {
+                              const resp = await fetch(
+                                "/api/account/address-delete",
+                                {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${token}`,
+                                  },
+                                  body: JSON.stringify({ id: deletingId }),
+                                }
+                              );
+
+                              const data = await resp.json();
+                              if (!resp.ok) {
+                                setError(data?.error || "Delete failed.");
+                                return;
+                              }
+
+                              // Compute remaining BEFORE state updates (so default promotion is correct)
+                              const remaining = addresses.filter(
+                                (x) => x.id !== deletingId
+                              );
+                              const nextDefault = remaining[0] || null;
+
+                              // Update list UI
+                              setAddresses(remaining);
+
+                              // If we deleted the default, promote another one in Shopify
+                              if (defaultAddressId === deletingId) {
+                                if (nextDefault) {
+                                  try {
+                                    const resp2 = await fetch(
+                                      "/api/account/address-set-default",
+                                      {
+                                        method: "POST",
+                                        headers: {
+                                          "Content-Type": "application/json",
+                                          Authorization: `Bearer ${token}`,
+                                        },
+                                        body: JSON.stringify({
+                                          addressId: nextDefault.id,
+                                        }),
+                                      }
+                                    );
+                                    const data2 = await resp2.json();
+
+                                    if (!resp2.ok) {
+                                      setError(
+                                        data2?.error ||
+                                          "Deleted default, but couldn't set a new default."
+                                      );
+                                      setDefaultAddressId(null);
+                                      setDefaultAddress(null);
+                                    } else {
+                                      setDefaultAddressId(nextDefault.id);
+                                      setDefaultAddress({
+                                        name: [
+                                          nextDefault.firstName,
+                                          nextDefault.lastName,
+                                        ]
+                                          .filter(Boolean)
+                                          .join(" "),
+                                        line1: nextDefault.address1,
+                                        line2: nextDefault.address2,
+                                        city: nextDefault.city,
+                                        state: nextDefault.province,
+                                        zip: nextDefault.zip,
+                                        country: nextDefault.country,
+                                      });
+                                    }
+                                  } catch {
                                     setDefaultAddressId(null);
                                     setDefaultAddress(null);
-                                  } else {
-                                    setDefaultAddressId(nextDefault.id);
-                                    setDefaultAddress({
-                                      name: [
-                                        nextDefault.firstName,
-                                        nextDefault.lastName,
-                                      ]
-                                        .filter(Boolean)
-                                        .join(" "),
-                                      line1: nextDefault.address1,
-                                      line2: nextDefault.address2,
-                                      city: nextDefault.city,
-                                      state: nextDefault.province,
-                                      zip: nextDefault.zip,
-                                      country: nextDefault.country,
-                                    });
                                   }
-                                } catch {
+                                } else {
                                   setDefaultAddressId(null);
                                   setDefaultAddress(null);
                                 }
-                              } else {
-                                setDefaultAddressId(null);
-                                setDefaultAddress(null);
                               }
+
+                              // If you happened to be editing the same address, exit edit mode + clear form
+                              if (editingId === deletingId) {
+                                setEditingId(null);
+                                (
+                                  document.querySelector(
+                                    'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
+                                  ) as HTMLFormElement | null
+                                )?.reset?.();
+                              }
+
+                              setConfirmDelete(false);
+                              setDeleteId(null);
+
+                              window.dispatchEvent(
+                                new CustomEvent("flash", {
+                                  detail: "Address deleted.",
+                                })
+                              );
+                            } finally {
+                              setLoading(false);
                             }
-
-                            // If you happened to be editing the same address, exit edit mode + clear form
-                            if (editingId === deletingId) {
-                              setEditingId(null);
-                              (
-                                document.querySelector(
-                                  'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
-                                ) as HTMLFormElement | null
-                              )?.reset?.();
-                            }
-
-                            setConfirmDelete(false);
-                            setDeleteId(null);
-
-                            window.dispatchEvent(
-                              new CustomEvent("flash", {
-                                detail: "Address deleted.",
-                              })
-                            );
-                          } finally {
-                            setLoading(false);
-                          }
-                        }}
-                        className="px-3 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-500 disabled:opacity-60"
-                      >
-                        Confirm delete
-                      </button>
+                          }}
+                          className="px-3 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-500 disabled:opacity-60"
+                        >
+                          Confirm delete
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                <button
-                  disabled={loading}
-                  className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300 disabled:opacity-60"
-                >
-                  {loading ? "Saving..." : "Save address"}
-                </button>
-              </form>
-            </div>
-
-            {/* Security */}
-            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-              <div className="text-amber-300 font-semibold mb-3">
-                Security and password
-              </div>
-              <div className="text-sm text-neutral-300 space-y-3">
-                <p>
-                  You can change your password and update login details from
-                  your secure account portal once connected.
-                </p>
-                <p className="text-neutral-400 text-xs">
-                  For now, email{" "}
-                  <a
-                    href="mailto:support@oldironsidescoffee.com"
-                    className="text-amber-300"
+                  <button
+                    disabled={loading}
+                    className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300 disabled:opacity-60"
                   >
-                    support@oldironsidescoffee.org
-                  </a>{" "}
-                  if you need help updating your login.
-                </p>
+                    {loading ? "Saving..." : "Save address"}
+                  </button>
+                </form>
               </div>
-              <button
-                // REAL: link to password reset flow
-                className="mt-4 px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
-              >
-                Request password reset
-              </button>
+
+              {/* Security */}
+              <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+                <div className="text-amber-300 font-semibold mb-3">
+                  Security and password
+                </div>
+                <div className="text-sm text-neutral-300 space-y-3">
+                  <p>
+                    You can change your password and update login details from
+                    your secure account portal once connected.
+                  </p>
+                  <p className="text-neutral-400 text-xs">
+                    For now, email{" "}
+                    <a
+                      href="mailto:support@oldironsidescoffee.com"
+                      className="text-amber-300"
+                    >
+                      support@oldironsidescoffee.org
+                    </a>{" "}
+                    if you need help updating your login.
+                  </p>
+                </div>
+                <button
+                  // REAL: link to password reset flow
+                  className="mt-4 px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+                >
+                  Request password reset
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </Container>
     </main>
   );
@@ -10579,6 +10597,7 @@ function Layout() {
   }, []);
 
   const isStore = location.pathname.startsWith("/store");
+  const isAccount = location.pathname.startsWith("/account");
   const isCart = location.pathname.startsWith("/cart"); // mobile drawer trigger
   const navigate = useNavigate();
 
@@ -11262,6 +11281,8 @@ function Layout() {
             ? "h-[105px] md:h-[205px]"
             : isStore
             ? "h-[120px] md:h-[150px]"
+            : isAccount
+            ? "h-[150px] md:h-[160px]"
             : isRoast
             ? "h-[140px] md:h-[190px]"
             : isOrigins

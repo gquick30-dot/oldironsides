@@ -9682,8 +9682,31 @@ function SubscribeManagePage({
                   );
                 })}
 
-                <div className="text-amber-300 font-semibold">
-                  Add shipping address
+                <div className="flex items-center justify-between">
+                  <div className="text-amber-300 font-semibold">
+                    {editingId
+                      ? "Edit shipping address"
+                      : "Add shipping address"}
+                  </div>
+
+                  {editingId && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingId(null);
+                        setConfirmDelete(false);
+                        (
+                          document.querySelector(
+                            'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
+                          ) as HTMLFormElement | null
+                        )?.reset?.();
+                        setError("");
+                      }}
+                      className="px-3 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
+                    >
+                      Cancel
+                    </button>
+                  )}
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-3">

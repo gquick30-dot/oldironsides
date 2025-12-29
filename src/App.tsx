@@ -8608,6 +8608,23 @@ function SubscribeManagePage({
   const [defaultAddressId, setDefaultAddressId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
+  // US-only shipping controls
+  const US_STATES = [
+    "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA",
+    "HI","ID","IL","IN","IA","KS","KY","LA","ME","MD",
+    "MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ",
+    "NM","NY","NC","ND","OH","OK","OR","PA","RI","SC",
+    "SD","TN","TX","UT","VT","VA","WA","WV","WI","WY",
+    "DC",
+  ] as const;
+
+  // Undo default change (lightweight safety net)
+  const [undoFromId, setUndoFromId] = useState<string | null>(null);
+  const [undoToId, setUndoToId] = useState<string | null>(null);
+  const [showUndo, setShowUndo] = useState(false);
+  const undoTimerRef = useRef<number | null>(null);
+
+
   const [tab, setTab] = useState<
     "overview" | "login" | "subscriptions" | "orders" | "profile"
   >(initialTab ?? (user ? "overview" : "login"));
@@ -9325,19 +9342,22 @@ function SubscribeManagePage({
                       city: String(fd.get("city") || "").trim(),
                       province: String(fd.get("province") || "").trim(),
                       zip: String(fd.get("zip") || "").trim(),
-                      country: String(fd.get("country") || "").trim(),
+                      country: "United States",
+
                       phone: String(fd.get("phone") || "").trim(),
                     };
 
                     if (
                       !address.address1 ||
                       !address.city ||
+                      !address.province ||
                       !address.zip ||
                       !address.country
                     ) {
-                      setError("Address, city, zip, and country are required.");
+                      setError("Address, city, state, zip, and country are required.");
                       return;
                     }
+                    
 
                     const endpoint = editingId
                       ? "/api/account/address-update"
@@ -9433,136 +9453,134 @@ function SubscribeManagePage({
                           : "border-neutral-700 hover:border-amber-400/60",
                       ].join(" ")}
                     >
-                      {/* Clickable body sets default */}
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          if (isDefault) return;
+                   {/* Address display (no click-to-set-default) */}
+<div className="block w-full text-left pr-24">
+  <div className="font-semibold text-neutral-200">
+    {a.firstName} {a.lastName}
+    {isDefault && (
+      <span className="ml-2 text-xs text-amber-300">(Default)</span>
+    )}
+  </div>
+  <div>{a.address1}</div>
+  {a.address2 && <div>{a.address2}</div>}
+  <div>
+    {a.city}, {a.province} {a.zip}
+  </div>
+  <div>{a.country}</div>
+</div>
 
-                          const token = localStorage.getItem("oi_token");
-                          if (!token) return;
+{/* Actions (top-right) */}
+<div className="absolute top-3 right-3 flex gap-2">
+  {!isDefault && (
+    <button
+      type="button"
+      disabled={loading}
+      onClick={async () => {
+        const token = localStorage.getItem("oi_token");
+        if (!token) return;
 
-                          setLoading(true);
-                          setError("");
+        setLoading(true);
+        setError("");
 
-                          try {
-                            const resp = await fetch(
-                              "/api/account/address-set-default",
-                              {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                  Authorization: `Bearer ${token}`,
-                                },
-                                body: JSON.stringify({ addressId: a.id }),
-                              }
-                            );
+        try {
+          const resp = await fetch("/api/account/address-set-default", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ addressId: a.id }),
+          });
 
-                            const data = await resp.json();
-                            if (!resp.ok) {
-                              setError(
-                                data?.error ||
-                                  "Failed to update shipping address."
-                              );
-                              return;
-                            }
+          const data = await resp.json();
+          if (!resp.ok) {
+            setError(data?.error || "Failed to update default address.");
+            return;
+          }
 
-                            setDefaultAddressId(a.id);
-                            setDefaultAddress({
-                              name: [a.firstName, a.lastName]
-                                .filter(Boolean)
-                                .join(" "),
-                              line1: a.address1,
-                              line2: a.address2,
-                              city: a.city,
-                              state: a.province,
-                              zip: a.zip,
-                              country: a.country,
-                            });
+          setDefaultAddressId(a.id);
+          setDefaultAddress({
+            name: [a.firstName, a.lastName].filter(Boolean).join(" "),
+            line1: a.address1,
+            line2: a.address2,
+            city: a.city,
+            state: a.province,
+            zip: a.zip,
+            country: a.country,
+          });
 
-                            window.dispatchEvent(
-                              new CustomEvent("flash", {
-                                detail: "Default shipping address updated.",
-                              })
-                            );
-                          } finally {
-                            setLoading(false);
-                          }
-                        }}
-                        className="block w-full text-left pr-24"
-                      >
-                        <div className="font-semibold text-neutral-200">
-                          {a.firstName} {a.lastName}
-                          {isDefault && (
-                            <span className="ml-2 text-xs text-amber-300">
-                              (Default)
-                            </span>
-                          )}
-                        </div>
-                        <div>{a.address1}</div>
-                        {a.address2 && <div>{a.address2}</div>}
-                        <div>
-                          {a.city}, {a.province} {a.zip}
-                        </div>
-                        <div>{a.country}</div>
-                      </button>
+          window.dispatchEvent(
+            new CustomEvent("flash", {
+              detail: "Default shipping address updated.",
+            })
+          );
+        } finally {
+          setLoading(false);
+        }
+      }}
+      className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-amber-400/60 disabled:opacity-60"
+    >
+      Set default
+    </button>
+  )}
 
-                      {/* Actions (top-right) */}
-                      <div className="absolute top-3 right-3 flex gap-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditingId(a.id);
-                            setDeleteId(null);
-                            setConfirmDelete(false);
+  <button
+    type="button"
+    onClick={() => {
+      setEditingId(a.id);
+      setDeleteId(null);
+      setConfirmDelete(false);
 
-                            const f = document.querySelector(
-                              'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
-                            ) as HTMLFormElement | null;
+      const f = document.querySelector(
+        'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
+      ) as HTMLFormElement | null;
 
-                            if (!f) return;
+      if (!f) return;
 
-                            // Fill the existing inputs by name (use .value so reset() actually clears)
-                            const setVal = (name: string, val: string) => {
-                              const el = f.elements.namedItem(
-                                name
-                              ) as HTMLInputElement | null;
-                              if (!el) return;
-                              el.value = val ?? "";
-                            };
+      const setVal = (name: string, val: string) => {
+        const el = f.elements.namedItem(name) as
+          | HTMLInputElement
+          | HTMLSelectElement
+          | null;
+        if (!el) return;
+        (el as any).value = val ?? "";
+      };
+      
 
-                            setVal("firstName", a.firstName);
-                            setVal("lastName", a.lastName);
-                            setVal("address1", a.address1);
-                            setVal("address2", a.address2);
-                            setVal("city", a.city);
-                            setVal("province", a.province);
-                            setVal("zip", a.zip);
-                            setVal("country", a.country);
-                            setVal("phone", a.phone);
+      setVal("firstName", a.firstName);
+      setVal("lastName", a.lastName);
+      setVal("address1", a.address1);
+      setVal("address2", a.address2);
+      setVal("city", a.city);
+      setVal("province", a.province);
+      setVal("zip", a.zip);
+      setVal("country", a.country);
+      setVal("phone", a.phone);
 
-                            window.dispatchEvent(
-                              new CustomEvent("flash", {
-                                detail: "Editing address.",
-                              })
-                            );
-                          }}
-                          className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
-                        >
-                          Edit
-                        </button>
+      window.dispatchEvent(
+        new CustomEvent("flash", {
+          detail: "Editing address.",
+        })
+      );
+    }}
+    className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
+  >
+    Edit
+  </button>
 
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setDeleteId(a.id);
-                            setConfirmDelete(true);
-                          }}
-                          className="px-2 py-1 text-xs rounded border border-red-800 text-red-300 hover:border-red-600"
-                        >
-                          Delete
-                        </button>
-                      </div>
+  <button
+    type="button"
+    onClick={() => {
+      setEditingId(null);
+      setDeleteId(a.id);
+      setConfirmDelete(true);
+    }}
+    className="px-2 py-1 text-xs rounded border border-red-800 text-red-300 hover:border-red-600"
+  >
+    Delete
+  </button>
+</div>
+
                     </div>
                   );
                 })}
@@ -9626,11 +9644,22 @@ function SubscribeManagePage({
                     placeholder="City"
                     className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
                   />
-                  <input
-                    name="province"
-                    placeholder="State / Province"
-                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                  />
+                 <select
+  name="province"
+  required
+  defaultValue=""
+  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
+>
+  <option value="" disabled>
+    State
+  </option>
+  {US_STATES.map((s) => (
+    <option key={s} value={s}>
+      {s}
+    </option>
+  ))}
+</select>
+
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-3">
@@ -9639,11 +9668,29 @@ function SubscribeManagePage({
                     placeholder="ZIP / Postal code"
                     className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
                   />
-                  <input
-                    name="country"
-                    placeholder="Country"
-                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                  />
+                 <div className="space-y-2">
+  <select
+    name="country"
+    required
+    defaultValue="United States"
+    disabled
+    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm opacity-80"
+  >
+    <option value="United States">United States</option>
+  </select>
+
+  <div className="text-xs text-neutral-400">
+    International?{" "}
+    <a
+      href="mailto:support@oldironsidescoffee.com"
+      className="text-amber-300"
+    >
+      Contact us
+    </a>
+    .
+  </div>
+</div>
+
                 </div>
 
                 <input
@@ -9654,145 +9701,136 @@ function SubscribeManagePage({
 
                 {error && <div className="text-sm text-red-300">{error}</div>}
                 {deleteId && confirmDelete && (
-                  <div className="mt-4 rounded-lg border border-red-800 bg-red-900/30 p-4">
-                    <div className="text-red-300 font-semibold mb-2">
-                      Delete this address?
-                    </div>
-                    <div className="text-sm text-neutral-300 mb-3">
-                      This action cannot be undone.
-                    </div>
+  <div className="mt-4 rounded-lg border border-red-800 bg-red-900/30 p-4">
+    <div className="text-red-300 font-semibold mb-2">
+      Delete this address?
+    </div>
+    <div className="text-sm text-neutral-300 mb-3">
+      This action cannot be undone.
+    </div>
 
-                    <div className="flex gap-3">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setConfirmDelete(false);
-                          setDeleteId(null);
-                        }}
-                        className="px-3 py-2 rounded-lg border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
-                      >
-                        Cancel
-                      </button>
+    <div className="flex gap-3">
+      <button
+        type="button"
+        onClick={() => {
+          setConfirmDelete(false);
+          setDeleteId(null);
+        }}
+        className="px-3 py-2 rounded-lg border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
+      >
+        Cancel
+      </button>
 
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          const token = localStorage.getItem("oi_token");
-                          if (!token || !deleteId) return;
+      <button
+        type="button"
+        disabled={loading}
+        onClick={async () => {
+          const token = localStorage.getItem("oi_token");
+          if (!token || !deleteId) return;
 
-                          setLoading(true);
-                          setError("");
+          setLoading(true);
+          setError("");
 
-                          const deletingId = deleteId;
+          const deletingId = deleteId;
 
-                          try {
-                            const resp = await fetch(
-                              "/api/account/address-delete",
-                              {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                  Authorization: `Bearer ${token}`,
-                                },
-                                body: JSON.stringify({ id: deletingId }),
-                              }
-                            );
+          try {
+            const resp = await fetch("/api/account/address-delete", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ id: deletingId }),
+            });
 
-                            const data = await resp.json();
-                            if (!resp.ok) {
-                              setError(data?.error || "Delete failed.");
-                              return;
-                            }
+            const data = await resp.json();
+            if (!resp.ok) {
+              setError(data?.error || "Delete failed.");
+              return;
+            }
 
-                            // Remove from UI list
-                            setAddresses((prev) =>
-                              prev.filter((x) => x.id !== deletingId)
-                            );
+            // Compute remaining BEFORE state updates (so default promotion is correct)
+            const remaining = addresses.filter((x) => x.id !== deletingId);
+            const nextDefault = remaining[0] || null;
 
-                            // If we deleted the default, promote another one
-                            if (defaultAddressId === deletingId) {
-                              const remaining = addresses.filter(
-                                (x) => x.id !== deletingId
-                              );
-                              const next = remaining[0];
+            // Update list UI
+            setAddresses(remaining);
 
-                              if (next) {
-                                try {
-                                  const resp2 = await fetch(
-                                    "/api/account/address-set-default",
-                                    {
-                                      method: "POST",
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: `Bearer ${token}`,
-                                      },
-                                      body: JSON.stringify({
-                                        addressId: next.id,
-                                      }),
-                                    }
-                                  );
-                                  const data2 = await resp2.json();
+            // If we deleted the default, promote another one in Shopify
+            if (defaultAddressId === deletingId) {
+              if (nextDefault) {
+                try {
+                  const resp2 = await fetch("/api/account/address-set-default", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ addressId: nextDefault.id }),
+                  });
+                  const data2 = await resp2.json();
 
-                                  if (!resp2.ok) {
-                                    setError(
-                                      data2?.error ||
-                                        "Deleted default, but couldn't set a new default."
-                                    );
-                                    setDefaultAddressId(null);
-                                    setDefaultAddress(null);
-                                  } else {
-                                    setDefaultAddressId(next.id);
-                                    setDefaultAddress({
-                                      name: [next.firstName, next.lastName]
-                                        .filter(Boolean)
-                                        .join(" "),
-                                      line1: next.address1,
-                                      line2: next.address2,
-                                      city: next.city,
-                                      state: next.province,
-                                      zip: next.zip,
-                                      country: next.country,
-                                    });
-                                  }
-                                } catch {
-                                  setDefaultAddressId(null);
-                                  setDefaultAddress(null);
-                                }
-                              } else {
-                                setDefaultAddressId(null);
-                                setDefaultAddress(null);
-                              }
-                            }
+                  if (!resp2.ok) {
+                    setError(
+                      data2?.error ||
+                        "Deleted default, but couldn't set a new default."
+                    );
+                    setDefaultAddressId(null);
+                    setDefaultAddress(null);
+                  } else {
+                    setDefaultAddressId(nextDefault.id);
+                    setDefaultAddress({
+                      name: [nextDefault.firstName, nextDefault.lastName]
+                        .filter(Boolean)
+                        .join(" "),
+                      line1: nextDefault.address1,
+                      line2: nextDefault.address2,
+                      city: nextDefault.city,
+                      state: nextDefault.province,
+                      zip: nextDefault.zip,
+                      country: nextDefault.country,
+                    });
+                  }
+                } catch {
+                  setDefaultAddressId(null);
+                  setDefaultAddress(null);
+                }
+              } else {
+                setDefaultAddressId(null);
+                setDefaultAddress(null);
+              }
+            }
 
-                            // Defensive cleanup so UI never sticks
-                            if (editingId === deletingId) {
-                              setEditingId(null);
-                              (
-                                document.querySelector(
-                                  'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
-                                ) as HTMLFormElement | null
-                              )?.reset?.();
-                            }
+            // If you happened to be editing the same address, exit edit mode + clear form
+            if (editingId === deletingId) {
+              setEditingId(null);
+              (
+                document.querySelector(
+                  'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
+                ) as HTMLFormElement | null
+              )?.reset?.();
+            }
 
-                            setConfirmDelete(false);
-                            setDeleteId(null);
+            setConfirmDelete(false);
+            setDeleteId(null);
 
-                            window.dispatchEvent(
-                              new CustomEvent("flash", {
-                                detail: "Address deleted.",
-                              })
-                            );
-                          } finally {
-                            setLoading(false);
-                          }
-                        }}
-                        className="px-3 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-500"
-                      >
-                        Confirm delete
-                      </button>
-                    </div>
-                  </div>
-                )}
+            window.dispatchEvent(
+              new CustomEvent("flash", {
+                detail: "Address deleted.",
+              })
+            );
+          } finally {
+            setLoading(false);
+          }
+        }}
+        className="px-3 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-500 disabled:opacity-60"
+      >
+        Confirm delete
+      </button>
+    </div>
+  </div>
+)}
+
 
                 <button
                   disabled={loading}

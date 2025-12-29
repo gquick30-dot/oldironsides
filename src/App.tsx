@@ -9429,7 +9429,7 @@ function SubscribeManagePage({
                     setEditingId(null);
                     setConfirmDelete(false);
 
-                    (e.target as HTMLFormElement)?.reset?.();
+                    form.reset();
                   } catch (err: any) {
                     setError(err?.message || "Address update failed.");
                   } finally {

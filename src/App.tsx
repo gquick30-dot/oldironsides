@@ -9357,13 +9357,21 @@ function SubscribeManagePage({
                       return;
                     }
 
-                    const resp = await fetch("/api/account/address-create", {
+                    const endpoint = editingId
+                      ? "/api/account/address-update"
+                      : "/api/account/address-create";
+
+                    const payload = editingId
+                      ? { id: editingId, address }
+                      : { address };
+
+                    const resp = await fetch(endpoint, {
                       method: "POST",
                       headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                       },
-                      body: JSON.stringify({ address }),
+                      body: JSON.stringify(payload),
                     });
 
                     const text = await resp.text();
@@ -9381,6 +9389,15 @@ function SubscribeManagePage({
                       setError(data?.error || "Address update failed.");
                       return;
                     }
+                    // Refresh addresses from Shopify so UI matches reality
+                    try {
+                      const r2 = await fetch("/api/account/addresses", {
+                        headers: { Authorization: `Bearer ${token}` },
+                      });
+                      const d2 = await r2.json();
+                      setAddresses(d2.addresses || []);
+                      setDefaultAddressId(d2.defaultId || null);
+                    } catch {}
 
                     // Update local UI immediately
                     const newDefault = {
@@ -9409,6 +9426,9 @@ function SubscribeManagePage({
                         detail: "Shipping address saved.",
                       })
                     );
+                    setEditingId(null);
+                    setConfirmDelete(false);
+
                     (e.target as HTMLFormElement)?.reset?.();
                   } catch (err: any) {
                     setError(err?.message || "Address update failed.");

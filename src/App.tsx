@@ -8613,6 +8613,8 @@ function SubscribeManagePage({
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const [subs, setSubs] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
@@ -9320,6 +9322,7 @@ function SubscribeManagePage({
                 className="mt-4 grid gap-3"
                 onSubmit={async (e) => {
                   e.preventDefault();
+                  const form = e.currentTarget as HTMLFormElement;
                   setError("");
                   setLoading(true);
 
@@ -9506,10 +9509,65 @@ function SubscribeManagePage({
                         <button
                           type="button"
                           onClick={() => {
-                            // next step will wire this to fill the form + enter edit mode
+                            setEditingId(a.id);
+                            setConfirmDelete(false);
+
+                            const f = document.querySelector(
+                              'form[class*="mt-4"][class*="grid"][class*="gap-3"]'
+                            ) as HTMLFormElement | null;
+
+                            if (!f) return;
+
+                            // Fill the existing inputs by name
+                            (
+                              f.elements.namedItem(
+                                "firstName"
+                              ) as HTMLInputElement | null
+                            )?.setAttribute("value", a.firstName || "");
+                            (
+                              f.elements.namedItem(
+                                "lastName"
+                              ) as HTMLInputElement | null
+                            )?.setAttribute("value", a.lastName || "");
+                            (
+                              f.elements.namedItem(
+                                "address1"
+                              ) as HTMLInputElement | null
+                            )?.setAttribute("value", a.address1 || "");
+                            (
+                              f.elements.namedItem(
+                                "address2"
+                              ) as HTMLInputElement | null
+                            )?.setAttribute("value", a.address2 || "");
+                            (
+                              f.elements.namedItem(
+                                "city"
+                              ) as HTMLInputElement | null
+                            )?.setAttribute("value", a.city || "");
+                            (
+                              f.elements.namedItem(
+                                "province"
+                              ) as HTMLInputElement | null
+                            )?.setAttribute("value", a.province || "");
+                            (
+                              f.elements.namedItem(
+                                "zip"
+                              ) as HTMLInputElement | null
+                            )?.setAttribute("value", a.zip || "");
+                            (
+                              f.elements.namedItem(
+                                "country"
+                              ) as HTMLInputElement | null
+                            )?.setAttribute("value", a.country || "");
+                            (
+                              f.elements.namedItem(
+                                "phone"
+                              ) as HTMLInputElement | null
+                            )?.setAttribute("value", a.phone || "");
+
                             window.dispatchEvent(
                               new CustomEvent("flash", {
-                                detail: "Edit mode coming next.",
+                                detail: "Editing address.",
                               })
                             );
                           }}
@@ -9553,9 +9611,57 @@ function SubscribeManagePage({
                                 list.filter((x) => x.id !== a.id)
                               );
 
-                              // If we deleted the default, clear it (next step will auto-pick another)
                               if (defaultAddressId === a.id) {
-                                setDefaultAddressId(null);
+                                // pick the first remaining address and set it as default in Shopify
+                                const remaining = addresses.filter(
+                                  (x) => x.id !== a.id
+                                );
+                                const next = remaining[0];
+
+                                if (next) {
+                                  try {
+                                    const resp2 = await fetch(
+                                      "/api/account/address-set-default",
+                                      {
+                                        method: "POST",
+                                        headers: {
+                                          "Content-Type": "application/json",
+                                          Authorization: `Bearer ${token}`,
+                                        },
+                                        body: JSON.stringify({
+                                          addressId: next.id,
+                                        }),
+                                      }
+                                    );
+
+                                    const data2 = await resp2.json();
+                                    if (resp2.ok) {
+                                      setDefaultAddressId(next.id);
+                                      setDefaultAddress({
+                                        name: [next.firstName, next.lastName]
+                                          .filter(Boolean)
+                                          .join(" "),
+                                        line1: next.address1,
+                                        line2: next.address2,
+                                        city: next.city,
+                                        state: next.province,
+                                        zip: next.zip,
+                                        country: next.country,
+                                      });
+                                    } else {
+                                      setError(
+                                        data2?.error ||
+                                          "Deleted default, but couldn't set a new default."
+                                      );
+                                      setDefaultAddressId(null);
+                                    }
+                                  } catch {
+                                    setDefaultAddressId(null);
+                                  }
+                                } else {
+                                  setDefaultAddressId(null);
+                                  setDefaultAddress(null);
+                                }
                               }
 
                               window.dispatchEvent(

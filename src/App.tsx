@@ -9067,26 +9067,47 @@ function SubscribeManagePage({
           {/* OVERVIEW */}
           {tab === "overview" && (
             <div className="mt-6 grid md:grid-cols-3 gap-6">
-              {/* Next delivery / subscription summary */}
+              {/* Next delivery / subscriptions summary */}
               <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
                 <div>
                   <div className="text-amber-300 font-semibold">
-                    Next delivery
+                    Next deliveries
                   </div>
-                  <div className="mt-2 text-neutral-300 text-sm">
-                    {subs[0] ? (
-                      <>
-                        <div>{subs[0].product}</div>
-                        <div className="text-neutral-400">
-                          Ships around {subs[0].nextCharge} •{" "}
-                          {subs[0].frequency}
-                        </div>
-                      </>
+
+                  <div className="mt-3 space-y-2 text-sm">
+                    {subs.length === 0 ? (
+                      <div className="text-neutral-400">
+                        No active subscriptions.
+                      </div>
                     ) : (
-                      "No active subscriptions."
+                      subs.slice(0, 4).map((s) => (
+                        <div
+                          key={s.id}
+                          className="border-t border-neutral-800 pt-2 first:border-t-0 first:pt-0"
+                        >
+                          <div className="text-neutral-200 font-semibold">
+                            {s.product}
+                          </div>
+                          <div className="text-neutral-400">
+                            {s.nextCharge
+                              ? `Ships around ${s.nextCharge}`
+                              : s.nextInDays != null
+                              ? `Ships in ${s.nextInDays} days`
+                              : "Next ship date unavailable"}{" "}
+                            • {s.frequency || "—"} • {s.status || "active"}
+                          </div>
+                        </div>
+                      ))
                     )}
                   </div>
+
+                  {subs.length > 4 && (
+                    <div className="mt-2 text-xs text-neutral-400">
+                      +{subs.length - 4} more subscriptions
+                    </div>
+                  )}
                 </div>
+
                 <button
                   onClick={() => setTab("subscriptions")}
                   className="mt-4 text-amber-300 text-sm text-left"
@@ -9106,19 +9127,37 @@ function SubscribeManagePage({
                     {orders.length === 0 ? (
                       <div className="text-neutral-400">No orders yet.</div>
                     ) : (
-                      orders.slice(0, 4).map((o) => (
-                        <div
-                          key={o.id}
-                          className="border-t border-neutral-800 pt-2 first:border-t-0 first:pt-0"
-                        >
-                          <div className="text-neutral-200 font-semibold">
-                            {o.id}
+                      orders.slice(0, 4).map((o) => {
+                        const items = Array.isArray(o.items) ? o.items : [];
+                        const first = items[0];
+                        const moreCount = Math.max(0, items.length - 1);
+
+                        const firstLine = first
+                          ? `${first.title} × ${first.qty}`
+                          : `${items.length} item${
+                              items.length === 1 ? "" : "s"
+                            }`;
+
+                        return (
+                          <div
+                            key={o.id}
+                            className="border-t border-neutral-800 pt-2 first:border-t-0 first:pt-0"
+                          >
+                            <div className="text-neutral-200 font-semibold">
+                              {o.id}
+                            </div>
+
+                            <div className="text-neutral-400">
+                              {o.date} • {o.status} • {fmt(o.total)}
+                            </div>
+
+                            <div className="text-neutral-300">
+                              {firstLine}
+                              {moreCount > 0 ? ` + ${moreCount} more` : ""}
+                            </div>
                           </div>
-                          <div className="text-neutral-400">
-                            {o.date} • {o.status} • {fmt(o.total)}
-                          </div>
-                        </div>
-                      ))
+                        );
+                      })
                     )}
                   </div>
                 </div>

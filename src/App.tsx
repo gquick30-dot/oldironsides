@@ -9211,63 +9211,15 @@ function SubscribeManagePage({
                     </div>
                   </div>
 
-                  <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-neutral-300">
-                    <div>
-                      <div className="text-neutral-400 text-xs uppercase tracking-wide mb-1">
-                        Ships to
-                      </div>
-                      <div>{s.shippingAddress?.name}</div>
-                      <div>{s.shippingAddress?.line1}</div>
-                      {s.shippingAddress?.line2 && (
-                        <div>{s.shippingAddress.line2}</div>
-                      )}
-                      <div>
-                        {s.shippingAddress?.city}, {s.shippingAddress?.state}{" "}
-                        {s.shippingAddress?.zip}
-                      </div>
-                      <div>{s.shippingAddress?.country}</div>
-                    </div>
-                    <div className="space-y-1 text-neutral-400">
-                      <div className="text-xs uppercase tracking-wide">
-                        Notes
-                      </div>
-                      <p>
-                        Change roast, quantity, frequency or address in your
-                        subscription portal once connected.
-                      </p>
-                    </div>
-                  </div>
+                  <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-neutral-300"></div>
 
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <button
-                      onClick={() => skipNextCharge(s.id)}
-                      className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+                  <div className="mt-4">
+                    <a
+                      href="/account/subscriptions"
+                      className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
                     >
-                      {s.skipped ? "Undo skip" : "Skip next delivery"}
-                    </button>
-
-                    {s.status === "paused" ? (
-                      <button
-                        onClick={() => resumeSub(s.id)}
-                        className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
-                      >
-                        Resume subscription
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => pauseSub(s.id)}
-                        className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
-                      >
-                        Pause subscription
-                      </button>
-                    )}
-
-                    <button
-                      onClick={() => cancelSub(s.id)}
-                      className="px-3 py-2 rounded-lg border border-red-800 text-red-300 hover:border-red-600 text-sm"
-                    >
-                      Cancel subscription
-                    </button>
+                      Manage subscription
+                    </a>
                   </div>
                 </div>
               ))}

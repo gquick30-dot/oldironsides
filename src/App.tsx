@@ -8777,9 +8777,8 @@ function SubscribeManagePage({
       // data: { accessToken, user }
       localStorage.setItem("oi_user", JSON.stringify(data.user));
       localStorage.setItem("oi_token", data.accessToken);
-
       setUser(data.user);
-      setTab("profile");
+      setTab("overview");
 
       window.dispatchEvent(
         new CustomEvent("flash", { detail: "Welcome back." })
@@ -8834,7 +8833,7 @@ function SubscribeManagePage({
       localStorage.setItem("oi_token", data.accessToken);
 
       setUser(data.user);
-      setTab("profile");
+      setTab("overview");
 
       window.dispatchEvent(
         new CustomEvent("flash", { detail: "Account created." })
@@ -9085,9 +9084,10 @@ function SubscribeManagePage({
                           key={s.id}
                           className="border-t border-neutral-800 pt-2 first:border-t-0 first:pt-0"
                         >
-                          <div className="text-neutral-200 font-semibold">
+                          <div className="text-amber-300 font-semibold">
                             {s.product}
                           </div>
+
                           <div className="text-neutral-400">
                             {s.nextCharge
                               ? `Ships around ${s.nextCharge}`
@@ -9143,7 +9143,7 @@ function SubscribeManagePage({
                             key={o.id}
                             className="border-t border-neutral-800 pt-2 first:border-t-0 first:pt-0"
                           >
-                            <div className="text-neutral-200 font-semibold">
+                            <div className="text-amber-300 font-semibold">
                               {o.id}
                             </div>
 
@@ -9217,7 +9217,7 @@ function SubscribeManagePage({
 
                 <button
                   onClick={() => setTab("profile")}
-                  className="mt-3 px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/40 text-sm text-neutral-300"
+                  className="mt-3 px-3 py-2 rounded-lg border border-neutral-700 text-sm text-amber-300 hover:border-amber-400/60 hover:bg-amber-400/10"
                 >
                   Manage addresses →
                 </button>
@@ -9227,7 +9227,7 @@ function SubscribeManagePage({
 
           {/* SUBSCRIPTIONS */}
           {tab === "subscriptions" && (
-            <div className="mt-6 space-y-4">
+            <div className="mt-6 space-y-4 max-w-3xl mx-auto">
               {subs.length === 0 && (
                 <div className="text-neutral-400">
                   No active subscriptions. Add Subscribe & Save from the store
@@ -9237,7 +9237,7 @@ function SubscribeManagePage({
               {subs.map((s) => (
                 <div
                   key={s.id}
-                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
+                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 border-l-4 border-amber-400/60"
                 >
                   <div className="flex flex-wrap items-center gap-3">
                     <div className="font-semibold text-amber-300">
@@ -9275,14 +9275,14 @@ function SubscribeManagePage({
 
           {/* ORDERS */}
           {tab === "orders" && (
-            <div className="mt-6 space-y-4">
+            <div className="mt-6 space-y-4 max-w-3xl mx-auto">
               {orders.length === 0 && (
                 <div className="text-neutral-400">No orders yet.</div>
               )}
               {orders.map((o) => (
                 <div
                   key={o.id}
-                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
+                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 border-l-4 border-amber-400/60"
                 >
                   <div className="flex flex-wrap items-center gap-3">
                     <div className="font-semibold text-amber-300">{o.id}</div>

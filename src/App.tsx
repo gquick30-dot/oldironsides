@@ -9071,7 +9071,7 @@ function SubscribeManagePage({
               <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
                 <div>
                   <div className="text-amber-300 font-semibold">
-                    Next deliveries
+                    Subscriptions and upcoming deliveries:
                   </div>
 
                   <div className="mt-3 space-y-2 text-sm">

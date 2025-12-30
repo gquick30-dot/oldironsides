@@ -9262,9 +9262,7 @@ function SubscribeManagePage({
 
                   <div className="mt-4">
                     <a
-                      href={`https://app.sealsubscriptions.com/customer/login?email=${encodeURIComponent(
-                        user?.email || ""
-                      )}`}
+                      href="/a/subscriptions"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"

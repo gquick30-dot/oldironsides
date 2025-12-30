@@ -9253,12 +9253,12 @@ function SubscribeManagePage({
                       • {s.frequency}
                     </div>
 
-                    <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
+                    <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-amber-400/60 text-amber-300 uppercase tracking-wide">
                       {s.status}
                     </div>
                   </div>
 
-                  <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-neutral-300"></div>
+                  <div className="mt-4 border-t border-neutral-800" />
 
                   <div className="mt-4">
                     <a
@@ -9284,13 +9284,16 @@ function SubscribeManagePage({
                   key={o.id}
                   className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 border-l-4 border-amber-400/60"
                 >
-                  <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <div className="font-semibold text-amber-300">{o.id}</div>
-                    <div className="text-sm text-neutral-400">• {o.date}</div>
-                    <div className="text-sm text-neutral-400">
-                      • {fmt(o.total)}
+
+                    <div className="flex items-center gap-2 text-sm text-neutral-400">
+                      <span>{o.date}</span>
+                      <span>•</span>
+                      <span>{fmt(o.total)}</span>
                     </div>
-                    <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
+
+                    <div className="ml-auto text-xs rounded px-2 py-1 ring-1 ring-neutral-700 text-neutral-300 uppercase tracking-wide">
                       {o.status}
                     </div>
                   </div>

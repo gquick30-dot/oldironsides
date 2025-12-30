@@ -9095,31 +9095,39 @@ function SubscribeManagePage({
                 </button>
               </div>
 
-              {/* Recent order */}
+              {/* Recent orders */}
               <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
                 <div>
                   <div className="text-amber-300 font-semibold">
-                    Recent order
+                    Recent orders
                   </div>
-                  <div className="mt-2 text-neutral-300 text-sm">
-                    {orders[0] ? (
-                      <>
-                        <div>{orders[0].id}</div>
-                        <div className="text-neutral-400">
-                          {orders[0].date} • {orders[0].status} •{" "}
-                          {fmt(orders[0].total)}
-                        </div>
-                      </>
+
+                  <div className="mt-3 space-y-2 text-sm">
+                    {orders.length === 0 ? (
+                      <div className="text-neutral-400">No orders yet.</div>
                     ) : (
-                      "No orders yet."
+                      orders.slice(0, 4).map((o) => (
+                        <div
+                          key={o.id}
+                          className="border-t border-neutral-800 pt-2 first:border-t-0 first:pt-0"
+                        >
+                          <div className="text-neutral-200 font-semibold">
+                            {o.id}
+                          </div>
+                          <div className="text-neutral-400">
+                            {o.date} • {o.status} • {fmt(o.total)}
+                          </div>
+                        </div>
+                      ))
                     )}
                   </div>
                 </div>
+
                 <button
                   onClick={() => setTab("orders")}
                   className="mt-4 text-amber-300 text-sm text-left"
                 >
-                  View order history →
+                  View all orders →
                 </button>
               </div>
 
@@ -9257,21 +9265,6 @@ function SubscribeManagePage({
                   </ul>
 
                   <div className="mt-3 grid md:grid-cols-2 gap-4 text-xs text-neutral-400">
-                    <div>
-                      <div className="uppercase tracking-wide mb-1">
-                        Ships to
-                      </div>
-                      <div>{o.shippingAddress?.name}</div>
-                      <div>{o.shippingAddress?.line1}</div>
-                      {o.shippingAddress?.line2 && (
-                        <div>{o.shippingAddress.line2}</div>
-                      )}
-                      <div>
-                        {o.shippingAddress?.city}, {o.shippingAddress?.state}{" "}
-                        {o.shippingAddress?.zip}
-                      </div>
-                      <div>{o.shippingAddress?.country}</div>
-                    </div>
                     <div>
                       <div className="uppercase tracking-wide mb-1">
                         Help with this order

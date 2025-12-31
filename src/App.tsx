@@ -8612,7 +8612,7 @@ function SubscribeManagePage({
   const SHOP_DOMAIN = (SHOP_DOMAIN_RAW || "")
     .replace(/^https?:\/\//, "")
     .replace(/\/$/, "");
-  const SEAL_PORTAL_URL = `https://${SHOP_DOMAIN}/a/subscriptions`;
+  const SEAL_LOGIN_URL = `https://${SHOP_DOMAIN}/account/login?return_url=/a/subscriptions`;
 
   // US-only shipping controls
   const US_STATES = [
@@ -9271,7 +9271,7 @@ function SubscribeManagePage({
                       type="button"
                       onClick={() =>
                         window.open(
-                          SEAL_PORTAL_URL,
+                          SEAL_LOGIN_URL,
                           "_blank",
                           "noopener,noreferrer"
                         )

@@ -8613,6 +8613,7 @@ function SubscribeManagePage({
     .replace(/^https?:\/\//, "")
     .replace(/\/$/, "");
   const SEAL_LOGIN_URL = `https://${SHOP_DOMAIN}/account/login?return_url=/a/subscriptions`;
+  const [showPassword, setShowPassword] = useState(false);
 
   // US-only shipping controls
   const US_STATES = [
@@ -8968,12 +8969,26 @@ function SubscribeManagePage({
                   placeholder="Email address"
                   className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
                 />
-                <input
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                  className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-sm"
-                />
+                <div className="relative">
+                  <input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    className="w-full rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 pr-10 text-sm"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute inset-y-0 right-2 flex items-center text-neutral-400 hover:text-amber-300"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? "🙈" : "👁️"}
+                  </button>
+                </div>
+
                 {error && <div className="text-sm text-red-300">{error}</div>}
                 <button
                   disabled={loading}

@@ -8607,7 +8607,13 @@ function SubscribeManagePage({
   const [addresses, setAddresses] = useState<any[]>([]);
   const [defaultAddressId, setDefaultAddressId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const SHOP_DOMAIN = (import.meta as any).env.VITE_SHOPIFY_STORE_DOMAIN;
+  const SHOP_DOMAIN_RAW = (import.meta as any).env
+    ?.VITE_SHOPIFY_STORE_DOMAIN as string;
+  const SHOP_DOMAIN = (SHOP_DOMAIN_RAW || "")
+    .replace(/^https?:\/\//, "")
+    .replace(/\/$/, "");
+  const SEAL_PORTAL_URL = `https://${SHOP_DOMAIN}/a/subscriptions`;
+
   // US-only shipping controls
   const US_STATES = [
     "AL",
@@ -9261,17 +9267,19 @@ function SubscribeManagePage({
                   <div className="mt-4 border-t border-neutral-800" />
 
                   <div className="mt-4">
-                    <a
-                      href={`${SHOP_DOMAIN.replace(/^https?:\/\//, "").replace(
-                        /\/$/,
-                        ""
-                      )}/a/subscriptions`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      type="button"
+                      onClick={() =>
+                        window.open(
+                          SEAL_PORTAL_URL,
+                          "_blank",
+                          "noopener,noreferrer"
+                        )
+                      }
                       className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
                     >
                       Manage subscription
-                    </a>
+                    </button>
                   </div>
                 </div>
               ))}

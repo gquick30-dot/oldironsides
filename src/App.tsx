@@ -10298,21 +10298,33 @@ function PromoSubscribeModal() {
   }, [isLeader]);
 
   // ===== SUBMIT =====
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailOk(email)) return flash("Enter a valid email.");
 
+    // 1. Send email to Shopify via Vercel API
+    try {
+      await fetch("/api/create-customer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+    } catch {
+      // swallow errors — do NOT block conversion
+    }
+
+    // 2. Mark as subscribed locally (your existing logic)
     localStorage.setItem(KEY_SUB, "1");
     setCookieDays(COOKIE_SUB, "1", 365);
 
-    // MOBILE: show amber full-width banner for ~2.5s, then close
+    // 3. Continue existing UX unchanged
     const isDesktop = window.matchMedia("(min-width: 768px)").matches;
     if (isDesktop) {
       safeClose();
       setTimeout(() => {
         window.dispatchEvent(
           new CustomEvent("flash", {
-            detail: "Welcome aboard! Your 20% code is on the way!",
+            detail: "Welcome aboard! Your 20% code is IRONSIDES20",
           })
         );
       }, 75);
@@ -10320,13 +10332,12 @@ function PromoSubscribeModal() {
       setPhase("success");
       setTimeout(() => {
         safeClose();
-        // also trigger your global flash after close (optional)
         window.dispatchEvent(
           new CustomEvent("flash", {
-            detail: "Welcome aboard! Your 20% code is on the way!",
+            detail: "Welcome aboard! Your 20% code is IRONSIDES20",
           })
         );
-      }, 2500); // was 1000 — now ~2.5s
+      }, 2500);
     }
   };
 
@@ -10400,7 +10411,7 @@ function PromoSubscribeModal() {
                   <p className="text-neutral-300 mb-3 md:mb-5 text-[14px] leading-snug md:text-[1.5625rem] md:leading-normal md:whitespace-nowrap">
                     Get 20% off your first freshly roasted coffee order.
                     <br className="hidden md:block" />
-                    Join the fleet and save 15% off every order.
+                    Join the fleet and save 15% off recurring orders.
                   </p>
 
                   {/* === THIS WHOLE WRAPPER SWAPPED === */}
@@ -10411,7 +10422,7 @@ function PromoSubscribeModal() {
                         <>
                           {/* Full-width amber banner fixed to the top */}
                           <div className="fixed inset-x-0 top-0 z-[2147483647] bg-amber-400 text-neutral-900 text-center font-semibold px-4 py-3 shadow-lg">
-                            Welcome aboard! Your discount is on the way.
+                            Welcome aboard! Your discount code is IRONSIDES20
                           </div>
 
                           {/* Spacer so content below doesn’t jump if visible briefly */}

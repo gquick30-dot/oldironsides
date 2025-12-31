@@ -10299,6 +10299,7 @@ function PromoSubscribeModal() {
 
   // ===== SUBMIT =====
   const onSubmit = async (e: React.FormEvent) => {
+    console.log("PROMO SUBMIT FIRED", email);
     e.preventDefault();
     if (!emailOk(email)) return flash("Enter a valid email.");
 

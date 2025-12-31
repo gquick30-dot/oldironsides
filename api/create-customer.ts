@@ -1,62 +1,49 @@
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).end();
-  }
+  if (req.method !== "POST") return res.status(405).end();
 
-  const { email } = req.body;
+  const { email } = req.body || {};
+  if (!email)
+    return res.status(400).json({ success: false, error: "Email required" });
 
-  if (!email) {
-    return res.status(400).json({ error: "Email required" });
-  }
-
-  const response = await fetch(
-    `https://${process.env.SHOPIFY_DOMAIN}/api/2023-10/graphql.json`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Shopify-Storefront-Access-Token":
-          process.env.VITE_SHOPIFY_STOREFRONT_TOKEN,
-      },
-      body: JSON.stringify({
-        query: `
-            mutation customerCreate($input: CustomerCreateInput!) {
-              customerCreate(input: $input) {
-                customer {
-                  id
-                  email
-                }
-                customerUserErrors {
-                  message
-                }
-              }
-            }
-          `,
-        variables: {
-          input: {
-            email,
-            acceptsMarketing: true,
-          },
+  try {
+    const r = await fetch(
+      `https://${process.env.SHOPIFY_DOMAIN}/admin/api/2023-10/customers.json`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_TOKEN,
         },
-      }),
+        body: JSON.stringify({
+          customer: {
+            email,
+            // marketing opt-in
+            accepts_marketing: true,
+            // optional: tag these signups for segmentation
+            tags: "promo_20_modal",
+            // optional: helps email deliverability/segmentation
+            marketing_opt_in_level: "single_opt_in",
+          },
+        }),
+      }
+    );
+
+    const data = await r.json();
+
+    // If customer already exists, Shopify returns 422 with error.
+    // Treat that as success (we still got the email in the system).
+    if (!r.ok) {
+      const msg = JSON.stringify(data);
+      if (r.status === 422) {
+        return res.status(200).json({ success: true, note: "already_exists" });
+      }
+      return res.status(400).json({ success: false, error: msg });
     }
-  );
 
-  const data = await response.json();
-
-  const errs = data?.errors?.map((e: any) => e?.message).filter(Boolean) || [];
-  const userErrs =
-    data?.data?.customerCreate?.customerUserErrors
-      ?.map((e: any) => e?.message)
-      .filter(Boolean) || [];
-
-  if (!response.ok || errs.length || userErrs.length) {
-    return res.status(400).json({
-      success: false,
-      errs,
-      userErrs,
-    });
+    return res.status(200).json({ success: true });
+  } catch (err: any) {
+    return res
+      .status(500)
+      .json({ success: false, error: err?.message || "server_error" });
   }
-
-  return res.status(200).json({ success: true });
 }

@@ -9062,7 +9062,10 @@ function SubscribeManagePage({
             </form>{" "}
             {/* Register */}
             <form
-              onSubmit={handleRegister}
+              onSubmit={(e) => {
+                e.preventDefault();
+                window.location.href = "/account/login";
+              }}
               className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
             >
               <div className="text-lg font-semibold text-amber-300 mb-3">

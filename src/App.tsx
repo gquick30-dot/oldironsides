@@ -456,7 +456,7 @@ const roastCards = [
     slug: "oak-and-copper",
     title: "OAK & COPPER",
     subTitle: "Medium Roast",
-    note: "Bourbon Barrel-Aged Micro-Batch",
+    note: "Limited Release, Micro-Batch",
     img: "oak-copper-deck.png", // Main image for hero section
     imgLeft: "ship-hull.avif", // New property for left image in duel
     imgRight: "ship-restore.jpg", // New property for right image in duel
@@ -803,12 +803,17 @@ function CartProvider({ children }: any) {
   );
 
   // simple sub price helper:
-  // - if explicit subPrice stored, use that
-  // - if item is already marked as subscription, treat `price` as the sub price
-  // - otherwise, compute 15% off
+
   const getSubPrice = useCallback((it: any) => {
     const explicit = Number(it?.subPrice ?? 0);
     if (explicit > 0) return explicit;
+
+    // Oak & Copper: subscription exists, but no discount
+    const slug = String(it?.slug ?? "");
+    if (slug === "oak-and-copper") {
+      const bp = Number(it?.basePrice ?? it?.price ?? 0);
+      return Math.max(0, +bp.toFixed(2));
+    }
 
     const p = Number(it?.price ?? 0);
     if (it?.isSubscription) {
@@ -1539,9 +1544,17 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             {roastCards.map((card, idx) => {
-              const base =
-                card.slug === "oak-and-copper" ? 27 : card.price ?? 22;
-              const sub = Math.round(base * 0.85 * 100) / 100; // 15% off
+             const base =
+             card.slug === "oak-and-copper"
+               ? 27
+               : Number(card.price ?? 22);
+           
+           const sub =
+             card.slug === "oak-and-copper"
+               ? base
+               : Math.round(base * 0.85 * 100) / 100;
+           
+
               const t = MOBILE_TUNE[card.slug] ?? DEFAULT_MOBILE_TUNE;
 
               return (
@@ -1646,7 +1659,9 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                       <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] bg-amber-400/10 text-amber-300 ring-1 ring-amber-400/30 whitespace-nowrap">
                         <span className="font-semibold">{fmt(sub)}</span>
                         <span className="opacity-140">
-                          Subscribe &amp; Save 15%
+                          {card.slug === "oak-and-copper"
+                            ? "Subscribe"
+                            : "Subscribe & Save 15%"}
                         </span>
                       </span>
                     </div>
@@ -1766,9 +1781,16 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             {roastCards.map((card) => {
-              const base =
-                card.slug === "oak-and-copper" ? 27 : card.price ?? 22;
-              const sub = Math.round(base * 0.85 * 100) / 100;
+             const base =
+             card.slug === "oak-and-copper"
+               ? 27
+               : Number(card.price ?? 22);
+           
+           const sub =
+             card.slug === "oak-and-copper"
+               ? base
+               : Math.round(base * 0.85 * 100) / 100;
+           
 
               return (
                 <Link
@@ -1829,7 +1851,9 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                       </span>
 
                       <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
-                        Subscribe &amp; Save 15%
+                        {card.slug === "oak-and-copper"
+                          ? "Subscribe"
+                          : "Subscribe & Save 15%"}
                         <span className="mx-1.5 opacity-60" aria-hidden>
                           •
                         </span>
@@ -3125,8 +3149,8 @@ function RoastDetailPage() {
     };
   }, []);
 
-  const basePrice = isOak ? 27 : card.price; // Oak & Copper single price
-  const discounted = Number((basePrice * 0.85).toFixed(2));
+  const basePrice = isOak ? 27 : card.price ?? 22;
+  const discounted = isOak ? basePrice : Number((basePrice * 0.85).toFixed(2));
 
   const addToChest = async () => {
     const n = Math.max(1, Math.min(99, Math.trunc(qty || 1)));
@@ -3199,7 +3223,7 @@ function RoastDetailPage() {
         title: `${card.title} (${variantLabel})`,
         // store both the regular one-time price and the active price
         basePrice,
-        price: purchaseMode === "sub" ? discounted : basePrice,
+        price: purchaseMode === "sub" ? discounted ?? basePrice : basePrice,
         beanType,
         purchaseMode,
         subEvery: purchaseMode === "sub" ? subEvery : undefined,
@@ -3513,28 +3537,40 @@ function RoastDetailPage() {
                           {/* top row: Join the Fleet + prices all inline */}
                           <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 w-full">
                             <span className="text-base text-neutral-100 font-medium leading-none">
-                              Join The Fleet
+                              {isOak ? "Join The Fleet" : "Join The Fleet"}
                             </span>
+                            {!isOak && (
+                              <div className="mt-2">
+                                <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-red-600 text-white tracking-tight">
+                                  SAVE 15%
+                                </span>
+                              </div>
+                            )}
 
                             <span className="text-sm text-neutral-300">
-                              <span className="line-through text-neutral-400 mr-2">
-                                {fmt(basePrice)}
-                              </span>
+                              {!isOak && (
+                                <span className="line-through text-neutral-400 mr-2">
+                                  {fmt(basePrice)}
+                                </span>
+                              )}
                               <span className="font-semibold text-amber-300">
                                 {fmt(discounted)}
                               </span>
+
                               <span className="text-xs text-neutral-500 ml-1">
                                 / 12oz bag
                               </span>
                             </span>
                           </div>
+{/* under-row: SAVE 15% pill */}
+{!isOak && (
+  <div className="mt-2">
+    <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-red-600 text-white tracking-tight">
+      SAVE 15%
+    </span>
+  </div>
+)}
 
-                          {/* under-row: SAVE 15% pill */}
-                          <div className="mt-2">
-                            <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-red-600 text-white tracking-tight">
-                              SAVE 15%
-                            </span>
-                          </div>
                         </div>
                       </div>
 
@@ -3724,12 +3760,15 @@ function RoastDetailPage() {
                         <div className="text-sm text-neutral-300">
                           {purchaseMode === "sub" ? (
                             <>
-                              <span className="line-through text-amber-300/80 mr-1">
-                                {fmt(basePrice)}
-                              </span>
+                              {!isOak && (
+                                <span className="line-through text-amber-300/80 mr-1">
+                                  {fmt(basePrice)}
+                                </span>
+                              )}
                               <span className="font-semibold text-amber-300">
                                 {fmt(discounted)}
                               </span>
+
                               <span className="text-xs text-neutral-400 ml-1">
                                 / bag
                               </span>
@@ -3909,7 +3948,7 @@ function RoastDetailPage() {
                         }
                         aria-pressed={purchaseMode === "sub"}
                       >
-                        Join the Fleet &amp; Save 15%
+                        {isOak ? "Join the Fleet" : "Join the Fleet & Save 15%"}
                       </button>
                     </div>
 
@@ -12179,7 +12218,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                           </div>
                         </div>
 
-                        {!isSub && (
+                        {!isSub && it?.slug !== "oak-and-copper" && (
                           <div className="mt-2">
                             {!showSubChooser[it.id] ? (
                               <button
@@ -12929,7 +12968,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                         </div>
 
                         {/* JOIN THE FLEET — 14/30/60 selector */}
-                        {!isSub && (
+                        {!isSub && it?.slug !== "oak-and-copper" && (
                           <div className="mt-2">
                             {!showSubChooser[it.id] ? (
                               <button

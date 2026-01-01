@@ -8817,46 +8817,37 @@ function SubscribeManagePage({
     const fd = new FormData(e.currentTarget);
     const name = String(fd.get("name") || "");
     const email = String(fd.get("email") || "");
-    const password = String(fd.get("password") || "");
 
     try {
-      if (!name || !emailOk(email) || !password) {
-        setError("Fill all fields.");
+      if (!name || !emailOk(email)) {
+        setError("Enter your name and a valid email.");
         return;
       }
 
       const resp = await fetch("/api/account/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ email, name }),
       });
 
       const text = await resp.text();
-      console.log("[account-register] raw response:", text);
-
       let data: any = {};
       try {
         data = text ? JSON.parse(text) : {};
-      } catch {
-        setError("Register server returned invalid response.");
-        return;
-      }
+      } catch {}
 
       if (!resp.ok) {
-        setError(data?.error || "Registration failed.");
+        setError(data?.error || "Account creation failed.");
         return;
       }
 
-      // data: { accessToken, user }
-      localStorage.setItem("oi_user", JSON.stringify(data.user));
-      localStorage.setItem("oi_token", data.accessToken);
-
-      setUser(data.user);
-      setTab("overview");
-
       window.dispatchEvent(
-        new CustomEvent("flash", { detail: "Account created." })
+        new CustomEvent("flash", {
+          detail: "Check your email to activate your account.",
+        })
       );
+
+      e.currentTarget.reset();
     } finally {
       setLoading(false);
     }
@@ -9062,10 +9053,7 @@ function SubscribeManagePage({
             </form>{" "}
             {/* Register */}
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                window.location.href = `https://${SHOP_DOMAIN}/account/login`;
-              }}
+              onSubmit={handleRegister}
               className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
             >
               <div className="text-lg font-semibold text-amber-300 mb-3">

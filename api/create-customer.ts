@@ -1,7 +1,11 @@
 export default async function handler(req, res) {
+  const { email, name } = req.body || {};
+
+  const [firstName, ...rest] = (name || "").trim().split(" ");
+  const lastName = rest.join(" ");
+
   if (req.method !== "POST") return res.status(405).end();
 
-  const { email } = req.body || {};
   if (!email)
     return res.status(400).json({ success: false, error: "Email required" });
 
@@ -17,12 +21,12 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           customer: {
             email,
-            // marketing opt-in
+            first_name: firstName || undefined,
+            last_name: lastName || undefined,
             accepts_marketing: true,
-            // optional: tag these signups for segmentation
             tags: "promo_20_modal",
-            // optional: helps email deliverability/segmentation
             marketing_opt_in_level: "single_opt_in",
+            send_email_invite: true,
           },
         }),
       }
@@ -39,22 +43,6 @@ export default async function handler(req, res) {
       return res
         .status(400)
         .json({ success: false, error: JSON.stringify(data) });
-    }
-
-    // 🔑 NEW: send Shopify activation email
-    const customerId = data?.customer?.id;
-
-    if (customerId) {
-      await fetch(
-        `https://${process.env.SHOPIFY_DOMAIN}/admin/api/2023-10/customers/${customerId}/send_invite.json`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_TOKEN,
-          },
-        }
-      );
     }
 
     return res.status(200).json({ success: true });

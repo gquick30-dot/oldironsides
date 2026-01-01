@@ -1,40 +1,22 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const SHOPIFY_DOMAIN = process.env.VITE_SHOPIFY_STORE_DOMAIN;
-const API_VERSION = process.env.VITE_SHOPIFY_API_VERSION || "2024-04";
-const STOREFRONT_TOKEN = process.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
-
-const STOREFRONT_URL = `https://${SHOPIFY_DOMAIN}/api/${API_VERSION}/graphql.json`;
-
-const CUSTOMER_CREATE_MUTATION = `
-  mutation customerCreate($input: CustomerCreateInput!) {
-    customerCreate(input: $input) {
-      customer {
-        id
-      }
-      customerUserErrors {
-        field
-        message
-      }
-    }
-  }
-`;
+const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN;
+const ADMIN_TOKEN = process.env.SHOPIFY_ADMIN_TOKEN;
+const API_VERSION = "2023-10";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== "POST") {
+  if (req.method !== "POST")
     return res.status(405).json({ error: "Method not allowed" });
-  }
 
-  if (!STOREFRONT_URL || !STOREFRONT_TOKEN) {
+  if (!SHOPIFY_DOMAIN || !ADMIN_TOKEN) {
     return res
       .status(500)
-      .json({ error: "Missing Shopify storefront env vars on server." });
+      .json({ error: "Missing Shopify admin env vars on server." });
   }
 
   try {
     const body =
       typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
-
     const name = String(body.name || "").trim();
     const email = String(body.email || "").trim();
 
@@ -45,38 +27,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const [firstName, ...rest] = name.split(" ").filter(Boolean);
     const lastName = rest.join(" ");
 
-    const createResp = await fetch(STOREFRONT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Shopify-Storefront-Access-Token": STOREFRONT_TOKEN,
-      },
-      body: JSON.stringify({
-        query: CUSTOMER_CREATE_MUTATION,
-        variables: {
-          input: {
-            email,
-            firstName: firstName || undefined,
-            lastName: lastName || undefined,
-          },
+    const r = await fetch(
+      `https://${SHOPIFY_DOMAIN}/admin/api/${API_VERSION}/customers.json`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Shopify-Access-Token": ADMIN_TOKEN,
         },
-      }),
-    });
+        body: JSON.stringify({
+          customer: {
+            email,
+            first_name: firstName || undefined,
+            last_name: lastName || undefined,
+            accepts_marketing: true,
+            tags: "promo_20_modal",
+            marketing_opt_in_level: "single_opt_in",
+            send_email_invite: true,
+          },
+        }),
+      }
+    );
 
-    const createJson = await createResp.json();
-    const result = createJson?.data?.customerCreate;
-    const errors = result?.customerUserErrors ?? [];
+    const data = await r.json();
 
-    if (errors.length) {
-      return res.status(400).json({
-        error: errors[0]?.message || "Registration failed.",
-      });
+    // customer already exists
+    if (!r.ok) {
+      if (r.status === 422) {
+        return res.status(200).json({ ok: true, note: "already_exists" });
+      }
+      return res.status(400).json({ error: data });
     }
 
-    // ✅ Shopify sends activation email automatically
     return res.status(200).json({ ok: true });
-  } catch (err) {
+  } catch (err: any) {
     console.error("account-register error:", err);
-    return res.status(500).json({ error: "Unexpected server error." });
+    return res
+      .status(500)
+      .json({ error: err?.message || "Unexpected server error." });
   }
 }

@@ -8129,8 +8129,16 @@ function CartPage() {
         const sf = await getCart(id);
         const qty = Number(sf?.totalQuantity ?? 0);
 
-        if (!cancelled && qty === 0 && cart.length > 0) {
+        let started = false;
+        try {
+          started = localStorage.getItem("oi_checkout_started") === "1";
+        } catch {}
+
+        if (!cancelled && started && qty === 0 && cart.length > 0) {
           clear();
+          try {
+            localStorage.removeItem("oi_checkout_started");
+          } catch {}
         }
       } catch {
         // ignore
@@ -8265,16 +8273,9 @@ function CartPage() {
         );
         return;
       }
-
-      // clear local Chest before sending to Shopify checkout
       try {
-        clear(); // from useCart()
-        localStorage.removeItem("oi_cart");
-        localStorage.removeItem("oi_cart_v1");
-        localStorage.removeItem("oi_cart_v2");
-      } catch {
-        /* ignore */
-      }
+        localStorage.setItem("oi_checkout_started", "1");
+      } catch {}
 
       window.location.assign(url);
     } catch (e) {

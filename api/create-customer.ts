@@ -31,13 +31,30 @@ export default async function handler(req, res) {
     const data = await r.json();
 
     // If customer already exists, Shopify returns 422 with error.
-    // Treat that as success (we still got the email in the system).
+    // Treat as success but DO NOT resend invite (prevents spam).
     if (!r.ok) {
-      const msg = JSON.stringify(data);
       if (r.status === 422) {
         return res.status(200).json({ success: true, note: "already_exists" });
       }
-      return res.status(400).json({ success: false, error: msg });
+      return res
+        .status(400)
+        .json({ success: false, error: JSON.stringify(data) });
+    }
+
+    // 🔑 NEW: send Shopify activation email
+    const customerId = data?.customer?.id;
+
+    if (customerId) {
+      await fetch(
+        `https://${process.env.SHOPIFY_DOMAIN}/admin/api/2023-10/customers/${customerId}/send_invite.json`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_TOKEN,
+          },
+        }
+      );
     }
 
     return res.status(200).json({ success: true });

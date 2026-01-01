@@ -10278,9 +10278,18 @@ function PromoSubscribeModal() {
       g.__promo.readyAt = nowMs() + OPEN_DELAY_MS;
 
       const cooldownUntil = getCooldownUntil();
+      const isLoggedIn = (() => {
+        try {
+          return !!localStorage.getItem("oi_user");
+        } catch {
+          return false;
+        }
+      })();
+
       const canAuto = TEST_FORCE_OPEN
         ? true
-        : !isSubscribed() && nowMs() >= cooldownUntil;
+        : !isSubscribed() && !isLoggedIn && nowMs() >= cooldownUntil;
+
       if (!canAuto) return;
 
       if (!g.__promo.entryTimer) {

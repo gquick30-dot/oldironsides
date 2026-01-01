@@ -9064,7 +9064,7 @@ function SubscribeManagePage({
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                window.location.href = "/account/login";
+                window.location.href = `https://${SHOP_DOMAIN}/account/login`;
               }}
               className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
             >

@@ -70,7 +70,12 @@ fragment CartBasics on Cart {
   id
   checkoutUrl
   totalQuantity
+  discountCodes {
+    code
+    applicable
+  }
   lines(first: 50) {
+
     edges {
       node {
         id
@@ -349,4 +354,42 @@ export function getSellingPlanIds(product: any): string[] {
       g?.node?.sellingPlans?.edges?.map((e: any) => e?.node?.id)
     ) || []
   );
+}
+export async function cartDiscountCodesUpdate(params: {
+  cartId: string;
+  discountCodes: string[];
+}) {
+  const mutation = /* GraphQL */ `
+    ${CART_FRAGMENT}
+    mutation CartDiscountCodesUpdate($cartId: ID!, $discountCodes: [String!]!) {
+      cartDiscountCodesUpdate(cartId: $cartId, discountCodes: $discountCodes) {
+        cart {
+          ...CartBasics
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const data = await sf<{
+    cartDiscountCodesUpdate: { cart: Cart | null; userErrors: any[] };
+  }>(mutation, params);
+
+  if (data.cartDiscountCodesUpdate.userErrors?.length) {
+    // do not block checkout for promo issues
+    console.warn(
+      "[Shopify] cartDiscountCodesUpdate errors:",
+      data.cartDiscountCodesUpdate.userErrors
+    );
+  }
+
+  const cart = data.cartDiscountCodesUpdate.cart;
+  if (cart?.id) {
+    saveCartLocal({ id: cart.id, checkoutUrl: cart.checkoutUrl });
+  }
+
+  return cart;
 }

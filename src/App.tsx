@@ -8,7 +8,9 @@ import {
   cartLinesRemove,
   getCart,
   cartCreate,
+  cartDiscountCodesUpdate,
 } from "./lib/shopify";
+
 import React, {
   useState,
   useMemo,
@@ -8239,7 +8241,17 @@ function CartPage() {
         });
       }
       // 5) Fresh checkout url and go
+      // Apply promo code if possible (safe even if not applicable)
+      try {
+        await cartDiscountCodesUpdate({
+          cartId,
+          discountCodes: ["IRONSIDES20"],
+        });
+      } catch {}
+
+      // Re-fetch cart for checkoutUrl
       const fresh = await getCart(cartId);
+
       const url: string | undefined = fresh?.checkoutUrl;
       if (
         !url ||
@@ -11847,6 +11859,15 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
         });
       }
 
+      // Apply promo code if possible (safe even if not applicable)
+      try {
+        await cartDiscountCodesUpdate({
+          cartId,
+          discountCodes: ["IRONSIDES20"],
+        });
+      } catch {}
+
+      // Re-fetch cart for checkoutUrl
       const fresh = await getCart(cartId);
 
       const url: string | undefined = fresh?.checkoutUrl;
@@ -12575,6 +12596,15 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
         });
       }
 
+      // Apply promo code if possible (safe even if not applicable)
+      try {
+        await cartDiscountCodesUpdate({
+          cartId,
+          discountCodes: ["IRONSIDES20"],
+        });
+      } catch {}
+
+      // Re-fetch cart for checkoutUrl
       const fresh = await getCart(cartId);
 
       const url: string | undefined = fresh?.checkoutUrl;

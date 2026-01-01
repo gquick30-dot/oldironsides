@@ -8847,7 +8847,7 @@ function SubscribeManagePage({
         })
       );
 
-      e.currentTarget.reset();
+      (e.target as HTMLFormElement)?.reset();
     } finally {
       setLoading(false);
     }

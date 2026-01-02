@@ -4331,7 +4331,6 @@ function RoastCoffeeSection({
       return null;
   }
 }
-
 /* ================== SHARED PARTS ================== */
 function CareCard() {
   return (
@@ -4347,24 +4346,31 @@ function CareCard() {
         </p>
 
         <ol className="mt-3 space-y-2 text-[0.9rem] text-neutral-300 leading-snug list-decimal pl-5">
-          <li>Freeze unopened 12-oz bags inside Ziplocks or vacuum-seal.</li>
+          <li>Freeze unopened 12-oz bags inside Ziplocks or vacuum-sealed.</li>
           <li>
-            When ready, let one bag reach room temperature{" "}
+            When ready, let the bag reach room temperature{" "}
             <span className="italic">before opening</span>.
           </li>
           <li>
-            After opening, store airtight at room temp and use within{" "}
-            <span className="font-semibold text-amber-300">7–10 days</span>. Do
-            not refreeze.
+            <span className="font-semibold text-amber-300">Whole bean:</span>{" "}
+            Store airtight at room temperature. Best flavor within{" "}
+            <span className="font-semibold">2-4 weeks</span>.
           </li>
+          <li>
+            <span className="font-semibold text-amber-300">Ground:</span> Store
+            airtight at room temperature. Best within{" "}
+            <span className="font-semibold">7-10 days</span>.
+          </li>
+          <li>Do not refreeze after opening.</li>
         </ol>
 
         <div className="mt-3 text-[0.9rem] text-amber-300 text-center leading-snug">
-          These steps keep your roast tasting fresh, even months later.
+          Follow these steps and your coffee stays fresh for weeks, even months
+          when frozen.
         </div>
       </aside>
 
-      {/* DESKTOP VERSION (UNCHANGED LAYOUT / SIZES) */}
+      {/* DESKTOP VERSION */}
       <aside className="hidden md:block w-[110%] rounded-xl border border-amber-400/60 bg-black/70 px-5 py-5 md:px-6 md:py-8 shadow-md shadow-amber-400/10">
         <h3 className="m-0 text-center text-[1.15rem] md:text-[1.294rem] font-bold text-amber-300 tracking-wide">
           COFFEE STORAGE &amp; FRESHNESS
@@ -4375,20 +4381,27 @@ function CareCard() {
         </p>
 
         <ol className="mt-3 space-y-2 text-[1.006rem] text-neutral-300 list-decimal pl-5">
-          <li>Freeze unopened 12-oz bags inside Ziplocks or vacuum-seal.</li>
+          <li>Freeze unopened 12-oz bags inside Ziplocks or vacuum-sealed.</li>
           <li>
-            When ready, let one bag reach room temperature{" "}
+            When ready, let the bag reach room temperature{" "}
             <span className="italic">before opening</span>.
           </li>
           <li>
-            After opening, store airtight at room temp and use within{" "}
-            <span className="font-semibold text-amber-300">7–10 days</span>. Do
-            not refreeze.
+            <span className="font-semibold text-amber-300">Whole bean:</span>{" "}
+            Store airtight at room temperature. Best flavor within{" "}
+            <span className="font-semibold">2-4 weeks</span>.
           </li>
+          <li>
+            <span className="font-semibold text-amber-300">Ground:</span> Store
+            airtight at room temperature. Best within{" "}
+            <span className="font-semibold">7-10 days</span>.
+          </li>
+          <li>Do not refreeze after opening.</li>
         </ol>
 
         <div className="mt-3 text-m md:text-m text-amber-300 text-center">
-          These steps keep your roast tasting fresh, even months later.
+          Follow these steps and your coffee stays fresh for weeks, even months
+          when frozen.
         </div>
       </aside>
     </>

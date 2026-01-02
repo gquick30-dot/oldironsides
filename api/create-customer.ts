@@ -26,7 +26,7 @@ export default async function handler(req, res) {
             accepts_marketing: true,
             tags: "promo_20_modal",
             marketing_opt_in_level: "single_opt_in",
-            send_email_invite: true,
+            send_email_invite: false,
           },
         }),
       }

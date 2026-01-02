@@ -933,16 +933,58 @@ function IntroRow({
     </div>
   );
 }
+// ===== Shared promo submit (used by every Ring That Bell box) =====
+const KEY_SUB = "promo_subscribed";
+const COOKIE_SUB = "promo_subscribed";
+
+const setCookieDays = (name: string, value: string, days: number) => {
+  const maxAge = Math.max(0, Math.floor(days * 86400));
+  const secure = location.protocol === "https:" ? "; Secure" : "";
+  document.cookie = `${name}=${encodeURIComponent(
+    value
+  )}; Path=/; SameSite=Lax; Max-Age=${maxAge}${secure}`;
+};
+
+const submitPromoEmail = async (email: string) => {
+  if (!emailOk(email)) {
+    flash("Enter a valid email.");
+    return false;
+  }
+
+  // Send email to Shopify via Vercel API (same as your modal)
+  try {
+    await fetch("/api/create-customer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+  } catch {
+    // do not block conversion
+  }
+
+  // Mark as subscribed locally (same as your modal)
+  localStorage.setItem(KEY_SUB, "1");
+  setCookieDays(COOKIE_SUB, "1", 365);
+
+  // Show the code (same outcome as the modal)
+  window.dispatchEvent(
+    new CustomEvent("flash", {
+      detail: "Welcome aboard! Your 20% code is IRONSIDES20",
+    })
+  );
+
+  return true;
+};
 
 function RingThatBellBox() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const submit = (e: any) => {
+  const submit = async (e: any) => {
     e.preventDefault();
-    if (!emailOk(email)) return flash("Enter a valid email.");
-
-    setSubmitted(true);
+    const ok = await submitPromoEmail(email);
+    if (ok) setSubmitted(true);
   };
+
   return (
     <section className="py-10 md:py-14 border-b border-neutral-800">
       <Container>
@@ -989,7 +1031,7 @@ function RingThatBellBox() {
 
           {submitted && (
             <p className="mt-3 text-sm text-emerald-400">
-              Welcome aboard! Your discount code is on it's way!
+              Welcome aboard! Your discount is applied at checkout.
             </p>
           )}
         </div>
@@ -1095,7 +1137,7 @@ function MegaSubscribeBox({
 
             {done && (
               <p className="mt-1 text-emerald-400" style={{ fontSize: 10.5 }}>
-                Welcome aboard! Your discount is on the way!
+                Welcome aboard! Your discount is applied at checkout.
               </p>
             )}
           </div>
@@ -1544,16 +1586,13 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             {roastCards.map((card, idx) => {
-             const base =
-             card.slug === "oak-and-copper"
-               ? 27
-               : Number(card.price ?? 22);
-           
-           const sub =
-             card.slug === "oak-and-copper"
-               ? base
-               : Math.round(base * 0.85 * 100) / 100;
-           
+              const base =
+                card.slug === "oak-and-copper" ? 27 : Number(card.price ?? 22);
+
+              const sub =
+                card.slug === "oak-and-copper"
+                  ? base
+                  : Math.round(base * 0.85 * 100) / 100;
 
               const t = MOBILE_TUNE[card.slug] ?? DEFAULT_MOBILE_TUNE;
 
@@ -1781,16 +1820,13 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             {roastCards.map((card) => {
-             const base =
-             card.slug === "oak-and-copper"
-               ? 27
-               : Number(card.price ?? 22);
-           
-           const sub =
-             card.slug === "oak-and-copper"
-               ? base
-               : Math.round(base * 0.85 * 100) / 100;
-           
+              const base =
+                card.slug === "oak-and-copper" ? 27 : Number(card.price ?? 22);
+
+              const sub =
+                card.slug === "oak-and-copper"
+                  ? base
+                  : Math.round(base * 0.85 * 100) / 100;
 
               return (
                 <Link
@@ -3562,15 +3598,14 @@ function RoastDetailPage() {
                               </span>
                             </span>
                           </div>
-{/* under-row: SAVE 15% pill */}
-{!isOak && (
-  <div className="mt-2">
-    <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-red-600 text-white tracking-tight">
-      SAVE 15%
-    </span>
-  </div>
-)}
-
+                          {/* under-row: SAVE 15% pill */}
+                          {!isOak && (
+                            <div className="mt-2">
+                              <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-red-600 text-white tracking-tight">
+                                SAVE 15%
+                              </span>
+                            </div>
+                          )}
                         </div>
                       </div>
 
@@ -6748,7 +6783,7 @@ function ContactPage() {
 
             {submitted && (
               <p className="mt-2 text-sm text-emerald-400">
-                Welcome aboard! Your discount is on the way!
+                Welcome aboard! Your discount is applied at checkout.
               </p>
             )}
           </div>
@@ -8325,16 +8360,13 @@ function CartPage() {
     }
   };
 
-  const onSbSubmit = (e: React.FormEvent) => {
+  const onSbSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!emailOk(sbEmail)) return alert("Enter a valid email.");
-    setSbDone(true);
-    window.dispatchEvent(
-      new CustomEvent("flash", {
-        detail: "Welcome aboard!  Your discount is on the way!",
-      })
-    );
-    setSbEmail("");
+    const ok = await submitPromoEmail(sbEmail);
+    if (ok) {
+      setSbDone(true);
+      setSbEmail("");
+    }
   };
 
   return (
@@ -8577,7 +8609,7 @@ function CartPage() {
                       value={sbEmail}
                       onChange={(e) => setSbEmail(e.target.value)}
                       placeholder="Enter your email"
-                      className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                      className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
                     />
                     <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
                       GET 20% OFF
@@ -8596,7 +8628,7 @@ function CartPage() {
 
                   {sbDone && (
                     <p className="mt-3 text-sm text-emerald-400">
-                      Welcome aboard! Your discount is on the way!
+                      Welcome aboard! Your discount is applied at checkout.
                     </p>
                   )}
                 </div>
@@ -10464,7 +10496,6 @@ function PromoSubscribeModal() {
                   <p className="text-neutral-300 mb-3 md:mb-5 text-[14px] leading-snug md:text-[1.5625rem] md:leading-normal md:whitespace-nowrap">
                     Get 20% off your first freshly roasted coffee order.
                     <br className="hidden md:block" />
-                    Join the fleet and save 15% off recurring orders.
                   </p>
 
                   {/* === THIS WHOLE WRAPPER SWAPPED === */}
@@ -10475,7 +10506,7 @@ function PromoSubscribeModal() {
                         <>
                           {/* Full-width amber banner fixed to the top */}
                           <div className="fixed inset-x-0 top-0 z-[2147483647] bg-amber-400 text-neutral-900 text-center font-semibold px-4 py-3 shadow-lg">
-                            Welcome aboard! Your discount code is IRONSIDES20
+                            Welcome aboard! Your discount applied at checkout
                           </div>
 
                           {/* Spacer so content below doesn’t jump if visible briefly */}
@@ -10498,7 +10529,8 @@ function PromoSubscribeModal() {
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
                               placeholder="Enter your email"
-                              className="rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[16px] focus:outline-none focus:ring-2 focus:ring-amber-400 md:px-5 md:py-3 md:text-[1.25rem] md:flex-none md:w-[50%]"
+                              className="rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[16px] text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-400 md:px-5 md:py-3 md:text-[1.25rem] md:flex-none md:w-[50%]"
+                              style={{ color: "#ffffff" }}
                             />
                             <button
                               type="submit"
@@ -10547,7 +10579,8 @@ function PromoSubscribeModal() {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="Enter your email"
-                          className="rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[16px] focus:outline-none focus:ring-2 focus:ring-amber-400 md:px-5 md:py-3 md:text-[1.25rem] md:flex-none md:w-[50%]"
+                          className="rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[16px] text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-400 md:px-5 md:py-3 md:text-[1.25rem] md:flex-none md:w-[50%]"
+                          style={{ color: "#ffffff" }}
                         />
                         <button
                           type="submit"
@@ -10735,11 +10768,12 @@ function Layout() {
   // Inline subscribe state for Origins mega panel
   const [mmEmail, setMmEmail] = useState("");
   const [mmDone, setMmDone] = useState(false);
-  const submitMegaSubscribe = (e: any) => {
+  const submitMegaSubscribe = async (e: any) => {
     e.preventDefault();
-    if (!emailOk(mmEmail)) return alert("Enter a valid email.");
-    setMmDone(true);
+    const ok = await submitPromoEmail(mmEmail);
+    if (ok) setMmDone(true);
   };
+
   // Hover-intent helpers so the mega menu doesn't close while moving into it or typing
   const closeTimer = React.useRef<number | null>(null);
   const scheduleClose = React.useCallback(() => {

@@ -974,7 +974,8 @@ const submitPromoEmail = async (email: string) => {
   );
 
   return true;
-};function BellRinger({
+};
+function BellRinger({
   iconClassName,
   soundSrc = "/ship-bell.mp3",
   ariaLabel = "Ring the bell",
@@ -1112,7 +1113,6 @@ const submitPromoEmail = async (email: string) => {
     </>
   );
 }
-
 
 function RingThatBellBox() {
   const [email, setEmail] = useState("");
@@ -8452,14 +8452,21 @@ function CartPage() {
           ...(line.sellingPlanId ? { sellingPlanId: line.sellingPlanId } : {}),
         });
       }
-      // 5) Fresh checkout url and go
-      // Apply promo code if possible (safe even if not applicable)
-      try {
-        await cartDiscountCodesUpdate({
-          cartId,
-          discountCodes: ["IRONSIDES20"],
-        });
-      } catch {}
+      // Apply promo code ONLY if they submitted the promo email box
+      const promoOk =
+        (typeof window !== "undefined" &&
+          (localStorage.getItem("promo_subscribed") === "1" ||
+            document.cookie.includes("promo_subscribed=1"))) ||
+        false;
+
+      if (promoOk) {
+        try {
+          await cartDiscountCodesUpdate({
+            cartId,
+            discountCodes: ["IRONSIDES20"],
+          });
+        } catch {}
+      }
 
       // Re-fetch cart for checkoutUrl
       const fresh = await getCart(cartId);
@@ -10633,14 +10640,13 @@ function PromoSubscribeModal() {
               <div className="h-full w-full flex flex-col justify-between text-center">
                 {/* Title + copy + form */}
                 <div>
-                 <div className="flex flex-col items-center justify-center gap-2 md:gap-3 mb-2 md:mb-4">
-  <BellRinger iconClassName="h-10 w-10 md:h-14 md:w-14 text-amber-300" />
+                  <div className="flex flex-col items-center justify-center gap-2 md:gap-3 mb-2 md:mb-4">
+                    <BellRinger iconClassName="h-10 w-10 md:h-14 md:w-14 text-amber-300" />
 
-  <h3 className="font-extrabold text-amber-300 text-[31px] leading-tight md:text-[3.25rem]">
-    RING THAT BELL
-  </h3>
-</div>
-
+                    <h3 className="font-extrabold text-amber-300 text-[31px] leading-tight md:text-[3.25rem]">
+                      RING THAT BELL
+                    </h3>
+                  </div>
 
                   <p className="text-neutral-300 mb-3 md:mb-5 text-[14px] leading-snug md:text-[1.5625rem] md:leading-normal md:whitespace-nowrap">
                     Get 20% off your first freshly roasted coffee order.
@@ -12076,13 +12082,21 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
         });
       }
 
-      // Apply promo code if possible (safe even if not applicable)
-      try {
-        await cartDiscountCodesUpdate({
-          cartId,
-          discountCodes: ["IRONSIDES20"],
-        });
-      } catch {}
+      // Apply promo code ONLY if they submitted the promo email box
+      const promoOk =
+        (typeof window !== "undefined" &&
+          (localStorage.getItem("promo_subscribed") === "1" ||
+            document.cookie.includes("promo_subscribed=1"))) ||
+        false;
+
+      if (promoOk) {
+        try {
+          await cartDiscountCodesUpdate({
+            cartId,
+            discountCodes: ["IRONSIDES20"],
+          });
+        } catch {}
+      }
 
       // Re-fetch cart for checkoutUrl
       const fresh = await getCart(cartId);
@@ -12813,13 +12827,21 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
         });
       }
 
-      // Apply promo code if possible (safe even if not applicable)
-      try {
-        await cartDiscountCodesUpdate({
-          cartId,
-          discountCodes: ["IRONSIDES20"],
-        });
-      } catch {}
+      // Apply promo code ONLY if they submitted the promo email box
+      const promoOk =
+        (typeof window !== "undefined" &&
+          (localStorage.getItem("promo_subscribed") === "1" ||
+            document.cookie.includes("promo_subscribed=1"))) ||
+        false;
+
+      if (promoOk) {
+        try {
+          await cartDiscountCodesUpdate({
+            cartId,
+            discountCodes: ["IRONSIDES20"],
+          });
+        } catch {}
+      }
 
       // Re-fetch cart for checkoutUrl
       const fresh = await getCart(cartId);

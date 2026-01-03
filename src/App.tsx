@@ -218,12 +218,12 @@ const Instagram = (p?: any) => (
     <circle cx="17.5" cy="6.5" r="1" />
   </svg>
 );
-const Youtube = (p?: any) => (
+const Facebook = (p?: any) => (
   <svg viewBox="0 0 24 24" {...iconBase(p)}>
-    <path d="M22.54 6.42A2.78 2.78 0 0020.77 4.7C19.2 4.25 12 4.25 12 4.25s-7.2 0-8.77.45A2.78 2.78 0 001.46 6.42 29.94 29.94 0 001 12a29.94 29.94 0 00.46 5.58 2.78 2.78 0 001.77 1.72C4.8 19.75 12 19.75 12 19.75s7.2 0 8.77-.45a2.78 2.78 0 001.77-1.72A29.94 29.94 0 0023 12a29.94 29.94 0 00-.46-5.58z" />
-    <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
+    <path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H7v3h3v6h3v-6h3l1-3h-4v-2c0-.6.4-1 1-1z" />
   </svg>
 );
+
 const Shirt = (p?: any) => (
   <svg viewBox="0 0 24 24" {...iconBase(p)}>
     <path d="M16 3l-4 2-4-2-3 3 3 3v10h8V9l3-3z" />
@@ -974,7 +974,145 @@ const submitPromoEmail = async (email: string) => {
   );
 
   return true;
-};
+};function BellRinger({
+  iconClassName,
+  soundSrc = "/ship-bell.mp3",
+  ariaLabel = "Ring the bell",
+}: {
+  iconClassName: string;
+  soundSrc?: string;
+  ariaLabel?: string;
+}) {
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+  const [ringing, setRinging] = React.useState(false);
+
+  const ring = () => {
+    setRinging(true);
+    window.setTimeout(() => setRinging(false), 750);
+
+    const a = audioRef.current;
+    if (a) {
+      a.currentTime = 0;
+      a.play().catch(() => {});
+    }
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        aria-label={ariaLabel}
+        onClick={ring}
+        data-ring={ringing ? "1" : "0"}
+        className={[
+          "bell-btn inline-flex items-center justify-center rounded-full p-1 select-none",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400",
+          "hover:[animation:bellSway_450ms_ease-in-out]",
+          ringing ? "[animation:bellRing_750ms_ease-in-out]" : "",
+        ].join(" ")}
+      >
+        <span className="bell-wrap" aria-hidden="true">
+          {/* LEFT: big arc + small arc */}
+          <span className="vibes vibes-l">
+            <svg viewBox="0 0 24 24" className="vibe-svg">
+              {/* big */}
+              <path d="M19 4c-6 5-6 11 0 16" />
+              {/* small (closer to bell) */}
+              <path d="M16 6c-4 3-4 9 0 12" />
+            </svg>
+          </span>
+
+          <Bell className={iconClassName} />
+
+          {/* RIGHT: big arc + small arc */}
+          <span className="vibes vibes-r">
+            <svg viewBox="0 0 24 24" className="vibe-svg">
+              {/* big */}
+              <path d="M5 4c6 5 6 11 0 16" />
+              {/* small (closer to bell) */}
+              <path d="M8 6c4 3 4 9 0 12" />
+            </svg>
+          </span>
+        </span>
+
+        <audio ref={audioRef} preload="auto" src={soundSrc} />
+      </button>
+
+      <style>{`
+        .bell-wrap {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* always-on vibes */
+        .vibes {
+          position: absolute;
+          top: 50%;
+          width: 18px;
+          height: 26px;
+          transform: translateY(-50%);
+          opacity: 0.5;
+          pointer-events: none;
+          animation: vibesIdle 1600ms ease-in-out infinite;
+        }
+
+        /* keep them off the circle so they read as vibration, not ears */
+        .vibes-l { left: -24px; }
+        .vibes-r { right: -24px; }
+        .vibes-r { animation-delay: 160ms; }
+
+        .vibe-svg {
+          width: 100%;
+          height: 100%;
+          fill: none;
+          stroke: rgba(252, 211, 77, 0.9);
+          stroke-width: 2;
+          stroke-linecap: round;
+        }
+
+        /* stronger when clicked */
+        .bell-btn[data-ring="1"] .vibes {
+          animation: vibesHit 750ms ease-in-out;
+          opacity: 0.9;
+        }
+
+        @keyframes vibesIdle {
+          0%   { opacity: 0.35; transform: translateY(-50%) scale(0.98); }
+          50%  { opacity: 0.60; transform: translateY(-50%) scale(1.03); }
+          100% { opacity: 0.35; transform: translateY(-50%) scale(0.98); }
+        }
+
+        @keyframes vibesHit {
+          0%   { opacity: 0.40; transform: translateY(-50%) scale(0.92); }
+          18%  { opacity: 1.00; transform: translateY(-50%) scale(1.10); }
+          60%  { opacity: 0.85; transform: translateY(-50%) scale(1.03); }
+          100% { opacity: 0.60; transform: translateY(-50%) scale(1.00); }
+        }
+
+        @keyframes bellSway {
+          0% { transform: rotate(0deg); }
+          50% { transform: rotate(-8deg); }
+          100% { transform: rotate(0deg); }
+        }
+
+        @keyframes bellRing {
+          0% { transform: rotate(0deg); }
+          12% { transform: rotate(-18deg); }
+          24% { transform: rotate(14deg); }
+          36% { transform: rotate(-12deg); }
+          48% { transform: rotate(10deg); }
+          60% { transform: rotate(-7deg); }
+          72% { transform: rotate(5deg); }
+          84% { transform: rotate(-3deg); }
+          100% { transform: rotate(0deg); }
+        }
+      `}</style>
+    </>
+  );
+}
+
 
 function RingThatBellBox() {
   const [email, setEmail] = useState("");
@@ -990,7 +1128,8 @@ function RingThatBellBox() {
       <Container>
         <div className="max-w-xl mx-auto rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
           <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 mb-4">
-            <Bell className="h-9 w-9 sm:h-11 sm:w-11 text-amber-300" />
+            <BellRinger iconClassName="h-9 w-9 sm:h-11 sm:w-11 text-amber-300" />
+
             <h3 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-amber-300">
               RING THAT BELL
             </h3>
@@ -1084,7 +1223,8 @@ function MegaSubscribeBox({
           <div className="p-2 text-center">
             {/* Icon inline with heading */}
             <div className="flex items-center justify-center gap-1 mb-1">
-              <Bell className="h-3.5 w-3.5 text-amber-300" />
+              <BellRinger iconClassName="h-3.5 w-3.5 text-amber-300" />
+
               <h3
                 className="font-extrabold text-amber-300"
                 style={{ fontSize: 13, lineHeight: 1.05, letterSpacing: 0.2 }}
@@ -2318,38 +2458,34 @@ function HomePage() {
                   HQ@oldironsidescoffee.org
                 </span>
               </div>
-              <div className="mt-2 flex items-center gap-3">
-                <Phone className="h-5 w-5 text-amber-300" />
-                <span className="text-neutral-300">(—) ——— ————</span>
-              </div>
+
               <div className="mt-2 text-neutral-400">
                 6 Liberty Square #2564, Boston, MA 02109
               </div>
             </div>
             <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
               <h4 className="font-semibold text-amber-300">Follow Us</h4>
-              <div className="mt-3 flex gap-4 text-neutral-300">
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-2 hover:text-amber-300"
+
+              <div className="mt-3 flex gap-6 text-amber-300">
+                <a
+                  href="https://instagram.com/oldironsidescoffee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-amber-200 transition"
                 >
                   <Instagram className="h-5 w-5" />
                   Instagram
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-2 hover:text-amber-300"
+                </a>
+
+                <a
+                  href="https://facebook.com/oldironsidescoffee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-amber-200 transition"
                 >
-                  <Youtube className="h-5 w-5" />
-                  YouTube
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-2 hover:text-amber-300"
-                >
-                  <span className="h-5 w-5 grid place-content-center">f</span>
+                  <Facebook className="h-5 w-5" />
                   Facebook
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -6752,10 +6888,7 @@ function ContactPage() {
                 HQ@oldironsidescoffee.org
               </span>
             </div>
-            <div className="mt-2 flex items-center gap-3">
-              <Phone className="h-5 w-5 text-amber-300" />
-              <span className="text-neutral-300">(—) ——— ————</span>
-            </div>
+
             <div className="mt-2 text-neutral-400">
               6 Liberty Square #2564, Boston, MA 02109
             </div>
@@ -6804,13 +6937,7 @@ function ContactPage() {
                 <Instagram className="h-5 w-5" />
                 Instagram
               </button>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 hover:text-amber-300"
-              >
-                <Youtube className="h-5 w-5" />
-                YouTube
-              </button>
+
               <button
                 type="button"
                 className="inline-flex items-center gap-2 hover:text-amber-300"
@@ -7121,10 +7248,10 @@ function LegalPage() {
                   <h3 className="text-amber-300 font-semibold">Contact</h3>
                   <p className="mt-1">
                     <a
-                      href="mailto:HQ@oldironsidescoffee.org"
+                      href="mailto:Support@oldironsidescoffee.org"
                       className="text-amber-300 hover:underline"
                     >
-                      HQ@oldironsidescoffee.org
+                      Support@oldironsidescoffee.org
                     </a>
                   </p>
                 </div>
@@ -7486,10 +7613,10 @@ function LegalPage() {
                     an individual claim in small-claims court if eligible. You
                     may opt out by sending written notice to{" "}
                     <a
-                      href="mailto:hq@oldironsidescoffee.org"
+                      href="mailto:Support@oldironsidescoffee.org"
                       className="text-amber-300 hover:underline"
                     >
-                      hq@oldironsidescoffee.org
+                      Support@oldironsidescoffee.org
                     </a>{" "}
                     within 30 days of your first use of our services. If you opt
                     out, the exclusive venue for any non-arbitrated action will
@@ -7587,10 +7714,10 @@ function LegalPage() {
                     <br />
                     Email:{" "}
                     <a
-                      href="mailto:hq@oldironsidescoffee.org"
+                      href="mailto:Support@oldironsidescoffee.org"
                       className="text-amber-300 hover:underline"
                     >
-                      hq@oldironsidescoffee.org
+                      Support@oldironsidescoffee.org
                     </a>
                     <br />
                     Address: 6 Liberty Square #2564, Boston, MA 02109
@@ -7627,10 +7754,10 @@ function LegalPage() {
               <p className="text-neutral-300">
                 Email:{" "}
                 <a
-                  href="mailto:HQ@oldironsidescoffee.org"
+                  href="mailto:Support@oldironsidescoffee.org"
                   className="text-amber-300 hover:underline"
                 >
-                  HQ@oldironsidescoffee.org
+                  Support@oldironsidescoffee.org
                 </a>
                 <br />
                 Address: 6 Liberty Square #2564, Boston, MA 02109
@@ -7838,10 +7965,10 @@ function LegalPage() {
                   <span className="font-semibold">Email:</span> use the
                   unsubscribe link in any marketing email or email{" "}
                   <a
-                    href="mailto:HQ@oldironsidescoffee.org"
+                    href="mailto:Support@oldironsidescoffee.org"
                     className="text-amber-300 hover:underline"
                   >
-                    HQ@oldironsidescoffee.org
+                    Support@oldironsidescoffee.org
                   </a>
                   .
                 </li>
@@ -7881,10 +8008,10 @@ function LegalPage() {
                 <span className="font-semibold">How to submit a request:</span>{" "}
                 email{" "}
                 <a
-                  href="mailto:HQ@oldironsidescoffee.org"
+                  href="mailto:Support@oldironsidescoffee.org"
                   className="text-amber-300 hover:underline"
                 >
-                  HQ@oldironsidescoffee.org
+                  Support@oldironsidescoffee.org
                 </a>{" "}
                 with your name, the email used for your purchases or account,
                 your request type, and your state of residence. We will verify
@@ -8090,10 +8217,10 @@ function LegalPage() {
                 <br />
                 Email:{" "}
                 <a
-                  href="mailto:HQ@oldironsidescoffee.org"
+                  href="mailto:Support@oldironsidescoffee.org"
                   className="text-amber-300 hover:underline"
                 >
-                  HQ@oldironsidescoffee.org
+                  Support@oldironsidescoffee.org
                 </a>
                 <br />
                 Address: 6 Liberty Square #2564, Boston, MA 02109
@@ -10449,8 +10576,25 @@ function PromoSubscribeModal() {
       <div className="relative z-10 w-[92vw] max-w-[380px] md:w-[98vw] md:max-w-6xl">
         <div
           className="relative rounded-2xl md:rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 
-          overflow-y-auto md:overflow-visible max-h-[96vh] md:min-h-0 md:max-h-none"
+  overflow-y-auto md:overflow-visible max-h-[96vh] md:min-h-0 md:max-h-none"
         >
+          {/* TOP-RIGHT CLOSE (X) */}
+          <button
+            type="button"
+            onClick={safeClose}
+            className="absolute right-3 top-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-md
+            bg-neutral-900/70 ring-1 ring-amber-300 text-amber-300 hover:text-amber-200
+            hover:ring-amber-400 transition"
+            aria-label="Close"
+          >
+            <span
+              aria-hidden="true"
+              className="text-[22px] leading-[1] relative top-[-1px]"
+            >
+              ×
+            </span>
+          </button>
+
           {/* Body: grid */}
           <div className="grid md:grid-cols-[auto,1fr] items-stretch gap-0 min-h-full">
             {/* MOBILE HERO */}
@@ -10489,12 +10633,14 @@ function PromoSubscribeModal() {
               <div className="h-full w-full flex flex-col justify-between text-center">
                 {/* Title + copy + form */}
                 <div>
-                  <div className="flex items-center justify-center gap-2 md:gap-3 mb-2 md:mb-4">
-                    <Bell className="h-8 w-8 md:h-12 md:w-12 text-amber-300" />
-                    <h3 className="font-extrabold text-amber-300 text-[31px] leading-tight md:text-[3.25rem]">
-                      RING THAT BELL
-                    </h3>
-                  </div>
+                 <div className="flex flex-col items-center justify-center gap-2 md:gap-3 mb-2 md:mb-4">
+  <BellRinger iconClassName="h-10 w-10 md:h-14 md:w-14 text-amber-300" />
+
+  <h3 className="font-extrabold text-amber-300 text-[31px] leading-tight md:text-[3.25rem]">
+    RING THAT BELL
+  </h3>
+</div>
+
 
                   <p className="text-neutral-300 mb-3 md:mb-5 text-[14px] leading-snug md:text-[1.5625rem] md:leading-normal md:whitespace-nowrap">
                     Get 20% off your first freshly roasted coffee order.
@@ -10873,7 +11019,7 @@ function Layout() {
             >
               OLD IRONSIDES COFFEE
             </div>
-            <div className="text-[12px] text-amber-200">
+            <div className="text-[12px] text-amber-300">
               Ignite the Spirit, Savor the Victory!
             </div>
           </Link>
@@ -11024,8 +11170,8 @@ function Layout() {
                   <div
                     className={
                       shrunk
-                        ? "text-sm text-amber-200 text-center"
-                        : "text-lg text-amber-200 text-center"
+                        ? "text-sm text-amber-300 text-center"
+                        : "text-lg text-amber-300 text-center"
                     }
                   >
                     Ignite the Spirit, Savor the Victory!
@@ -11550,32 +11696,26 @@ function Layout() {
             </div>
             {/* Follow */}
             <div className="hidden md:block">
-              <div className="text-neutral-400 font-semibold mb-2">
-                Follow Us
-              </div>
-              <div className="flex gap-4 text-neutral-300">
+              <div className="text-amber-300 font-semibold mb-2">Follow Us</div>
+
+              <div className="flex gap-6 text-amber-300">
                 <a
                   href="https://instagram.com/oldironsidescoffee"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-amber-300"
+                  className="inline-flex items-center gap-2 hover:text-amber-200 transition"
                 >
+                  <Instagram className="h-5 w-5" />
                   Instagram
                 </a>
-                <a
-                  href="https://youtube.com/@oldironsidescoffee"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-amber-300"
-                >
-                  YouTube
-                </a>
+
                 <a
                   href="https://facebook.com/oldironsidescoffee"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-amber-300"
+                  className="inline-flex items-center gap-2 hover:text-amber-200 transition"
                 >
+                  <Facebook className="h-5 w-5" />
                   Facebook
                 </a>
               </div>

@@ -983,8 +983,6 @@ const submitPromoEmail = async (email: string) => {
   );
 
   return true;
-
-  return true;
 };
 function BellRinger({
   iconClassName,
@@ -10534,48 +10532,18 @@ function PromoSubscribeModal() {
 
   // ===== SUBMIT =====
   const onSubmit = async (e: React.FormEvent) => {
-    console.log("PROMO SUBMIT FIRED", email);
     e.preventDefault();
-    if (!emailOk(email)) return flash("Enter a valid email.");
 
-    // 1. Send email to Shopify via Vercel API
-    try {
-      await fetch("/api/create-customer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-    } catch {
-      // swallow errors — do NOT block conversion
-    }
+    const ok = await submitPromoEmail(email);
+    if (!ok) return;
 
-    // 2. Mark as subscribed locally (your existing logic)
-    localStorage.setItem(KEY_SUB, "1");
-    setCookieDays(COOKIE_SUB, "1", 365);
-
-    // 3. Continue existing UX unchanged
+    // match existing modal UX
     const isDesktop = window.matchMedia("(min-width: 768px)").matches;
     if (isDesktop) {
       safeClose();
-      setTimeout(() => {
-        window.dispatchEvent(
-          new CustomEvent("flash", {
-            detail:
-              "Welcome aboard! Your discount will be applied at checkout.",
-          })
-        );
-      }, 75);
     } else {
       setPhase("success");
-      setTimeout(() => {
-        safeClose();
-        window.dispatchEvent(
-          new CustomEvent("flash", {
-            detail:
-              "Welcome aboard! Your discount will be applied at checkout.",
-          })
-        );
-      }, 7000);
+      setTimeout(() => safeClose(), 7000);
     }
   };
 

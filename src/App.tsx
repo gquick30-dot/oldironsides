@@ -3575,13 +3575,6 @@ function RoastDetailPage() {
                             <span className="text-base text-neutral-100 font-medium leading-none">
                               {isOak ? "Join The Fleet" : "Join The Fleet"}
                             </span>
-                            {!isOak && (
-                              <div className="mt-2">
-                                <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-red-600 text-white tracking-tight">
-                                  SAVE 15%
-                                </span>
-                              </div>
-                            )}
 
                             <span className="text-sm text-neutral-300">
                               {!isOak && (
@@ -7005,10 +6998,7 @@ function LegalPage() {
               <div className="mt-4">
                 <p className="font-semibold text-amber-300">Free Shipping</p>
                 <ul className="list-disc pl-5 mt-1 space-y-1">
-                  <li>
-                    Mix and match any roasts or choose <em>The Fleet</em>{" "}
-                    bundle.
-                  </li>
+                  <li>Mix and match any roasts.</li>
                   <li>
                     <strong>3 or more bags</strong> ship free.
                   </li>

@@ -137,7 +137,7 @@ function FlashToast() {
 
       // clear any existing hide timer, then start a fresh 2s timer
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = window.setTimeout(() => setShow(false), 2000);
+      timeoutRef.current = window.setTimeout(() => setShow(false), 4000);
     };
 
     window.addEventListener("flash", onFlash as any);
@@ -157,7 +157,7 @@ function FlashToast() {
       }`}
     >
       <div
-        className="rounded-lg bg-amber-400/95 px-4 py-2 text-neutral-900 font-semibold shadow-xl"
+        className="rounded-lg bg-amber-400/95 px-4 py-2 text-neutral-900 font-semibold shadow-xl text-center whitespace-pre-line"
         role="status"
         aria-live="polite"
       >
@@ -966,12 +966,23 @@ const submitPromoEmail = async (email: string) => {
   localStorage.setItem(KEY_SUB, "1");
   setCookieDays(COOKIE_SUB, "1", 365);
 
+  // Bell confirmation tone (user-gesture = allowed)
+  try {
+    const a = new Audio("/ship-bell.mp3");
+    a.preload = "auto";
+    a.currentTime = 0;
+    a.play().catch(() => {});
+  } catch {}
+
   // Show the code (same outcome as the modal)
   window.dispatchEvent(
     new CustomEvent("flash", {
-      detail: "Welcome aboard! Your 20% code is IRONSIDES20",
+      detail:
+        "Welcome aboard! Your discount will be applied at checkout.\nDoes not stack with subscriptions.",
     })
   );
+
+  return true;
 
   return true;
 };
@@ -1170,7 +1181,8 @@ function RingThatBellBox() {
 
           {submitted && (
             <p className="mt-3 text-sm text-emerald-400">
-              Welcome aboard! Your discount is applied at checkout.
+              Welcome aboard! Your discount will be applied at checkout. <br />{" "}
+              Does not stack with subscriptions.
             </p>
           )}
         </div>
@@ -1277,7 +1289,8 @@ function MegaSubscribeBox({
 
             {done && (
               <p className="mt-1 text-emerald-400" style={{ fontSize: 10.5 }}>
-                Welcome aboard! Your discount is applied at checkout.
+                Welcome aboard! Your discount will be applied at checkout.{" "}
+                <br /> Does not stack with subscriptions.
               </p>
             )}
           </div>
@@ -1332,7 +1345,8 @@ function MegaSubscribeBox({
 
           {done && (
             <p className="mt-3 text-sm text-emerald-400">
-              Welcome aboard! Your discount is on the way!
+              Welcome aboard! Your discount will be applied at checkout. <br />{" "}
+              Does not stack with subscriptions.
             </p>
           )}
         </div>
@@ -6922,7 +6936,7 @@ function ContactPage() {
 
             {submitted && (
               <p className="mt-2 text-sm text-emerald-400">
-                Welcome aboard! Your discount is applied at checkout.
+                Welcome aboard! Your discount will be applied at checkout.
               </p>
             )}
           </div>
@@ -8765,7 +8779,7 @@ function CartPage() {
 
                   {sbDone && (
                     <p className="mt-3 text-sm text-emerald-400">
-                      Welcome aboard! Your discount is applied at checkout.
+                      Welcome aboard! Your discount will be applied at checkout.
                     </p>
                   )}
                 </div>
@@ -10546,7 +10560,8 @@ function PromoSubscribeModal() {
       setTimeout(() => {
         window.dispatchEvent(
           new CustomEvent("flash", {
-            detail: "Welcome aboard! Your 20% code is IRONSIDES20",
+            detail:
+              "Welcome aboard! Your discount will be applied at checkout.",
           })
         );
       }, 75);
@@ -10556,10 +10571,11 @@ function PromoSubscribeModal() {
         safeClose();
         window.dispatchEvent(
           new CustomEvent("flash", {
-            detail: "Welcome aboard! Your 20% code is IRONSIDES20",
+            detail:
+              "Welcome aboard! Your discount will be applied at checkout.",
           })
         );
-      }, 2500);
+      }, 7000);
     }
   };
 

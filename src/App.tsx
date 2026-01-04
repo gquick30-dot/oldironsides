@@ -10583,13 +10583,13 @@ function PromoSubscribeModal() {
             <div className="md:hidden">
               <div className="relative w-full h-[246px] sm:h-[282px] bg-neutral-900 overflow-hidden">
                 <img
-                  src="/captain-deck.png"
+                  src="/captain-deck1.png"
                   alt=""
                   aria-hidden="true"
                   className="absolute inset-0 w-full h-full object-cover blur-sm scale-110 opacity-60"
                 />
                 <img
-                  src="/captain-deck.png"
+                  src="/captain-deck1.png"
                   alt="Hero"
                   className="relative z-10 h-full mx-auto object-contain"
                 />
@@ -10602,7 +10602,7 @@ function PromoSubscribeModal() {
               <div className="rounded-2xl ring-1 ring-amber-400 bg-neutral-900/60 overflow-hidden shadow-2xl shadow-black/40">
                 <div className="w-[19rem] lg:w-[21rem] aspect-[4/5]">
                   <img
-                    src="/captain-deck.png"
+                    src="/captain-deck1.png"
                     alt="Hero"
                     className="w-full h-full object-cover"
                   />

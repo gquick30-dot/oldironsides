@@ -2284,7 +2284,7 @@ function HomePage() {
                   •
                 </span>
                 <a
-                  href="https://www.govx.com/govx-id/"
+                  href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-amber-200 underline-offset-2 hover:underline"
@@ -11089,7 +11089,7 @@ function Layout() {
                 <span>|</span>
 
                 <a
-                  href="https://www.govx.com/govx-id/"
+                  href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-amber-200 underline-offset-2 hover:underline"

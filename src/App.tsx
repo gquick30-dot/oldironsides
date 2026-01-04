@@ -1370,14 +1370,12 @@ function GovXLoginBox() {
         off for veterans and first responders.
       </p>
 
-      <button
-        type="button"
-        onClick={() => window.location.assign("/account?govx=1")}
-        className="mt-3 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300 underline-offset-2 hover:underline"
-        aria-label="Verify with GovX"
+      <a
+        href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
+        className="mt-3 w-full inline-block px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300 underline-offset-2 hover:underline"
       >
-        Verify with GovX
-      </button>
+        Get Govx discount code
+      </a>
 
       <div className="mt-2 text-[11px] text-neutral-400">
         Need help?{" "}
@@ -2378,15 +2376,13 @@ function HomePage() {
                 coffee, every day. The discount stacks with subscriptions.
               </p>
               <a
-                href="https://www.govx.com/govx-id/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block rounded-xl ring-1 ring-amber-400/60 
-                     text-amber-400 font-semibold text-[1rem]
-                     px-[1.1rem] py-[0.45rem]
-                     hover:bg-amber-400 hover:text-neutral-900 transition-all"
+                href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
+                className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
+       text-amber-400 font-semibold text-[1rem]
+       px-[1.1rem] py-[0.45rem]
+       hover:bg-amber-400 hover:text-neutral-900 transition-all"
               >
-                Verify with GovX
+                Get GovX discount code
               </a>
             </div>
           </div>
@@ -2429,22 +2425,19 @@ function HomePage() {
                   </p>
                   <br />
                   <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                    Active duty, veterans, and first responders including fire,
-                    law enforcement, and EMTs receive $1 off every bag of fresh
-                    roasted coffee, every day. The discount stacks with
-                    subscriptions.
+                    Active duty, veterans, and first responders receive $1 off
+                    every bag of fresh roasted coffee, every day. The discount
+                    stacks with subscriptions.
                   </p>
                   <br />
                   <a
-                    href="https://www.govx.com/govx-id/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
                     className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
-                         text-amber-400 font-semibold text-[1rem]
-                         px-[1.1rem] py-[0.45rem]
-                         hover:bg-amber-400 hover:text-neutral-900 transition-all"
+       text-amber-400 font-semibold text-[1rem]
+       px-[1.1rem] py-[0.45rem]
+       hover:bg-amber-400 hover:text-neutral-900 transition-all"
                   >
-                    Verify with GovX
+                    Get GovX discount code
                   </a>
                 </div>
               </div>
@@ -6799,15 +6792,13 @@ function OriginsPage() {
                 </p>
                 <br />
                 <a
-                  href="https://www.govx.com/govx-id/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
                   className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
-                   text-amber-400 font-semibold text-[1rem]
-                   px-[1.1rem] py-[0.45rem]
-                   hover:bg-amber-400 hover:text-neutral-900 transition-all"
+       text-amber-400 font-semibold text-[1rem]
+       px-[1.1rem] py-[0.45rem]
+       hover:bg-amber-400 hover:text-neutral-900 transition-all"
                 >
-                  Verify with GovX
+                  Get GovX discount code
                 </a>
               </div>
             </div>
@@ -12531,15 +12522,17 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
             Continue shopping
           </button>
 
-          <a
-            href="https://www.govx.com/govx-id/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full rounded-lg ring-1 ring-emerald-600 bg-emerald-900/30 py-2 text-emerald-300 text-[13px] font-semibold"
-          >
-            <span className="text-lg">✔</span>
-            <span>Verify with GovX ID</span>
-          </a>
+          <div className="mt-3 flex justify-center">
+            <a
+              href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
+              className="inline-block rounded-xl ring-1 ring-amber-400/60 
+       text-amber-400 font-semibold text-[1rem]
+       px-[1.1rem] py-[0.45rem]
+       hover:bg-amber-400 hover:text-neutral-900 transition-all"
+            >
+              Get GovX discount code
+            </a>
+          </div>
 
           <button
             type="button"
@@ -13279,15 +13272,17 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
           </button>
 
           {/* GovX login after checkout */}
-          <a
-            href="https://www.govx.com/govx-id/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full rounded-lg ring-1 ring-emerald-600 bg-emerald-900/30 py-2 text-emerald-300 text-[13px] font-semibold"
-          >
-            <span className="text-lg">✔</span>
-            <span>Verify with GovX ID</span>
-          </a>
+          <div className="mt-3 flex justify-center">
+            <a
+              href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
+              className="inline-block rounded-xl ring-1 ring-amber-400/60 
+       text-amber-400 font-semibold text-[1rem]
+       px-[1.1rem] py-[0.45rem]
+       hover:bg-amber-400 hover:text-neutral-900 transition-all"
+            >
+              Get GovX discount code
+            </a>
+          </div>
 
           {/* Read-before-checkout link */}
           <button

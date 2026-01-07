@@ -1122,68 +1122,73 @@ function BellRinger({
     </>
   );
 }
-
-function RingThatBellBox() {
+function RingThatBellBox({ mode = "section" }: { mode?: "section" | "card" }) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+
   const submit = async (e: any) => {
     e.preventDefault();
     const ok = await submitPromoEmail(email);
     if (ok) setSubmitted(true);
   };
 
+  const Card = (
+    <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
+      <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 mb-4">
+        <BellRinger iconClassName="h-9 w-9 sm:h-11 sm:w-11 text-amber-300" />
+        <h3 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-amber-300">
+          RING THAT BELL
+        </h3>
+      </div>
+
+      <p className="text-neutral-300 mb-5 text-base sm:text-lg md:text-xl">
+        Get 20% off your first freshly roasted coffee order. <br />
+        Join the fleet later and save 15% off every order.
+      </p>
+
+      <form
+        onSubmit={submit}
+        className="flex flex-col sm:flex-row justify-center gap-3 max-w-md mx-auto"
+      >
+        <input
+          type="email"
+          autoComplete="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+        />
+        <button
+          type="submit"
+          className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
+        >
+          GET 20% OFF
+        </button>
+      </form>
+
+      <div className="mt-6 text-xs sm:text-sm text-neutral-400">
+        Already a member?{" "}
+        <Link to="/account/login" className="text-amber-300 hover:underline">
+          Sign in
+        </Link>
+      </div>
+
+      {submitted && (
+        <p className="mt-3 text-sm text-emerald-400">
+          Welcome aboard! Your discount will be applied at checkout. <br />
+          Does not stack with subscriptions.
+        </p>
+      )}
+    </div>
+  );
+
+  if (mode === "card") return Card;
+
   return (
     <section className="py-10 md:py-14 border-b border-neutral-800">
       <Container>
-        <div className="max-w-xl mx-auto rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
-          <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 mb-4">
-            <BellRinger iconClassName="h-9 w-9 sm:h-11 sm:w-11 text-amber-300" />
-
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-amber-300">
-              RING THAT BELL
-            </h3>
-          </div>
-
-          <p className="text-neutral-300 mb-5 text-base sm:text-lg md:text-xl">
-            Get 20% off your first freshly roasted coffee order. <br /> Join the
-            fleet later and save 15% off every order.
-          </p>
-
-          <form
-            onSubmit={submit}
-            className="flex flex-col sm:flex-row justify-center gap-3 max-w-md mx-auto"
-          >
-            <input
-              type="email"
-              autoComplete="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
-            />
-            <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
-              GET 20% OFF
-            </button>
-          </form>
-
-          <div className="mt-6 text-xs sm:text-sm text-neutral-400">
-            Already a member?{" "}
-            <Link
-              to="/account/login"
-              className="text-amber-300 hover:underline"
-            >
-              Sign in
-            </Link>
-          </div>
-
-          {submitted && (
-            <p className="mt-3 text-sm text-emerald-400">
-              Welcome aboard! Your discount will be applied at checkout. <br />{" "}
-              Does not stack with subscriptions.
-            </p>
-          )}
-        </div>
+        <div className="max-w-xl mx-auto">{Card}</div>
       </Container>
     </section>
   );
@@ -6857,15 +6862,7 @@ function OriginsPage() {
     </main>
   );
 }
-
 function ContactPage() {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const submit = (e: any) => {
-    e.preventDefault();
-
-    setSubmitted(true);
-  };
   return (
     <main className="pt-0 pb-12 md:pt-24 md:pb-24">
       <Container className="-mt-4 md:mt-0">
@@ -6876,85 +6873,71 @@ function ContactPage() {
                 Hail The Quarterdeck!
               </span>
             }
-            subtitle="Questions, comments, press – we’ll get back fast."
+            subtitle="Questions, comments, press. We’ll get back fast."
           />
           <div className="hidden md:block">
             <BackButton size="sm" />
           </div>
         </div>
 
-        <div className="mt-4 md:mt-8 grid md:grid-cols-3 gap-6 text-sm">
-          <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
-            <div className="flex items-center gap-3">
-              <Mail className="h-5 w-5 text-amber-300" />
-              <span className="text-neutral-300">
-                HQ@oldironsidescoffee.org
-              </span>
+        <div className="mt-4 md:mt-8 grid gap-6 text-sm md:grid-cols-2 items-start">
+          {/* LEFT: Contact + Follow */}
+          <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6 max-w-md">
+            <h4 className="font-semibold text-amber-300">Contact</h4>
+
+            <div className="mt-3 space-y-3">
+              <a
+                href="mailto:HQ@oldironsidescoffee.org"
+                className="flex items-center gap-3 text-neutral-300 hover:text-amber-300"
+              >
+                <Mail className="h-5 w-5 text-amber-300" />
+                <span>HQ@oldironsidescoffee.org</span>
+              </a>
+
+              <div className="text-neutral-400 leading-relaxed">
+                6 Liberty Square #2564
+                <br />
+                Boston, MA 02109
+              </div>
             </div>
 
-            <div className="mt-2 text-neutral-400">
-              6 Liberty Square #2564, Boston, MA 02109
+            <div className="mt-6 border-t border-neutral-800 pt-5">
+              <h4 className="font-semibold text-amber-300">Follow Us</h4>
+
+              <div className="mt-3 flex flex-wrap gap-4 text-neutral-300">
+                <a
+                  href="https://instagram.com/oldironsidescoffee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-amber-300"
+                >
+                  <Instagram className="h-5 w-5" />
+                  Instagram
+                </a>
+
+                <a
+                  href="https://facebook.com/oldironsidescoffee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-amber-300"
+                >
+                  <span className="h-5 w-5 grid place-content-center">f</span>
+                  Facebook
+                </a>
+              </div>
             </div>
           </div>
-          <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-4 md:p-6 text-center md:text-left">
-            <h4 className="font-semibold text-amber-300 text-xl md:text-lg tracking-wide">
-              RING THAT BELL
-            </h4>
-            <p className="mt-1 text-neutral-400 text-sm md:text-base">
-              Get 20% off your first order.
-              <br className="hidden md:block" />
-              Join the fleet and save 15% on recurring orders.
-            </p>
 
-            <form
-              onSubmit={submit}
-              className="mt-3 flex flex-col items-center gap-2 md:flex-row md:items-stretch md:gap-3"
-            >
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="w-full flex-1 rounded-lg bg-neutral-900/70 border border-neutral-700 !h-[72px] md:h-11 px-5 !text-[20px] md:text-sm !placeholder:text-[20px] md:placeholder:text-sm leading-none appearance-none"
-              />
-
-              <button className="w-full md:w-auto h-12 md:h-11 px-5 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300">
-                GET 20% OFF
-              </button>
-            </form>
-
-            {submitted && (
-              <p className="mt-2 text-sm text-emerald-400">
-                Welcome aboard! Your discount will be applied at checkout.
-              </p>
-            )}
-          </div>
-
-          <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
-            <h4 className="font-semibold text-amber-300">Follow Us</h4>
-            <div className="mt-3 flex gap-4 text-neutral-300">
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 hover:text-amber-300"
-              >
-                <Instagram className="h-5 w-5" />
-                Instagram
-              </button>
-
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 hover:text-amber-300"
-              >
-                <span className="h-5 w-5 grid place-content-center">f</span>
-                Facebook
-              </button>
-            </div>
+          {/* RIGHT: Ring That Bell (use the exact same working component as homepage) */}
+          <div className="max-w-xl">
+            <RingThatBellBox mode="card" />
           </div>
         </div>
       </Container>
     </main>
   );
 }
+
 function nextRoastLabel() {
   const now = new Date();
   const day = now.getDay(); // 0=Sun, 1=Mon, ...
@@ -7185,8 +7168,8 @@ function LegalPage() {
                   </h3>
                   <p className="mt-1">
                     If your package is damaged, the coffee is defective in any
-                    way, or we made a mistake, contact us. We will make it
-                    right.
+                    way, or we made a mistake, contact us. We won't leave you at
+                    the harbor.
                   </p>
                 </div>
 
@@ -7425,8 +7408,8 @@ function LegalPage() {
                       us—we’ll replace or refund.
                     </li>
                     <li>
-                      Not happy? Email us. We can recommend a better fit, credit
-                      your account, or find a solution.
+                      Not happy? Email us. We can recommend a better fit, or
+                      find a solution.
                     </li>
                     <li>
                       Report issues within 7 days of delivery. Include your
@@ -7607,14 +7590,14 @@ function LegalPage() {
                     products through binding arbitration administered by the
                     American Arbitration Association under its Consumer
                     Arbitration Rules. The Federal Arbitration Act governs this
-                    agreement to arbitrate. Arbitration will take place in
-                    Suffolk County, Massachusetts, unless we agree otherwise,
-                    and may be conducted by telephone or video when appropriate.
-                    You and we each waive the right to a jury trial and to
-                    participate in a class action or class-wide arbitration;
-                    claims must be brought individually. Either party may bring
-                    an individual claim in small-claims court if eligible. You
-                    may opt out by sending written notice to{" "}
+                    agreement to arbitrate. Arbitration will take place in Salt
+                    Lake City, Utah, unless we agree otherwise, and may be
+                    conducted by telephone or video when appropriate. You and we
+                    each waive the right to a jury trial and to participate in a
+                    class action or class-wide arbitration; claims must be
+                    brought individually. Either party may bring an individual
+                    claim in small-claims court if eligible. You may opt out by
+                    sending written notice to{" "}
                     <a
                       href="mailto:Support@oldironsidescoffee.org"
                       className="text-amber-300 hover:underline"
@@ -7634,9 +7617,9 @@ function LegalPage() {
                     20. Governing Law
                   </h3>
                   <p className="mt-1">
-                    These Terms are governed by the laws of the Commonwealth of
-                    Massachusetts, without regard to conflict-of-laws rules. The
-                    Federal Arbitration Act governs the arbitration provision.
+                    These Terms are governed by the laws of the State of Utah,
+                    without regard to its conflict-of-laws rules. The Federal
+                    Arbitration Act governs the arbitration provision.
                   </p>
                 </div>
 
@@ -7749,6 +7732,11 @@ function LegalPage() {
               Policy, do not use our services.
             </p>
 
+            <p className="text-neutral-300">
+              Liberty Lighthouse Supply Co. is the data controller for purposes
+              of applicable privacy laws.
+            </p>
+
             {/* Contact */}
             <div className="space-y-2">
               <h3 className="text-amber-300 font-semibold">
@@ -7815,9 +7803,11 @@ function LegalPage() {
                 <li>
                   <span className="font-semibold">Sensitive information:</span>{" "}
                   we do not intentionally collect sensitive personal information
-                  as defined by applicable law. If you provide any such
-                  information to us, we will handle it as required by law and
-                  will delete or restrict it when appropriate.
+                  as defined by applicable law. We do not collect biometric
+                  identifiers such as fingerprints, facial scans, or
+                  voiceprints. If you provide any such information to us, we
+                  will handle it as required by law and will delete or restrict
+                  it when appropriate.
                 </li>
               </ul>
               <p className="text-neutral-300">
@@ -7869,8 +7859,7 @@ function LegalPage() {
                     Analytics and improvement:
                   </span>{" "}
                   understand site performance, fix bugs, and improve our
-                  products and services (<em>legitimate interests</em>
-                  ).
+                  products and services (<em>legitimate interests</em>).
                 </li>
                 <li>
                   <span className="font-semibold">
@@ -7934,8 +7923,10 @@ function LegalPage() {
                   and logistics partners, customer support tools.
                 </li>
                 <li>
-                  <span className="font-semibold">Business partners:</span> for
-                  joint promotions or collaborations.
+                  <span className="font-semibold">Business partners:</span> only
+                  where you have explicitly opted in to a joint promotion or
+                  collaboration, and only for the purpose disclosed at the time
+                  of collection.
                 </li>
                 <li>
                   <span className="font-semibold">Legal and safety:</span> to
@@ -8007,6 +7998,12 @@ function LegalPage() {
                 <li>limit use and disclosure of sensitive information,</li>
                 <li>non-discrimination for exercising these rights.</li>
               </ul>
+
+              <p className="text-neutral-300">
+                Utah residents may exercise their rights under the Utah Consumer
+                Privacy Act by contacting us as described below.
+              </p>
+
               <p className="text-neutral-300">
                 <span className="font-semibold">How to submit a request:</span>{" "}
                 email{" "}
@@ -8092,11 +8089,11 @@ function LegalPage() {
                   Financial incentive notice:
                 </span>{" "}
                 if you join our email list or subscribe to receive a discount
-                such as 20 percent off, we collect your email and marketing
-                preferences in exchange for the incentive. You can withdraw at
-                any time by unsubscribing or canceling the subscription. We
-                estimate the value of the incentive based on the cost of running
-                the program and expected revenue from increased engagement.
+                such as 20% off, we collect your email and marketing preferences
+                in exchange for the incentive. You can withdraw at any time by
+                unsubscribing or canceling the subscription. We estimate the
+                value of the incentive based on the cost of running the program
+                and expected revenue from increased engagement.
               </p>
             </div>
 
@@ -8158,13 +8155,13 @@ function LegalPage() {
                 11. International users
               </h3>
               <p className="text-neutral-300">
-                We are based in the United States. If you access the services
-                from outside the United States, your information may be
-                transferred to, stored in, or processed in the United States or
-                other countries that may not provide the same level of data
-                protection as your home jurisdiction. We will protect your
-                information as described in this Policy and as required by
-                applicable law.
+                We are based in the United States, with operations and legal
+                domicile in the State of Utah. If you access the services from
+                outside the United States, your information may be transferred
+                to, stored in, or processed in the United States or other
+                countries that may not provide the same level of data protection
+                as your home jurisdiction. We will protect your information as
+                described in this Policy and as required by applicable law.
               </p>
               <p className="text-neutral-300">
                 For EEA and UK users, our legal bases appear in Section 2. You

@@ -1,4 +1,4 @@
-import AccountGate from "./Components/AccountGate";
+// FORCE-GIT-SSS-CHANGE-3
 import CookieConsent from "./Components/CookieConsent";
 import {
   getProductByHandle,

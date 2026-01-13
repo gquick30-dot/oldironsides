@@ -5749,15 +5749,14 @@ function TheCoffeeOak({
                   Signature Notes
                 </h3>
                 <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
-                {notes.map((note, i) => (
-  <span key={note}>
-    {note}
-    {i < notes.length - 1 && (
-      <span className="mx-1 text-amber-300">|</span>
-    )}
-  </span>
-))}
-
+                  {notes.map((note, i) => (
+                    <span key={note}>
+                      {note}
+                      {i < notes.length - 1 && (
+                        <span className="mx-1 text-amber-300">|</span>
+                      )}
+                    </span>
+                  ))}
                 </div>
               </div>
 

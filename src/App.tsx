@@ -381,7 +381,7 @@ const roastCards = [
     title: "Flagship",
     subTitle: "Medium Roast",
     note: "Balanced, Enduring, Everyday",
-    img: "Flagship-web.png", // Main image for hero section
+    img: "Flagship Transparent Mockup.png", // Main image for hero section
     imgLeft: "washington-cannon.jpg", // New property for left image in duel
     imgRight: "barry-ship.jpg", // New property for right image in duel
     heroImg: "Flagship-web.png", // New property for hero section image
@@ -407,7 +407,7 @@ const roastCards = [
     title: "Baptism by Fire",
     subTitle: "Dark Roast",
     note: "Bold, Smooth, Unyielding",
-    img: "Baptism By Fire Transparent_.png", // Main image for hero section
+    img: "Baptism By Fire Transparent .png", // Main image for hero section
     imgLeft: "capt-hull.jpg", // New property for left image in duel
     imgRight: "james-surrender.jpg", // New property for right image in duel
     heroImg: "baptism-web.png", // New property for hero section image
@@ -433,7 +433,7 @@ const roastCards = [
     title: "The Java Action",
     subTitle: "Medium Roast",
     note: "Captivating, Decisive Finish.",
-    img: "java-web.png", // Main image for hero section
+    img: "Java Action Transparent.png", // Main image for hero section
     imgLeft: "bainbridge-java.jpg", // New property for left image in duel
     imgRight: "lambert-pic.png", // New property for right image in duel
     heroImg: "java-web.png", // New property for hero section image
@@ -457,7 +457,7 @@ const roastCards = [
     title: "OAK & COPPER",
     subTitle: "Medium Roast",
     note: "Limited Release, Micro-Batch",
-    img: "oak-copper-deck.png", // Main image for hero section
+    img: "Oak&Copper Bag Transparent.png", // Main image for hero section
     imgLeft: "ship-hull.avif", // New property for left image in duel
     imgRight: "ship-restore.jpg", // New property for right image in duel
     heroImg: "ironship.png", // New property for hero section image
@@ -481,7 +481,7 @@ const roastCards = [
     title: "BRASS MONKEY",
     subTitle: "COLD AS BALLS!",
     note: "Southern Pecan Seasonal Winter Roast",
-    img: "/brass monkey 4.png", // change to your actual filename
+    img: "/Brass Monkey Transparent Bag.png", // change to your actual filename
     price: 22, // change if needed
     canBuy: true, // or false if you want it visible but not purchasable yet
   },
@@ -1669,7 +1669,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
       id="fleet"
       className={`relative overflow-hidden ${
         isHome
-          ? "pt-2 pb-6 md:py-14 min-h-[auto] md:min-h-[820px]"
+          ? "pt-2 pb-6 md:pt-8 md:pb-10 min-h-[auto] md:min-h-[820px]"
           : isStore
           ? "pt-2 pb-6 md:pt-8 md:pb-14 min-h-[auto] md:min-h-[1000px]"
           : "pt-2 pb-6 md:py-20 min-h-[auto] md:min-h-[1100px]"
@@ -1684,9 +1684,13 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         />
       )}
 
-      <Container className={`relative z-10 ${isStore ? "md:pt-16" : ""}`}>
+      <Container
+        className={`relative z-10 ${
+          isStore ? "md:pt-16" : ""
+        } px-0 sm:px-0 lg:px-0`}
+      >
         {/* header row: title + (maybe) back button */}
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between text-center md:text-left">
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between text-center md:text-left px-4 sm:px-6 lg:px-8">
           <SectionTitle
             title={
               <span
@@ -1730,7 +1734,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         </div>
 
         {/* tighten gap before cards */}
-        <div className="mt-1 md:mt-4"></div>
+        <div className="mt-1 md:mt-1"></div>
         {/* mobile: 1-card swipe carousel with arrows */}
         <div className="relative md:hidden">
           {/* scroll row */}
@@ -1852,11 +1856,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                       <span className="text-neutral-100">From {fmt(base)}</span>
                       <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] bg-amber-400/10 text-amber-300 ring-1 ring-amber-400/30 whitespace-nowrap">
                         <span className="font-semibold">{fmt(sub)}</span>
-                        <span className="opacity-140">
-                          {card.slug === "oak-and-copper"
-                            ? "Subscribe"
-                            : "Subscribe & Save 15%"}
-                        </span>
+                        <span className="opacity-140">"Subscribe"</span>
                       </span>
                     </div>
 
@@ -1971,7 +1971,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         <div className="hidden md:block relative">
           {/* scroll row */}
           <div
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar scroll-smooth px-2"
+            className="flex gap-12 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory pb-4 no-scrollbar scroll-smooth px-0 -mx-4 sm:-mx-6 lg:-mx-8 pl-4 sm:pl-6 lg:pl-8 pr-4 sm:pr-6 lg:pr-8 md:justify-center"
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             {roastCards.map((card) => {
@@ -1988,8 +1988,10 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                   key={card.id}
                   to={`/roast/${card.slug}`}
                   aria-label={`${card.title} details`}
-                  className="snap-center shrink-0 w-[360px] rounded-2xl ring-1 ring-amber-400/60 hover:ring-amber-300 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg shadow-amber-400/10 flex flex-col overflow-hidden"
+                  className="group relative snap-center shrink-0 w-[260px] flex flex-col items-center text-center transition"
                 >
+                  <div className="pointer-events-none absolute top-[110px] left-1/2 -translate-x-1/2 h-[300px] w-[300px] rounded-full bg-amber-300/30 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
                   <img
                     src={
                       card.img?.startsWith("/") || card.img?.startsWith("http")
@@ -1997,7 +1999,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                         : `/${card.img}`
                     }
                     alt={card.title}
-                    className="w-full h-[28rem] object-cover"
+                    className="w-auto h-[450px] object-contain mx-auto mb-[-72px] relative z-10 transition duration-300 group-hover:brightness-110"
                     loading="lazy"
                     decoding="async"
                     onError={(e) => {
@@ -2007,15 +2009,15 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     }}
                   />
 
-                  <div className="p-5 flex flex-col flex-1 text-left">
+                  <div className="pt-0 pb-5 px-5 flex flex-col flex-1 items-center text-center transition duration-300 group-hover:brightness-110">
                     <h3
-                      className="text-4xl font-extrabold text-amber-300"
-                      style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                      className="text-2xl font-extrabold text-amber-300 mt-[-4px] transition duration-300 group-hover:text-amber-200"
+                      style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
                     >
                       {card.title}
                     </h3>
 
-                    <p className="text-[1.15rem] italic text-neutral-500">
+                    <p className="text-[1.05rem] italic text-neutral-500 -mt-1">
                       {card.subTitle}
                       <span className="mx-1.5 text-amber-300/80" aria-hidden>
                         -
@@ -2026,7 +2028,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     {/* Clamp ONLY Brass Monkey so it can't make the card taller */}
                     <p
                       className={
-                        "text-base text-neutral-400 leading-snug " +
+                        "text-sm text-neutral-400 leading-snug mt-1 " +
                         (card.slug === "brass-monkey"
                           ? "line-clamp-1"
                           : "line-clamp-2")
@@ -2036,25 +2038,30 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     </p>
 
                     {/* PRICE ROW */}
-                    <div className="mt-2 flex items-center gap-3 text-sm">
-                      <span className="text-neutral-200 whitespace-nowrap">
-                        From {fmt(base)}
-                      </span>
-
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[12px] whitespace-nowrap">
-                        {card.slug === "oak-and-copper"
-                          ? "Subscribe"
-                          : "Subscribe & Save 15%"}
-                        <span className="mx-1.5 opacity-60" aria-hidden>
-                          •
+                    <div className="mt-2 flex items-center justify-center gap-3">
+                      {card.slug !== "oak-and-copper" && (
+                        <span className="text-neutral-300 text-[13px] whitespace-nowrap">
+                          From {fmt(base)}
                         </span>
-                        <span className="font-semibold">{fmt(sub)}</span>
-                      </span>
+                      )}
+
+                      {card.slug === "oak-and-copper" ? (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[13px] whitespace-nowrap font-extrabold tabular-nums">
+                          {fmt(base)}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-2 px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[13px] whitespace-nowrap">
+                          <span className="font-semibold">Subscribe</span>
+                          <span className="font-extrabold tabular-nums">
+                            {fmt(sub)}
+                          </span>
+                        </span>
+                      )}
                     </div>
 
                     {/* STARS (same as your desktop grid) */}
-                    <div className="mt-3 flex flex-col text-[13px] text-neutral-400">
-                      <div className="flex items-center gap-2">
+                    <div className="mt-2 flex flex-col items-center text-[13px] text-neutral-400">
+                      <div className="flex items-center justify-center gap-2">
                         {(() => {
                           const summary = summaryBySlug[card.slug] || {
                             avg: 0,
@@ -2135,41 +2142,6 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                 </Link>
               );
             })}
-          </div>
-
-          {/* left/right arrows */}
-          <div className="absolute inset-y-1/2 -translate-y-1/2 left-2 flex items-center pointer-events-none">
-            <button
-              type="button"
-              onClick={() => {
-                const scroller = document.querySelector(
-                  "#fleet .hidden.md\\:block.relative .flex.overflow-x-auto"
-                ) as HTMLDivElement | null;
-                if (scroller)
-                  scroller.scrollBy({ left: -420, behavior: "smooth" });
-              }}
-              className="pointer-events-auto h-14 w-14 rounded-full bg-amber-400 text-neutral-900 font-bold text-3xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
-              aria-label="Previous roast"
-            >
-              ‹
-            </button>
-          </div>
-
-          <div className="absolute inset-y-1/2 -translate-y-1/2 right-2 flex items-center pointer-events-none">
-            <button
-              type="button"
-              onClick={() => {
-                const scroller = document.querySelector(
-                  "#fleet .hidden.md\\:block.relative .flex.overflow-x-auto"
-                ) as HTMLDivElement | null;
-                if (scroller)
-                  scroller.scrollBy({ left: 420, behavior: "smooth" });
-              }}
-              className="pointer-events-auto h-14 w-14 rounded-full bg-amber-400 text-neutral-900 font-bold text-3xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
-              aria-label="Next roast"
-            >
-              ›
-            </button>
           </div>
         </div>
       </Container>
@@ -2344,7 +2316,20 @@ function HomePage() {
         </Container>
       </header>
 
-      <LaunchedFromHarbor noBg />
+      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
+        <img
+          src="/World Amber.png"
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover opacity-80"
+        />
+        <div className="absolute inset-0 bg-black/70" />
+
+        <div className="relative">
+          <LaunchedFromHarbor noBg />
+        </div>
+      </section>
+
       <RingThatBellBox />
       {/* ===== GIVING BACK (copied from Origins) ===== */}
       <section

@@ -5257,7 +5257,14 @@ function TheCoffeeFlagship({
                   Signature Notes
                 </h3>
                 <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
-                  {notes.join(", ")}
+                  {notes.map((note, i) => (
+                    <span key={note}>
+                      {note}
+                      {i < notes.length - 1 && (
+                        <span className="mx-1 text-amber-300">|</span>
+                      )}
+                    </span>
+                  ))}
                 </div>
               </div>
 
@@ -5414,7 +5421,14 @@ function TheCoffeeBaptism({
                   Signature Notes
                 </h3>
                 <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
-                  {notes.join(", ")}
+                  {notes.map((note, i) => (
+                    <span key={note}>
+                      {note}
+                      {i < notes.length - 1 && (
+                        <span className="mx-1 text-amber-300">|</span>
+                      )}
+                    </span>
+                  ))}
                 </div>
               </div>
 
@@ -5571,7 +5585,14 @@ function TheCoffeeJava({
                   Signature Notes
                 </h3>
                 <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
-                  {notes.join(", ")}
+                  {notes.map((note, i) => (
+                    <span key={note}>
+                      {note}
+                      {i < notes.length - 1 && (
+                        <span className="mx-1 text-amber-300">|</span>
+                      )}
+                    </span>
+                  ))}
                 </div>
               </div>
 
@@ -5728,7 +5749,15 @@ function TheCoffeeOak({
                   Signature Notes
                 </h3>
                 <div className="mt-1 text-neutral-300 text-lg leading-relaxed">
-                  {notes.join(", ")}
+                {notes.map((note, i) => (
+  <span key={note}>
+    {note}
+    {i < notes.length - 1 && (
+      <span className="mx-1 text-amber-300">|</span>
+    )}
+  </span>
+))}
+
                 </div>
               </div>
 

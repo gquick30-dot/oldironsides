@@ -1,4 +1,5 @@
 // FORCE-GIT-SSS-CHANGE-3
+import AccountGateModal from "./Components/AccountGate";
 import CookieConsent from "./Components/CookieConsent";
 import {
   getProductByHandle,
@@ -8784,7 +8785,7 @@ function CartPage() {
           </div>
         )}
         {/* Account gate modal */}
-        <AccountGate
+        <AccountGateModal
           open={showAccountGate}
           onClose={() => setShowAccountGate(false)}
         />

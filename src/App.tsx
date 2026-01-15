@@ -1736,16 +1736,10 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
 
         {/* tighten gap before cards */}
         <div className="mt-1 md:mt-1"></div>
-        {/* mobile: 1-card swipe carousel with arrows */}
-        <div className="relative md:hidden">
-          {/* scroll row */}
-          <div
-            ref={scrollRef}
-            onScroll={handleScroll}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pl-3 pr-3 no-scrollbar scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none]"
-            style={{ WebkitOverflowScrolling: "touch" }}
-          >
-            {roastCards.map((card, idx) => {
+        {/* mobile: 2-up tiles (no carousel) */}
+        <div className="md:hidden px-0 pt-2">
+          <div className="grid grid-cols-2 gap-2">
+            {roastCards.map((card) => {
               const base =
                 card.slug === "oak-and-copper" ? 27 : Number(card.price ?? 22);
 
@@ -1754,47 +1748,34 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                   ? base
                   : Math.round(base * 0.85 * 100) / 100;
 
-              const t = MOBILE_TUNE[card.slug] ?? DEFAULT_MOBILE_TUNE;
+              const summary = summaryBySlug[card.slug] || { avg: 0, count: 0 };
+              const avg = summary.avg ?? 0;
+              const count = summary.count ?? 0;
 
               return (
                 <Link
                   key={card.id}
                   to={`/roast/${card.slug}`}
                   aria-label={`${card.title} details`}
-                  ref={(el) => {
-                    cardRefs.current[idx] = el;
-                  }}
                   className="
-                    mt-2 snap-center shrink-0
-                    w-[88vw] max-w-[88vw]
-                    rounded-2xl ring-1 ring-amber-400/60
-                    bg-neutral-900/40 shadow-lg shadow-amber-400/10
-                    hover:ring-amber-300 hover:bg-neutral-900
-                    transition flex flex-col
-                  "
+            group relative overflow-hidden rounded-2xl
+            bg-neutral-800/70 ring-1 ring-neutral-700/80
+            shadow-lg shadow-black/40
+            px-2.5 pt-2 pb-2
+            flex flex-col items-center text-center
+          "
                 >
-                  {/* ===== IMAGE (no overlay text) ===== */}
-                  {/* Tweak these two numbers if needed */}
-                  {/* IMG_HEIGHT ↓ and OBJECT_Y ↓ */}
-                  <div
-                    className={`relative ${t.imgH} ${t.shift} ${t.overlap} rounded-t-2xl overflow-hidden bg-black`}
-                  >
-                    {/* FILLER LAYER: covers side bars when using object-contain */}
-                    {t.sideFill && (
-                      <img
-                        src={
-                          card.img?.startsWith("/") ||
-                          card.img?.startsWith("http")
-                            ? card.img
-                            : `/${card.img}`
-                        }
-                        alt=""
-                        aria-hidden
-                        className={`absolute inset-0 w-full ${t.imgH} object-cover scale-110 blur-sm opacity-60 z-0`}
-                      />
-                    )}
+                  {/* FULL TILE GLOW */}
+                  <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute inset-[-40px] bg-amber-300/15 blur-3xl" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-amber-300/10 via-transparent to-transparent" />
+                  </div>
 
-                    {/* MAIN IMAGE */}
+                  {/* BAG IMAGE BEHIND CONTENT (uncaged) */}
+                  <div className="pointer-events-none absolute inset-0">
+                    {/* soft vignette so text reads over the bag */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/0 to-black/35" />
+
                     <img
                       src={
                         card.img?.startsWith("/") ||
@@ -1803,7 +1784,15 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                           : `/${card.img}`
                       }
                       alt={card.title}
-                      className={`relative z-[1] w-full ${t.imgH} ${t.fit} ${t.objY}`}
+                      className="
+                absolute left-1/2 -translate-x-1/2
+                top-[-90px]
+                w-auto h-[360px]
+                object-contain
+                opacity-95
+                transition duration-300
+                group-hover:brightness-110
+              "
                       loading="lazy"
                       decoding="async"
                       onError={(e) => {
@@ -1812,58 +1801,33 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                           el.src = "/placeholder.png";
                       }}
                     />
-
-                    {/* GRADIENT */}
-                    <div
-                      className={`pointer-events-none absolute inset-x-0 bottom-0 ${t.gradH} bg-gradient-to-t from-black/80 via-black/45 to-transparent z-[2]`}
-                    />
                   </div>
 
-                  {/* ===== CONTENT BELOW IMAGE (tight stack) ===== */}
-                  <div
-                    className={`relative z-10 px-4 pt-0 pb-4 flex flex-col text-center ${t.stack}`}
-                  >
-                    <h3
-                      className={`text-[26px] leading-[1.1] font-extrabold text-amber-300 ${t.title}`}
-                      style={{
-                        fontFamily: "'Cinzel', serif",
-                        fontWeight: 800,
-                      }}
+                  {/* SPACER to reserve vertical room while image overlaps */}
+                  <div className="h-[165px] w-full" />
+
+                  {/* CONTENT ON TOP */}
+                  <div className="relative z-10 w-full flex flex-col items-center">
+                    {/* title (bigger) */}
+                    <div
+                      className="mt-0 text-[18px] leading-[1.05] font-extrabold text-amber-300"
+                      style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
                     >
                       {card.title}
-                    </h3>
+                    </div>
 
-                    {/* SUBTITLE — ensure this exists ONLY ONCE in mobile */}
-                    <p
-                      className={`text-[13px] italic text-neutral-400 ${t.subtitle}`}
-                    >
+                    {/* roast + size */}
+                    <div className="mt-0.5 text-[12px] italic text-neutral-200/90 whitespace-nowrap">
                       {card.subTitle}
-                      <span className="mx-1.5 text-amber-300/80" aria-hidden>
+                      <span className="mx-1 text-amber-300/70" aria-hidden>
                         -
                       </span>
                       <span className="not-italic">12 oz</span>
-                    </p>
-
-                    {/* NOTE */}
-                    <p
-                      className={`text-sm text-neutral-400 line-clamp-1 ${t.note}`}
-                    >
-                      {card.note}
-                    </p>
-
-                    {/* PRICE */}
-
-                    <div className="mt-2 text-[15px] flex flex-row flex-wrap items-center justify-center gap-2">
-                      <span className="text-neutral-100">From {fmt(base)}</span>
-                      <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] bg-amber-400/10 text-amber-300 ring-1 ring-amber-400/30 whitespace-nowrap">
-                        <span className="font-semibold">{fmt(sub)}</span>
-                        <span className="opacity-140">"Subscribe"</span>
-                      </span>
                     </div>
 
-                    {/* STARS */}
-                    <div className="mt-2 flex flex-col items-center text-[12px] text-neutral-300">
-                      <div className="flex items-center gap-2">
+                    {/* STARS (same logic as desktop, keep Judge.me wiring) */}
+                    <div className="mt-1 flex flex-col items-center text-[11px] text-neutral-300/80">
+                      <div className="flex items-center justify-center gap-2">
                         {(() => {
                           const summary = summaryBySlug[card.slug] || {
                             avg: 0,
@@ -1877,6 +1841,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                               <span className="text-amber-300 font-semibold tabular-nums">
                                 {avg.toFixed(1)}
                               </span>
+
                               <div className="inline-flex items-center gap-0.5">
                                 {[0, 1, 2, 3, 4].map((i) => {
                                   const starFill = Math.max(
@@ -1884,12 +1849,13 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                                     Math.min(1, avg - i)
                                   );
                                   const clipWidth = 24 * starFill;
-                                  const clipId = `cardStarClip-${card.slug}-${i}`;
+                                  const clipId = `cardStarClipMob-${card.slug}-${i}`;
+
                                   return (
                                     <svg
                                       key={i}
                                       viewBox="0 0 24 24"
-                                      className="h-4 w-4"
+                                      className="h-3 w-3"
                                       aria-hidden
                                     >
                                       <defs>
@@ -1905,20 +1871,18 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                                           />
                                         </clipPath>
                                       </defs>
-                                      {/* base */}
+
                                       <path
                                         d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
                                         className="text-neutral-800"
                                         fill="currentColor"
                                       />
-                                      {/* amber fill */}
                                       <path
                                         d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
                                         className="text-amber-400"
                                         fill="currentColor"
                                         clipPath={`url(#${clipId})`}
                                       />
-                                      {/* outline */}
                                       <path
                                         d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
                                         fill="none"
@@ -1931,7 +1895,8 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                                   );
                                 })}
                               </div>
-                              <span className="text-[11px] text-neutral-300/85 tracking-wide whitespace-nowrap">
+
+                              <span className="text-[10px] text-neutral-300/80 tracking-wide whitespace-nowrap">
                                 {count} REVIEWS
                               </span>
                             </>
@@ -1943,28 +1908,6 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                 </Link>
               );
             })}
-          </div>
-
-          {/* left/right hint arrows - clickable */}
-          <div className="absolute inset-y-1/2 -translate-y-1/2 left-1 flex items-center pl-1 pointer-events-none">
-            <button
-              type="button"
-              onClick={handlePrev}
-              className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
-              aria-label="Previous roast"
-            >
-              ‹
-            </button>
-          </div>
-          <div className="absolute inset-y-1/2 -translate-y-1/2 right-1 flex items-center pr-1 pointer-events-none">
-            <button
-              type="button"
-              onClick={handleNext}
-              className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
-              aria-label="Next roast"
-            >
-              ›
-            </button>
           </div>
         </div>
 
@@ -2249,7 +2192,7 @@ function HomePage() {
       text-[1.25rem] sm:text-[1.5rem] md:text-[2.1rem]"
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
-                PREMIUM, SMALL-BATCH COFFEE!!!
+                PREMIUM, SMALL-BATCH COFFEE
               </h2>
 
               <div className="mt-1 text-neutral-300 text-[12px] sm:text-sm md:text-lg">
@@ -2317,14 +2260,15 @@ function HomePage() {
         </Container>
       </header>
 
-      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
+      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950">
+        {/* DESKTOP ONLY map background */}
         <img
           src="/World Amber.png"
           alt=""
           aria-hidden
-          className="absolute inset-0 w-full h-full object-cover opacity-80"
+          className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-60"
         />
-        <div className="absolute inset-0 bg-black/70" />
+        <div className="hidden md:block absolute inset-0 bg-black/70" />
 
         <div className="relative">
           <LaunchedFromHarbor noBg />

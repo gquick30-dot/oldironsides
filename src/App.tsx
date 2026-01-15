@@ -2249,7 +2249,7 @@ function HomePage() {
       text-[1.25rem] sm:text-[1.5rem] md:text-[2.1rem]"
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
-                PREMIUM, SMALL-BATCH COFFEE.
+                PREMIUM, SMALL-BATCH COFFEE!!!
               </h2>
 
               <div className="mt-1 text-neutral-300 text-[12px] sm:text-sm md:text-lg">

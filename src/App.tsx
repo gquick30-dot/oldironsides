@@ -2144,7 +2144,7 @@ function HomePage() {
         <img
           src="emblem-black.png"
           alt="Stormy sea"
-          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[62vw] max-w-[780px] object-contain opacity-30 pointer-events-none select-none"
+          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[62vw] max-w-[780px] object-contain opacity-10 pointer-events-none select-none"
         />
         <div className="hidden md:block absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,193,7,0.10),transparent_60%)]" />
         <div className="hidden md:block absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
@@ -2220,21 +2220,25 @@ function HomePage() {
                 <Link
                   to="/store"
                   className="w-full inline-flex items-center justify-center gap-2
-                  px-8 py-4 sm:px-10 sm:py-5
+  px-8 py-4 sm:px-10 sm:py-5
 
-          rounded-xl bg-neutral-900 text-amber-400 font-extrabold
-          text-2xl sm:text-lg md:text-2xl tracking-wide
-          border-2 border-amber-400 shadow-2xl shadow-amber-500/35
+  rounded-xl bg-neutral-900 text-amber-400 font-extrabold
+  text-2xl sm:text-lg md:text-2xl tracking-wide
+  border-2 border-amber-400 shadow-2xl shadow-amber-500/35
 
-
-          hover:bg-amber-400 hover:text-neutral-900
-          transition-all duration-200"
+  hover:bg-amber-400 hover:text-neutral-900
+  transition-all duration-200"
                 >
                   <span aria-hidden>⚓</span>
                   SHOP COFFEE NOW
                 </Link>
 
                 <RoastCTAInfo />
+
+                <p className="mt-2 text-[12px] sm:text-sm text-neutral-400">
+                  Launch offer: The first 200 subscribers receive a 15 oz Old
+                  Ironsides diner mug with their second shipment.
+                </p>
               </div>
             </div>
 
@@ -7411,9 +7415,30 @@ function LegalPage() {
                       for cash unless required by law.
                     </li>
                   </ul>
-                </div>
+                  <div>
+                    <h3 className="text-amber-300 font-semibold">
+                      Launch Mug Offer
+                    </h3>
+                    <p className="mt-1">
+                      The launch mug offer is available to the first 200 active
+                      subscribers only. To qualify, customers must place a
+                      subscription order and successfully complete a second
+                      subscription shipment. One mug per customer.
+                    </p>
+                    <p className="mt-2">
+                      The mug ships separately from coffee orders and may arrive
+                      in a separate package. Offer is non-transferable, not
+                      redeemable for cash, and may not be combined with other
+                      promotions or discounts.
+                    </p>
+                    <p className="mt-2">
+                      This offer ends automatically once 200 qualifying
+                      subscribers have been fulfilled or supplies are exhausted.
+                      We reserve the right to modify, suspend, or discontinue
+                      this offer at any time without notice.
+                    </p>
+                  </div>
 
-                <div>
                   <h3 className="text-amber-300 font-semibold">
                     9. Personal Use Only and Resale
                   </h3>

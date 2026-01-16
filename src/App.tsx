@@ -3388,26 +3388,25 @@ function RoastDetailPage() {
       <Container className="relative z-10 mt-0 md:mt-0">
         {/* ===== HERO ===== */}
         <div className="relative">
-          <div
-            className="pointer-events-none select-none absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 z-0 hidden md:block"
-            aria-hidden
-          >
-            <img
-              src="/emblem-black.png"
-              alt=""
-              className="w-[58vw] max-w-[720px] opacity-15 object-contain"
-            />
-          </div>
+          {/* emblem moved to live behind the bag (image wrapper) */}
 
           <div className="relative z-10 mt-0 md:mt-3 grid md:grid-cols-[auto,1fr] gap-0 md:gap-6 items-start">
             {/* HERO IMAGE */}
             <div className="flex flex-col items-center md:items-start w-full md:w-auto relative">
-              {/* emblem behind bag — mobile only */}
+              {/* emblem behind bag — mobile */}
               <img
                 src="/emblem-black.png"
                 alt=""
                 aria-hidden
                 className="md:hidden absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 w-[125%] max-w-[570px] opacity-10 object-contain z-0"
+              />
+
+              {/* emblem behind bag — desktop */}
+              <img
+                src="/emblem-black.png"
+                alt=""
+                aria-hidden
+                className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[155%] max-w-[760px] opacity-[0.08] object-contain z-0"
               />
 
               <div className="relative z-10 flex flex-col items-center md:items-start w-full md:w-auto">

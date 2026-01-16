@@ -3401,23 +3401,30 @@ function RoastDetailPage() {
 
           <div className="relative z-10 mt-0 md:mt-3 grid md:grid-cols-[auto,1fr] gap-0 md:gap-6 items-start">
             {/* HERO IMAGE */}
-            <div className="flex flex-col items-center md:items-start w-full md:w-auto">
-              <div className="w-full md:w-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20 bg-neutral-900/40">
-                <div className="flex flex-col items-center md:items-start w-full md:w-auto">
-                  <img
-                    src={
-                      card.img?.startsWith("/") || card.img?.startsWith("http")
-                        ? card.img
-                        : `/${card.img}`
-                    }
-                    alt={card.title}
-                    loading="eager"
-                    decoding="async"
-                    className="block w-full h-auto max-h-[61vh] md:w-auto md:max-h-[65vh] object-cover md:object-contain rounded-2xl md:rounded-3xl ring-1 ring-amber-400/60 shadow-2xl shadow-amber-500/20"
-                  />
-                </div>
+            <div className="flex flex-col items-center md:items-start w-full md:w-auto relative">
+              {/* emblem behind bag — mobile only */}
+              <img
+                src="/emblem-black.png"
+                alt=""
+                aria-hidden
+                className="md:hidden absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 w-[125%] max-w-[570px] opacity-10 object-contain z-0"
+              />
+
+              <div className="relative z-10 flex flex-col items-center md:items-start w-full md:w-auto">
+                <img
+                  src={
+                    card.img?.startsWith("/") || card.img?.startsWith("http")
+                      ? card.img
+                      : `/${card.img}`
+                  }
+                  alt={card.title}
+                  loading="eager"
+                  decoding="async"
+                  className="block w-full h-auto max-h-[61vh] md:w-auto md:max-h-[65vh] object-cover md:object-contain"
+                />
               </div>
             </div>
+
             {/* ...rest of your text column stays exactly the same */}
 
             {/* 2/3/4/5/6 live together in this column so desktop still sees one text column */}
@@ -6475,10 +6482,12 @@ function OriginsPage() {
                       <div className="relative h-[22rem] rounded-t-2xl overflow-hidden bg-black">
                         <img
                           src={
-                            card.img?.startsWith("/") ||
-                            card.img?.startsWith("http")
-                              ? card.img
-                              : `/${card.img}`
+                            card.heroImg?.startsWith("/") ||
+                            card.heroImg?.startsWith("http")
+                              ? card.heroImg
+                              : card.heroImg
+                              ? `/${card.heroImg}`
+                              : "/placeholder.png"
                           }
                           alt={String(card.title)}
                           className="w-full h-full object-cover"
@@ -6490,6 +6499,7 @@ function OriginsPage() {
                               el.src = "/placeholder.png";
                           }}
                         />
+
                         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
                       </div>
 
@@ -6561,14 +6571,17 @@ function OriginsPage() {
                   >
                     <img
                       src={
-                        card.img?.startsWith("/") ||
-                        card.img?.startsWith("http")
-                          ? card.img
-                          : `/${card.img}`
+                        card.heroImg?.startsWith("/") ||
+                        card.heroImg?.startsWith("http")
+                          ? card.heroImg
+                          : card.heroImg
+                          ? `/${card.heroImg}`
+                          : "/placeholder.png"
                       }
                       alt={String(card.title)}
                       className="h-72 sm:h-80 md:h-96 w-full object-cover"
                     />
+
                     <div className="p-5 flex flex-col flex-1">
                       <div className="flex items-center gap-3 text-amber-300 mb-1">
                         <Compass className="h-4 w-4" />

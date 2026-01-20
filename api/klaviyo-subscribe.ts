@@ -30,7 +30,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Create profile (Klaviyo API v2024-xx style)
-    const createProfile = await fetch("https://a.klaviyo.com/api/profiles/", {
+    // 1) Create or fetch profile
+    const profileResp = await fetch("https://a.klaviyo.com/api/profiles/", {
       method: "POST",
       headers: {
         Authorization: `Klaviyo-API-Key ${PRIVATE_KEY}`,
@@ -52,14 +53,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }),
     });
 
-    // 409 means profile exists, still OK
-    if (!createProfile.ok && createProfile.status !== 409) {
-      const t = await createProfile.text();
+    // Accept 200 (created) or 409 (already exists)
+    if (!profileResp.ok && profileResp.status !== 409) {
+      const t = await profileResp.text();
       res.status(502).json({ error: "Klaviyo profile failed", detail: t });
       return;
     }
 
-    // Subscribe profile to list (correct relationship payload)
+    // 2) Get profile ID (required for list subscribe)
+    let profileId: string | null = null;
+
+    if (profileResp.status === 200) {
+      const json = await profileResp.json();
+      profileId = json?.data?.id || null;
+    } else {
+      // 409 → fetch profile by email
+      const lookup = await fetch(
+        `https://a.klaviyo.com/api/profiles/?filter=equals(email,"${email}")`,
+        {
+          headers: {
+            Authorization: `Klaviyo-API-Key ${PRIVATE_KEY}`,
+            Accept: "application/json",
+            Revision: "2024-10-15",
+          },
+        }
+      );
+
+      if (lookup.ok) {
+        const json = await lookup.json();
+        profileId = json?.data?.[0]?.id || null;
+      }
+    }
+
+    if (!profileId) {
+      res.status(502).json({ error: "Klaviyo profile ID not found" });
+      return;
+    }
+
+    // 3) Subscribe profile to list using ID (this never races)
     const sub = await fetch(
       `https://a.klaviyo.com/api/lists/${LIST_ID}/relationships/profiles/`,
       {
@@ -71,16 +102,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           Revision: "2024-10-15",
         },
         body: JSON.stringify({
-          data: [
-            {
-              type: "profile",
-              meta: {
-                identifiers: {
-                  email,
-                },
-              },
-            },
-          ],
+          data: [{ type: "profile", id: profileId }],
         }),
       }
     );

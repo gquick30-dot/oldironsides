@@ -59,7 +59,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    // Subscribe profile to list
+    // Subscribe profile to list (correct relationship payload)
     const sub = await fetch(
       `https://a.klaviyo.com/api/lists/${LIST_ID}/relationships/profiles/`,
       {
@@ -71,7 +71,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           Revision: "2024-10-15",
         },
         body: JSON.stringify({
-          data: [{ type: "profile", attributes: { email } }],
+          data: [
+            {
+              type: "profile",
+              meta: {
+                identifiers: {
+                  email,
+                },
+              },
+            },
+          ],
         }),
       }
     );

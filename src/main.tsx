@@ -2,6 +2,26 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
+// ===== Klaviyo onsite loader =====
+(function loadKlaviyo() {
+  const COMPANY_ID = (import.meta as any).env?.VITE_KLAVIYO_COMPANY_ID as
+    | string
+    | undefined;
+
+  if (!COMPANY_ID) return;
+  if (typeof window === "undefined") return;
+
+  // Prevent duplicates
+  if ((window as any).__klaviyoLoaded) return;
+  (window as any).__klaviyoLoaded = true;
+
+  const s = document.createElement("script");
+  s.async = true;
+  s.src = `https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=${encodeURIComponent(
+    COMPANY_ID
+  )}`;
+  document.head.appendChild(s);
+})();
 
 // ===== CONFIG =====
 // mode: "session" (show once per browser session), "daily" (once per day),

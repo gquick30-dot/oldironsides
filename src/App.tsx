@@ -962,6 +962,19 @@ const submitPromoEmail = async (email: string) => {
   } catch {
     // do not block conversion
   }
+  // Send email to Klaviyo (server-side, safe)
+  try {
+    await fetch("/api/klaviyo-subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        source: "ring-that-bell",
+      }),
+    });
+  } catch {
+    // do not block conversion
+  }
 
   // Mark as subscribed locally (same as your modal)
   localStorage.setItem(KEY_SUB, "1");
@@ -982,6 +995,17 @@ const submitPromoEmail = async (email: string) => {
         "Welcome aboard! Your discount will be applied at checkout.\nDoes not stack with subscriptions.",
     })
   );
+
+  // Klaviyo client-side event (analytics only)
+  try {
+    (window as any)._learnq = (window as any)._learnq || [];
+    (window as any)._learnq.push(["identify", { $email: email }]);
+    (window as any)._learnq.push([
+      "track",
+      "Promo Email Submitted",
+      { source: "ring-that-bell" },
+    ]);
+  } catch {}
 
   return true;
 };

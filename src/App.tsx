@@ -7059,6 +7059,19 @@ function LegalPage() {
     const id = setInterval(compute, 1000);
     return () => clearInterval(id);
   }, []);
+
+  // Typography + layout (consistent across sections)
+  const sectionWrap = "mt-6 text-neutral-100";
+  const proseWrap = "max-w-[72ch] leading-relaxed";
+  const stack = "space-y-8";
+  const h3 = "text-amber-300 font-semibold";
+  const p = "mt-1 text-neutral-300";
+  const pTight = "text-neutral-300";
+  const ul = "mt-1 list-disc list-outside pl-5 space-y-1 text-neutral-300";
+  const ulT2 = "mt-2 list-disc list-outside pl-5 space-y-1 text-neutral-300";
+  const ol = "mt-1 list-decimal list-outside pl-5 space-y-1 text-neutral-300";
+  const link = "text-amber-300 hover:underline";
+
   return (
     <main className="md:py-16 max-md:py-6 max-md:-mt-12">
       <Container className="max-md:pt-0">
@@ -7140,14 +7153,12 @@ function LegalPage() {
 
         {/* Returns & Freshness Policy */}
         {slug === "returns" && (
-          <section className="mt-6 text-neutral-100">
-            <div className="max-w-[72ch] leading-relaxed">
-              <div className="space-y-8">
+          <section className={sectionWrap}>
+            <div className={proseWrap}>
+              <div className={stack}>
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    Short version
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>Short version</h3>
+                  <p className={p}>
                     Our coffee is roasted to your order and sails out fresh. We
                     cannot accept returns on roasted coffee. If there is
                     something wrong with your order, please contact us.
@@ -7155,10 +7166,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    Why no returns on coffee
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>Why no returns on coffee</h3>
+                  <p className={p}>
                     Once beans are roasted and ship out, they’re like a frigate
                     leaving port. We cannot resell opened or returned coffee,
                     and we do not restock roasted bags.
@@ -7166,10 +7175,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    Customer's Satisfaction
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>Customer's Satisfaction</h3>
+                  <p className={p}>
                     If your package is damaged, the coffee is defective in any
                     way, or we made a mistake, contact us. We won't leave you at
                     the harbor.
@@ -7177,20 +7184,16 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    If you're unhappy with your purchase
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>If you're unhappy with your purchase</h3>
+                  <p className={p}>
                     Email us and we will not leave you at the harbor. We can
                     recommend a better roast to your liking or find another fix.
                   </p>
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    How to report an issue (quick steps)
-                  </h3>
-                  <ol className="mt-1 list-decimal list-outside pl-5 space-y-1">
+                  <h3 className={h3}>How to report an issue (quick steps)</h3>
+                  <ol className={ol}>
                     <li>Contact us within 5 days of delivery.</li>
                     <li>
                       Include your order number, a brief note on the issue, and
@@ -7201,10 +7204,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    What this covers
-                  </h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <h3 className={h3}>What this covers</h3>
+                  <ul className={ul}>
                     <li>Damaged in transit</li>
                     <li>Wrong item received</li>
                     <li>
@@ -7215,10 +7216,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    What this doesn’t cover
-                  </h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <h3 className={h3}>What this doesn’t cover</h3>
+                  <ul className={ul}>
                     <li>
                       Returns or exchanges on roasted coffee that was correctly
                       fulfilled
@@ -7234,11 +7233,11 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">Contact</h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>Contact</h3>
+                  <p className={p}>
                     <a
                       href="mailto:Support@oldironsidescoffee.org"
-                      className="text-amber-300 hover:underline"
+                      className={link}
                     >
                       Support@oldironsidescoffee.org
                     </a>
@@ -7248,21 +7247,20 @@ function LegalPage() {
             </div>
           </section>
         )}
-        {/* Terms of Service — tightened layout, wrapped width */}
+
+        {/* Terms of Service */}
         {slug === "terms" && (
           <section className="mt-3 text-neutral-100">
-            <div className="max-w-[72ch] leading-relaxed">
-              <div className="space-y-8">
+            <div className={proseWrap}>
+              <div className={stack}>
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    Effective Date
-                  </h3>
-                  <p className="mt-1">October 11, 2025</p>
+                  <h3 className={h3}>Effective Date</h3>
+                  <p className={p}>October 11, 2025</p>
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">Overview</h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>Overview</h3>
+                  <p className={p}>
                     These Terms of Service govern your access to and use of the
                     websites, online stores, and services operated by Liberty
                     Lighthouse Supply Co., dba Old Ironsides Coffee (“Company,”
@@ -7275,10 +7273,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    1. Eligibility and Accounts
-                  </h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <h3 className={h3}>1. Eligibility and Accounts</h3>
+                  <ul className={ul}>
                     <li>
                       You must be at least 18 years old and able to enter a
                       binding contract.
@@ -7295,10 +7291,10 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
+                  <h3 className={h3}>
                     2. Orders, Acceptance, and Right to Refuse Service
                   </h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <ul className={ul}>
                     <li>
                       Your order is an offer to buy. We may accept, reject, or
                       cancel any order at our discretion.
@@ -7317,10 +7313,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    3. Pricing, Availability, and Errors
-                  </h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <h3 className={h3}>3. Pricing, Availability, and Errors</h3>
+                  <ul className={ul}>
                     <li>
                       Prices, descriptions, and availability may change without
                       notice.
@@ -7338,8 +7332,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">4. Payment</h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <h3 className={h3}>4. Payment</h3>
+                  <ul className={ul}>
                     <li>
                       You authorize us and our processors to charge your
                       selected payment method for all amounts due.
@@ -7352,10 +7346,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    5. Subscriptions and Auto-Renewal
-                  </h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <h3 className={h3}>5. Subscriptions and Auto-Renewal</h3>
+                  <ul className={ul}>
                     <li>
                       Subscriptions renew automatically at the stated interval
                       until you cancel.
@@ -7375,11 +7367,12 @@ function LegalPage() {
                     </li>
                   </ul>
                 </div>
+
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
+                  <h3 className={h3}>
                     5A. Limited Releases and Discount Exclusions
                   </h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <ul className={ul}>
                     <li>
                       Certain products are designated as limited release or
                       specialty items. These products are excluded from
@@ -7413,10 +7406,10 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
+                  <h3 className={h3}>
                     6. Shipping, Risk of Loss, and Delivery
                   </h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <ul className={ul}>
                     <li>
                       We ship to the address you provide. Title and risk of loss
                       pass when the carrier accepts the shipment.
@@ -7429,15 +7422,15 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
+                  <h3 className={h3}>
                     7. Returns, Replacements, and Freshness Policy
                   </h3>
-                  <p className="mt-1">
+                  <p className={p}>
                     To avoid any conflict, this section mirrors our Returns
                     &amp; Freshness Policy and controls if inconsistent
                     elsewhere.
                   </p>
-                  <ul className="mt-2 list-disc list-outside pl-5 space-y-1">
+                  <ul className={ulT2}>
                     <li>
                       No returns on roasted coffee that was correctly fulfilled;
                       we do not restock roasted bags.
@@ -7467,10 +7460,10 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
+                  <h3 className={h3}>
                     8. Promotions, Discounts, and Gift Cards
                   </h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <ul className={ul}>
                     <li>
                       Promotions, coupons, and discounts are subject to their
                       own rules and may be modified, limited, or canceled at any
@@ -7502,22 +7495,20 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    Launch Mug Offer
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>Launch Mug Offer</h3>
+                  <p className={p}>
                     The launch mug offer is available to the first 200 active
                     subscribers only. To qualify, customers must place a
                     subscription order and successfully complete a second
                     subscription shipment. One mug per customer.
                   </p>
-                  <p className="mt-2">
+                  <p className={p}>
                     The mug ships separately from coffee orders and may arrive
                     in a separate package. Offer is non-transferable, not
                     redeemable for cash, and may not be combined with other
                     promotions or discounts.
                   </p>
-                  <p className="mt-2">
+                  <p className={p}>
                     This offer ends automatically once 200 qualifying
                     subscribers have been fulfilled or supplies are exhausted.
                     We reserve the right to modify, suspend, or discontinue this
@@ -7526,10 +7517,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    10. User Content and Reviews
-                  </h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <h3 className={h3}>10. User Content and Reviews</h3>
+                  <ul className={ul}>
                     <li>
                       You grant us a worldwide, royalty-free, perpetual license
                       to use, reproduce, modify, publish, translate, and display
@@ -7543,10 +7532,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    11. Acceptable Use
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>11. Acceptable Use</h3>
+                  <p className={p}>
                     You agree not to violate law or third-party rights;
                     interfere with or disrupt the site; bypass security
                     measures; or scrape/harvest data except as allowed by
@@ -7555,10 +7542,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    12. Intellectual Property
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>12. Intellectual Property</h3>
+                  <p className={p}>
                     The site, products, logos, graphics, text, and other
                     materials are owned by us or our licensors. We grant a
                     limited, nonexclusive, nontransferable license to access and
@@ -7568,10 +7553,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    13. Health and Safety
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>13. Health and Safety</h3>
+                  <p className={p}>
                     Coffee contains caffeine. We do not provide medical advice.
                     You are responsible for your own dietary and medical
                     needs—consult a qualified professional with questions about
@@ -7580,10 +7563,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    14. Third-Party Services and Links
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>14. Third-Party Services and Links</h3>
+                  <p className={p}>
                     We are not responsible for third-party websites, apps, or
                     services that may be linked or integrated. Your use is at
                     your own risk and subject to those terms and policies.
@@ -7591,10 +7572,10 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
+                  <h3 className={h3}>
                     15. SMS, Email, and Electronic Communications
                   </h3>
-                  <p className="mt-1">
+                  <p className={p}>
                     By providing a phone number or email, you consent to receive
                     transactional and marketing messages, subject to our Privacy
                     Policy. Message/data rates may apply. Opt out of marketing
@@ -7605,10 +7586,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    16. Disclaimers
-                  </h3>
-                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                  <h3 className={h3}>16. Disclaimers</h3>
+                  <ul className={ul}>
                     <li>
                       The site and all products/services are provided “as is”
                       and “as available.”
@@ -7624,10 +7603,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    17. Limitation of Liability
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>17. Limitation of Liability</h3>
+                  <p className={p}>
                     To the fullest extent allowed by law, we and our suppliers
                     are not liable for any indirect, incidental, special,
                     consequential, or punitive damages, or any loss of profits,
@@ -7638,10 +7615,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    18. Indemnification
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>18. Indemnification</h3>
+                  <p className={p}>
                     You agree to defend, indemnify, and hold harmless the
                     Company and our officers, directors, employees, agents, and
                     affiliates from and against claims, liabilities, damages,
@@ -7653,10 +7628,10 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
+                  <h3 className={h3}>
                     19. Dispute Resolution, Arbitration, and Class Action Waiver
                   </h3>
-                  <p className="mt-1">
+                  <p className={p}>
                     You and the Company agree to resolve any dispute arising out
                     of or relating to these Terms or your use of our site or
                     products through binding arbitration administered by the
@@ -7672,7 +7647,7 @@ function LegalPage() {
                     sending written notice to{" "}
                     <a
                       href="mailto:Support@oldironsidescoffee.org"
-                      className="text-amber-300 hover:underline"
+                      className={link}
                     >
                       Support@oldironsidescoffee.org
                     </a>{" "}
@@ -7685,10 +7660,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    20. Governing Law
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>20. Governing Law</h3>
+                  <p className={p}>
                     These Terms are governed by the laws of the State of Utah,
                     without regard to its conflict-of-laws rules. The Federal
                     Arbitration Act governs the arbitration provision.
@@ -7696,10 +7669,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    21. Termination
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>21. Termination</h3>
+                  <p className={p}>
                     We may suspend or terminate your access at any time and for
                     any reason. You may stop using our services at any time.
                     Sections that by their nature should survive termination
@@ -7708,10 +7679,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    22. Force Majeure
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>22. Force Majeure</h3>
+                  <p className={p}>
                     We are not liable for delays or failures caused by events
                     outside our reasonable control, including natural disasters,
                     labor disputes, acts of government, supply or transportation
@@ -7720,10 +7689,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    23. Changes to the Services or Terms
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>23. Changes to the Services or Terms</h3>
+                  <p className={p}>
                     We may update these Terms at any time. Changes apply when
                     posted unless a later effective date is stated. Your
                     continued use after changes means you accept the updated
@@ -7732,10 +7699,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    24. Assignment
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>24. Assignment</h3>
+                  <p className={p}>
                     You may not assign or transfer your rights under these Terms
                     without our prior written consent. We may assign these Terms
                     at any time.
@@ -7743,10 +7708,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    25. Severability and Waiver
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>25. Severability and Waiver</h3>
+                  <p className={p}>
                     If any provision is found unenforceable, the remaining
                     provisions remain in full force. Our failure to enforce any
                     right is not a waiver.
@@ -7754,10 +7717,8 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">
-                    26. Entire Agreement
-                  </h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>26. Entire Agreement</h3>
+                  <p className={p}>
                     These Terms, together with the Privacy Policy and any order
                     or subscription details, are the entire agreement between
                     you and us and supersede all prior or contemporaneous
@@ -7766,14 +7727,14 @@ function LegalPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-amber-300 font-semibold">27. Contact</h3>
-                  <p className="mt-1">
+                  <h3 className={h3}>27. Contact</h3>
+                  <p className={p}>
                     Liberty Lighthouse Supply Co., dba Old Ironsides Coffee
                     <br />
                     Email:{" "}
                     <a
                       href="mailto:Support@oldironsidescoffee.org"
-                      className="text-amber-300 hover:underline"
+                      className={link}
                     >
                       Support@oldironsidescoffee.org
                     </a>
@@ -7788,515 +7749,503 @@ function LegalPage() {
 
         {/* Privacy Policy */}
         {slug === "privacy" && (
-          <section className="mt-3 max-w-[68ch] text-neutral-100 space-y-8">
-            {/* Intro */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">Effective date</h3>
-              <div className="text-neutral-300">October 11, 2025</div>
-            </div>
+          <section className="mt-3 text-neutral-100">
+            <div className="max-w-[68ch] leading-relaxed space-y-8">
+              {/* Intro */}
+              <div className="space-y-2">
+                <h3 className={h3}>Effective date</h3>
+                <div className={pTight}>October 11, 2025</div>
+              </div>
 
-            <p className="text-neutral-300">
-              This Privacy Policy explains how Liberty Lighthouse Supply Co.,
-              dba Old Ironsides Coffee (“Company,” “we,” “us,” or “our”)
-              collects, uses, shares, and protects personal information when you
-              visit our websites, make a purchase, create an account, subscribe,
-              or otherwise interact with us. If you do not agree with this
-              Policy, do not use our services.
-            </p>
-
-            <p className="text-neutral-300">
-              Liberty Lighthouse Supply Co. is the data controller for purposes
-              of applicable privacy laws.
-            </p>
-
-            {/* Contact */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                Contact for privacy questions and requests
-              </h3>
-              <p className="text-neutral-300">
-                Email:{" "}
-                <a
-                  href="mailto:Support@oldironsidescoffee.org"
-                  className="text-amber-300 hover:underline"
-                >
-                  Support@oldironsidescoffee.org
-                </a>
-                <br />
-                Address: 6 Liberty Square #2564, Boston, MA 02109
+              <p className={pTight}>
+                This Privacy Policy explains how Liberty Lighthouse Supply Co.,
+                dba Old Ironsides Coffee (“Company,” “we,” “us,” or “our”)
+                collects, uses, shares, and protects personal information when
+                you visit our websites, make a purchase, create an account,
+                subscribe, or otherwise interact with us. If you do not agree
+                with this Policy, do not use our services.
               </p>
-            </div>
 
-            {/* 1 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                1. Information we collect
-              </h3>
-              <p className="text-neutral-300">
-                We collect the categories of information below. The exact data
-                depends on how you interact with us.
+              <p className={pTight}>
+                Liberty Lighthouse Supply Co. is the data controller for
+                purposes of applicable privacy laws.
               </p>
-              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
-                <li>
-                  <span className="font-semibold">Identifiers:</span> name,
-                  email address, billing and shipping addresses, phone number,
-                  account username, IP address, device identifiers.
-                </li>
-                <li>
-                  <span className="font-semibold">Commercial information:</span>{" "}
-                  products viewed or purchased, order history, subscription
-                  selections, discount code usage, customer service
-                  interactions.
-                </li>
-                <li>
-                  <span className="font-semibold">
-                    Internet or network activity:
-                  </span>{" "}
-                  pages viewed, links clicked, timestamps, approximate location
-                  derived from IP, cookie identifiers, analytics events.
-                </li>
-                <li>
-                  <span className="font-semibold">Payment information:</span> we
-                  receive limited payment details from our payment processors
-                  such as payment method type and the last four digits of a
-                  card. We do not store full card numbers.
-                </li>
-                <li>
-                  <span className="font-semibold">User content:</span> product
-                  reviews, ratings, photos, messages you send to us.
-                </li>
-                <li>
-                  <span className="font-semibold">
-                    Inferences and preferences:
-                  </span>{" "}
-                  roast and product preferences, marketing segment membership,
-                  subscription cadence.
-                </li>
-                <li>
-                  <span className="font-semibold">Sensitive information:</span>{" "}
-                  we do not intentionally collect sensitive personal information
-                  as defined by applicable law. We do not collect biometric
-                  identifiers such as fingerprints, facial scans, or
-                  voiceprints. If you provide any such information to us, we
-                  will handle it as required by law and will delete or restrict
-                  it when appropriate.
-                </li>
-              </ul>
-              <p className="text-neutral-300">
-                We obtain personal information from you directly, from your
-                devices through cookies and similar tools, from our service
-                providers such as payment processors and shipping carriers, and
-                from marketing and analytics partners.
-              </p>
-            </div>
 
-            {/* 2 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                2. Why we use your information
-              </h3>
-              <p className="text-neutral-300">
-                For users in the EEA and UK, legal bases appear in parentheses.
-              </p>
-              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
-                <li>
-                  <span className="font-semibold">Provide the services:</span>{" "}
-                  process and fulfill orders, manage subscriptions, deliver
-                  products, provide customer support, operate your account (
-                  <em>contract necessity</em>).
-                </li>
-                <li>
-                  <span className="font-semibold">
-                    Payments and fraud prevention:
-                  </span>{" "}
-                  process payments, verify identity, prevent abuse and
-                  unauthorized activity (<em>contract necessity</em>,{" "}
-                  <em>legitimate interests</em>).
-                </li>
-                <li>
-                  <span className="font-semibold">
-                    Customer communications:
-                  </span>{" "}
-                  send transactional emails and SMS about orders, subscriptions,
-                  and account notices (<em>contract necessity</em>).
-                </li>
-                <li>
-                  <span className="font-semibold">Marketing:</span> send
-                  promotional emails and SMS, personalize content, and measure
-                  campaign performance where permitted (<em>consent</em> or{" "}
-                  <em>legitimate interests</em>).
-                </li>
-                <li>
-                  <span className="font-semibold">
-                    Analytics and improvement:
-                  </span>{" "}
-                  understand site performance, fix bugs, and improve our
-                  products and services (<em>legitimate interests</em>).
-                </li>
-                <li>
-                  <span className="font-semibold">
-                    Security and compliance:
-                  </span>{" "}
-                  enforce terms, comply with legal obligations, respond to
-                  lawful requests (<em>legal obligation</em>,{" "}
-                  <em>legitimate interests</em>).
-                </li>
-                <li>
-                  <span className="font-semibold">Financial incentives:</span>{" "}
-                  operate opt-in programs like subscribe-and-save discounts and
-                  email signup offers (<em>consent</em>).
-                </li>
-              </ul>
-            </div>
-
-            {/* 3 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                3. Cookies and similar technologies
-              </h3>
-              <p className="text-neutral-300">
-                We use cookies, pixels, tags, and similar technologies to enable
-                site functionality, maintain your session, remember preferences,
-                perform analytics, and support marketing.
-              </p>
-              <h4 className="text-amber-300 font-semibold">Your choices</h4>
-              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
-                <li>Control cookies in your browser settings.</li>
-                <li>
-                  Opt out of certain analytics or advertising cookies through
-                  the cookie banner or device settings where available.
-                </li>
-                <li>
-                  Where required by law and technically feasible, we will treat
-                  a browser-level opt-out signal such as Global Privacy Control
-                  as a valid request to opt out of sale or sharing.
-                </li>
-              </ul>
-            </div>
-
-            {/* 4 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                4. How we share information
-              </h3>
-              <p className="text-neutral-300">
-                We do not sell personal information for money. We may share
-                limited information with advertising and analytics partners that
-                could be considered a “share” for targeted advertising under
-                some state laws.
-              </p>
-              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
-                <li>
-                  <span className="font-semibold">
-                    Service providers and processors:
-                  </span>{" "}
-                  ecommerce platforms, payment processors, fraud prevention
-                  tools, email and SMS platforms, analytics providers, shipping
-                  and logistics partners, customer support tools.
-                </li>
-                <li>
-                  <span className="font-semibold">Business partners:</span> only
-                  where you have explicitly opted in to a joint promotion or
-                  collaboration, and only for the purpose disclosed at the time
-                  of collection.
-                </li>
-                <li>
-                  <span className="font-semibold">Legal and safety:</span> to
-                  comply with law, respond to lawful requests, or protect
-                  rights, users, or the public.
-                </li>
-                <li>
-                  <span className="font-semibold">Business transfers:</span> in
-                  connection with a merger, acquisition, financing, or sale of
-                  assets.
-                </li>
-                <li>
-                  <span className="font-semibold">
-                    Aggregated or de-identified data:
-                  </span>{" "}
-                  information that cannot reasonably be linked to you. We
-                  maintain de-identified data and do not attempt to re-identify
-                  it.
-                </li>
-              </ul>
-            </div>
-
-            {/* 5 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                5. Your choices about marketing
-              </h3>
-              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
-                <li>
-                  <span className="font-semibold">Email:</span> use the
-                  unsubscribe link in any marketing email or email{" "}
+              {/* Contact */}
+              <div className="space-y-2">
+                <h3 className={h3}>
+                  Contact for privacy questions and requests
+                </h3>
+                <p className={pTight}>
+                  Email:{" "}
                   <a
                     href="mailto:Support@oldironsidescoffee.org"
-                    className="text-amber-300 hover:underline"
+                    className={link}
                   >
                     Support@oldironsidescoffee.org
                   </a>
-                  .
-                </li>
-                <li>
-                  <span className="font-semibold">SMS:</span> reply STOP to opt
-                  out of marketing texts. Transactional emails or texts about
-                  your orders or account will still be sent.
-                </li>
-              </ul>
-            </div>
+                  <br />
+                  Address: 6 Liberty Square #2564, Boston, MA 02109
+                </p>
+              </div>
 
-            {/* 6 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                6. Your privacy rights
-              </h3>
-              <p className="text-neutral-300">
-                Your rights depend on your location. We will honor requests as
-                required by law.
-              </p>
-              <p className="text-neutral-300">
-                U.S. state privacy laws (including CA, CO, CT, UT, VA) may
-                provide rights to:
-              </p>
-              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
-                <li>
-                  know and access categories and specific pieces of personal
-                  information we collected about you,
-                </li>
-                <li>correct inaccurate information,</li>
-                <li>delete information,</li>
-                <li>opt out of sale or sharing for targeted advertising,</li>
-                <li>limit use and disclosure of sensitive information,</li>
-                <li>non-discrimination for exercising these rights.</li>
-              </ul>
+              {/* 1 */}
+              <div className="space-y-2">
+                <h3 className={h3}>1. Information we collect</h3>
+                <p className={pTight}>
+                  We collect the categories of information below. The exact data
+                  depends on how you interact with us.
+                </p>
+                <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                  <li>
+                    <span className="font-semibold">Identifiers:</span> name,
+                    email address, billing and shipping addresses, phone number,
+                    account username, IP address, device identifiers.
+                  </li>
+                  <li>
+                    <span className="font-semibold">
+                      Commercial information:
+                    </span>{" "}
+                    products viewed or purchased, order history, subscription
+                    selections, discount code usage, customer service
+                    interactions.
+                  </li>
+                  <li>
+                    <span className="font-semibold">
+                      Internet or network activity:
+                    </span>{" "}
+                    pages viewed, links clicked, timestamps, approximate
+                    location derived from IP, cookie identifiers, analytics
+                    events.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Payment information:</span>{" "}
+                    we receive limited payment details from our payment
+                    processors such as payment method type and the last four
+                    digits of a card. We do not store full card numbers.
+                  </li>
+                  <li>
+                    <span className="font-semibold">User content:</span> product
+                    reviews, ratings, photos, messages you send to us.
+                  </li>
+                  <li>
+                    <span className="font-semibold">
+                      Inferences and preferences:
+                    </span>{" "}
+                    roast and product preferences, marketing segment membership,
+                    subscription cadence.
+                  </li>
+                  <li>
+                    <span className="font-semibold">
+                      Sensitive information:
+                    </span>{" "}
+                    we do not intentionally collect sensitive personal
+                    information as defined by applicable law. We do not collect
+                    biometric identifiers such as fingerprints, facial scans, or
+                    voiceprints. If you provide any such information to us, we
+                    will handle it as required by law and will delete or
+                    restrict it when appropriate.
+                  </li>
+                </ul>
+                <p className={pTight}>
+                  We obtain personal information from you directly, from your
+                  devices through cookies and similar tools, from our service
+                  providers such as payment processors and shipping carriers,
+                  and from marketing and analytics partners.
+                </p>
+              </div>
 
-              <p className="text-neutral-300">
-                Utah residents may exercise their rights under the Utah Consumer
-                Privacy Act by contacting us as described below.
-              </p>
+              {/* 2 */}
+              <div className="space-y-2">
+                <h3 className={h3}>2. Why we use your information</h3>
+                <p className={pTight}>
+                  For users in the EEA and UK, legal bases appear in
+                  parentheses.
+                </p>
+                <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                  <li>
+                    <span className="font-semibold">Provide the services:</span>{" "}
+                    process and fulfill orders, manage subscriptions, deliver
+                    products, provide customer support, operate your account (
+                    <em>contract necessity</em>).
+                  </li>
+                  <li>
+                    <span className="font-semibold">
+                      Payments and fraud prevention:
+                    </span>{" "}
+                    process payments, verify identity, prevent abuse and
+                    unauthorized activity (<em>contract necessity</em>,{" "}
+                    <em>legitimate interests</em>).
+                  </li>
+                  <li>
+                    <span className="font-semibold">
+                      Customer communications:
+                    </span>{" "}
+                    send transactional emails and SMS about orders,
+                    subscriptions, and account notices (
+                    <em>contract necessity</em>).
+                  </li>
+                  <li>
+                    <span className="font-semibold">Marketing:</span> send
+                    promotional emails and SMS, personalize content, and measure
+                    campaign performance where permitted (<em>consent</em> or{" "}
+                    <em>legitimate interests</em>).
+                  </li>
+                  <li>
+                    <span className="font-semibold">
+                      Analytics and improvement:
+                    </span>{" "}
+                    understand site performance, fix bugs, and improve our
+                    products and services (<em>legitimate interests</em>).
+                  </li>
+                  <li>
+                    <span className="font-semibold">
+                      Security and compliance:
+                    </span>{" "}
+                    enforce terms, comply with legal obligations, respond to
+                    lawful requests (<em>legal obligation</em>,{" "}
+                    <em>legitimate interests</em>).
+                  </li>
+                  <li>
+                    <span className="font-semibold">Financial incentives:</span>{" "}
+                    operate opt-in programs like subscribe-and-save discounts
+                    and email signup offers (<em>consent</em>).
+                  </li>
+                </ul>
+              </div>
 
-              <p className="text-neutral-300">
-                <span className="font-semibold">How to submit a request:</span>{" "}
-                email{" "}
-                <a
-                  href="mailto:Support@oldironsidescoffee.org"
-                  className="text-amber-300 hover:underline"
-                >
-                  Support@oldironsidescoffee.org
-                </a>{" "}
-                with your name, the email used for your purchases or account,
-                your request type, and your state of residence. We will verify
-                your identity by matching to existing records and may request
-                additional information such as an order number. You may use an
-                authorized agent as permitted by law if you provide a signed
-                permission or a valid power of attorney.
-              </p>
-              <p className="text-neutral-300">
-                <span className="font-semibold">Appeals:</span> if we deny a
-                request, you may appeal by replying to our decision email within
-                30 days. If you still have concerns, you may contact your state
-                attorney general.
-              </p>
-              <p className="text-neutral-300">
-                <span className="font-semibold">Global Privacy Control:</span>{" "}
-                where required by law and technically feasible, we will treat an
-                opt-out signal such as GPC as a valid request for the associated
-                browser.
-              </p>
-            </div>
+              {/* 3 */}
+              <div className="space-y-2">
+                <h3 className={h3}>3. Cookies and similar technologies</h3>
+                <p className={pTight}>
+                  We use cookies, pixels, tags, and similar technologies to
+                  enable site functionality, maintain your session, remember
+                  preferences, perform analytics, and support marketing.
+                </p>
+                <h4 className={h3}>Your choices</h4>
+                <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                  <li>Control cookies in your browser settings.</li>
+                  <li>
+                    Opt out of certain analytics or advertising cookies through
+                    the cookie banner or device settings where available.
+                  </li>
+                  <li>
+                    Where required by law and technically feasible, we will
+                    treat a browser-level opt-out signal such as Global Privacy
+                    Control as a valid request to opt out of sale or sharing.
+                  </li>
+                </ul>
+              </div>
 
-            {/* 7 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                7. California disclosures
-              </h3>
-              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
-                <li>
+              {/* 4 */}
+              <div className="space-y-2">
+                <h3 className={h3}>4. How we share information</h3>
+                <p className={pTight}>
+                  We do not sell personal information for money. We may share
+                  limited information with advertising and analytics partners
+                  that could be considered a “share” for targeted advertising
+                  under some state laws.
+                </p>
+                <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                  <li>
+                    <span className="font-semibold">
+                      Service providers and processors:
+                    </span>{" "}
+                    ecommerce platforms, payment processors, fraud prevention
+                    tools, email and SMS platforms, analytics providers,
+                    shipping and logistics partners, customer support tools.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Business partners:</span>{" "}
+                    only where you have explicitly opted in to a joint promotion
+                    or collaboration, and only for the purpose disclosed at the
+                    time of collection.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Legal and safety:</span> to
+                    comply with law, respond to lawful requests, or protect
+                    rights, users, or the public.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Business transfers:</span>{" "}
+                    in connection with a merger, acquisition, financing, or sale
+                    of assets.
+                  </li>
+                  <li>
+                    <span className="font-semibold">
+                      Aggregated or de-identified data:
+                    </span>{" "}
+                    information that cannot reasonably be linked to you. We
+                    maintain de-identified data and do not attempt to
+                    re-identify it.
+                  </li>
+                </ul>
+              </div>
+
+              {/* 5 */}
+              <div className="space-y-2">
+                <h3 className={h3}>5. Your choices about marketing</h3>
+                <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                  <li>
+                    <span className="font-semibold">Email:</span> use the
+                    unsubscribe link in any marketing email or email{" "}
+                    <a
+                      href="mailto:Support@oldironsidescoffee.org"
+                      className={link}
+                    >
+                      Support@oldironsidescoffee.org
+                    </a>
+                    .
+                  </li>
+                  <li>
+                    <span className="font-semibold">SMS:</span> reply STOP to
+                    opt out of marketing texts. Transactional emails or texts
+                    about your orders or account will still be sent.
+                  </li>
+                </ul>
+              </div>
+
+              {/* 6 */}
+              <div className="space-y-2">
+                <h3 className={h3}>6. Your privacy rights</h3>
+                <p className={pTight}>
+                  Your rights depend on your location. We will honor requests as
+                  required by law.
+                </p>
+                <p className={pTight}>
+                  U.S. state privacy laws (including CA, CO, CT, UT, VA) may
+                  provide rights to:
+                </p>
+                <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                  <li>
+                    know and access categories and specific pieces of personal
+                    information we collected about you,
+                  </li>
+                  <li>correct inaccurate information,</li>
+                  <li>delete information,</li>
+                  <li>opt out of sale or sharing for targeted advertising,</li>
+                  <li>limit use and disclosure of sensitive information,</li>
+                  <li>non-discrimination for exercising these rights.</li>
+                </ul>
+
+                <p className={pTight}>
+                  Utah residents may exercise their rights under the Utah
+                  Consumer Privacy Act by contacting us as described below.
+                </p>
+
+                <p className={pTight}>
                   <span className="font-semibold">
-                    Categories collected in the last 12 months:
+                    How to submit a request:
                   </span>{" "}
-                  identifiers, commercial information, internet or network
-                  activity, geolocation derived from IP, user content,
-                  inferences. Payment card details are processed by our payment
-                  processor.
-                </li>
-                <li>
-                  <span className="font-semibold">Sources:</span> directly from
-                  you, your devices, service providers, analytics and marketing
-                  partners.
-                </li>
-                <li>
-                  <span className="font-semibold">Purposes:</span> as listed in
-                  Section 2.
-                </li>
-                <li>
+                  email{" "}
+                  <a
+                    href="mailto:Support@oldironsidescoffee.org"
+                    className={link}
+                  >
+                    Support@oldironsidescoffee.org
+                  </a>{" "}
+                  with your name, the email used for your purchases or account,
+                  your request type, and your state of residence. We will verify
+                  your identity by matching to existing records and may request
+                  additional information such as an order number. You may use an
+                  authorized agent as permitted by law if you provide a signed
+                  permission or a valid power of attorney.
+                </p>
+                <p className={pTight}>
+                  <span className="font-semibold">Appeals:</span> if we deny a
+                  request, you may appeal by replying to our decision email
+                  within 30 days. If you still have concerns, you may contact
+                  your state attorney general.
+                </p>
+                <p className={pTight}>
+                  <span className="font-semibold">Global Privacy Control:</span>{" "}
+                  where required by law and technically feasible, we will treat
+                  an opt-out signal such as GPC as a valid request for the
+                  associated browser.
+                </p>
+              </div>
+
+              {/* 7 */}
+              <div className="space-y-2">
+                <h3 className={h3}>7. California disclosures</h3>
+                <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                  <li>
+                    <span className="font-semibold">
+                      Categories collected in the last 12 months:
+                    </span>{" "}
+                    identifiers, commercial information, internet or network
+                    activity, geolocation derived from IP, user content,
+                    inferences. Payment card details are processed by our
+                    payment processor.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Sources:</span> directly
+                    from you, your devices, service providers, analytics and
+                    marketing partners.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Purposes:</span> as listed
+                    in Section 2.
+                  </li>
+                  <li>
+                    <span className="font-semibold">
+                      Disclosures for business purposes:
+                    </span>{" "}
+                    service providers and processors, shipping carriers,
+                    analytics and security vendors, customer support tools.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Sale or sharing:</span> we
+                    do not sell personal information for money. We may “share”
+                    limited identifiers and internet activity with advertising
+                    partners for cross-context behavioral advertising. You can
+                    opt out as described in Section 6.
+                  </li>
+                  <li>
+                    <span className="font-semibold">
+                      Sensitive personal information:
+                    </span>{" "}
+                    we do not use or disclose sensitive personal information for
+                    purposes that require a right to limit under California law.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Non-discrimination:</span>{" "}
+                    we will not discriminate against you for exercising your
+                    rights.
+                  </li>
+                </ul>
+                <p className={pTight}>
                   <span className="font-semibold">
-                    Disclosures for business purposes:
+                    Financial incentive notice:
                   </span>{" "}
-                  service providers and processors, shipping carriers, analytics
-                  and security vendors, customer support tools.
-                </li>
-                <li>
-                  <span className="font-semibold">Sale or sharing:</span> we do
-                  not sell personal information for money. We may “share”
-                  limited identifiers and internet activity with advertising
-                  partners for cross-context behavioral advertising. You can opt
-                  out as described in Section 6.
-                </li>
-                <li>
-                  <span className="font-semibold">
-                    Sensitive personal information:
-                  </span>{" "}
-                  we do not use or disclose sensitive personal information for
-                  purposes that require a right to limit under California law.
-                </li>
-                <li>
-                  <span className="font-semibold">Non-discrimination:</span> we
-                  will not discriminate against you for exercising your rights.
-                </li>
-              </ul>
-              <p className="text-neutral-300">
-                <span className="font-semibold">
-                  Financial incentive notice:
-                </span>{" "}
-                if you join our email list or subscribe to receive a discount
-                such as 20% off, we collect your email and marketing preferences
-                in exchange for the incentive. You can withdraw at any time by
-                unsubscribing or canceling the subscription. We estimate the
-                value of the incentive based on the cost of running the program
-                and expected revenue from increased engagement.
-              </p>
-            </div>
+                  if you join our email list or subscribe to receive a discount
+                  such as 20% off, we collect your email and marketing
+                  preferences in exchange for the incentive. You can withdraw at
+                  any time by unsubscribing or canceling the subscription. We
+                  estimate the value of the incentive based on the cost of
+                  running the program and expected revenue from increased
+                  engagement.
+                </p>
+              </div>
 
-            {/* 8 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                8. Children’s privacy
-              </h3>
-              <p className="text-neutral-300">
-                Our services are not intended for children under 13, and we do
-                not knowingly collect personal information from children under
-                13. If you believe a child provided information, contact us and
-                we will delete it.
-              </p>
-            </div>
+              {/* 8 */}
+              <div className="space-y-2">
+                <h3 className={h3}>8. Children’s privacy</h3>
+                <p className={pTight}>
+                  Our services are not intended for children under 13, and we do
+                  not knowingly collect personal information from children under
+                  13. If you believe a child provided information, contact us
+                  and we will delete it.
+                </p>
+              </div>
 
-            {/* 9 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                9. Data retention
-              </h3>
-              <p className="text-neutral-300">
-                We keep personal information only as long as necessary for the
-                purposes described in this Policy, for legitimate business
-                needs, and as required by law. Typical retention periods
-                include:
-              </p>
-              <ul className="list-disc pl-5 space-y-2 text-neutral-300">
-                <li>orders and tax records: up to 7 years,</li>
-                <li>
-                  customer support records: up to 3 years after resolution,
-                </li>
-                <li>
-                  marketing contact data: until you unsubscribe or your account
-                  becomes inactive,
-                </li>
-                <li>
-                  analytics data: per vendor defaults or a reasonable period we
-                  configure.
-                </li>
-              </ul>
-            </div>
+              {/* 9 */}
+              <div className="space-y-2">
+                <h3 className={h3}>9. Data retention</h3>
+                <p className={pTight}>
+                  We keep personal information only as long as necessary for the
+                  purposes described in this Policy, for legitimate business
+                  needs, and as required by law. Typical retention periods
+                  include:
+                </p>
+                <ul className="list-disc pl-5 space-y-2 text-neutral-300">
+                  <li>orders and tax records: up to 7 years,</li>
+                  <li>
+                    customer support records: up to 3 years after resolution,
+                  </li>
+                  <li>
+                    marketing contact data: until you unsubscribe or your
+                    account becomes inactive,
+                  </li>
+                  <li>
+                    analytics data: per vendor defaults or a reasonable period
+                    we configure.
+                  </li>
+                </ul>
+              </div>
 
-            {/* 10 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">10. Security</h3>
-              <p className="text-neutral-300">
-                We use administrative, technical, and physical safeguards
-                designed to protect personal information, including encryption
-                in transit, access controls, and vendor due diligence. No method
-                of transmission or storage is completely secure. You use the
-                services at your own risk.
-              </p>
-            </div>
+              {/* 10 */}
+              <div className="space-y-2">
+                <h3 className={h3}>10. Security</h3>
+                <p className={pTight}>
+                  We use administrative, technical, and physical safeguards
+                  designed to protect personal information, including encryption
+                  in transit, access controls, and vendor due diligence. No
+                  method of transmission or storage is completely secure. You
+                  use the services at your own risk.
+                </p>
+              </div>
 
-            {/* 11 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                11. International users
-              </h3>
-              <p className="text-neutral-300">
-                We are based in the United States, with operations and legal
-                domicile in the State of Utah. If you access the services from
-                outside the United States, your information may be transferred
-                to, stored in, or processed in the United States or other
-                countries that may not provide the same level of data protection
-                as your home jurisdiction. We will protect your information as
-                described in this Policy and as required by applicable law.
-              </p>
-              <p className="text-neutral-300">
-                For EEA and UK users, our legal bases appear in Section 2. You
-                may contact your data protection authority if you believe your
-                rights have been infringed.
-              </p>
-            </div>
+              {/* 11 */}
+              <div className="space-y-2">
+                <h3 className={h3}>11. International users</h3>
+                <p className={pTight}>
+                  We are based in the United States, with operations and legal
+                  domicile in the State of Utah. If you access the services from
+                  outside the United States, your information may be transferred
+                  to, stored in, or processed in the United States or other
+                  countries that may not provide the same level of data
+                  protection as your home jurisdiction. We will protect your
+                  information as described in this Policy and as required by
+                  applicable law.
+                </p>
+                <p className={pTight}>
+                  For EEA and UK users, our legal bases appear in Section 2. You
+                  may contact your data protection authority if you believe your
+                  rights have been infringed.
+                </p>
+              </div>
 
-            {/* 12 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                12. Third party sites and services
-              </h3>
-              <p className="text-neutral-300">
-                Our site may link to or integrate with third party websites,
-                apps, or services. Their privacy practices are governed by their
-                own policies. We are not responsible for third party privacy
-                practices.
-              </p>
-            </div>
+              {/* 12 */}
+              <div className="space-y-2">
+                <h3 className={h3}>12. Third party sites and services</h3>
+                <p className={pTight}>
+                  Our site may link to or integrate with third party websites,
+                  apps, or services. Their privacy practices are governed by
+                  their own policies. We are not responsible for third party
+                  privacy practices.
+                </p>
+              </div>
 
-            {/* 13 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">13. Do Not Track</h3>
-              <p className="text-neutral-300">
-                Some browsers transmit Do Not Track signals. Our services do not
-                respond to Do Not Track. We will treat a legally required
-                browser-level opt-out signal such as Global Privacy Control as
-                described in Section 6.
-              </p>
-            </div>
+              {/* 13 */}
+              <div className="space-y-2">
+                <h3 className={h3}>13. Do Not Track</h3>
+                <p className={pTight}>
+                  Some browsers transmit Do Not Track signals. Our services do
+                  not respond to Do Not Track. We will treat a legally required
+                  browser-level opt-out signal such as Global Privacy Control as
+                  described in Section 6.
+                </p>
+              </div>
 
-            {/* 14 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                14. Changes to this Policy
-              </h3>
-              <p className="text-neutral-300">
-                We may update this Policy from time to time. If we make material
-                changes, we will post the updated Policy and change the
-                effective date. Your continued use of the services after an
-                update means you accept the changes.
-              </p>
-            </div>
+              {/* 14 */}
+              <div className="space-y-2">
+                <h3 className={h3}>14. Changes to this Policy</h3>
+                <p className={pTight}>
+                  We may update this Policy from time to time. If we make
+                  material changes, we will post the updated Policy and change
+                  the effective date. Your continued use of the services after
+                  an update means you accept the changes.
+                </p>
+              </div>
 
-            {/* 15 */}
-            <div className="space-y-2">
-              <h3 className="text-amber-300 font-semibold">
-                15. How to contact us
-              </h3>
-              <p className="text-neutral-300">
-                Liberty Lighthouse Supply Co., dba Old Ironsides Coffee
-                <br />
-                Email:{" "}
-                <a
-                  href="mailto:Support@oldironsidescoffee.org"
-                  className="text-amber-300 hover:underline"
-                >
-                  Support@oldironsidescoffee.org
-                </a>
-                <br />
-                Address: 6 Liberty Square #2564, Boston, MA 02109
-              </p>
+              {/* 15 */}
+              <div className="space-y-2">
+                <h3 className={h3}>15. How to contact us</h3>
+                <p className={pTight}>
+                  Liberty Lighthouse Supply Co., dba Old Ironsides Coffee
+                  <br />
+                  Email:{" "}
+                  <a
+                    href="mailto:Support@oldironsidescoffee.org"
+                    className={link}
+                  >
+                    Support@oldironsidescoffee.org
+                  </a>
+                  <br />
+                  Address: 6 Liberty Square #2564, Boston, MA 02109
+                </p>
+              </div>
             </div>
           </section>
         )}
@@ -8304,6 +8253,7 @@ function LegalPage() {
     </main>
   );
 }
+
 // Use the real Shopify product handles now
 const handleMap: Record<string, string> = {
   flagship: "flagship",

@@ -7085,7 +7085,7 @@ function LegalPage() {
         {slug === "shipping" && (
           <div className="mt-6 mb-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
             <div className="text-sm md:text-base text-neutral-200">
-              <p>We roast on Monday and Tuesday and ship Wednesday.</p>
+              <p>We roast on Monday and Tuesday and ship on Wednesday.</p>
 
               <p className="mt-2">
                 Your next eligible roast date is{" "}
@@ -7111,16 +7111,22 @@ function LegalPage() {
                 <ul className="list-disc pl-5 mt-1 space-y-1">
                   <li>Mix and match any roasts.</li>
                   <li>
-                    <strong>3 or more bags</strong> ship free.
+                    <strong>3 or more bags</strong> ship free{" "}
+                    <strong>within the continental United States only</strong>.
                   </li>
                   <li>
-                    All free shipping is via{" "}
-                    <strong>UPS Standard Ground</strong>.
+                    Free shipping applies to standard ground service only (UPS
+                    or equivalent carrier).
+                  </li>
+                  <li>
+                    International orders and non-continental U.S. destinations
+                    (including Alaska and Hawaii) do not qualify for free
+                    shipping.
                   </li>
                 </ul>
                 <p className="mt-2">
-                  Orders of 1 or 2 bags ship at the carrier rates shown at
-                  checkout.
+                  Orders of 1 or 2 bags, and all non-qualifying destinations,
+                  ship at the carrier rates shown at checkout.
                 </p>
               </div>
 
@@ -7133,7 +7139,6 @@ function LegalPage() {
         )}
 
         {/* Returns & Freshness Policy */}
-        {/* Returns & Freshness Policy — tightened layout, wrapped width */}
         {slug === "returns" && (
           <section className="mt-6 text-neutral-100">
             <div className="max-w-[72ch] leading-relaxed">
@@ -7393,7 +7398,7 @@ function LegalPage() {
                       discount or any automatic promotional discount.
                     </li>
                     <li>
-                      The only approved discount for Oak &amp; Copper is a
+                      The only approved discount for Oak &amp; Copper:
                       <strong>
                         $1 per bag discount for verified GOVX members
                       </strong>
@@ -7485,6 +7490,13 @@ function LegalPage() {
                     <li>
                       Gift cards are not reloadable, refundable, or redeemable
                       for cash unless required by law.
+                    </li>
+                    <li>
+                      Free shipping promotions apply only to qualifying orders
+                      shipped within the{" "}
+                      <strong>continental United States</strong>. International
+                      orders and non-continental U.S. destinations (including
+                      Alaska and Hawaii) are excluded unless expressly stated.
                     </li>
                   </ul>
                 </div>

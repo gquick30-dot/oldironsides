@@ -7370,6 +7370,42 @@ function LegalPage() {
                     </li>
                   </ul>
                 </div>
+                <div>
+                  <h3 className="text-amber-300 font-semibold">
+                    5A. Limited Releases and Discount Exclusions
+                  </h3>
+                  <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
+                    <li>
+                      Certain products are designated as limited release or
+                      specialty items. These products are excluded from
+                      subscription discounts, first-order promotions, and
+                      site-wide offers unless expressly stated otherwise.
+                    </li>
+                    <li>
+                      <strong>Oak &amp; Copper</strong> is a specialty,
+                      limited-release coffee and is{" "}
+                      <strong>not eligible</strong> for the 15% Subscribe &amp;
+                      Save discount.
+                    </li>
+                    <li>
+                      <strong>Oak &amp; Copper</strong> is{" "}
+                      <strong>not eligible</strong> for the 20% first-order
+                      discount or any automatic promotional discount.
+                    </li>
+                    <li>
+                      The only approved discount for Oak &amp; Copper is a
+                      <strong>
+                        $1 per bag discount for verified GOVX members
+                      </strong>
+                      , when applicable.
+                    </li>
+                    <li>
+                      We reserve the right to limit quantities, suspend
+                      discounts, or remove any promotion for limited releases at
+                      any time.
+                    </li>
+                  </ul>
+                </div>
 
                 <div>
                   <h3 className="text-amber-300 font-semibold">
@@ -7427,48 +7463,53 @@ function LegalPage() {
 
                 <div>
                   <h3 className="text-amber-300 font-semibold">
-                    8. Promotions, Gift Cards, and Referral Codes
+                    8. Promotions, Discounts, and Gift Cards
                   </h3>
                   <ul className="mt-1 list-disc list-outside pl-5 space-y-1">
                     <li>
-                      Promotions/coupons/codes are subject to their own rules
-                      and may be modified or canceled at any time.
+                      Promotions, coupons, and discounts are subject to their
+                      own rules and may be modified, limited, or canceled at any
+                      time.
+                    </li>
+                    <li>
+                      Discounts do not apply to limited-release or specialty
+                      products unless expressly stated.
+                    </li>
+                    <li>
+                      <strong>Oak &amp; Copper</strong> is excluded from the 15%
+                      Subscribe &amp; Save discount and the 20% first-order
+                      discount. The only approved discount for Oak &amp; Copper
+                      is a <strong>$1 per bag discount</strong> for verified{" "}
+                      <strong>GOVX members</strong>, when applicable.
                     </li>
                     <li>
                       Gift cards are not reloadable, refundable, or redeemable
                       for cash unless required by law.
                     </li>
                   </ul>
-                  <div>
-                    <h3 className="text-amber-300 font-semibold">
-                      Launch Mug Offer
-                    </h3>
-                    <p className="mt-1">
-                      The launch mug offer is available to the first 200 active
-                      subscribers only. To qualify, customers must place a
-                      subscription order and successfully complete a second
-                      subscription shipment. One mug per customer.
-                    </p>
-                    <p className="mt-2">
-                      The mug ships separately from coffee orders and may arrive
-                      in a separate package. Offer is non-transferable, not
-                      redeemable for cash, and may not be combined with other
-                      promotions or discounts.
-                    </p>
-                    <p className="mt-2">
-                      This offer ends automatically once 200 qualifying
-                      subscribers have been fulfilled or supplies are exhausted.
-                      We reserve the right to modify, suspend, or discontinue
-                      this offer at any time without notice.
-                    </p>
-                  </div>
+                </div>
 
+                <div>
                   <h3 className="text-amber-300 font-semibold">
-                    9. Personal Use Only and Resale
+                    Launch Mug Offer
                   </h3>
                   <p className="mt-1">
-                    Products are intended for personal use. We may refuse or
-                    cancel suspected resale orders without written consent.
+                    The launch mug offer is available to the first 200 active
+                    subscribers only. To qualify, customers must place a
+                    subscription order and successfully complete a second
+                    subscription shipment. One mug per customer.
+                  </p>
+                  <p className="mt-2">
+                    The mug ships separately from coffee orders and may arrive
+                    in a separate package. Offer is non-transferable, not
+                    redeemable for cash, and may not be combined with other
+                    promotions or discounts.
+                  </p>
+                  <p className="mt-2">
+                    This offer ends automatically once 200 qualifying
+                    subscribers have been fulfilled or supplies are exhausted.
+                    We reserve the right to modify, suspend, or discontinue this
+                    offer at any time without notice.
                   </p>
                 </div>
 

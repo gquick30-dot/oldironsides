@@ -35,6 +35,27 @@
     <script type="module" src="/src/main.tsx"></script>
     <script async src="https://auth.govx.com/js/govxid.js"></script>
 
+    <!-- Tidio chat widget control -->
+    <script>
+      window.tidioChatApi = window.tidioChatApi || [];
+      window.tidioChatApi.push({
+        on: "ready",
+        callback: function () {
+          // Force widget to stay closed on load
+          window.tidioChatApi.hide();
+        },
+      });
+
+      window.tidioChatApi.push({
+        on: "open",
+        callback: function () {
+          try {
+            window.tidioChatApi.openTab("home");
+          } catch (e) {}
+        },
+      });
+    </script>
+
     <!-- Tidio chat widget -->
     <script
       src="//code.tidio.co/fvua8pqirxw8egpkw9ey3bsc9q0o9v7o.js"

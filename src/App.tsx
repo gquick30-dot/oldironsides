@@ -2174,7 +2174,7 @@ function HomePage() {
         <div className="hidden md:block absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
 
         {/* content wrapper sits on top */}
-        <Container className="relative desktopHeroPad pt-[26rem] pb-10 sm:pt-[24rem] sm:pb-14">
+        <Container className="relative desktopHeroPad pt-[20rem] pb-10 sm:pt-[18rem] sm:pb-14 md:pt-[4.5rem] md:pb-[4.5rem]">
           <style>{`
   @media (min-width: 768px) {
     #top .desktopHeroPad {
@@ -2182,7 +2182,7 @@ function HomePage() {
       padding-bottom: 4.5rem;
     }
     #top .heroCenter {
-      transform: translateY(72px);
+      transform: translateY(0);
     }
   }
 `}</style>
@@ -2209,7 +2209,57 @@ function HomePage() {
 
             {/* CENTER TEXT + CTA (desktop only) */}
             <div className="md:col-span-6 flex flex-col items-center text-center heroCenter">
-              <div aria-hidden className="hidden md:block h-12 lg:h-16" />
+              <div aria-hidden className="hidden md:block h-4 lg:h-6" />
+              {/* SOFT LAUNCH STATUS */}
+              <div
+                id="soft-launch"
+                className="w-full max-w-[32rem] mb-4 -mt-12 md:-mt-12 lg:-mt-14 text-center"
+              >
+                <h2
+                  className="text-amber-300 font-extrabold tracking-[0.22em]
+             text-2xl sm:text-3xl md:text-4xl"
+                  style={{ fontFamily: "'Cinzel', serif" }}
+                >
+                  LAUNCHING FEBRUARY
+                </h2>
+
+                <p className="mt-2 text-neutral-300 text-sm sm:text-base leading-relaxed">
+                  Old Ironsides Coffee is nearing commissioning for launch.
+                  <br />
+                  In the meantime, explore the fleet and learn what Old
+                  Ironsides Coffee stands for.
+                </p>
+
+                {/* notify form only */}
+                <div className="mt-3 rounded-lg ring-1 ring-amber-400/40 bg-neutral-900/60 px-3 py-2 backdrop-blur max-w-[20rem] mx-auto">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const form = e.currentTarget as HTMLFormElement;
+                      const input = form.querySelector(
+                        "input"
+                      ) as HTMLInputElement;
+                      if (input?.value) submitPromoEmail(input.value);
+                    }}
+                    className="flex gap-1"
+                  >
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      className="flex-1 rounded-md bg-neutral-900/70 border border-neutral-700 px-2 py-1.5 text-xs"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="px-3 py-1.5 rounded-md bg-amber-400 text-neutral-900 text-xs font-semibold"
+                    >
+                      Notify Me
+                    </button>
+                  </form>
+                </div>
+              </div>
+              {/* push the original hero stack back down (leave launch block up top) */}
+              <div aria-hidden className="hidden md:block h-16 lg:h-20" />
 
               <h2
                 className="text-amber-400 font-extrabold leading-snug tracking-tight

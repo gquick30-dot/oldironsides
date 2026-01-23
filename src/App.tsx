@@ -1009,6 +1009,59 @@ const submitPromoEmail = async (email: string) => {
 
   return true;
 };
+// ===== Soft-launch notify submit (NO discounts, NO promo messaging) =====
+const submitLaunchNotifyEmail = async (email: string) => {
+  if (!emailOk(email)) {
+    flash("Enter a valid email.");
+    return false;
+  }
+
+  // Best-effort: create Shopify customer (optional, do not block)
+  try {
+    await fetch("/api/create-customer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+  } catch {
+    // do not block
+  }
+
+  // Klaviyo subscribe (server-side)
+  try {
+    await fetch("/api/klaviyo-subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        source: "soft-launch-notify",
+      }),
+    });
+  } catch {
+    // do not block
+  }
+
+  // Confirmation banner (NO discount language)
+  window.dispatchEvent(
+    new CustomEvent("flash", {
+      detail: "Thank you. We’ll notify you the moment we launch.",
+    })
+  );
+
+  // Klaviyo client-side event (analytics only)
+  try {
+    (window as any)._learnq = (window as any)._learnq || [];
+    (window as any)._learnq.push(["identify", { $email: email }]);
+    (window as any)._learnq.push([
+      "track",
+      "Launch Notify Submitted",
+      { source: "soft-launch-notify" },
+    ]);
+  } catch {}
+
+  return true;
+};
+
 function BellRinger({
   iconClassName,
   soundSrc = "/ship-bell.mp3",
@@ -2239,7 +2292,7 @@ function HomePage() {
                       const input = form.querySelector(
                         "input"
                       ) as HTMLInputElement;
-                      if (input?.value) submitPromoEmail(input.value);
+                      if (input?.value) submitLaunchNotifyEmail(input.value);
                     }}
                     className="flex gap-1"
                   >

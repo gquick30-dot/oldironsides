@@ -2209,7 +2209,7 @@ function HomePage() {
         <div className="absolute inset-0 md:hidden bg-neutral-950">
           {/* bean image as background, less zoom */}
           <img
-            src="officer-window3.tif"
+            src="officer-window2.jpg"
             alt=""
             className="w-full h-full object-contain object-center"
           />
@@ -2245,7 +2245,7 @@ function HomePage() {
             <div className="hidden md:flex md:col-span-3 justify-start">
               <div className="w-full max-w-[420px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
-                  src="smell-beans.png"
+                  src="smell-beans.jpg"
                   alt="Smelling beans"
                   className="
           block
@@ -2373,7 +2373,7 @@ function HomePage() {
             <div className="hidden md:flex md:col-span-3 justify-end">
               <div className="w-full max-w-[420px] ml-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
-                  src="officer-window2.png"
+                  src="officer-window2.jpg"
                   alt="Old Ironsides hero"
                   className="
           block

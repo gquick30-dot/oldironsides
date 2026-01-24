@@ -1756,7 +1756,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
       {/* Background image just for this section */}
       {!noBg && (
         <img
-          src="/old-boston-harbor.png"
+          src="/old-boston-harbor.jpg"
           alt="Boston Harbor backdrop"
           className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-40 -z-0"
         />
@@ -6115,25 +6115,25 @@ function StorePage() {
       key: "tees",
       label: "Tees",
       icon: <Shirt className="h-5 w-5" />,
-      img: "shirts-web.png",
+      img: "shirts-web.jpg",
     },
     {
       key: "Hats",
       label: "Hats",
       icon: <span className="text-sm">☕</span>,
-      img: "hat1-web.png",
+      img: "hat1-web.jpg",
     },
     {
       key: "Mugs",
       label: "Mugs",
       icon: <span className="text-sm">◼︎</span>,
-      img: "coffee-deck2.png",
+      img: "coffee-deck2.jpg",
     },
     {
       key: "accessories",
       label: "Coffee Accessories",
       icon: <PackageOpen className="h-5 w-5" />,
-      img: "canister-web.png",
+      img: "canister-web.jpg",
     },
   ];
 

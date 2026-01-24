@@ -1,10 +1,18 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const PRIVATE_KEY = process.env.KLAVIYO_PRIVATE_KEY; // server-only
-const LIST_ID = process.env.KLAVIYO_LIST_ID; // server-only
+const PROMO_LIST_ID = process.env.KLAVIYO_LIST_ID; // existing promo list
+const LAUNCH_LIST_ID = process.env.KLAVIYO_LAUNCH_LIST_ID; // new launch notify list
 
 function emailOk(val: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val || "").trim());
+}
+
+function pickListId(source: string) {
+  const s = String(source || "").trim();
+  if (s === "soft-launch-notify") return LAUNCH_LIST_ID;
+  // default everything else to promo list
+  return PROMO_LIST_ID;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -13,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  if (!PRIVATE_KEY || !LIST_ID) {
+  if (!PRIVATE_KEY || !PROMO_LIST_ID) {
     res.status(500).json({ error: "Klaviyo env missing" });
     return;
   }
@@ -29,8 +37,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    // Create profile (Klaviyo API v2024-xx style)
-    // 1) Create or fetch profile
+    const LIST_ID = pickListId(source);
+
+    // If they hit soft-launch-notify but you forgot to set the launch list env var, fail loudly.
+    if (source === "soft-launch-notify" && !LIST_ID) {
+      res.status(500).json({ error: "Launch list env missing" });
+      return;
+    }
+
+    if (!LIST_ID) {
+      res.status(500).json({ error: "Klaviyo list env missing" });
+      return;
+    }
+
+    // 1) Create profile (or 409 if already exists)
     const profileResp = await fetch("https://a.klaviyo.com/api/profiles/", {
       method: "POST",
       headers: {
@@ -46,28 +66,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             email,
             properties: {
               source,
-              capture: "promo",
+              capture:
+                source === "soft-launch-notify" ? "launch-notify" : "promo",
             },
           },
         },
       }),
     });
 
-    // Accept 200 (created) or 409 (already exists)
     if (!profileResp.ok && profileResp.status !== 409) {
       const t = await profileResp.text();
       res.status(502).json({ error: "Klaviyo profile failed", detail: t });
       return;
     }
 
-    // 2) Get profile ID (required for list subscribe)
+    // 2) Get profile ID
     let profileId: string | null = null;
 
     if (profileResp.status === 200) {
       const json = await profileResp.json();
       profileId = json?.data?.id || null;
     } else {
-      // 409 → fetch profile by email
       const lookup = await fetch(
         `https://a.klaviyo.com/api/profiles/?filter=equals(email,"${email}")`,
         {
@@ -90,7 +109,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    // 3) Subscribe profile to list using ID (this never races)
+    // 3) Subscribe to the right list
     const sub = await fetch(
       `https://a.klaviyo.com/api/lists/${LIST_ID}/relationships/profiles/`,
       {
@@ -115,8 +134,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    res.status(200).json({ ok: true });
-  } catch (err) {
+    res
+      .status(200)
+      .json({
+        ok: true,
+        list: source === "soft-launch-notify" ? "launch" : "promo",
+      });
+  } catch {
     res.status(500).json({ error: "Unexpected server error" });
   }
 }

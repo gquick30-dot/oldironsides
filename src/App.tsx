@@ -2276,7 +2276,7 @@ function HomePage() {
                   LAUNCHING FEBRUARY
                 </h2>
 
-                <p className="mt-2 text-amber-300 text-sm sm:text-base leading-relaxed">
+                <p className="mt-2 text-amber-300 text-md md:text-base leading-relaxed">
                   In the mean time explore the site.
                   <br />
                   Want to be notified when we open?

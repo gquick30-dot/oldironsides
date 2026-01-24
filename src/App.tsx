@@ -385,7 +385,7 @@ const roastCards = [
     img: "Flagship Transparent Mockup.png", // Main image for hero section
     imgLeft: "washington-cannon.jpg", // New property for left image in duel
     imgRight: "barry-ship.jpg", // New property for right image in duel
-    heroImg: "Flagship-web.png", // New property for hero section image
+    heroImg: "Flagship-web.jpg", // New property for hero section image
     price: 22.0,
     canBuy: true,
     variant: "12oz Bag",
@@ -409,9 +409,9 @@ const roastCards = [
     subTitle: "Dark Roast",
     note: "Bold, Smooth, Unyielding",
     img: "Baptism By Fire Transparent .png", // Main image for hero section
-    imgLeft: "capt-hull.jpg", // New property for left image in duel
-    imgRight: "james-surrender.jpg", // New property for right image in duel
-    heroImg: "baptism-web.png", // New property for hero section image
+    imgLeft: "capt-hull.jpeg", // New property for left image in duel
+    imgRight: "james-surrender.jpeg", // New property for right image in duel
+    heroImg: "baptism-web.jpg", // New property for hero section image
     price: 22.0,
     canBuy: true,
     variant: "12oz Bag",
@@ -436,8 +436,8 @@ const roastCards = [
     note: "Captivating, Decisive Finish.",
     img: "Java Action Transparent.png", // Main image for hero section
     imgLeft: "bainbridge-java.jpg", // New property for left image in duel
-    imgRight: "lambert-pic.png", // New property for right image in duel
-    heroImg: "java-web.png", // New property for hero section image
+    imgRight: "lambert-pic.jpg", // New property for right image in duel
+    heroImg: "java-web.jpg", // New property for hero section image
     price: 22.0,
     canBuy: true,
     variant: "12oz Bag",
@@ -459,9 +459,9 @@ const roastCards = [
     subTitle: "Medium Roast",
     note: "Limited Release, Micro-Batch",
     img: "Oak&Copper Bag Transparent.png", // Main image for hero section
-    imgLeft: "ship-hull.avif", // New property for left image in duel
-    imgRight: "ship-restore.jpg", // New property for right image in duel
-    heroImg: "ironship.png", // New property for hero section image
+    imgLeft: "ship-hull.jpg", // New property for left image in duel
+    imgRight: "ship-restore.jpeg", // New property for right image in duel
+    heroImg: "ironship.jpg", // New property for hero section image
     price: 0,
     canBuy: false,
     variant: "12oz Bag",
@@ -2219,7 +2219,7 @@ function HomePage() {
 
         {/* DESKTOP original emblem + radial glow */}
         <img
-          src="emblem-black.png"
+          src="emblem-black.jpg"
           alt="Stormy sea"
           className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[62vw] max-w-[780px] object-contain opacity-10 pointer-events-none select-none"
         />
@@ -2277,10 +2277,9 @@ function HomePage() {
                 </h2>
 
                 <p className="mt-2 text-neutral-300 text-sm sm:text-base leading-relaxed">
-                  Old Ironsides Coffee is nearing commissioning for launch.
+                  In the mean time explore the site.
                   <br />
-                  In the meantime, explore the fleet and learn what Old
-                  Ironsides Coffee stands for.
+                  Want to be notified when we open?
                 </p>
 
                 {/* notify form only */}
@@ -2414,7 +2413,7 @@ function HomePage() {
       >
         {/* Background image, cooled and desaturated */}
         <img
-          src="/flag-close.jpg"
+          src="/flag-close.jpeg"
           alt=""
           role="presentation"
           aria-hidden="true"
@@ -2460,7 +2459,7 @@ function HomePage() {
                 <div className="justify-self-center md:justify-self-start self-center">
                   <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
                     <img
-                      src="/soliders-sunset.png"
+                      src="/soliders-sunset.jpg"
                       alt="Giving back"
                       className="w-full h-full object-cover hue-rotate-[-10deg] saturate-70"
                     />
@@ -6355,7 +6354,7 @@ function OriginsPage() {
         className={`${SECTION_FRAME} -translate-y-3 md:translate-y-0 scroll-mt-28 md:scroll-mt-36`}
       >
         <img
-          src="/roasted-dark.jpg"
+          src="/roasted-dark.jpeg"
           alt="Roasting process backdrop"
           className="absolute inset-0 w-full h-full object-cover object-center transform scale-[0.9] md:scale-100 opacity-50 z-0 pointer-events-none"
         />
@@ -6424,7 +6423,7 @@ function OriginsPage() {
         className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
       >
         <img
-          src="/farm1-web.jpg"
+          src="/farm1-web.jpeg"
           alt="Origins & Voyages backdrop"
           className="absolute inset-0 w-full h-full object-cover object-[50%_68%] opacity-80 z-0 pointer-events-none origin-center [transform:scaleY(1.08)] md:[transform:none]"
         />
@@ -6453,7 +6452,7 @@ function OriginsPage() {
               <div className="justify-self-center self-center">
                 <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
                   <img
-                    src="/bean-stock3.jpg"
+                    src="/bean-stock3.jpeg"
                     alt="Beans lands"
                     className="w-full h-full object-cover"
                   />
@@ -6471,7 +6470,7 @@ function OriginsPage() {
       >
         {/* Mobile: no backdrop. Desktop: keep backdrop */}
         <img
-          src="/hands-bowl.jpg"
+          src="/hands-bowl.jpeg"
           alt="Growers backdrop"
           className="absolute inset-0 w-full h-full object-cover object-center opacity-70 z-0 pointer-events-none hidden md:block"
         />
@@ -6495,7 +6494,7 @@ function OriginsPage() {
                   {/* Top card (far LEFT) */}
                   <div className="absolute left-0 top-0 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
                     <img
-                      src="/workergirl1.jpg"
+                      src="/workergirl1.jpeg"
                       alt="Harvest and selection"
                       className="w-full h-full object-cover"
                     />
@@ -6783,7 +6782,7 @@ function OriginsPage() {
                   {/* Middle card (offset right) */}
                   <div className="absolute left-[56%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-2xl">
                     <img
-                      src="/iraq-self1.JPG"
+                      src="/iraq-self1.jpeg"
                       alt=""
                       className="w-full h-full object-cover"
                     />
@@ -6791,7 +6790,7 @@ function OriginsPage() {
                   {/* Bottom card (left) */}
                   <div className="absolute left-0 bottom-0 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
                     <img
-                      src="/iraq-kids.JPG"
+                      src="/iraq-kids.jpeg"
                       alt=""
                       className="w-full h-full object-cover"
                     />

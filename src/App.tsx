@@ -2227,7 +2227,7 @@ function HomePage() {
         <div className="hidden md:block absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
 
         {/* content wrapper sits on top */}
-        <Container className="relative desktopHeroPad pt-[20rem] pb-10 sm:pt-[18rem] sm:pb-14 md:pt-[4.5rem] md:pb-[4.5rem]">
+        <Container className="relative desktopHeroPad pt-[13rem] pb-10 sm:pt-[12rem] sm:pb-14 md:pt-[4.5rem] md:pb-[4.5rem]">
           <style>{`
   @media (min-width: 768px) {
     #top .desktopHeroPad {
@@ -2261,7 +2261,7 @@ function HomePage() {
             </div>
 
             {/* CENTER TEXT + CTA (desktop only) */}
-            <div className="md:col-span-6 flex flex-col items-center text-center heroCenter">
+            <div className="md:col-span-6 flex flex-col items-center text-center heroCenter translate-y-[11vh] md:translate-y-0">
               <div aria-hidden className="hidden md:block h-4 lg:h-6" />
               {/* SOFT LAUNCH STATUS */}
               <div

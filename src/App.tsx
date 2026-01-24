@@ -1041,12 +1041,7 @@ const submitLaunchNotifyEmail = async (email: string) => {
     // do not block
   }
 
-  // Confirmation banner (NO discount language)
-  window.dispatchEvent(
-    new CustomEvent("flash", {
-      detail: "Thank you. We’ll notify you the moment we launch.",
-    })
-  );
+ 
 
   // Klaviyo client-side event (analytics only)
   try {
@@ -2198,7 +2193,10 @@ function SDVOSBHighlight() {
 
 /* ================= Pages ================= */
 function HomePage() {
+  const [launchNotified, setLaunchNotified] = useState(false);
+
   return (
+
     <>
       <header
         id="top"
@@ -2284,23 +2282,34 @@ function HomePage() {
 
                 {/* notify form only */}
                 <div className="mt-3 rounded-lg ring-1 ring-amber-400/40 bg-neutral-900/60 px-3 py-2 backdrop-blur max-w-[20rem] mx-auto">
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      const form = e.currentTarget as HTMLFormElement;
-                      const input = form.querySelector(
-                        "input"
-                      ) as HTMLInputElement;
-                      if (input?.value) submitLaunchNotifyEmail(input.value);
-                    }}
-                    className="flex gap-1"
-                  >
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="flex-1 rounded-md bg-neutral-900/70 border border-neutral-700 px-2 py-1.5 text-xs"
-                      required
-                    />
+                <form
+  onSubmit={async (e) => {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    const input = form.querySelector(
+      "input[type='email']"
+    ) as HTMLInputElement | null;
+
+    if (!input || !input.value) return;
+
+    const ok = await submitLaunchNotifyEmail(input.value);
+if (ok) {
+  setLaunchNotified(true);
+  input.value = "";
+}
+
+  }}
+  className="flex gap-1"
+>
+
+<input
+  type="email"
+  placeholder="Enter your email"
+  required
+  className="flex-1 rounded-md bg-neutral-900/70 border border-neutral-700 px-2 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-amber-400"
+/>
+
                     <button
                       type="submit"
                       className="px-3 py-1.5 rounded-md bg-amber-400 text-neutral-900 text-xs font-semibold"
@@ -2308,6 +2317,12 @@ function HomePage() {
                       Notify Me
                     </button>
                   </form>
+                  {launchNotified && (
+  <p className="mt-2 text-xs text-emerald-400 text-center">
+    Thank you. We’ll notify you when we launch.
+  </p>
+)}
+
                 </div>
               </div>
               {/* push the original hero stack back down (leave launch block up top) */}

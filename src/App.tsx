@@ -491,7 +491,7 @@ type RoastCardConfig = (typeof roastCards)[number];
 const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
   flagship: "9141081276637",
   "baptism-by-fire": "9192531853533",
-  "java-action": "9192548663517",
+  "java-action": "9271153918173",
   "oak-and-copper": "9192552104157",
   "brass-monkey": "9236587315421",
 };
@@ -1040,8 +1040,6 @@ const submitLaunchNotifyEmail = async (email: string) => {
   } catch {
     // do not block
   }
-
- 
 
   // Klaviyo client-side event (analytics only)
   try {
@@ -2196,7 +2194,6 @@ function HomePage() {
   const [launchNotified, setLaunchNotified] = useState(false);
 
   return (
-
     <>
       <header
         id="top"
@@ -2282,33 +2279,31 @@ function HomePage() {
 
                 {/* notify form only */}
                 <div className="mt-3 rounded-lg ring-1 ring-amber-400/40 bg-neutral-900/60 px-3 py-2 backdrop-blur max-w-[20rem] mx-auto">
-                <form
-  onSubmit={async (e) => {
-    e.preventDefault();
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
 
-    const form = e.currentTarget;
-    const input = form.querySelector(
-      "input[type='email']"
-    ) as HTMLInputElement | null;
+                      const form = e.currentTarget;
+                      const input = form.querySelector(
+                        "input[type='email']"
+                      ) as HTMLInputElement | null;
 
-    if (!input || !input.value) return;
+                      if (!input || !input.value) return;
 
-    const ok = await submitLaunchNotifyEmail(input.value);
-if (ok) {
-  setLaunchNotified(true);
-  input.value = "";
-}
-
-  }}
-  className="flex gap-1"
->
-
-<input
-  type="email"
-  placeholder="Enter your email"
-  required
-  className="flex-1 rounded-md bg-neutral-900/70 border border-neutral-700 px-2 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-amber-400"
-/>
+                      const ok = await submitLaunchNotifyEmail(input.value);
+                      if (ok) {
+                        setLaunchNotified(true);
+                        input.value = "";
+                      }
+                    }}
+                    className="flex gap-1"
+                  >
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      required
+                      className="flex-1 rounded-md bg-neutral-900/70 border border-neutral-700 px-2 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    />
 
                     <button
                       type="submit"
@@ -2318,11 +2313,10 @@ if (ok) {
                     </button>
                   </form>
                   {launchNotified && (
-  <p className="mt-2 text-xs text-emerald-400 text-center">
-    Thank you. We’ll notify you when we launch.
-  </p>
-)}
-
+                    <p className="mt-2 text-xs text-emerald-400 text-center">
+                      Thank you. We’ll notify you when we launch.
+                    </p>
+                  )}
                 </div>
               </div>
               {/* push the original hero stack back down (leave launch block up top) */}

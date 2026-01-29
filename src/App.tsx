@@ -3467,9 +3467,10 @@ function RoastDetailPage() {
       // 3) mirror to your local cart UI
       const itemToAdd = {
         ...card,
-        id: `${card.slug}-12oz-${beanType}`,
+        id: PRODUCT_IDS_BY_SLUG[card.slug], // ← THIS IS THE FIX
         sku: `${card.slug}-12oz-${beanType}`,
         title: `${card.title} (${variantLabel})`,
+
         // store both the regular one-time price and the active price
         basePrice,
         price: purchaseMode === "sub" ? discounted ?? basePrice : basePrice,

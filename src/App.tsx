@@ -489,7 +489,7 @@ const roastCards = [
 ];
 type RoastCardConfig = (typeof roastCards)[number];
 const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
-  flagship: "9141081276637",
+  flagship: "9271153885405",
   "baptism-by-fire": "9192531853533",
   "java-action": "9192548663517",
   "oak-and-copper": "9192552104157",

@@ -377,8 +377,6 @@ const flash = (message: string) => {
 };
 const roastCards = [
   {
-    id: "flagship-12oz-ground",
-    slug: "flagship",
     title: "Flagship",
     subTitle: "Medium Roast",
     note: "Balanced, Enduring, Everyday",
@@ -716,7 +714,13 @@ function CartProvider({ children }: any) {
           ? "Ground"
           : null;
 
-      const rawId = String(item?.id ?? "");
+      const slug = String(item?.slug ?? "");
+      const productId = PRODUCT_IDS_BY_SLUG[slug];
+
+      if (!productId) {
+        throw new Error(`Missing PRODUCT_IDS_BY_SLUG for slug: ${slug}`);
+      }
+
       const beanKey =
         item?.beanType === "whole" || item?.beanType === "ground"
           ? item.beanType
@@ -726,7 +730,7 @@ function CartProvider({ children }: any) {
       const freqKey =
         item?.purchaseMode === "sub" ? `_${String(item?.subEvery ?? 30)}d` : "";
 
-      const base = rawId.replace(/(__.*)$/, "");
+      const base = String(productId);
       const canonicalId = `${base}__${beanKey}__${purchaseKey}${freqKey}`;
 
       const displayTitle =

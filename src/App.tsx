@@ -491,11 +491,10 @@ type RoastCardConfig = (typeof roastCards)[number];
 const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
   flagship: "9141081276637",
   "baptism-by-fire": "9192531853533",
-  "java-action": "9271153918173",
+  "java-action": "9192548663517",
   "oak-and-copper": "9192552104157",
   "brass-monkey": "9236587315421",
 };
-
 function RoastMegaCard({
   card,
   onClick,
@@ -2188,7 +2187,6 @@ function SDVOSBHighlight() {
     </section>
   );
 }
-
 /* ================= Pages ================= */
 function HomePage() {
   const [launchNotified, setLaunchNotified] = useState(false);

@@ -490,10 +490,10 @@ const roastCards = [
 type RoastCardConfig = (typeof roastCards)[number];
 const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
   flagship: "9271153885405",
-  "baptism-by-fire": "9192531853533",
-  "java-action": "9192548663517",
-  "oak-and-copper": "9192552104157",
-  "brass-monkey": "9236587315421",
+  "baptism-by-fire": "9271153754333",
+  "java-action": "9271153918173",
+  "oak-and-copper": "9271153787101",
+  "brass-monkey": "9271153819869",
 };
 function RoastMegaCard({
   card,
@@ -3467,10 +3467,9 @@ function RoastDetailPage() {
       // 3) mirror to your local cart UI
       const itemToAdd = {
         ...card,
-        id: PRODUCT_IDS_BY_SLUG[card.slug], // ← THIS IS THE FIX
+        id: `${card.slug}-12oz-${beanType}`,
         sku: `${card.slug}-12oz-${beanType}`,
         title: `${card.title} (${variantLabel})`,
-
         // store both the regular one-time price and the active price
         basePrice,
         price: purchaseMode === "sub" ? discounted ?? basePrice : basePrice,

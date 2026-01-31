@@ -456,7 +456,7 @@ const roastCards = [
     id: "oak-copper-coming-soon",
     slug: "oak-and-copper",
     title: "OAK & COPPER",
-    subTitle: "Medium Roast",
+    subTitle: "Bourbon Barrel Aged",
     note: "Limited Release, Micro-Batch",
     img: "Oak&Copper Bag Transparent.png", // Main image for hero section
     imgLeft: "ship-hull.jpg", // New property for left image in duel
@@ -480,8 +480,8 @@ const roastCards = [
     id: "brass-monkey",
     slug: "brass-monkey",
     title: "BRASS MONKEY",
-    subTitle: "COLD AS BALLS!",
-    note: "Southern Pecan Seasonal Winter Roast",
+    subTitle: "Winter Seasonal",
+    note: "Southern Pecan",
     img: "/Brass Monkey Transparent Bag.png", // change to your actual filename
     price: 22, // change if needed
     canBuy: true, // or false if you want it visible but not purchasable yet
@@ -1291,6 +1291,22 @@ function MegaSubscribeBox({
     `Get 20% off your first order
   Join the fleet for 15% off recurring orders`;
   const btn = buttonText ?? "GET 20% OFF";
+
+  // ===== 48-hour cooldown logic =====
+  const COOLDOWN_HOURS = 48;
+  const COOLDOWN_KEY = "welcome_20_seen_at";
+
+  const now = Date.now();
+  const lastSeen = Number(localStorage.getItem(COOLDOWN_KEY) || 0);
+  const cooldownMs = COOLDOWN_HOURS * 60 * 60 * 1000;
+
+  const isInCooldown = lastSeen && now - lastSeen < cooldownMs;
+
+  if (isInCooldown) return null;
+  // mark banner as seen
+  if (!lastSeen) {
+    localStorage.setItem(COOLDOWN_KEY, String(now));
+  }
 
   return (
     <div className="w-full lg:w-[36rem]">

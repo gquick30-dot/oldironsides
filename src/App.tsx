@@ -10464,7 +10464,7 @@ function PromoSubscribeModal() {
   // ===== LIVE CONFIG =====
   const TEST_FORCE_OPEN = false; // keep false in production
   const OPEN_DELAY_MS = 5000; // open ~5s AFTER window 'load'
-  const COOLDOWN_MINUTES = 1440; // 24 hours
+  const COOLDOWN_MINUTES = 2880; // 48 hours
 
   // ===== STATE =====
   const [open, setOpen] = React.useState(false);
@@ -10651,6 +10651,10 @@ function PromoSubscribeModal() {
         const delay = Math.max(0, g.__promo.readyAt - nowMs());
         g.__promo.entryTimer = window.setTimeout(() => {
           g.__promo.entryTimer = null;
+
+          // 🔒 burn cooldown immediately on auto-open
+          startCooldown();
+
           safeOpen(false);
         }, delay);
       }

@@ -10662,6 +10662,7 @@ function PromoSubscribeModal() {
           g.__promo.entryTimer = null;
 
           sessionStorage.setItem(KEY_SEEN, "1");
+          startCooldown(); // 🔒 burn cooldown on auto-open
 
           safeOpen(false);
         }, delay);

@@ -10566,6 +10566,11 @@ function PromoSubscribeModal() {
   const safeOpen = (force = false) => {
     if (g.__promo.isLockedOpen) return;
 
+    // 🔒 hard stop: blocks any auto-open trigger anywhere
+    try {
+      if (!force && localStorage.getItem(KEY_HARD_STOP) === "1") return;
+    } catch {}
+
     const readyAt = g.__promo.readyAt || 0;
     const now = nowMs();
 
@@ -10583,6 +10588,11 @@ function PromoSubscribeModal() {
     }
 
     g.__promo.isLockedOpen = true;
+
+    try {
+      if (!force) localStorage.setItem(KEY_HARD_STOP, "1"); // burn on any non-click open
+    } catch {}
+
     setEmail("");
     setPhase("form");
     setOpen(true);

@@ -10463,7 +10463,7 @@ function ScrollToTop() {
 function PromoSubscribeModal() {
   // ===== LIVE CONFIG =====
   const TEST_FORCE_OPEN = false; // keep false in production
-  const OPEN_DELAY_MS = 5000; // open ~5s AFTER window 'load'
+  const OPEN_DELAY_MS = 7000; // open ~7s AFTER window 'load'
   const COOLDOWN_MINUTES = 2880; // 48 hours
 
   // ===== STATE =====
@@ -10476,6 +10476,7 @@ function PromoSubscribeModal() {
   const KEY_CD = "promo_cooldown_until";
   const COOKIE_SUB = "promo_subscribed";
   const COOKIE_CD = "promo_cooldown_until";
+  const KEY_SEEN = "promo_seen_session";
 
   // ===== GLOBAL GUARDS (singleton + timers + gating) =====
   const g = globalThis as any;
@@ -10568,6 +10569,9 @@ function PromoSubscribeModal() {
       if (!g.__promo.pendingTimer) {
         g.__promo.pendingTimer = window.setTimeout(() => {
           g.__promo.pendingTimer = null;
+
+          sessionStorage.setItem(KEY_SEEN, "1");
+
           safeOpen(false);
         }, Math.max(0, readyAt - now + 10));
       }
@@ -10641,9 +10645,14 @@ function PromoSubscribeModal() {
         }
       })();
 
+      const seenThisSession = sessionStorage.getItem(KEY_SEEN) === "1";
+
       const canAuto = TEST_FORCE_OPEN
         ? true
-        : !isSubscribed() && !isLoggedIn && nowMs() >= cooldownUntil;
+        : !seenThisSession &&
+          !isSubscribed() &&
+          !isLoggedIn &&
+          nowMs() >= cooldownUntil;
 
       if (!canAuto) return;
 
@@ -10652,8 +10661,7 @@ function PromoSubscribeModal() {
         g.__promo.entryTimer = window.setTimeout(() => {
           g.__promo.entryTimer = null;
 
-          // 🔒 burn cooldown immediately on auto-open
-          startCooldown();
+          sessionStorage.setItem(KEY_SEEN, "1");
 
           safeOpen(false);
         }, delay);

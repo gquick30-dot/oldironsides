@@ -10477,6 +10477,7 @@ function PromoSubscribeModal() {
   const COOKIE_SUB = "promo_subscribed";
   const COOKIE_CD = "promo_cooldown_until";
   const KEY_SEEN = "promo_seen_session";
+  const KEY_HARD_STOP = "promo_autoshown";
 
   // ===== GLOBAL GUARDS (singleton + timers + gating) =====
   const g = globalThis as any;
@@ -10637,6 +10638,9 @@ function PromoSubscribeModal() {
     if (!isLeader) return;
 
     const setReady = () => {
+      // 🔒 hard stop: never auto-open again
+      if (localStorage.getItem(KEY_HARD_STOP) === "1") return;
+
       g.__promo.readyAt = nowMs() + OPEN_DELAY_MS;
 
       const cooldownUntil = getCooldownUntil();
@@ -10664,9 +10668,7 @@ function PromoSubscribeModal() {
         g.__promo.entryTimer = window.setTimeout(() => {
           g.__promo.entryTimer = null;
 
-          sessionStorage.setItem(KEY_SEEN, "1");
-          startCooldown(); // 🔒 burn cooldown on auto-open
-
+          localStorage.setItem(KEY_HARD_STOP, "1"); // 🔒 permanent auto-open kill
           safeOpen(false);
         }, delay);
       }

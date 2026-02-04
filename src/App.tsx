@@ -10520,10 +10520,14 @@ function PromoSubscribeModal() {
   const setCookieSeconds = (name: string, value: string, seconds: number) => {
     const maxAge = Math.max(0, Math.floor(seconds));
     const secure = location.protocol === "https:" ? "; Secure" : "";
+    const domain = location.hostname.includes("oldironsidescoffee.org")
+      ? "; Domain=.oldironsidescoffee.org"
+      : "";
     document.cookie = `${name}=${encodeURIComponent(
       value
-    )}; Path=/; SameSite=Lax; Max-Age=${maxAge}${secure}`;
+    )}; Path=/; SameSite=Lax; Max-Age=${maxAge}${domain}${secure}`;
   };
+
   const getCookie = (name: string): string | null => {
     if (!document.cookie) return null;
     const parts = document.cookie.split("; ");
@@ -10542,12 +10546,11 @@ function PromoSubscribeModal() {
     localStorage.getItem(KEY_SUB) === "1" || getCookie(COOKIE_SUB) === "1";
 
   const getCooldownUntil = () => {
-    const cdLocal = parseInt(localStorage.getItem(KEY_CD) || "0", 10);
     const cdCookie = parseInt(getCookie(COOKIE_CD) || "0", 10);
-    return Math.max(
-      Number.isFinite(cdLocal) ? cdLocal : 0,
-      Number.isFinite(cdCookie) ? cdCookie : 0
-    );
+    if (Number.isFinite(cdCookie) && cdCookie > 0) return cdCookie;
+
+    const cdLocal = parseInt(localStorage.getItem(KEY_CD) || "0", 10);
+    return Number.isFinite(cdLocal) ? cdLocal : 0;
   };
 
   const startCooldown = () => {

@@ -10477,7 +10477,6 @@ function PromoSubscribeModal() {
   const COOKIE_CD = "promo_cooldown_until";
   const KEY_SEEN = "promo_seen_session";
 
-
   // ===== GLOBAL GUARDS (singleton + timers + gating) =====
   const g = globalThis as any;
   g.__promo = g.__promo || {
@@ -10485,8 +10484,8 @@ function PromoSubscribeModal() {
     entryTimer: null as any,
     readyAt: Number.POSITIVE_INFINITY as number,
     isLockedOpen: false,
+    didInit: false, // 🔒 GLOBAL ONE-TIME GUARD
   };
-  
 
   // unique id for this instance
   const instanceId = React.useMemo(
@@ -10564,35 +10563,35 @@ function PromoSubscribeModal() {
   // force=true bypasses delay gate for user clicks; auto-open respects gate
   const safeOpen = (force = false) => {
     if (g.__promo.isLockedOpen) return;
-  
+
     // ⛔ block auto-open during cooldown
     if (!force) {
       const cooldownUntil = getCooldownUntil();
       if (nowMs() < cooldownUntil) return;
     }
-  
+
     // kill any pending auto-open
     if (g.__promo.entryTimer) {
       clearTimeout(g.__promo.entryTimer);
       g.__promo.entryTimer = null;
     }
-  
+
     g.__promo.isLockedOpen = true;
-  
+
     setEmail("");
     setPhase("form");
     setOpen(true);
   };
-  
+
   const safeClose = () => {
     setOpen(false);
-  
+
     // mark seen for this session
     sessionStorage.setItem(KEY_SEEN, "1");
-  
+
     // start 48h cooldown
     startCooldown();
-  
+
     setTimeout(() => {
       g.__promo.isLockedOpen = false;
     }, 200);
@@ -10603,7 +10602,7 @@ function PromoSubscribeModal() {
       sessionStorage.setItem(KEY_SEEN, "1");
     }
   }, []);
-  
+
   // ===== EVENT: open from anywhere (respects gate) =====
   React.useEffect(() => {
     if (!isLeader) return;
@@ -10645,31 +10644,34 @@ function PromoSubscribeModal() {
   React.useEffect(() => {
     if (!isLeader) return;
 
+    // 🔒 absolute one-time init guard
+    if (g.__promo.didInit) return;
+    g.__promo.didInit = true;
+
     const setReady = () => {
       g.__promo.readyAt = nowMs() + OPEN_DELAY_MS;
-    
+
       const cooldownUntil = getCooldownUntil();
       const seenThisSession = sessionStorage.getItem(KEY_SEEN) === "1";
-    
+
       const canAuto =
         TEST_FORCE_OPEN ||
         (!seenThisSession && !isSubscribed() && nowMs() >= cooldownUntil);
-    
+
       if (!canAuto) return;
-    
+
       if (!g.__promo.entryTimer) {
         const delay = Math.max(0, g.__promo.readyAt - nowMs());
         g.__promo.entryTimer = window.setTimeout(() => {
           g.__promo.entryTimer = null;
-        
+
           // mark seen for this tab immediately
           sessionStorage.setItem(KEY_SEEN, "1");
-        
+
           safeOpen(false);
-        }, delay);        
+        }, delay);
       }
     };
-    
 
     if (document.readyState === "complete") {
       setReady();
@@ -10835,7 +10837,6 @@ function PromoSubscribeModal() {
                               to="/account/login"
                               className="text-amber-300 hover:underline"
                               onClick={() => {
-                             
                                 setCookieDays(COOKIE_SUB, "1", 365);
                                 safeClose();
                               }}
@@ -10885,7 +10886,6 @@ function PromoSubscribeModal() {
                           to="/account/login"
                           className="text-amber-300 hover:underline"
                           onClick={() => {
-                  
                             setCookieDays(COOKIE_SUB, "1", 365);
                             safeClose();
                           }}

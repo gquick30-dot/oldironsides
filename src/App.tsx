@@ -10461,8 +10461,8 @@ function ScrollToTop() {
 function PromoSubscribeModal() {
   // ===== LIVE CONFIG =====
   const TEST_FORCE_OPEN = false; // keep false in production
-  const OPEN_DELAY_MS = 7000; // open ~7s AFTER window 'load'
-  const COOLDOWN_MINUTES = 2880; // 48 hours
+  const OPEN_DELAY_MS = 5000; // open ~5s AFTER window 'load'
+  const COOLDOWN_MINUTES = 1440; // 24 hours
 
   // ===== STATE =====
   const [open, setOpen] = React.useState(false);
@@ -10472,11 +10472,41 @@ function PromoSubscribeModal() {
   // ===== KEYS =====
   const KEY_SUB = "promo_subscribed";
   const KEY_CD = "promo_cooldown_until";
-  const KEY_AUTO_HARD_STOP = "promo_auto_hard_stop"; // auto-open only once ever
+  const COOKIE_SUB = "promo_subscribed";
+  const COOKIE_CD = "promo_cooldown_until";
+
+  // ===== GLOBAL GUARDS (singleton + timers + gating) =====
+  const g = globalThis as any;
+  g.__promo = g.__promo || {
+    leaderId: null as string | null,
+    entryTimer: null as any,
+    pendingTimer: null as any,
+    readyAt: Number.POSITIVE_INFINITY as number,
+    isLockedOpen: false,
+  };
+
+  // unique id for this instance
+  const instanceId = React.useMemo(
+    () => Math.random().toString(36).slice(2),
+    []
+  );
+  const [isLeader, setIsLeader] = React.useState(false);
+
+  // elect a single leader instance
+  React.useEffect(() => {
+    if (!g.__promo.leaderId) g.__promo.leaderId = instanceId;
+    setIsLeader(g.__promo.leaderId === instanceId);
+    return () => {
+      if (g.__promo.leaderId === instanceId) g.__promo.leaderId = null;
+    };
+  }, [g, instanceId]);
 
   // ===== HELPERS =====
+  const emailOk = (val: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
   const nowMs = () => Date.now();
 
+  // Cookie helpers (regex-free)
   const setCookieDays = (name: string, value: string, days: number) => {
     const maxAge = Math.max(0, Math.floor(days * 86400));
     const secure = location.protocol === "https:" ? "; Secure" : "";
@@ -10484,18 +10514,13 @@ function PromoSubscribeModal() {
       value
     )}; Path=/; SameSite=Lax; Max-Age=${maxAge}${secure}`;
   };
-
   const setCookieSeconds = (name: string, value: string, seconds: number) => {
     const maxAge = Math.max(0, Math.floor(seconds));
     const secure = location.protocol === "https:" ? "; Secure" : "";
-    const domain = location.hostname.includes("oldironsidescoffee.org")
-      ? "; Domain=.oldironsidescoffee.org"
-      : "";
     document.cookie = `${name}=${encodeURIComponent(
       value
-    )}; Path=/; SameSite=Lax; Max-Age=${maxAge}${domain}${secure}`;
+    )}; Path=/; SameSite=Lax; Max-Age=${maxAge}${secure}`;
   };
-
   const getCookie = (name: string): string | null => {
     if (!document.cookie) return null;
     const parts = document.cookie.split("; ");
@@ -10510,135 +10535,133 @@ function PromoSubscribeModal() {
     return null;
   };
 
-  const COOKIE_SUB = "promo_subscribed";
-  const COOKIE_CD = "promo_cooldown_until";
-
   const isSubscribed = () =>
     localStorage.getItem(KEY_SUB) === "1" || getCookie(COOKIE_SUB) === "1";
 
   const getCooldownUntil = () => {
-    const cdCookie = parseInt(getCookie(COOKIE_CD) || "0", 10);
-    if (Number.isFinite(cdCookie) && cdCookie > 0) return cdCookie;
-
     const cdLocal = parseInt(localStorage.getItem(KEY_CD) || "0", 10);
-    return Number.isFinite(cdLocal) ? cdLocal : 0;
+    const cdCookie = parseInt(getCookie(COOKIE_CD) || "0", 10);
+    return Math.max(
+      Number.isFinite(cdLocal) ? cdLocal : 0,
+      Number.isFinite(cdCookie) ? cdCookie : 0
+    );
   };
 
   const startCooldown = () => {
-    if (COOLDOWN_MINUTES <= 0) return;
-    const until = nowMs() + COOLDOWN_MINUTES * 60 * 1000;
-    localStorage.setItem(KEY_CD, String(until));
-    setCookieSeconds(COOKIE_CD, String(until), COOLDOWN_MINUTES * 60);
+    if (COOLDOWN_MINUTES > 0) {
+      const until = nowMs() + COOLDOWN_MINUTES * 60 * 1000;
+      localStorage.setItem(KEY_CD, String(until));
+      setCookieSeconds(COOKIE_CD, String(until), COOLDOWN_MINUTES * 60);
+    }
   };
 
-  const isHardStopped = () => localStorage.getItem(KEY_AUTO_HARD_STOP) === "1";
+  // force=true bypasses delay gate for user clicks; auto-open respects gate
+  const safeOpen = (force = false) => {
+    if (g.__promo.isLockedOpen) return;
 
-  // ===== OPEN/CLOSE =====
-  const openModal = (mode: "user" | "auto") => {
-    // AUTO is gated. USER always opens.
-    if (mode === "auto") {
-      if (!TEST_FORCE_OPEN) {
-        if (isHardStopped()) return;
-        if (isSubscribed()) return;
-        if (nowMs() < getCooldownUntil()) return;
+    const readyAt = g.__promo.readyAt || 0;
+    const now = nowMs();
+
+    if (!force && now < readyAt) {
+      if (!g.__promo.pendingTimer) {
+        g.__promo.pendingTimer = window.setTimeout(() => {
+          g.__promo.pendingTimer = null;
+          safeOpen(false);
+        }, Math.max(0, readyAt - now + 10));
       }
+      return;
     }
 
+    g.__promo.isLockedOpen = true;
     setEmail("");
     setPhase("form");
     setOpen(true);
   };
 
-  const closeModal = () => {
+  const safeClose = () => {
     setOpen(false);
     startCooldown();
+    setTimeout(() => {
+      g.__promo.isLockedOpen = false;
+    }, 200);
   };
 
-  // ===== GLOBAL MANUAL OPENER (BULLETPROOF) =====
+  // ===== EVENT: open from anywhere (respects gate) =====
   React.useEffect(() => {
-    const g = globalThis as any;
-
-    // 1) global function your header can call directly
-    g.__openPromoModal = () => openModal("user");
-
-    // 2) event listener for programmatic opens
-    const onOpen = (e: Event) => {
-      const ce = e as CustomEvent<any>;
-      const forced = ce?.detail?.force === true;
-      openModal(forced ? "user" : "user"); // manual event always opens
-    };
-
+    if (!isLeader) return;
+    const onOpen = () => safeOpen(false);
     window.addEventListener("promo-subscribe", onOpen as any);
-
+    document.addEventListener("promo-subscribe", onOpen as any);
     return () => {
-      if (g.__openPromoModal) delete g.__openPromoModal;
       window.removeEventListener("promo-subscribe", onOpen as any);
+      document.removeEventListener("promo-subscribe", onOpen as any);
     };
-  }, []);
+  }, [isLeader]);
 
-  // ===== OPTIONAL: CLICK HOOK FOR [data-open-promo] (KEEP, BUT NOT REQUIRED) =====
+  // ===== CLICK TRIGGER: [data-open-promo] — opens immediately for user action =====
   React.useEffect(() => {
-    const handler = (e: Event) => {
+    if (!isLeader) return;
+    const handleClickCapture = (e: Event) => {
       const t = e.target as HTMLElement | null;
       if (!t) return;
       const trigger = t.closest("[data-open-promo]");
       if (!trigger) return;
       e.preventDefault();
-      openModal("user");
+      safeOpen(true); // user clicked, bypass delay
     };
+    document.addEventListener("click", handleClickCapture, true);
+    return () =>
+      document.removeEventListener("click", handleClickCapture, true);
+  }, [isLeader]);
 
-    // capture + bubble, plus pointerup for stubborn elements
-    document.addEventListener("click", handler, true);
-    document.addEventListener("click", handler, false);
-    document.addEventListener("pointerup", handler, true);
-
-    return () => {
-      document.removeEventListener("click", handler, true);
-      document.removeEventListener("click", handler, false);
-      document.removeEventListener("pointerup", handler, true);
-    };
-  }, []);
-
-  // ===== ESC =====
+  // ===== ESC to close =====
   React.useEffect(() => {
-    if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeModal();
+      if (e.key === "Escape") safeClose();
     };
-    window.addEventListener("keydown", onKey);
+    if (open) window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  // ===== AUTO OPEN: 7s AFTER LOAD, ONCE EVER =====
+  // ===== SET READY TIME AFTER FULL WINDOW LOAD, THEN SCHEDULE AUTO-OPEN =====
   React.useEffect(() => {
-    const schedule = () => {
-      if (TEST_FORCE_OPEN === false) {
-        if (isHardStopped()) return;
-        if (isSubscribed()) return;
-        if (nowMs() < getCooldownUntil()) return;
-      }
+    if (!isLeader) return;
 
-      window.setTimeout(() => {
-        if (TEST_FORCE_OPEN === false) {
-          if (isSubscribed()) return;
-          if (nowMs() < getCooldownUntil()) return;
-          if (isHardStopped()) return;
+    const setReady = () => {
+      g.__promo.readyAt = nowMs() + OPEN_DELAY_MS;
+
+      const cooldownUntil = getCooldownUntil();
+      const isLoggedIn = (() => {
+        try {
+          return !!localStorage.getItem("oi_user");
+        } catch {
+          return false;
         }
+      })();
 
-        // hard stop auto-open permanently after first auto show
-        localStorage.setItem(KEY_AUTO_HARD_STOP, "1");
+      const canAuto = TEST_FORCE_OPEN
+        ? true
+        : !isSubscribed() && !isLoggedIn && nowMs() >= cooldownUntil;
 
-        openModal("auto");
-      }, OPEN_DELAY_MS);
+      if (!canAuto) return;
+
+      if (!g.__promo.entryTimer) {
+        const delay = Math.max(0, g.__promo.readyAt - nowMs());
+        g.__promo.entryTimer = window.setTimeout(() => {
+          g.__promo.entryTimer = null;
+          safeOpen(false);
+        }, delay);
+      }
     };
 
     if (document.readyState === "complete") {
-      schedule();
+      setReady();
     } else {
-      window.addEventListener("load", schedule, { once: true });
-      return () => window.removeEventListener("load", schedule);
+      const onLoad = () => setReady();
+      window.addEventListener("load", onLoad, { once: true });
+      return () => window.removeEventListener("load", onLoad);
     }
-  }, []);
+  }, [isLeader]);
 
   // ===== SUBMIT =====
   const onSubmit = async (e: React.FormEvent) => {
@@ -10647,17 +10670,13 @@ function PromoSubscribeModal() {
     const ok = await submitPromoEmail(email);
     if (!ok) return;
 
-    // mark subscribed (local + cookie)
-    localStorage.setItem(KEY_SUB, "1");
-    setCookieDays(COOKIE_SUB, "1", 365);
-
     // match existing modal UX
     const isDesktop = window.matchMedia("(min-width: 768px)").matches;
     if (isDesktop) {
-      closeModal();
+      safeClose();
     } else {
       setPhase("success");
-      setTimeout(() => closeModal(), 7000);
+      setTimeout(() => safeClose(), 7000);
     }
   };
 
@@ -10671,7 +10690,7 @@ function PromoSubscribeModal() {
       aria-modal="true"
       aria-label="Get 20% off your first order"
       onClick={(e) => {
-        if (e.target === e.currentTarget) closeModal();
+        if (e.target === e.currentTarget) safeClose();
       }}
     >
       {/* Backdrop */}
@@ -10686,7 +10705,7 @@ function PromoSubscribeModal() {
           {/* TOP-RIGHT CLOSE (X) */}
           <button
             type="button"
-            onClick={closeModal}
+            onClick={safeClose}
             className="absolute right-3 top-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-md
             bg-neutral-900/70 ring-1 ring-amber-300 text-amber-300 hover:text-amber-200
             hover:ring-amber-400 transition"
@@ -10751,14 +10770,18 @@ function PromoSubscribeModal() {
                     <br className="hidden md:block" />
                   </p>
 
+                  {/* === THIS WHOLE WRAPPER SWAPPED === */}
                   <div className="w-full max-w-[300px] sm:max-w-sm md:max-w-2xl mx-auto">
                     {/* MOBILE: success OR form */}
                     <div className="md:hidden">
                       {phase === "success" ? (
                         <>
+                          {/* Full-width amber banner fixed to the top */}
                           <div className="fixed inset-x-0 top-0 z-[2147483647] bg-amber-400 text-neutral-900 text-center font-semibold px-4 py-3 shadow-lg">
                             Welcome aboard! Your discount applied at checkout
                           </div>
+
+                          {/* Spacer so content below doesn’t jump if visible briefly */}
                           <div className="h-12" />
                         </>
                       ) : (
@@ -10795,8 +10818,9 @@ function PromoSubscribeModal() {
                               to="/account/login"
                               className="text-amber-300 hover:underline"
                               onClick={() => {
+                                localStorage.setItem(KEY_SUB, "1");
                                 setCookieDays(COOKIE_SUB, "1", 365);
-                                closeModal();
+                                safeClose();
                               }}
                             >
                               Sign in
@@ -10810,7 +10834,7 @@ function PromoSubscribeModal() {
                       )}
                     </div>
 
-                    {/* DESKTOP: form */}
+                    {/* DESKTOP: form (closes immediately on submit) */}
                     <div className="hidden md:block">
                       <form
                         onSubmit={onSubmit}
@@ -10844,8 +10868,9 @@ function PromoSubscribeModal() {
                           to="/account/login"
                           className="text-amber-300 hover:underline"
                           onClick={() => {
+                            localStorage.setItem(KEY_SUB, "1");
                             setCookieDays(COOKIE_SUB, "1", 365);
-                            closeModal();
+                            safeClose();
                           }}
                         >
                           Sign in
@@ -10857,13 +10882,14 @@ function PromoSubscribeModal() {
                       </div>
                     </div>
                   </div>
+                  {/* === /WRAPPER === */}
                 </div>
 
                 {/* BOTTOM: desktop-only Nah */}
                 <div className="hidden md:flex justify-center pt-4">
                   <button
                     type="button"
-                    onClick={closeModal}
+                    onClick={safeClose}
                     className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl ring-1 ring-amber-400/60 
                     text-amber-400 font-semibold text-lg hover:bg-amber-400 hover:text-neutral-900 transition-all"
                     aria-label="Close banner"
@@ -10884,7 +10910,7 @@ function PromoSubscribeModal() {
           >
             <button
               type="button"
-              onClick={closeModal}
+              onClick={safeClose}
               className="inline-flex items-center justify-center px-4 md:px-5 py-2 rounded-xl ring-1 ring-amber-400/60 
               text-amber-400 font-semibold text-m md:text-lg
               hover:bg-amber-400 hover:text-neutral-900 transition-all"
@@ -10898,7 +10924,7 @@ function PromoSubscribeModal() {
     </div>,
     document.body
   );
-}
+} // <-- end PromoSubscribeModal
 
 function RoastAnchorsInline({ level = 3 }: { level?: 1 | 2 | 3 | 4 | 5 }) {
   return (

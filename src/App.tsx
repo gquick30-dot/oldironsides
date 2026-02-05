@@ -10458,7 +10458,6 @@ function ScrollToTop() {
 }
 // Drop-in replacement: removes the "X" and adds a centered bottom closer
 // styled like your buy box. Clicking it closes the banner.
-
 function PromoSubscribeModal() {
   // ===== LIVE CONFIG =====
   const TEST_FORCE_OPEN = false; // keep false in production
@@ -10473,42 +10472,11 @@ function PromoSubscribeModal() {
   // ===== KEYS =====
   const KEY_SUB = "promo_subscribed";
   const KEY_CD = "promo_cooldown_until";
-  const COOKIE_SUB = "promo_subscribed";
-  const COOKIE_CD = "promo_cooldown_until";
-  const KEY_SEEN = "promo_seen_session";
-
-  // ===== GLOBAL GUARDS (singleton + timers + gating) =====
-  const g = globalThis as any;
-  g.__promo = g.__promo || {
-    leaderId: null as string | null,
-    entryTimer: null as any,
-    readyAt: Number.POSITIVE_INFINITY as number,
-    isLockedOpen: false,
-    didInit: false, // 🔒 GLOBAL ONE-TIME GUARD
-  };
-
-  // unique id for this instance
-  const instanceId = React.useMemo(
-    () => Math.random().toString(36).slice(2),
-    []
-  );
-  const [isLeader, setIsLeader] = React.useState(false);
-
-  // elect a single leader instance
-  React.useEffect(() => {
-    if (!g.__promo.leaderId) g.__promo.leaderId = instanceId;
-    setIsLeader(g.__promo.leaderId === instanceId);
-    return () => {
-      if (g.__promo.leaderId === instanceId) g.__promo.leaderId = null;
-    };
-  }, [g, instanceId]);
+  const KEY_AUTO_HARD_STOP = "promo_auto_hard_stop"; // auto-open only once ever
 
   // ===== HELPERS =====
-  const emailOk = (val: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
   const nowMs = () => Date.now();
 
-  // Cookie helpers (regex-free)
   const setCookieDays = (name: string, value: string, days: number) => {
     const maxAge = Math.max(0, Math.floor(days * 86400));
     const secure = location.protocol === "https:" ? "; Secure" : "";
@@ -10516,6 +10484,7 @@ function PromoSubscribeModal() {
       value
     )}; Path=/; SameSite=Lax; Max-Age=${maxAge}${secure}`;
   };
+
   const setCookieSeconds = (name: string, value: string, seconds: number) => {
     const maxAge = Math.max(0, Math.floor(seconds));
     const secure = location.protocol === "https:" ? "; Secure" : "";
@@ -10541,6 +10510,9 @@ function PromoSubscribeModal() {
     return null;
   };
 
+  const COOKIE_SUB = "promo_subscribed";
+  const COOKIE_CD = "promo_cooldown_until";
+
   const isSubscribed = () =>
     localStorage.getItem(KEY_SUB) === "1" || getCookie(COOKIE_SUB) === "1";
 
@@ -10553,149 +10525,120 @@ function PromoSubscribeModal() {
   };
 
   const startCooldown = () => {
-    if (COOLDOWN_MINUTES > 0) {
-      const until = nowMs() + COOLDOWN_MINUTES * 60 * 1000;
-      localStorage.setItem(KEY_CD, String(until));
-      setCookieSeconds(COOKIE_CD, String(until), COOLDOWN_MINUTES * 60);
-    }
+    if (COOLDOWN_MINUTES <= 0) return;
+    const until = nowMs() + COOLDOWN_MINUTES * 60 * 1000;
+    localStorage.setItem(KEY_CD, String(until));
+    setCookieSeconds(COOKIE_CD, String(until), COOLDOWN_MINUTES * 60);
   };
 
-  // force=true bypasses delay gate for user clicks; auto-open respects gate
-  const safeOpen = (force = false) => {
-    if (g.__promo.isLockedOpen) return;
+  const isHardStopped = () => localStorage.getItem(KEY_AUTO_HARD_STOP) === "1";
 
-    // ⛔ block auto-open during cooldown
-    if (!force) {
-      const cooldownUntil = getCooldownUntil();
-      if (nowMs() < cooldownUntil) return;
+  // ===== OPEN/CLOSE =====
+  const openModal = (mode: "user" | "auto") => {
+    // AUTO is gated. USER always opens.
+    if (mode === "auto") {
+      if (!TEST_FORCE_OPEN) {
+        if (isHardStopped()) return;
+        if (isSubscribed()) return;
+        if (nowMs() < getCooldownUntil()) return;
+      }
     }
-
-    // kill any pending auto-open
-    if (g.__promo.entryTimer) {
-      clearTimeout(g.__promo.entryTimer);
-      g.__promo.entryTimer = null;
-    }
-
-    g.__promo.isLockedOpen = true;
 
     setEmail("");
     setPhase("form");
     setOpen(true);
   };
 
-  const safeClose = () => {
+  const closeModal = () => {
     setOpen(false);
-
-    // mark seen for this session
-    sessionStorage.setItem(KEY_SEEN, "1");
-
-    // start 48h cooldown
     startCooldown();
-
-    setTimeout(() => {
-      g.__promo.isLockedOpen = false;
-    }, 200);
   };
-  React.useEffect(() => {
-    const cooldownUntil = getCooldownUntil();
-    if (nowMs() < cooldownUntil) {
-      sessionStorage.setItem(KEY_SEEN, "1");
-    }
-  }, []);
 
-  // ===== EVENT: open from anywhere (respects gate) =====
+  // ===== GLOBAL MANUAL OPENER (BULLETPROOF) =====
   React.useEffect(() => {
-    if (!isLeader) return;
+    const g = globalThis as any;
 
+    // 1) global function your header can call directly
+    g.__openPromoModal = () => openModal("user");
+
+    // 2) event listener for programmatic opens
     const onOpen = (e: Event) => {
-      console.log(
-        "[promo-subscribe]",
-        "trusted:",
-        (e as any)?.isTrusted,
-        "time:",
-        Date.now()
-      );
-
-      // Only bypass cooldown/delay for real user-triggered events
-      const trusted = (e as any)?.isTrusted === true;
-      safeOpen(trusted);
+      const ce = e as CustomEvent<any>;
+      const forced = ce?.detail?.force === true;
+      openModal(forced ? "user" : "user"); // manual event always opens
     };
 
     window.addEventListener("promo-subscribe", onOpen as any);
-    document.addEventListener("promo-subscribe", onOpen as any);
 
     return () => {
+      if (g.__openPromoModal) delete g.__openPromoModal;
       window.removeEventListener("promo-subscribe", onOpen as any);
-      document.removeEventListener("promo-subscribe", onOpen as any);
     };
-  }, [isLeader]);
+  }, []);
 
-  // ===== CLICK TRIGGER: [data-open-promo] — opens immediately for user action =====
+  // ===== OPTIONAL: CLICK HOOK FOR [data-open-promo] (KEEP, BUT NOT REQUIRED) =====
   React.useEffect(() => {
-    if (!isLeader) return;
-    const handleClickCapture = (e: Event) => {
+    const handler = (e: Event) => {
       const t = e.target as HTMLElement | null;
       if (!t) return;
       const trigger = t.closest("[data-open-promo]");
       if (!trigger) return;
       e.preventDefault();
-      safeOpen(true); // user clicked, bypass delay
+      openModal("user");
     };
-    document.addEventListener("click", handleClickCapture, true);
-    return () =>
-      document.removeEventListener("click", handleClickCapture, true);
-  }, [isLeader]);
 
-  // ===== ESC to close =====
-  React.useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") safeClose();
+    // capture + bubble, plus pointerup for stubborn elements
+    document.addEventListener("click", handler, true);
+    document.addEventListener("click", handler, false);
+    document.addEventListener("pointerup", handler, true);
+
+    return () => {
+      document.removeEventListener("click", handler, true);
+      document.removeEventListener("click", handler, false);
+      document.removeEventListener("pointerup", handler, true);
     };
-    if (open) window.addEventListener("keydown", onKey);
+  }, []);
+
+  // ===== ESC =====
+  React.useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeModal();
+    };
+    window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  // ===== SET READY TIME AFTER FULL WINDOW LOAD, THEN SCHEDULE AUTO-OPEN =====
+  // ===== AUTO OPEN: 7s AFTER LOAD, ONCE EVER =====
   React.useEffect(() => {
-    if (!isLeader) return;
-
-    // 🔒 absolute one-time init guard
-    if (g.__promo.didInit) return;
-    g.__promo.didInit = true;
-
-    const setReady = () => {
-      g.__promo.readyAt = nowMs() + OPEN_DELAY_MS;
-
-      const cooldownUntil = getCooldownUntil();
-      const seenThisSession = sessionStorage.getItem(KEY_SEEN) === "1";
-
-      const canAuto =
-        TEST_FORCE_OPEN ||
-        (!seenThisSession && !isSubscribed() && nowMs() >= cooldownUntil);
-
-      if (!canAuto) return;
-
-      if (!g.__promo.entryTimer) {
-        const delay = Math.max(0, g.__promo.readyAt - nowMs());
-        g.__promo.entryTimer = window.setTimeout(() => {
-          g.__promo.entryTimer = null;
-
-          // mark seen for this tab immediately
-          sessionStorage.setItem(KEY_SEEN, "1");
-
-          safeOpen(false);
-        }, delay);
+    const schedule = () => {
+      if (TEST_FORCE_OPEN === false) {
+        if (isHardStopped()) return;
+        if (isSubscribed()) return;
+        if (nowMs() < getCooldownUntil()) return;
       }
+
+      window.setTimeout(() => {
+        if (TEST_FORCE_OPEN === false) {
+          if (isSubscribed()) return;
+          if (nowMs() < getCooldownUntil()) return;
+          if (isHardStopped()) return;
+        }
+
+        // hard stop auto-open permanently after first auto show
+        localStorage.setItem(KEY_AUTO_HARD_STOP, "1");
+
+        openModal("auto");
+      }, OPEN_DELAY_MS);
     };
 
     if (document.readyState === "complete") {
-      setReady();
+      schedule();
     } else {
-      const onLoad = () => setReady();
-      window.addEventListener("load", onLoad, { once: true });
-      return () => window.removeEventListener("load", onLoad);
+      window.addEventListener("load", schedule, { once: true });
+      return () => window.removeEventListener("load", schedule);
     }
-  }, [isLeader]);
+  }, []);
 
   // ===== SUBMIT =====
   const onSubmit = async (e: React.FormEvent) => {
@@ -10704,13 +10647,17 @@ function PromoSubscribeModal() {
     const ok = await submitPromoEmail(email);
     if (!ok) return;
 
+    // mark subscribed (local + cookie)
+    localStorage.setItem(KEY_SUB, "1");
+    setCookieDays(COOKIE_SUB, "1", 365);
+
     // match existing modal UX
     const isDesktop = window.matchMedia("(min-width: 768px)").matches;
     if (isDesktop) {
-      safeClose();
+      closeModal();
     } else {
       setPhase("success");
-      setTimeout(() => safeClose(), 7000);
+      setTimeout(() => closeModal(), 7000);
     }
   };
 
@@ -10724,7 +10671,7 @@ function PromoSubscribeModal() {
       aria-modal="true"
       aria-label="Get 20% off your first order"
       onClick={(e) => {
-        if (e.target === e.currentTarget) safeClose();
+        if (e.target === e.currentTarget) closeModal();
       }}
     >
       {/* Backdrop */}
@@ -10739,7 +10686,7 @@ function PromoSubscribeModal() {
           {/* TOP-RIGHT CLOSE (X) */}
           <button
             type="button"
-            onClick={safeClose}
+            onClick={closeModal}
             className="absolute right-3 top-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-md
             bg-neutral-900/70 ring-1 ring-amber-300 text-amber-300 hover:text-amber-200
             hover:ring-amber-400 transition"
@@ -10804,18 +10751,14 @@ function PromoSubscribeModal() {
                     <br className="hidden md:block" />
                   </p>
 
-                  {/* === THIS WHOLE WRAPPER SWAPPED === */}
                   <div className="w-full max-w-[300px] sm:max-w-sm md:max-w-2xl mx-auto">
                     {/* MOBILE: success OR form */}
                     <div className="md:hidden">
                       {phase === "success" ? (
                         <>
-                          {/* Full-width amber banner fixed to the top */}
                           <div className="fixed inset-x-0 top-0 z-[2147483647] bg-amber-400 text-neutral-900 text-center font-semibold px-4 py-3 shadow-lg">
                             Welcome aboard! Your discount applied at checkout
                           </div>
-
-                          {/* Spacer so content below doesn’t jump if visible briefly */}
                           <div className="h-12" />
                         </>
                       ) : (
@@ -10853,7 +10796,7 @@ function PromoSubscribeModal() {
                               className="text-amber-300 hover:underline"
                               onClick={() => {
                                 setCookieDays(COOKIE_SUB, "1", 365);
-                                safeClose();
+                                closeModal();
                               }}
                             >
                               Sign in
@@ -10867,7 +10810,7 @@ function PromoSubscribeModal() {
                       )}
                     </div>
 
-                    {/* DESKTOP: form (closes immediately on submit) */}
+                    {/* DESKTOP: form */}
                     <div className="hidden md:block">
                       <form
                         onSubmit={onSubmit}
@@ -10902,7 +10845,7 @@ function PromoSubscribeModal() {
                           className="text-amber-300 hover:underline"
                           onClick={() => {
                             setCookieDays(COOKIE_SUB, "1", 365);
-                            safeClose();
+                            closeModal();
                           }}
                         >
                           Sign in
@@ -10914,14 +10857,13 @@ function PromoSubscribeModal() {
                       </div>
                     </div>
                   </div>
-                  {/* === /WRAPPER === */}
                 </div>
 
                 {/* BOTTOM: desktop-only Nah */}
                 <div className="hidden md:flex justify-center pt-4">
                   <button
                     type="button"
-                    onClick={safeClose}
+                    onClick={closeModal}
                     className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl ring-1 ring-amber-400/60 
                     text-amber-400 font-semibold text-lg hover:bg-amber-400 hover:text-neutral-900 transition-all"
                     aria-label="Close banner"
@@ -10942,7 +10884,7 @@ function PromoSubscribeModal() {
           >
             <button
               type="button"
-              onClick={safeClose}
+              onClick={closeModal}
               className="inline-flex items-center justify-center px-4 md:px-5 py-2 rounded-xl ring-1 ring-amber-400/60 
               text-amber-400 font-semibold text-m md:text-lg
               hover:bg-amber-400 hover:text-neutral-900 transition-all"
@@ -10956,7 +10898,7 @@ function PromoSubscribeModal() {
     </div>,
     document.body
   );
-} // <-- end PromoSubscribeModal
+}
 
 function RoastAnchorsInline({ level = 3 }: { level?: 1 | 2 | 3 | 4 | 5 }) {
   return (

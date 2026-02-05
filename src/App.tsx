@@ -1784,7 +1784,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
               block md:inline md:whitespace-nowrap
               text-[18.5px] sm:text-[24px] md:text-5xl
               leading-tight md:leading-[1.1]
-              tracking-[0.08em] md:text-5xl font-extrabold md:font-bold text-amber-300
+              tracking-[0.08em] md:text-5xl font-extrabold md:font-bold text-amber-400
               mt-2 md:mt-0
               "
                 style={{ fontFamily: "'Cinzel', serif", fontWeight: 1000 }}

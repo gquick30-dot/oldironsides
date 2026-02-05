@@ -10609,7 +10609,7 @@ function PromoSubscribeModal() {
   // ===== EVENT: open from anywhere (respects gate) =====
   React.useEffect(() => {
     if (!isLeader) return;
-    const onOpen = () => safeOpen(false);
+    const onOpen = () => safeOpen(true); // ✅ manual override
     window.addEventListener("promo-subscribe", onOpen as any);
     document.addEventListener("promo-subscribe", onOpen as any);
     return () => {
@@ -10621,13 +10621,17 @@ function PromoSubscribeModal() {
   // ===== CLICK TRIGGER: [data-open-promo] — opens immediately for user action =====
   React.useEffect(() => {
     if (!isLeader) return;
-    const onOpen = () => safeOpen(true); // ✅ manual override
-    window.addEventListener("promo-subscribe", onOpen as any);
-    document.addEventListener("promo-subscribe", onOpen as any);
-    return () => {
-      window.removeEventListener("promo-subscribe", onOpen as any);
-      document.removeEventListener("promo-subscribe", onOpen as any);
+    const handleClickCapture = (e: Event) => {
+      const t = e.target as HTMLElement | null;
+      if (!t) return;
+      const trigger = t.closest("[data-open-promo]");
+      if (!trigger) return;
+      e.preventDefault();
+      safeOpen(true); // user clicked, bypass delay
     };
+    document.addEventListener("click", handleClickCapture, true);
+    return () =>
+      document.removeEventListener("click", handleClickCapture, true);
   }, [isLeader]);
 
   // ===== ESC to close =====

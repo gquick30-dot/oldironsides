@@ -976,7 +976,6 @@ const submitPromoEmail = async (email: string) => {
   }
 
   // Mark as subscribed locally (same as your modal)
-  localStorage.setItem(KEY_SUB, "1");
   setCookieDays(COOKIE_SUB, "1", 365);
 
   // Bell confirmation tone (user-gesture = allowed)
@@ -10477,17 +10476,17 @@ function PromoSubscribeModal() {
   const COOKIE_SUB = "promo_subscribed";
   const COOKIE_CD = "promo_cooldown_until";
   const KEY_SEEN = "promo_seen_session";
-  const KEY_HARD_STOP = "promo_autoshown";
+
 
   // ===== GLOBAL GUARDS (singleton + timers + gating) =====
   const g = globalThis as any;
   g.__promo = g.__promo || {
     leaderId: null as string | null,
     entryTimer: null as any,
-    pendingTimer: null as any,
     readyAt: Number.POSITIVE_INFINITY as number,
     isLockedOpen: false,
   };
+  
 
   // unique id for this instance
   const instanceId = React.useMemo(
@@ -10565,47 +10564,46 @@ function PromoSubscribeModal() {
   // force=true bypasses delay gate for user clicks; auto-open respects gate
   const safeOpen = (force = false) => {
     if (g.__promo.isLockedOpen) return;
-
-    // 🔒 hard stop: blocks any auto-open trigger anywhere
-    try {
-      if (!force && localStorage.getItem(KEY_HARD_STOP) === "1") return;
-    } catch {}
-
-    const readyAt = g.__promo.readyAt || 0;
-    const now = nowMs();
-
-    if (!force && now < readyAt) {
-      if (!g.__promo.pendingTimer) {
-        g.__promo.pendingTimer = window.setTimeout(() => {
-          g.__promo.pendingTimer = null;
-
-          sessionStorage.setItem(KEY_SEEN, "1");
-
-          safeOpen(false);
-        }, Math.max(0, readyAt - now + 10));
-      }
-      return;
+  
+    // ⛔ block auto-open during cooldown
+    if (!force) {
+      const cooldownUntil = getCooldownUntil();
+      if (nowMs() < cooldownUntil) return;
     }
-
+  
+    // kill any pending auto-open
+    if (g.__promo.entryTimer) {
+      clearTimeout(g.__promo.entryTimer);
+      g.__promo.entryTimer = null;
+    }
+  
     g.__promo.isLockedOpen = true;
-
-    try {
-      if (!force) localStorage.setItem(KEY_HARD_STOP, "1"); // burn on any non-click open
-    } catch {}
-
+  
     setEmail("");
     setPhase("form");
     setOpen(true);
   };
-
+  
   const safeClose = () => {
     setOpen(false);
+  
+    // mark seen for this session
+    sessionStorage.setItem(KEY_SEEN, "1");
+  
+    // start 48h cooldown
     startCooldown();
+  
     setTimeout(() => {
       g.__promo.isLockedOpen = false;
     }, 200);
   };
-
+  React.useEffect(() => {
+    const cooldownUntil = getCooldownUntil();
+    if (nowMs() < cooldownUntil) {
+      sessionStorage.setItem(KEY_SEEN, "1");
+    }
+  }, []);
+  
   // ===== EVENT: open from anywhere (respects gate) =====
   React.useEffect(() => {
     if (!isLeader) return;
@@ -10648,41 +10646,30 @@ function PromoSubscribeModal() {
     if (!isLeader) return;
 
     const setReady = () => {
-      // 🔒 hard stop: never auto-open again
-      if (localStorage.getItem(KEY_HARD_STOP) === "1") return;
-
       g.__promo.readyAt = nowMs() + OPEN_DELAY_MS;
-
+    
       const cooldownUntil = getCooldownUntil();
-      const isLoggedIn = (() => {
-        try {
-          return !!localStorage.getItem("oi_user");
-        } catch {
-          return false;
-        }
-      })();
-
       const seenThisSession = sessionStorage.getItem(KEY_SEEN) === "1";
-
-      const canAuto = TEST_FORCE_OPEN
-        ? true
-        : !seenThisSession &&
-          !isSubscribed() &&
-          !isLoggedIn &&
-          nowMs() >= cooldownUntil;
-
+    
+      const canAuto =
+        TEST_FORCE_OPEN ||
+        (!seenThisSession && !isSubscribed() && nowMs() >= cooldownUntil);
+    
       if (!canAuto) return;
-
+    
       if (!g.__promo.entryTimer) {
         const delay = Math.max(0, g.__promo.readyAt - nowMs());
         g.__promo.entryTimer = window.setTimeout(() => {
           g.__promo.entryTimer = null;
-
-          localStorage.setItem(KEY_HARD_STOP, "1"); // 🔒 permanent auto-open kill
+        
+          // mark seen for this tab immediately
+          sessionStorage.setItem(KEY_SEEN, "1");
+        
           safeOpen(false);
-        }, delay);
+        }, delay);        
       }
     };
+    
 
     if (document.readyState === "complete") {
       setReady();
@@ -10848,7 +10835,7 @@ function PromoSubscribeModal() {
                               to="/account/login"
                               className="text-amber-300 hover:underline"
                               onClick={() => {
-                                localStorage.setItem(KEY_SUB, "1");
+                             
                                 setCookieDays(COOKIE_SUB, "1", 365);
                                 safeClose();
                               }}
@@ -10898,7 +10885,7 @@ function PromoSubscribeModal() {
                           to="/account/login"
                           className="text-amber-300 hover:underline"
                           onClick={() => {
-                            localStorage.setItem(KEY_SUB, "1");
+                  
                             setCookieDays(COOKIE_SUB, "1", 365);
                             safeClose();
                           }}

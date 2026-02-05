@@ -10606,9 +10606,24 @@ function PromoSubscribeModal() {
   // ===== EVENT: open from anywhere (respects gate) =====
   React.useEffect(() => {
     if (!isLeader) return;
-    const onOpen = () => safeOpen(true); // ✅ manual override
+
+    const onOpen = (e: Event) => {
+      console.log(
+        "[promo-subscribe]",
+        "trusted:",
+        (e as any)?.isTrusted,
+        "time:",
+        Date.now()
+      );
+
+      // Only bypass cooldown/delay for real user-triggered events
+      const trusted = (e as any)?.isTrusted === true;
+      safeOpen(trusted);
+    };
+
     window.addEventListener("promo-subscribe", onOpen as any);
     document.addEventListener("promo-subscribe", onOpen as any);
+
     return () => {
       window.removeEventListener("promo-subscribe", onOpen as any);
       document.removeEventListener("promo-subscribe", onOpen as any);

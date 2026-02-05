@@ -10639,7 +10639,9 @@ function PromoSubscribeModal() {
         }
       })();
 
-      const canAuto = false;
+      const canAuto = TEST_FORCE_OPEN
+        ? true
+        : !isSubscribed() && !isLoggedIn && nowMs() >= cooldownUntil;
 
       if (!canAuto) return;
 

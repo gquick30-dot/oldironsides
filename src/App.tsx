@@ -6972,7 +6972,7 @@ function OriginsPage() {
                   Navy. The ship is based in Boston, Massachusetts and remains a
                   living symbol of American resilience and strength. <br />{" "}
                   <br />
-                  We roast to order premium coffee and ship nationwide across
+                  We roast premium coffee to order and ship nationwide across
                   the United States. Every batch is ethically sourced and
                   carefully roasted for bold flavor, freshness, and consistency.
                   Our goal is to deliver coffee that reflects the discipline,

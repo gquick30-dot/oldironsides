@@ -6966,15 +6966,30 @@ function OriginsPage() {
                   About Old Ironsides Coffee
                 </h3>
                 <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
-                  At Old Ironsides Coffee, our mission is to bring education,
-                  pride, and a revival of the American spirit that is being lost
-                  at an alarming rate. <br /> <br />
-                  If we can entice people to learn about our history and the
-                  great American treasure that is the USS Constitution, while
-                  also enjoying a truly excellent cup of coffee, then we have
-                  done our duty. <br /> <br /> This is the heart of what Old
-                  Ironsides Coffee stands for. <br /> <br /> OLD IRONSIDES
-                  COFFEE - IGNITE THE SPIRIT, SAVOR THE VICTORY!
+                  Old Ironsides Coffee Company is a veteran-owned small-batch
+                  coffee brand inspired by the legacy of the USS Constitution,
+                  the oldest commissioned warship afloat in the United States
+                  Navy. The ship is based in Boston, Massachusetts and remains a
+                  living symbol of American resilience and strength. <br />{" "}
+                  <br />
+                  We roast to order premium coffee and ship nationwide across
+                  the United States. Every batch is ethically sourced and
+                  carefully roasted for bold flavor, freshness, and consistency.
+                  Our goal is to deliver coffee that reflects the discipline,
+                  craftsmanship, and pride that the name Old Ironsides
+                  represents. <br /> <br /> The name Old Ironsides is a direct
+                  tribute to the USS Constitution, which earned its nickname
+                  during the War of 1812 when cannonballs appeared to bounce
+                  from its hull. That spirit of durability and resolve defines
+                  our brand. We honor that legacy by building a company rooted
+                  in heritage, quality, and purpose. <br /> <br /> Whether you
+                  are a daily coffee drinker, a history enthusiast, or someone
+                  who values American heritage brands, Old Ironsides Coffee
+                  exists to serve you.
+                  <br /> <br />
+                  <span className="text-amber-300 font-semibold tracking-wide">
+                    OLD IRONSIDES COFFEE - IGNITE THE SPIRIT, SAVOR THE VICTORY!
+                  </span>
                 </p>
               </div>
             </div>

@@ -2204,8 +2204,6 @@ function SDVOSBHighlight() {
 }
 /* ================= Pages ================= */
 function HomePage() {
-  const [launchNotified, setLaunchNotified] = useState(false);
-
   return (
     <>
       <header
@@ -2217,7 +2215,7 @@ function HomePage() {
         <div className="absolute inset-0 md:hidden bg-neutral-950">
           {/* bean image as background, less zoom */}
           <img
-            src="officer-window2.jpg"
+            src="officer-window3.tif"
             alt=""
             className="w-full h-full object-contain object-center"
           />
@@ -2227,7 +2225,7 @@ function HomePage() {
 
         {/* DESKTOP original emblem + radial glow */}
         <img
-          src="emblem-black.jpg"
+          src="emblem-black.png"
           alt="Stormy sea"
           className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[62vw] max-w-[780px] object-contain opacity-10 pointer-events-none select-none"
         />
@@ -2235,7 +2233,7 @@ function HomePage() {
         <div className="hidden md:block absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
 
         {/* content wrapper sits on top */}
-        <Container className="relative desktopHeroPad pt-[13rem] pb-10 sm:pt-[12rem] sm:pb-14 md:pt-[4.5rem] md:pb-[4.5rem]">
+        <Container className="relative desktopHeroPad pt-[26rem] pb-10 sm:pt-[24rem] sm:pb-14">
           <style>{`
   @media (min-width: 768px) {
     #top .desktopHeroPad {
@@ -2243,7 +2241,7 @@ function HomePage() {
       padding-bottom: 4.5rem;
     }
     #top .heroCenter {
-      transform: translateY(0);
+      transform: translateY(72px);
     }
   }
 `}</style>
@@ -2253,7 +2251,7 @@ function HomePage() {
             <div className="hidden md:flex md:col-span-3 justify-start">
               <div className="w-full max-w-[420px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
-                  src="smell-beans.jpg"
+                  src="smell-beans.png"
                   alt="Smelling beans"
                   className="
           block
@@ -2269,71 +2267,8 @@ function HomePage() {
             </div>
 
             {/* CENTER TEXT + CTA (desktop only) */}
-            <div className="md:col-span-6 flex flex-col items-center text-center heroCenter translate-y-[11vh] md:translate-y-0">
-              <div aria-hidden className="hidden md:block h-4 lg:h-6" />
-              {/* SOFT LAUNCH STATUS */}
-              <div
-                id="soft-launch"
-                className="w-full max-w-[32rem] mb-4 -mt-12 md:-mt-12 lg:-mt-14 text-center"
-              >
-                <h2
-                  className="text-amber-300 font-extrabold tracking-[0.22em]
-             text-2xl sm:text-3xl md:text-4xl"
-                  style={{ fontFamily: "'Cinzel', serif" }}
-                >
-                  LAUNCHING FEBRUARY
-                </h2>
-
-                <p className="mt-2 text-amber-300 text-md md:text-base leading-relaxed">
-                  In the mean time explore the site.
-                  <br />
-                  Want to be notified when we open?
-                </p>
-
-                {/* notify form only */}
-                <div className="mt-3 rounded-lg ring-1 ring-amber-400/40 bg-neutral-900/60 px-3 py-2 backdrop-blur max-w-[20rem] mx-auto">
-                  <form
-                    onSubmit={async (e) => {
-                      e.preventDefault();
-
-                      const form = e.currentTarget;
-                      const input = form.querySelector(
-                        "input[type='email']"
-                      ) as HTMLInputElement | null;
-
-                      if (!input || !input.value) return;
-
-                      const ok = await submitLaunchNotifyEmail(input.value);
-                      if (ok) {
-                        setLaunchNotified(true);
-                        input.value = "";
-                      }
-                    }}
-                    className="flex gap-1"
-                  >
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      required
-                      className="flex-1 rounded-md bg-neutral-900/70 border border-neutral-700 px-2 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-amber-400"
-                    />
-
-                    <button
-                      type="submit"
-                      className="px-3 py-1.5 rounded-md bg-amber-400 text-neutral-900 text-xs font-semibold"
-                    >
-                      Notify Me
-                    </button>
-                  </form>
-                  {launchNotified && (
-                    <p className="mt-2 text-xs text-emerald-400 text-center">
-                      Thank you. We’ll notify you when we launch.
-                    </p>
-                  )}
-                </div>
-              </div>
-              {/* push the original hero stack back down (leave launch block up top) */}
-              <div aria-hidden className="hidden md:block h-16 lg:h-20" />
+            <div className="md:col-span-6 flex flex-col items-center text-center heroCenter">
+              <div aria-hidden className="hidden md:block h-12 lg:h-16" />
 
               <h2
                 className="text-amber-400 font-extrabold leading-snug tracking-tight
@@ -2394,7 +2329,7 @@ function HomePage() {
             <div className="hidden md:flex md:col-span-3 justify-end">
               <div className="w-full max-w-[420px] ml-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
-                  src="officer-window2.jpg"
+                  src="officer-window2.png"
                   alt="Old Ironsides hero"
                   className="
           block
@@ -2435,7 +2370,7 @@ function HomePage() {
       >
         {/* Background image, cooled and desaturated */}
         <img
-          src="/flag-close.jpeg"
+          src="/flag-close.jpg"
           alt=""
           role="presentation"
           aria-hidden="true"
@@ -2481,7 +2416,7 @@ function HomePage() {
                 <div className="justify-self-center md:justify-self-start self-center">
                   <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
                     <img
-                      src="/soliders-sunset.jpg"
+                      src="/soliders-sunset.png"
                       alt="Giving back"
                       className="w-full h-full object-cover hue-rotate-[-10deg] saturate-70"
                     />

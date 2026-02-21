@@ -2229,7 +2229,7 @@ function HomePage() {
           alt="Stormy sea"
           className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[62vw] max-w-[780px] object-contain opacity-10 pointer-events-none select-none"
         />
-        <div className="hidden md:block absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,193,7,0.10),transparent_60%)]" />
+        <div className="hidden md:block absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.65),transparent_60%)]" />
         <div className="hidden md:block absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
 
         {/* content wrapper sits on top */}
@@ -2241,7 +2241,7 @@ function HomePage() {
       padding-bottom: 4.5rem;
     }
     #top .heroCenter {
-      transform: translateY(72px);
+      transform: translateY(90px);
     }
   }
 `}</style>
@@ -3291,7 +3291,12 @@ function RoastDetailPage() {
         if (!cancelled) setShopifyProduct(null);
       }
     }
+    setQty(1);
+    setBeanType("");
+    setShowBeanError(false);
+
     if (slug) run();
+
     return () => {
       cancelled = true;
     };

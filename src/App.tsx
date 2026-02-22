@@ -8439,8 +8439,8 @@ function CartPage() {
           started = localStorage.getItem("oi_checkout_started") === "1";
         } catch {}
 
-        if (!cancelled && started && qty === 0 && cart.length > 0) {
-          clear();
+        if (!cancelled && started && qty === 0) {
+          // Do NOT clear local cart here. Shopify checkout can keep items while Storefront cart reads 0.
           try {
             localStorage.removeItem("oi_checkout_started");
           } catch {}

@@ -834,7 +834,23 @@ function CartProvider({ children }: any) {
     [persist]
   );
 
-  const clear = useCallback(() => {
+  const clear = useCallback(async () => {
+    try {
+      const { id: cartId } = await ensureCart();
+      const sf = await getCart(cartId);
+
+      const lineIds =
+        sf?.lines?.edges
+          ?.map((e: any) => String(e?.node?.id))
+          .filter(Boolean) ?? [];
+
+      if (lineIds.length) {
+        await cartLinesRemove({ cartId, lineIds });
+      }
+    } catch (e) {
+      console.error("Shopify clear failed", e);
+    }
+
     persist(() => []);
   }, [persist]);
 
@@ -12186,15 +12202,6 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
         );
         setCheckingOut(false);
         return;
-      }
-
-      // clear local cart so it’s empty next time you open it
-      try {
-        localStorage.removeItem("oi_cart");
-        localStorage.removeItem("oi_cart_v1");
-        localStorage.removeItem("oi_cart_v2");
-      } catch {
-        /* ignore */
       }
 
       window.location.assign(url);

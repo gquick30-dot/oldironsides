@@ -796,10 +796,28 @@ function CartProvider({ children }: any) {
   );
 
   const remove = useCallback(
-    (id: string) => {
+    async (id: string) => {
+      try {
+        const { id: cartId } = await ensureCart();
+        const sf = await getCart(cartId);
+
+        const lineToRemove = sf?.lines?.edges?.find((e: any) => {
+          const merchId = String(e?.node?.merchandise?.id ?? "");
+          return cart.some(
+            (i: any) => i.id === id && String(i.merchandiseId) === merchId
+          );
+        })?.node?.id;
+
+        if (lineToRemove) {
+          await cartLinesRemove({ cartId, lineIds: [lineToRemove] });
+        }
+      } catch (e) {
+        console.error("Shopify remove failed", e);
+      }
+
       persist((prev) => prev.filter((x: any) => x.id !== id));
     },
-    [persist]
+    [persist, cart]
   );
 
   // simple sub price helper:

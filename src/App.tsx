@@ -3080,6 +3080,16 @@ function RoastDetailPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    if (typeof window !== "undefined" && (window as any).fbq) {
+      (window as any).fbq("track", "ViewContent", {
+        content_name: card.title,
+        content_ids: [card.slug],
+        content_type: "product",
+        value: isOak ? 27 : card.price ?? 22,
+        currency: "USD",
+      });
+    }
   }, []);
 
   // drop-in replacement for craftSubtitleMap (no names/emojis in the text)
@@ -3477,7 +3487,16 @@ function RoastDetailPage() {
       };
 
       add(itemToAdd, n);
-
+      // 🔥 META ADD TO CART
+      if (typeof window !== "undefined" && (window as any).fbq) {
+        (window as any).fbq("track", "AddToCart", {
+          content_name: `${card.title} (${variantLabel})`,
+          content_ids: [card.slug],
+          content_type: "product",
+          value: purchaseMode === "sub" ? discounted : basePrice,
+          currency: "USD",
+        });
+      }
       // set mobile toast state so we can render a bottom banner on mobile
       setMobileToast({
         title: `${card.title} (${variantLabel})`,
@@ -8619,6 +8638,20 @@ function CartPage() {
         );
         return;
       }
+
+      // 🔥 META INITIATE CHECKOUT
+      if (typeof window !== "undefined" && (window as any).fbq) {
+        (window as any).fbq("track", "InitiateCheckout", {
+          content_type: "product",
+          contents: desired.map((line) => ({
+            id: line.merchandiseId,
+            quantity: line.quantity,
+          })),
+          value: total,
+          currency: "USD",
+        });
+      }
+
       try {
         localStorage.setItem("oi_checkout_started", "1");
       } catch {}
@@ -12222,6 +12255,19 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
         return;
       }
 
+      // 🔥 META INITIATE CHECKOUT
+      if (typeof window !== "undefined" && (window as any).fbq) {
+        (window as any).fbq("track", "InitiateCheckout", {
+          content_type: "product",
+          contents: Array.from(byKey.values()).map((line) => ({
+            id: line.merchandiseId,
+            quantity: line.quantity,
+          })),
+          value: total,
+          currency: "USD",
+        });
+      }
+
       window.location.assign(url);
     } catch (e) {
       console.error(e);
@@ -12967,6 +13013,19 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
         localStorage.removeItem("oi_cart_v2");
       } catch {
         /* ignore */
+      }
+
+      // 🔥 META INITIATE CHECKOUT
+      if (typeof window !== "undefined" && (window as any).fbq) {
+        (window as any).fbq("track", "InitiateCheckout", {
+          content_type: "product",
+          contents: Array.from(byKey.values()).map((line) => ({
+            id: line.merchandiseId,
+            quantity: line.quantity,
+          })),
+          value: total,
+          currency: "USD",
+        });
       }
 
       window.location.assign(url);

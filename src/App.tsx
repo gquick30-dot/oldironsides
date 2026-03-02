@@ -2281,22 +2281,19 @@ function HomePage() {
 `}</style>
 
           <div className="grid grid-cols-1 md:grid-cols-12 md:gap-12 items-center text-center md:text-left md:-mx-16 lg:-mx-24">
-            {/* LEFT HERO IMAGE (desktop only) */}
+            {/* LEFT HERO VIDEO (desktop only) */}
             <div className="hidden md:flex md:col-span-3 justify-start">
-              <div className="w-full max-w-[420px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
-                <img
-                  src="smell-beans.png"
-                  alt="Smelling beans"
-                  className="
-          block
-          w-full
-          h-auto
-          max-h-[60vh]
-          sm:max-h-[70vh]
-          md:max-h-[calc(100vh-300px)]
-          object-cover
-        "
-                />
+              <div className="w-full max-w-[420px] h-[600px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="block w-full h-full object-cover"
+                >
+                  <source src="/reel.mp4" type="video/mp4" />
+                </video>
               </div>
             </div>
 
@@ -2380,7 +2377,21 @@ function HomePage() {
           </div>
         </Container>
       </header>
-
+      {/* MOBILE HERO VIDEO */}
+      <div className="md:hidden px-4 pt-6">
+        <div className="rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20 h-[400px]">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="w-full h-full object-cover"
+          >
+            <source src="/reel.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </div>
       <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950">
         {/* DESKTOP ONLY map background */}
         <img

@@ -84,7 +84,6 @@ function PromoSubscribeTrigger() {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <PromoSubscribeTrigger />
     <App />
   </React.StrictMode>
 );

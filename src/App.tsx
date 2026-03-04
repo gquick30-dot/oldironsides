@@ -2261,10 +2261,9 @@ function HomePage() {
         <img
           src="emblem-black.png"
           alt="Stormy sea"
-          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[62vw] max-w-[780px] object-contain opacity-10 pointer-events-none select-none"
+          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[62vw] max-w-[780px] object-contain opacity-10 pointer-events-none select-none z-10"
         />
-        <div className="hidden md:block absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.65),transparent_60%)]" />
-        <div className="hidden md:block absolute inset-0 bg-neutral-950/10 mix-blend-multiply" />
+        <div className="hidden md:block absolute inset-0 bg-black" />
 
         {/* content wrapper sits on top */}
         <Container className="relative desktopHeroPad pt-[26rem] pb-10 sm:pt-[24rem] sm:pb-14">
@@ -2292,7 +2291,7 @@ function HomePage() {
                   preload="metadata"
                   className="block w-full h-full object-cover"
                 >
-                  <source src="/reel.mp4" type="video/mp4" />
+                  <source src="/reel 9.mp4" type="video/mp4" />
                 </video>
               </div>
             </div>
@@ -2388,11 +2387,11 @@ function HomePage() {
             preload="metadata"
             className="w-full h-full object-cover"
           >
-            <source src="/reel.mp4" type="video/mp4" />
+            <source src="/reel 9.mp4" type="video/mp4" />
           </video>
         </div>
       </div>
-      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950">
+      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950 mt-6 md:mt-0">
         {/* DESKTOP ONLY map background */}
         <img
           src="/World Amber.png"
@@ -10492,11 +10491,6 @@ function ScrollToTop() {
 // Drop-in replacement: removes the "X" and adds a centered bottom closer
 // styled like your buy box. Clicking it closes the banner.
 function PromoSubscribeModal() {
-  // ===== LIVE CONFIG =====
-  const TEST_FORCE_OPEN = false; // keep false in production
-  const OPEN_DELAY_MS = 5000; // open ~5s AFTER window 'load'
-  const COOLDOWN_MINUTES = 1440; // 24 hours
-
   // ===== STATE =====
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState("");
@@ -10504,9 +10498,7 @@ function PromoSubscribeModal() {
 
   // ===== KEYS =====
   const KEY_SUB = "promo_subscribed";
-  const KEY_CD = "promo_cooldown_until";
   const COOKIE_SUB = "promo_subscribed";
-  const COOKIE_CD = "promo_cooldown_until";
 
   // ===== GLOBAL GUARDS (singleton + timers + gating) =====
   const g = globalThis as any;
@@ -10571,23 +10563,6 @@ function PromoSubscribeModal() {
   const isSubscribed = () =>
     localStorage.getItem(KEY_SUB) === "1" || getCookie(COOKIE_SUB) === "1";
 
-  const getCooldownUntil = () => {
-    const cdLocal = parseInt(localStorage.getItem(KEY_CD) || "0", 10);
-    const cdCookie = parseInt(getCookie(COOKIE_CD) || "0", 10);
-    return Math.max(
-      Number.isFinite(cdLocal) ? cdLocal : 0,
-      Number.isFinite(cdCookie) ? cdCookie : 0
-    );
-  };
-
-  const startCooldown = () => {
-    if (COOLDOWN_MINUTES > 0) {
-      const until = nowMs() + COOLDOWN_MINUTES * 60 * 1000;
-      localStorage.setItem(KEY_CD, String(until));
-      setCookieSeconds(COOKIE_CD, String(until), COOLDOWN_MINUTES * 60);
-    }
-  };
-
   // force=true bypasses delay gate for user clicks; auto-open respects gate
   const safeOpen = (force = false) => {
     if (g.__promo.isLockedOpen) return;
@@ -10613,7 +10588,6 @@ function PromoSubscribeModal() {
 
   const safeClose = () => {
     setOpen(false);
-    startCooldown();
     setTimeout(() => {
       g.__promo.isLockedOpen = false;
     }, 200);
@@ -10622,7 +10596,7 @@ function PromoSubscribeModal() {
   // ===== EVENT: open from anywhere (respects gate) =====
   React.useEffect(() => {
     if (!isLeader) return;
-    const onOpen = () => safeOpen(false);
+    const onOpen = () => safeOpen(true); // force open for header/tab/manual triggers
     window.addEventListener("promo-subscribe", onOpen as any);
     document.addEventListener("promo-subscribe", onOpen as any);
     return () => {
@@ -10657,44 +10631,6 @@ function PromoSubscribeModal() {
   }, [open]);
 
   // ===== SET READY TIME AFTER FULL WINDOW LOAD, THEN SCHEDULE AUTO-OPEN =====
-  React.useEffect(() => {
-    if (!isLeader) return;
-
-    const setReady = () => {
-      g.__promo.readyAt = nowMs() + OPEN_DELAY_MS;
-
-      const cooldownUntil = getCooldownUntil();
-      const isLoggedIn = (() => {
-        try {
-          return !!localStorage.getItem("oi_user");
-        } catch {
-          return false;
-        }
-      })();
-
-      const canAuto = TEST_FORCE_OPEN
-        ? true
-        : !isSubscribed() && !isLoggedIn && nowMs() >= cooldownUntil;
-
-      if (!canAuto) return;
-
-      if (!g.__promo.entryTimer) {
-        const delay = Math.max(0, g.__promo.readyAt - nowMs());
-        g.__promo.entryTimer = window.setTimeout(() => {
-          g.__promo.entryTimer = null;
-          safeOpen(false);
-        }, delay);
-      }
-    };
-
-    if (document.readyState === "complete") {
-      setReady();
-    } else {
-      const onLoad = () => setReady();
-      window.addEventListener("load", onLoad, { once: true });
-      return () => window.removeEventListener("load", onLoad);
-    }
-  }, [isLeader]);
 
   // ===== SUBMIT =====
   const onSubmit = async (e: React.FormEvent) => {
@@ -11037,6 +10973,11 @@ function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileCartOpen, setMobileCartOpen] = useState(false);
   const [desktopCartOpen, setDesktopCartOpen] = useState(false);
+  const [hidePromoTab, setHidePromoTab] = useState(() => {
+    const hiddenUntil = localStorage.getItem("promoTabHiddenUntil");
+    if (!hiddenUntil) return false;
+    return Date.now() < Number(hiddenUntil);
+  });
 
   // Open the cart drawer when other code dispatches 'oi-open-cart'
   useEffect(() => {
@@ -11129,13 +11070,13 @@ function Layout() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 overflow-x-hidden">
+    <div className="min-h-screen bg-black text-neutral-100 overflow-x-hidden">
       <ScrollToTop />
       <FlashToast />
       <PromoSubscribeModal />
 
       {/* ===== HEADER (desktop + mobile) ===== */}
-      <header className="fixed top-0 inset-x-0 z-[999999] md:z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800">
+      <header className="fixed top-0 inset-x-0 z-[999999] md:z-50 bg-black border-b border-neutral-800">
         {/* === MOBILE HEADER TALL v3 === */}
         <div className="md:hidden border-b border-neutral-800 bg-neutral-950 pb-1">
           {/* promo strip */}
@@ -11290,9 +11231,13 @@ function Layout() {
         </div>
 
         {/* === DESKTOP HEADER STACK + NAV (unchanged look) === */}
-        <div className="hidden md:block">
+        <div className="hidden md:block relative bg-black z-20">
           <Container>
-            <div className={(shrunk ? "pt-3 pb-2" : "pt-8 pb-3") + " relative"}>
+            <div
+              className={
+                (shrunk ? "pt-3 pb-2" : "pt-8 pb-3") + " relative z-30"
+              }
+            >
               {/* centered brand block with emblem on the left */}
               <div className="relative mx-auto w-max">
                 {/* emblem left of stack */}
@@ -11750,7 +11695,45 @@ function Layout() {
             : "h-[180px] md:h-[160px]"
         }
       />
+      {!hidePromoTab && (
+        <div
+          className="fixed left-0 top-1/2 z-40"
+          style={{ transform: "translateY(-50%)" }}
+        >
+          <div className="flex flex-col items-center bg-amber-400 text-black rounded-r-md shadow-lg overflow-hidden promo-tab-pulse">
+            {/* close button */}
+            <button
+              onClick={() => {
+                const until = Date.now() + 24 * 60 * 60 * 1000;
+                localStorage.setItem("promoTabHiddenUntil", String(until));
+                setHidePromoTab(true);
+              }}
+              className="w-full text-center text-black text-lg font-extrabold py-1 hover:bg-amber-300"
+            >
+              ✕
+            </button>
 
+            {/* vertical promo tab */}
+            <button
+              onClick={() =>
+                document.dispatchEvent(
+                  new CustomEvent("promo-subscribe", {
+                    bubbles: true,
+                    composed: true,
+                  })
+                )
+              }
+              className="px-3 py-10 font-bold tracking-wider hover:bg-amber-300 transition"
+              style={{
+                writingMode: "vertical-rl",
+                textOrientation: "mixed",
+              }}
+            >
+              GET 20% OFF
+            </button>
+          </div>
+        </div>
+      )}
       {/* page body */}
       <Outlet />
 

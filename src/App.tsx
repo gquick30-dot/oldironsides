@@ -1788,9 +1788,9 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
       id="fleet"
       className={`relative overflow-hidden ${
         isHome
-          ? "pt-2 pb-6 md:pt-8 md:pb-10 min-h-[auto] md:min-h-[820px]"
+          ? "pt-2 pb-6 md:pt-6 md:pb-8 min-h-[auto] md:min-h-[740px]"
           : isStore
-          ? "pt-2 pb-6 md:pt-8 md:pb-14 min-h-[auto] md:min-h-[1000px]"
+          ? "pt-2 pb-6 md:pt-6 md:pb-10 min-h-[auto] md:min-h-[740px]"
           : "pt-2 pb-6 md:py-20 min-h-[auto] md:min-h-[1100px]"
       }`}
     >
@@ -1809,16 +1809,17 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         } px-0 sm:px-0 lg:px-0`}
       >
         {/* header row: title + (maybe) back button */}
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between text-center md:text-left px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between text-center md:text-left px-0 sm:px-6 lg:px-8">
           <SectionTitle
             title={
               <span
                 className="
-              block md:inline md:whitespace-nowrap
-              text-[18.5px] sm:text-[24px] md:text-5xl
-              leading-tight md:leading-[1.1]
-              tracking-[0.08em] md:text-5xl font-extrabold md:font-bold text-amber-400
-              mt-2 md:mt-0
+                whitespace-nowrap
+                text-[20px] sm:text-[24px] md:text-5xl
+                leading-tight md:leading-[1.1]
+                tracking-[0.04em]
+                font-black md:font-bold text-amber-400
+                mt-2 md:mt-0
               "
                 style={{ fontFamily: "'Cinzel', serif", fontWeight: 1000 }}
               >
@@ -2205,6 +2206,17 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
               );
             })}
           </div>
+          {/* DESKTOP MUG PROMO */}
+          <div className="hidden md:block text-center mt-4">
+            <p className="text-neutral-300 text-sm">
+              The first 200 subscribers receive a free
+              <span className="text-amber-300 font-semibold">
+                {" "}
+                Old Ironsides diner mug
+              </span>{" "}
+              with their 2nd subscription purchase.
+            </p>
+          </div>
         </div>
       </Container>
     </section>
@@ -2301,7 +2313,7 @@ function HomePage() {
         <img
           src="emblem-black.png"
           alt="Stormy sea"
-          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[62vw] max-w-[780px] object-contain opacity-5 pointer-events-none select-none z-10"
+          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[62vw] max-w-[780px] object-contain opacity-10 pointer-events-none select-none z-10"
         />
         <div className="hidden md:block absolute inset-0 bg-black" />
 
@@ -2464,8 +2476,8 @@ function HomePage() {
       </header>
 
       {/* MOBILE HERO VIDEO */}
-      <div className="md:hidden px-4 pt-6">
-        <div className="rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20 h-[400px]">
+      <div className="md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+        <div className="overflow-hidden h-[420px]">
           <video
             autoPlay
             muted
@@ -2478,9 +2490,8 @@ function HomePage() {
           </video>
         </div>
       </div>
-
       {/* LAUNCHED FROM HARBOR SECTION (UNCHANGED) */}
-      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950 mt-6 md:mt-0">
+      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950 md:mt-0">
         <img
           src="/World Amber.png"
           alt=""
@@ -2494,30 +2505,22 @@ function HomePage() {
           <LaunchedFromHarbor noBg />
         </div>
       </section>
-
-      {/* DINER MUG TEXT */}
-      <section className="py-10 border-t border-neutral-800">
-        <Container>
-          <div className="text-center max-w-xl mx-auto">
-            <p className="text-neutral-300 text-lg">
-              The first 200 subscribers receive a free
-              <span className="text-amber-300 font-semibold">
-                {" "}
-                Old Ironsides diner mug
-              </span>{" "}
-              with their subscription.
-            </p>
-          </div>
-        </Container>
-      </section>
-
-      {/* EMAIL CAPTURE */}
-      <RingThatBellBox />
+      {/* ===== MOBILE SITE ONLY ===== */}
+      <div className="py-6 text-center md:hidden">
+        <p className="text-neutral-300 text-sm md:text-base">
+          The first 200 subscribers receive a free
+          <span className="text-amber-300 font-semibold">
+            {" "}
+            Old Ironsides diner mug
+          </span>{" "}
+          with their 2nd subscription purchase.
+        </p>
+      </div>
 
       {/* ===== GIVING BACK (copied from Origins) ===== */}
       <section
         id="origins-giving-back"
-        className="relative overflow-hidden border-t border-neutral-800 scroll-mt-28 md:scroll-mt-36"
+        className="relative overflow-hidden border-t border-neutral-800 scroll-mt-28 md:scroll-mt-36 -mt-0 md:-mt-6"
       >
         {/* Background image, cooled and desaturated */}
         <img
@@ -2541,7 +2544,7 @@ function HomePage() {
 
         <Container>
           {/* ===== MOBILE-ONLY: amber line + GovX button ===== */}
-          <div className="relative z-10 md:hidden min-h-[420px] py-12 flex items-center">
+          <div className="relative z-10 md:hidden min-h-[320px] py-5 flex items-center">
             <div className="mx-auto max-w-screen-sm space-y-4 text-center">
               <p className="text-amber-300 text-xl leading-relaxed tracking-[0.02em]">
                 Active duty, veterans, and first responders including fire, law
@@ -2618,61 +2621,77 @@ function HomePage() {
           </div>
         </Container>
       </section>
-
       <section
         id="contact"
         className="py-16 md:py-24 border-b border-neutral-800"
       >
         <Container>
-          <SectionTitle
-            title="Hail The Quarterdeck"
-            subtitle="Questions • Comments • Press – We’ll get back to you fast."
-          />
-          <div className="mt-2 md:mt-8 grid md:grid-cols-3 gap-6 text-sm">
-            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
-              <div className="flex items-center gap-3">
-                <Mail className="h-5 w-5 text-amber-300" />
-                <span className="text-neutral-300">
-                  HQ@oldironsidescoffee.org
-                </span>
-              </div>
+          <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-start">
+            {/* LEFT COLUMN */}
+            <div className="max-w-[560px]">
+              <SectionTitle
+                title="Hail The Quarterdeck"
+                subtitle="Questions • Comments • Press – We’ll get back to you fast."
+              />
 
-              <div className="mt-2 text-neutral-400">
-                6 Liberty Square #2564, Boston, MA 02109
+              <div className="mt-8 flex flex-col gap-5 text-sm">
+                {/* CONTACT BOX */}
+                <div className="rounded-xl ring-1 ring-neutral-800 bg-neutral-900/40 px-5 py-3 text-center">
+                  <div className="flex items-center justify-center gap-2 text-neutral-300">
+                    <Mail className="h-4 w-4 text-amber-300" />
+                    HQ@oldironsidescoffee.org
+                  </div>
+
+                  <div className="mt-1 text-neutral-400 text-xs">
+                    6 Liberty Square #2564, Boston, MA 02109
+                  </div>
+                </div>
+
+                {/* SOCIAL */}
+                <div className="rounded-xl ring-1 ring-neutral-800 bg-neutral-900/40 px-5 py-3 text-center">
+                  <div className="text-amber-300 text-sm font-semibold">
+                    Follow Us
+                  </div>
+
+                  <div className="mt-2 flex justify-center gap-6 text-amber-300 text-sm">
+                    <a
+                      href="https://instagram.com/oldironsidescoffee"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 hover:text-amber-200 transition"
+                    >
+                      <Instagram className="h-4 w-4" />
+                      Instagram
+                    </a>
+
+                    <a
+                      href="https://facebook.com/oldironsidescoffee"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 hover:text-amber-200 transition"
+                    >
+                      <Facebook className="h-4 w-4" />
+                      Facebook
+                    </a>
+                  </div>
+                </div>
+
+                {/* SDVOSB */}
+                <div>
+                  <div className="hidden md:block">
+                    <SDVOSBHighlight />
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
-              <h4 className="font-semibold text-amber-300">Follow Us</h4>
 
-              <div className="mt-3 flex gap-6 text-amber-300">
-                <a
-                  href="https://instagram.com/oldironsidescoffee"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-amber-200 transition"
-                >
-                  <Instagram className="h-5 w-5" />
-                  Instagram
-                </a>
-
-                <a
-                  href="https://facebook.com/oldironsidescoffee"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-amber-200 transition"
-                >
-                  <Facebook className="h-5 w-5" />
-                  Facebook
-                </a>
-              </div>
+            {/* RIGHT COLUMN */}
+            <div className="order-first md:order-none -mt-8 md:mt-0 md:pt-12">
+              <RingThatBellBox />
             </div>
           </div>
         </Container>
       </section>
-
-      <div className="hidden md:block">
-        <SDVOSBHighlight />
-      </div>
     </>
   );
 }
@@ -11177,7 +11196,7 @@ function Layout() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   return (
-    <div className="min-h-screen bg-black text-neutral-100 overflow-x-hidden">
+    <div className="min-h-screen bg-black text-neutral-100 overflow-x-hidden pt-[20px] md:pt-0">
       <ScrollToTop />
       <FlashToast />
       <PromoSubscribeModal />
@@ -11532,7 +11551,7 @@ function Layout() {
                           {/* keep your inner openMega === 'coffee' / 'merch' / 'origins' exactly */}
                           {openMega === "coffee" && (
                             <div className="grid lg:grid-cols-[1fr,auto] gap-8 items-start">
-                              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                              <div className="grid grid-cols-5 gap-4">
                                 {roastCards.map((card) => (
                                   <RoastMegaCard
                                     key={`mega-roast-${card.id}`}
@@ -11559,7 +11578,7 @@ function Layout() {
                                     key={`mega-merch-${t.key}`}
                                     className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 transition shadow-lg flex flex-col"
                                   >
-                                    <div className="h-52 sm:h-60 lg:h-60 w-full overflow-hidden">
+                                    <div className="h-32 sm:h-36 lg:h-36 w-full overflow-hidden">
                                       <img
                                         src={t.img}
                                         alt={`${t.label} preview`}

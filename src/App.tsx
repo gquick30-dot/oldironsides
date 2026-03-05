@@ -2514,8 +2514,165 @@ function HomePage() {
       {/* EMAIL CAPTURE */}
       <RingThatBellBox />
 
-      {/* EVERYTHING BELOW REMAINS YOUR ORIGINAL CONTENT */}
-      {/* Giving Back, Contact, etc. remain unchanged */}
+      {/* ===== GIVING BACK (copied from Origins) ===== */}
+      <section
+        id="origins-giving-back"
+        className="relative overflow-hidden border-t border-neutral-800 scroll-mt-28 md:scroll-mt-36"
+      >
+        {/* Background image, cooled and desaturated */}
+        <img
+          src="/flag-close.jpg"
+          alt=""
+          role="presentation"
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover object-center z-0 pointer-events-none brightness-70 saturate-70 hue-rotate-[-10deg]"
+        />
+
+        <div className="pointer-events-none absolute inset-0 z-0">
+          {/* global darken */}
+          <div className="absolute inset-0 bg-black/45" />
+          {/* left shield over copy only */}
+          <div className="absolute inset-y-0 left-0 w-full md:w-[62%] lg:w-[55%] bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
+          {/* mild texture blur */}
+          <div className="absolute inset-0 md:backdrop-blur-[2px]" />
+          {/* top/bottom vignette to kill remaining glare */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/35" />
+        </div>
+
+        <Container>
+          {/* ===== MOBILE-ONLY: amber line + GovX button ===== */}
+          <div className="relative z-10 md:hidden min-h-[420px] py-12 flex items-center">
+            <div className="mx-auto max-w-screen-sm space-y-4 text-center">
+              <p className="text-amber-300 text-xl leading-relaxed tracking-[0.02em]">
+                Active duty, veterans, and first responders including fire, law
+                enforcement, and EMTs receive $1 off every bag of fresh roasted
+                coffee, every day. The discount stacks with subscriptions.
+              </p>
+              <a
+                href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
+                className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
+       text-amber-400 font-semibold text-[1rem]
+       px-[1.1rem] py-[0.45rem]
+       hover:bg-amber-400 hover:text-neutral-900 transition-all"
+              >
+                Get GovX discount code
+              </a>
+            </div>
+          </div>
+
+          {/* ===== DESKTOP/TABLET: original layout (unchanged) ===== */}
+          <div className="relative z-10 hidden md:block">
+            <div className="min-h-[700px] py-16 flex flex-col justify-center">
+              <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-6 items-center">
+                <div className="justify-self-center md:justify-self-start self-center">
+                  <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
+                    <img
+                      src="/soliders-sunset.png"
+                      alt="Giving back"
+                      className="w-full h-full object-cover hue-rotate-[-10deg] saturate-70"
+                    />
+                    {/* top and bottom vignettes reduce perceived warmth */}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10" />
+                  </div>
+                </div>
+
+                {/* text: center on mobile, left on md+ */}
+                <div className="space-y-3 text-center md:text-left">
+                  <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                    Giving Back To Those Who Served
+                  </h3>
+                  <br />
+
+                  <p className="text-neutral-100 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                    Even as a young company where every dollar counts, giving
+                    back is a big part of who we are and what Old Ironsides
+                    Coffee stands for. As a veteran, I believe service is a
+                    promise kept when no one is watching. It is standards held
+                    high, teamwork under pressure, and loyalty to the people
+                    beside you. <br />
+                    <br />
+                    This brand exists to honor that code, to stand with those
+                    who protect our freedoms, and to keep their legacy present
+                    in the work we do every day.
+                  </p>
+                  <br />
+                  <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                    Active duty, veterans, and first responders receive $1 off
+                    every bag of fresh roasted coffee, every day. The discount
+                    stacks with subscriptions.
+                  </p>
+                  <br />
+                  <a
+                    href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
+                    className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
+       text-amber-400 font-semibold text-[1rem]
+       px-[1.1rem] py-[0.45rem]
+       hover:bg-amber-400 hover:text-neutral-900 transition-all"
+                  >
+                    Get GovX discount code
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section
+        id="contact"
+        className="py-16 md:py-24 border-b border-neutral-800"
+      >
+        <Container>
+          <SectionTitle
+            title="Hail The Quarterdeck"
+            subtitle="Questions • Comments • Press – We’ll get back to you fast."
+          />
+          <div className="mt-2 md:mt-8 grid md:grid-cols-3 gap-6 text-sm">
+            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
+              <div className="flex items-center gap-3">
+                <Mail className="h-5 w-5 text-amber-300" />
+                <span className="text-neutral-300">
+                  HQ@oldironsidescoffee.org
+                </span>
+              </div>
+
+              <div className="mt-2 text-neutral-400">
+                6 Liberty Square #2564, Boston, MA 02109
+              </div>
+            </div>
+            <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
+              <h4 className="font-semibold text-amber-300">Follow Us</h4>
+
+              <div className="mt-3 flex gap-6 text-amber-300">
+                <a
+                  href="https://instagram.com/oldironsidescoffee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-amber-200 transition"
+                >
+                  <Instagram className="h-5 w-5" />
+                  Instagram
+                </a>
+
+                <a
+                  href="https://facebook.com/oldironsidescoffee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-amber-200 transition"
+                >
+                  <Facebook className="h-5 w-5" />
+                  Facebook
+                </a>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <div className="hidden md:block">
+        <SDVOSBHighlight />
+      </div>
     </>
   );
 }

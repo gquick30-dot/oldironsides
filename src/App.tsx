@@ -2325,7 +2325,7 @@ function HomePage() {
                 padding-bottom: 4.5rem;
               }
               #top .heroCenter {
-                transform: translateY(90px);
+                transform: translateY(-10px);
               }
             }
           `}</style>
@@ -2353,7 +2353,7 @@ function HomePage() {
 
               <h2
                 className="text-amber-400 font-extrabold leading-tight tracking-tight
-  text-[1.5rem] sm:text-[1.9rem] md:text-[2.6rem]"
+                text-[1.5rem] sm:text-[1.9rem] md:text-[3rem]"
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
                 FRESH ROASTED COFFEE
@@ -2369,12 +2369,12 @@ function HomePage() {
                 <Link
                   to="/store"
                   className="w-full inline-flex items-center justify-center
-                  px-8 py-4 sm:px-10 sm:py-5
-                  rounded-xl bg-neutral-900 text-amber-400 font-extrabold
-                  text-xl sm:text-lg md:text-2xl tracking-wide
-                  border-2 border-amber-400 shadow-2xl shadow-amber-500/35
-                  hover:bg-amber-400 hover:text-neutral-900
-                  transition-all duration-200"
+  px-10 py-5 sm:px-12 sm:py-6
+  rounded-xl bg-neutral-900 text-amber-400 font-extrabold
+  text-xl sm:text-lg md:text-[1.6rem] tracking-wide
+  border-2 border-amber-400 shadow-2xl shadow-amber-500/35
+  hover:bg-amber-400 hover:text-neutral-900
+  transition-all duration-200"
                 >
                   SHOP FRESH COFFEE
                 </Link>

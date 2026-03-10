@@ -571,7 +571,7 @@ function RoastMegaCard({
             : `/${card.img}`
         }
         alt={card.title}
-        className="h-52 sm:h-60 lg:h-60 w-full object-cover"
+        className="h-52 sm:h-60 md:h-52 lg:h-60 w-full object-cover"
       />
 
       <div className="p-3">
@@ -1856,7 +1856,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         {/* tighten gap before cards */}
         <div className="mt-1 md:mt-1"></div>
         {/* mobile: 2-up tiles (no carousel) */}
-        <div className="md:hidden px-0 pt-2">
+        <div className="lg:hidden px-0 pt-2">
           <div className="grid grid-cols-2 gap-2">
             {roastCards.map((card) => {
               const base =
@@ -1904,14 +1904,14 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                       }
                       alt={card.title}
                       className="
-                absolute left-1/2 -translate-x-1/2
-                top-[-90px]
-                w-auto h-[360px]
-                object-contain
-                opacity-95
-                transition duration-300
-                group-hover:brightness-110
-              "
+                      absolute left-1/2 -translate-x-1/2
+                      top-[-90px] md:top-[40px]
+                      w-auto h-[360px]
+                      object-contain
+                      opacity-95
+                      transition duration-300
+                      group-hover:brightness-110
+                    "
                       loading="lazy"
                       decoding="async"
                       onError={(e) => {
@@ -1923,7 +1923,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                   </div>
 
                   {/* SPACER to reserve vertical room while image overlaps */}
-                  <div className="h-[165px] w-full" />
+                  <div className="h-[165px] md:h-[360px] w-full" />
 
                   {/* CONTENT ON TOP */}
                   <div className="relative z-10 w-full flex flex-col items-center">
@@ -2031,7 +2031,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         </div>
 
         {/* desktop / tablet: horizontal slider (all roasts) */}
-        <div className="hidden md:block relative">
+        <div className="hidden lg:block relative">
           {/* scroll row */}
           <div
             className="flex gap-12 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory pb-4 no-scrollbar scroll-smooth px-0 -mx-4 sm:-mx-6 lg:-mx-8 pl-4 sm:pl-6 lg:pl-8 pr-4 sm:pr-6 lg:pr-8 md:justify-center"
@@ -2300,11 +2300,11 @@ function HomePage() {
         style={{ isolation: "isolate" }}
       >
         {/* MOBILE hero background */}
-        <div className="absolute inset-0 md:hidden bg-neutral-950">
+        <div className="absolute inset-0 lg:hidden bg-neutral-950">
           <img
             src="officer-window3.tif"
             alt=""
-            className="w-full h-full object-contain object-center"
+            className="w-full h-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-black/20" />
         </div>
@@ -2313,7 +2313,7 @@ function HomePage() {
         <img
           src="emblem-black.png"
           alt="Stormy sea"
-          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[62vw] max-w-[780px] object-contain opacity-10 pointer-events-none select-none z-10"
+          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78vw] max-w-[780px] object-contain opacity-10 md:opacity-[0.15] lg:opacity-10 pointer-events-none select-none z-10"
         />
         <div className="hidden md:block absolute inset-0 bg-black" />
 
@@ -2330,10 +2330,10 @@ function HomePage() {
             }
           `}</style>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 md:gap-12 items-center text-center md:text-left md:-mx-16 lg:-mx-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-12 items-center text-center lg:text-left lg:-mx-24">
             {/* LEFT HERO VIDEO */}
-            <div className="hidden md:flex md:col-span-3 justify-start">
-              <div className="w-full max-w-[420px] h-[600px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
+            <div className="hidden lg:flex lg:col-span-3 justify-start">
+              <div className="w-full max-w-[260px] lg:max-w-[420px] h-[420px] lg:h-[600px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <video
                   autoPlay
                   muted
@@ -2348,7 +2348,7 @@ function HomePage() {
             </div>
 
             {/* HERO TEXT */}
-            <div className="md:col-span-6 flex flex-col items-center text-center heroCenter">
+            <div className="lg:col-span-6 flex flex-col items-center text-center heroCenter">
               <div aria-hidden className="hidden md:block h-12 lg:h-16" />
 
               <h2
@@ -2462,8 +2462,8 @@ function HomePage() {
             </div>
 
             {/* RIGHT HERO IMAGE */}
-            <div className="hidden md:flex md:col-span-3 justify-end">
-              <div className="w-full max-w-[420px] ml-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
+            <div className="hidden lg:flex lg:col-span-3 justify-end">
+              <div className="w-full max-w-[220px] lg:max-w-[420px] ml-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
                   src="officer-window2.png"
                   alt="Old Ironsides hero"
@@ -2476,7 +2476,7 @@ function HomePage() {
       </header>
 
       {/* MOBILE HERO VIDEO */}
-      <div className="md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+      <div className="lg:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
         <div className="overflow-hidden h-[420px]">
           <video
             autoPlay
@@ -2484,7 +2484,7 @@ function HomePage() {
             loop
             playsInline
             preload="metadata"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain md:object-contain lg:object-cover"
           >
             <source src="/reel 9.mp4" type="video/mp4" />
           </video>
@@ -2499,7 +2499,7 @@ function HomePage() {
           className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-60"
         />
 
-        <div className="hidden md:block absolute inset-0 bg-black/70" />
+        <div className="hidden md:block lg:block absolute inset-0 bg-black/70 md:bg-black/80 lg:bg-black/70" />
 
         <div className="relative">
           <LaunchedFromHarbor noBg />
@@ -2544,7 +2544,7 @@ function HomePage() {
 
         <Container>
           {/* ===== MOBILE-ONLY: amber line + GovX button ===== */}
-          <div className="relative z-10 md:hidden min-h-[320px] py-5 flex items-center">
+          <div className="relative z-10 lg:hidden min-h-[320px] py-5 flex items-center">
             <div className="mx-auto max-w-screen-sm space-y-4 text-center">
               <p className="text-amber-300 text-xl leading-relaxed tracking-[0.02em]">
                 Active duty, veterans, and first responders including fire, law
@@ -2564,7 +2564,7 @@ function HomePage() {
           </div>
 
           {/* ===== DESKTOP/TABLET: original layout (unchanged) ===== */}
-          <div className="relative z-10 hidden md:block">
+          <div className="relative z-10 hidden lg:block">
             <div className="min-h-[700px] py-16 flex flex-col justify-center">
               <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-6 items-center">
                 <div className="justify-self-center md:justify-self-start self-center">
@@ -2587,7 +2587,7 @@ function HomePage() {
                   </h3>
                   <br />
 
-                  <p className="text-neutral-100 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                  <p className="text-neutral-100 text-xl md:text-[1.4rem] lg:text-2xl leading-relaxed tracking-[0.02em]">
                     Even as a young company where every dollar counts, giving
                     back is a big part of who we are and what Old Ironsides
                     Coffee stands for. As a veteran, I believe service is a
@@ -2626,9 +2626,9 @@ function HomePage() {
         className="py-16 md:py-24 border-b border-neutral-800"
       >
         <Container>
-          <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-start">
+          <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 items-start">
             {/* LEFT COLUMN */}
-            <div className="max-w-[560px]">
+            <div className="max-w-[560px] md:mx-auto lg:mx-0 text-center md:text-center lg:text-center">
               <SectionTitle
                 title="Hail The Quarterdeck"
                 subtitle="Questions • Comments • Press – We’ll get back to you fast."
@@ -2686,7 +2686,7 @@ function HomePage() {
             </div>
 
             {/* RIGHT COLUMN */}
-            <div className="order-first md:order-none -mt-8 md:mt-0 md:pt-12">
+            <div className="order-first md:order-first lg:order-none -mt-8 md:mt-0 lg:pt-12">
               <RingThatBellBox />
             </div>
           </div>
@@ -11165,13 +11165,8 @@ function Layout() {
   // Open the cart drawer when other code dispatches 'oi-open-cart'
   useEffect(() => {
     const onOpen = () => {
-      if (typeof window !== "undefined" && window.innerWidth < 768) {
-        // mobile
-        setMobileCartOpen(true);
-      } else {
-        // desktop / tablet
-        setDesktopCartOpen(true);
-      }
+      setMobileCartOpen(true);
+      setDesktopCartOpen(false);
     };
     window.addEventListener("oi-open-cart", onOpen);
     return () => window.removeEventListener("oi-open-cart", onOpen);
@@ -11253,7 +11248,7 @@ function Layout() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   return (
-    <div className="min-h-screen bg-black text-neutral-100 overflow-x-hidden pt-[20px] md:pt-0">
+    <div className="min-h-screen w-full bg-black text-neutral-100 overflow-x-hidden pt-[20px] lg:pt-0">
       <ScrollToTop />
       <FlashToast />
       <PromoSubscribeModal />
@@ -11261,7 +11256,7 @@ function Layout() {
       {/* ===== HEADER (desktop + mobile) ===== */}
       <header className="fixed top-0 inset-x-0 z-[999999] md:z-50 bg-black border-b border-neutral-800">
         {/* === MOBILE HEADER TALL v3 === */}
-        <div className="md:hidden border-b border-neutral-800 bg-neutral-950 pb-1">
+        <div className="lg:hidden border-b border-neutral-800 bg-neutral-950 pb-1">
           {/* promo strip */}
           <div className="px-3 py-2 text-center text-[13px] font-semibold leading-tight text-amber-300 truncate border-b border-neutral-800">
             <button
@@ -11294,15 +11289,15 @@ function Layout() {
             className="block px-4 pt-2 pb-1 text-center leading-tight"
           >
             <div
-              className="text-[20px] font-bold tracking-[0.18em] text-neutral-300"
+              className="text-[20px] md:text-[40px] lg:text-[20px] font-bold tracking-[0.18em] text-neutral-300"
               style={{ fontFamily: "'Cinzel', serif", fontWeight: 1000 }}
             >
               OLD IRONSIDES COFFEE
             </div>
-            <div className="text-[14px] text-amber-300">
+            <div className="text-[14px] md:text-[21px] lg:text-[14px] text-amber-300">
               Ignite the Spirit, Savor the Victory!
             </div>
-            <div className="text-neutral-300 text-[12px] tracking-wide mt-1">
+            <div className="text-neutral-300 text-[12px] md:text-[18px] lg:text-[12px] tracking-wide mt-1">
               Proudly Veteran Owned
             </div>
           </Link>
@@ -11322,17 +11317,17 @@ function Layout() {
             </button>
 
             {/* right icons */}
-            <div className="flex gap-4 text-amber-300 translate-y-[6px]">
+            <div className="flex gap-4 text-amber-300 translate-y-[6px] lg:hidden relative z-[1000001]">
               {/* chest/cart */}
               <button
                 type="button"
-                onClick={() => setMobileCartOpen(true)}
+                onClick={() => window.dispatchEvent(new Event("oi-open-cart"))}
                 aria-label="Open Chest (Cart)"
                 title="Chest"
-                className="relative flex flex-col items-center text-center leading-none"
+                className="relative flex flex-col items-center text-center leading-none z-[1000002]"
               >
-                <ChestIcon className="h-8 w-8" />
-                <span className="absolute -top-1 -right-2 text-[10px] font-bold tabular-nums bg-neutral-900 rounded px-1 py-[1px] ring-1 ring-amber-400/60 text-amber-300 leading-none">
+                <ChestIcon className="h-8 w-8 pointer-events-none" />
+                <span className="absolute -top-1 -right-2 text-[10px] font-bold tabular-nums bg-neutral-900 rounded px-1 py-[1px] ring-1 ring-amber-400/60 text-amber-300 leading-none pointer-events-none">
                   {count ?? 0}
                 </span>
               </button>
@@ -11350,7 +11345,7 @@ function Layout() {
         </div>
 
         {/* === DESKTOP TOP BAR === */}
-        <div className="hidden md:block border-b border-neutral-800 bg-neutral-950">
+        <div className="hidden lg:block border-b border-neutral-800 bg-neutral-950">
           <Container>
             <div className="h-10 flex items-center relative">
               {/* promo text centered */}
@@ -11417,7 +11412,7 @@ function Layout() {
         </div>
 
         {/* === DESKTOP HEADER STACK + NAV (unchanged look) === */}
-        <div className="hidden md:block relative bg-black z-20">
+        <div className="hidden lg:block relative bg-black z-20">
           <Container>
             <div
               className={
@@ -11436,7 +11431,7 @@ function Layout() {
                         ? "h-28 md:h-32 top-[calc(50%+6px)]"
                         : "h-40 md:h-48 top-[calc(50%+12px)]") +
                       " w-auto object-contain select-none transition-all cursor-pointer " +
-                      "absolute -translate-y-1/2 right-[calc(100%+72px)]"
+                      "absolute md:-translate-y-[65%] lg:-translate-y-1/2 md:scale-[1.15] lg:scale-[1] right-[calc(100%+72px)]"
                     }
                   />
                 </Link>
@@ -11777,8 +11772,14 @@ function Layout() {
       </header>
 
       {mobileOpen && (
-        <div className="md:hidden fixed inset-0 z-[999999] flex items-start">
-          <div className="relative z-[1000000] w-[80%] max-w-[360px] bg-neutral-950 shadow-xl ring-1 ring-neutral-800 inline-flex flex-col max-h-[90vh]">
+        <div
+          className="lg:hidden fixed inset-0 z-[999999] flex items-start"
+          onClick={() => setMobileOpen(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative z-[1000000] w-[80%] max-w-[360px] bg-neutral-950 shadow-xl ring-1 ring-neutral-800 inline-flex flex-col max-h-[90vh]"
+          >
             {/* header */}
             <div className="flex items-start justify-between p-4 border-b border-neutral-800">
               <div className="text-left">
@@ -11854,31 +11855,35 @@ function Layout() {
       )}
 
       {/* Desktop Cart Drawer */}
-      {desktopCartOpen && (
-        <DesktopCartSheet onClose={() => setDesktopCartOpen(false)} />
-      )}
+      {desktopCartOpen &&
+        typeof window !== "undefined" &&
+        window.innerWidth >= 1024 && (
+          <DesktopCartSheet onClose={() => setDesktopCartOpen(false)} />
+        )}
 
       {/* Mobile Cart Drawer */}
       {mobileCartOpen && (
-        <MobileCartSheet onClose={() => setMobileCartOpen(false)} />
+        <div className="lg:hidden">
+          <MobileCartSheet onClose={() => setMobileCartOpen(false)} />
+        </div>
       )}
 
       {/* spacer so content doesn’t hide under header (mobile-tuned for /coffee) */}
       <div
         className={
           isHome
-            ? "h-[105px] md:h-[205px]"
+            ? "h-[105px] md:h-[170px] lg:h-[205px]"
             : isStore
-            ? "h-[120px] md:h-[150px]"
+            ? "h-[120px] md:h-[140px] lg:h-[150px]"
             : isAccount
-            ? "h-[150px] md:h-[160px]"
+            ? "h-[150px] md:h-[155px] lg:h-[160px]"
             : isRoast
-            ? "h-[140px] md:h-[190px]"
+            ? "h-[140px] md:h-[165px] lg:h-[190px]"
             : isOrigins
-            ? "h-[200px] md:h-[210px]"
+            ? "h-[200px] md:h-[205px] lg:h-[210px]"
             : isSupport
-            ? "h-[190px] md:h-[200px]"
-            : "h-[180px] md:h-[160px]"
+            ? "h-[190px] md:h-[195px] lg:h-[200px]"
+            : "h-[180px] md:h-[150px] lg:h-[160px]"
         }
       />
       {!hidePromoTab && (
@@ -11926,9 +11931,9 @@ function Layout() {
       {/* footer */}
       <footer className="border-t border-neutral-800 bg-neutral-950">
         <Container className="py-8 text-sm">
-          <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid lg:grid-cols-4 gap-8">
             {/* Brand + Vet-owned + Flag (centered and nudged up) */}
-            <div className="relative -top-4 md:-top-5 flex flex-col items-center text-center">
+            <div className="relative -top-4 lg:-top-5 flex flex-col items-center text-center">
               {/* Title */}
               <div className="mt-3 md:mt-4 text-base tracking-[0.5em] text-amber-300">
                 OLD IRONSIDES COFFEE
@@ -12005,7 +12010,7 @@ function Layout() {
               </ul>
             </div>
             {/* Contact */}
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <div className="text-neutral-400 font-semibold mb-2">Contact</div>
               <ul className="space-y-1 text-neutral-300">
                 <li>
@@ -12020,7 +12025,7 @@ function Layout() {
               </ul>
             </div>
             {/* Follow */}
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <div className="text-amber-300 font-semibold mb-2">Follow Us</div>
 
               <div className="flex gap-6 text-amber-300">
@@ -13219,7 +13224,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="md:hidden fixed inset-0 z-[1000002] flex justify-end items-stretch">
+    <div className="lg:hidden fixed inset-0 z-[1000002] flex justify-end items-stretch">
       {/* BACKDROP */}
       <button
         className="flex-1 bg-black/65 touch-none"

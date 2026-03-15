@@ -1814,14 +1814,14 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             title={
               <span
                 className="
-                whitespace-nowrap
-                text-[20px] sm:text-[24px] md:text-5xl
-                leading-tight md:leading-[1.1]
-                tracking-[0.04em]
-                font-black md:font-bold text-amber-400
-                mt-2 md:mt-0
-              "
-                style={{ fontFamily: "'Cinzel', serif", fontWeight: 1000 }}
+        whitespace-nowrap
+        text-[25px] sm:text-[30px] md:text-[3.9rem]
+        leading-tight md:leading-[1.1]
+        tracking-[0.04em]
+        font-bold text-amber-400
+        mt-2 md:mt-0
+      "
+                style={{ fontFamily: "'Cinzel', serif" }}
               >
                 THE FLEET
               </span>
@@ -1829,20 +1829,18 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             subtitle={
               <>
                 {/* info lines */}
-                <div className="text-neutral-300 text-sm sm:text-base font-semibold tracking-tight flex flex-col items-center md:items-start gap-1">
+                <div className="text-neutral-300 text-[10px] sm:text-base font-bold tracking-tight flex flex-col items-center md:items-start gap-1">
                   {/* line 1 */}
                   <div className="whitespace-nowrap">
-                    <span>
-                      ROASTED MONDAY
-                      <span className="mx-2 text-amber-400">•</span>
-                      PACKAGED TUESDAY
-                      <span className="mx-2 text-amber-400">•</span>
-                      SHIPS WEDNESDAY
-                    </span>
+                    ROASTED MONDAY
+                    <span className="mx-2 text-amber-400">•</span>
+                    PACKAGED TUESDAY
+                    <span className="mx-2 text-amber-400">•</span>
+                    SHIPS WEDNESDAY
                   </div>
 
                   {/* line 2 */}
-                  <div className="text-center md:text-left whitespace-nowrap">
+                  <div className="text-center md:text-left whitespace-nowrap text-[12px] sm:text-base font-bold">
                     <span>Next Roast Date: </span>
                     <span className="text-amber-400">{nextInfo}</span>
                   </div>
@@ -2348,7 +2346,7 @@ function HomePage() {
                   preload="metadata"
                   className="block w-full h-full object-cover"
                 >
-                  <source src="/reel 9.mp4" type="video/mp4" />
+                  <source src="/short vid.mp4" type="video/mp4" />
                 </video>
               </div>
             </div>
@@ -2364,11 +2362,9 @@ function HomePage() {
               >
                 ROASTED TO ORDER COFFEE
               </h2>
-
               <div className="mt-1 text-neutral-300 text-[13px] sm:text-[15px] md:text-lg whitespace-nowrap">
                 Roasted Monday • Packed Tuesday • Ships Wednesday
               </div>
-
               <div aria-hidden className="h-2 md:h-3" />
 
               <div className="w-full max-w-[28rem]">
@@ -2480,8 +2476,8 @@ function HomePage() {
           </div>
         </Container>
       </header>
-      {/* FULL WIDTH FLEET IMAGE */}
-      <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-950 py-16">
+      {/* FULL WIDTH FLEET IMAGE (DESKTOP/TABLET) */}
+      <section className="hidden md:block w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-950 py-16">
         <div className="max-w-[1400px] mx-auto px-6">
           <img
             src="/fleet 2 pic.jpg"
@@ -2490,22 +2486,30 @@ function HomePage() {
           />
         </div>
       </section>
+
       {/* MOBILE HERO VIDEO */}
-      <div className="hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-        <div className="overflow-hidden h-[420px] sm:h-[420px] md:h-[360px] lg:h-[420px]">
+      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+        <div className="overflow-hidden h-[420px]">
           <video
             autoPlay
             muted
             loop
             playsInline
             preload="metadata"
-            className="w-full h-full object-contain md:object-contain lg:object-cover"
+            className="w-full h-full object-cover"
           >
-            <source src="/reel 9.mp4" type="video/mp4" />
+            <source src="/short vid.mp4" type="video/mp4" />
           </video>
         </div>
       </div>
-
+      {/* MOBILE FLEET IMAGE */}
+      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-950 py-12">
+        <img
+          src="/fleet 2 pic.jpg"
+          alt="Old Ironsides Fleet"
+          className="w-full h-auto object-contain"
+        />
+      </div>
       {/* FLEET SECTION (UNCHANGED) */}
       <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950 md:mt-0">
         <img
@@ -12755,7 +12759,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* FOOTER */}
-        <div className="border-t border-neutral-800 px-4 pt-3 pb-2 space-y-2">
+        <div className="border-t border-neutral-800 px-4 pt-4 pb-24 space-y-2">
           <div className="flex items-center justify-between text-[12px] text-neutral-400">
             <span>Shipping</span>
             <span>{shippingLabel}</span>
@@ -12795,51 +12799,11 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
 
           <button
             type="button"
-            onClick={onClose}
-            className="block w-full text-center text-[16px] text-neutral-300 underline underline-offset-4"
-          >
-            Continue shopping
-          </button>
-
-          <div className="mt-3 flex justify-center">
-            <a
-              href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
-              className="inline-block rounded-xl ring-1 ring-amber-400/60 
-       text-amber-400 font-semibold text-[1rem]
-       px-[1.1rem] py-[0.45rem]
-       hover:bg-amber-400 hover:text-neutral-900 transition-all"
-            >
-              Get GovX discount code
-            </a>
-          </div>
-
-          <button
-            type="button"
             onClick={() => setShowRoastInfo(true)}
             className="block w-full text-center text-[14px] text-red-300 underline underline-offset-4"
           >
             Please read before checking out
           </button>
-
-          <div className="mt-1 mb-1 rounded-md bg-neutral-900/60 ring-1 ring-neutral-800 px-3 py-2 text-center">
-            {state === "countdown" ? (
-              <div className="text-[12px] text-neutral-300">
-                Time left to make the next roast:{" "}
-                <span className="text-amber-300 font-semibold">{left}</span>
-              </div>
-            ) : state === "closed" ? (
-              <div className="text-[12px] text-neutral-300">
-                Next batch roasts:{" "}
-                <span className="text-amber-300">{dateLabel}</span>
-              </div>
-            ) : (
-              <div className="text-[12px] text-neutral-300">
-                Next batch roasts:{" "}
-                <span className="text-amber-300">{dateLabel}</span>{" "}
-                <span className="text-neutral-500">(ET)</span>
-              </div>
-            )}
-          </div>
         </div>
 
         {/* SUBSCRIBE GATE */}
@@ -13529,7 +13493,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* FOOTER: Checkout ABOVE ID.me, plus links */}
-        <div className="border-t border-neutral-800 px-4 pt-3 pb-2 space-y-2">
+        <div className="border-t border-neutral-800 px-4 pt-4 pb-24 space-y-2">
           <div className="flex items-center justify-between text-[12px] text-neutral-400">
             <span>Shipping</span>
             <span>{shippingLabel}</span>
@@ -13551,31 +13515,6 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
             {checkingOut ? "Syncing cart…" : `Checkout • $${total.toFixed(2)}`}
           </button>
 
-          {/* Continue shopping closes drawer */}
-          <button
-            type="button"
-            onClick={() => {
-              setPinned(true);
-              onClose();
-            }}
-            className="block w-full text-center text-[20px] text-neutral-300 underline underline-offset-4"
-          >
-            Continue shopping
-          </button>
-
-          {/* GovX login after checkout */}
-          <div className="mt-3 flex justify-center">
-            <a
-              href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
-              className="inline-block rounded-xl ring-1 ring-amber-400/60 
-       text-amber-400 font-semibold text-[1rem]
-       px-[1.1rem] py-[0.45rem]
-       hover:bg-amber-400 hover:text-neutral-900 transition-all"
-            >
-              Get GovX discount code
-            </a>
-          </div>
-
           {/* Read-before-checkout link */}
           <button
             type="button"
@@ -13584,27 +13523,6 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
           >
             Please read before checking out
           </button>
-
-          {/* Tiny roast timer pinned at very bottom */}
-          <div className="mt-1 mb-1 rounded-md bg-neutral-900/60 ring-1 ring-neutral-800 px-3 py-2 text-center">
-            {state === "countdown" ? (
-              <div className="text-[16px] text-neutral-300">
-                Time left to make the next roast:{" "}
-                <span className="text-amber-300 font-semibold">{left}</span>
-              </div>
-            ) : state === "closed" ? (
-              <div className="text-[11px] text-neutral-300">
-                Next batch roasts:{" "}
-                <span className="text-amber-300">{dateLabel}</span>
-              </div>
-            ) : (
-              <div className="text-[11px] text-neutral-300">
-                Next batch roasts:{" "}
-                <span className="text-amber-300">{dateLabel}</span>{" "}
-                <span className="text-neutral-500">(ET)</span>
-              </div>
-            )}
-          </div>
         </div>
 
         {/* SUBSCRIBE GATE BANNER (blocks checkout when not signed in) */}

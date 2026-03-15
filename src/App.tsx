@@ -1788,9 +1788,9 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
       id="fleet"
       className={`relative overflow-hidden ${
         isHome
-          ? "pt-2 pb-6 md:pt-6 md:pb-8 min-h-[auto] md:min-h-[740px]"
+          ? "pt-2 pb-4 md:pt-2 md:pb-4 min-h-[auto]"
           : isStore
-          ? "pt-2 pb-6 md:pt-6 md:pb-10 min-h-[auto] md:min-h-[740px]"
+          ? "pt-2 pb-6 md:pt-6 md:pb-10 min-h-[auto] md:min-h-[1000px]"
           : "pt-2 pb-6 md:py-20 min-h-[auto] md:min-h-[1100px]"
       }`}
     >
@@ -1823,19 +1823,25 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
               "
                 style={{ fontFamily: "'Cinzel', serif", fontWeight: 1000 }}
               >
-                LAUNCHED FROM THE HARBOR
+                THE FLEET
               </span>
             }
             subtitle={
               <>
                 {/* info lines */}
-                <div className="text-neutral-300 text-sm sm:text-base font-normal tracking-tight flex flex-col items-center md:items-start gap-1">
-                  {/* line 1: Roast CTA */}
+                <div className="text-neutral-300 text-sm sm:text-base font-semibold tracking-tight flex flex-col items-center md:items-start gap-1">
+                  {/* line 1 */}
                   <div className="whitespace-nowrap">
-                    <span>Order your fresh roasted coffee now</span>
+                    <span>
+                      ROASTED MONDAY
+                      <span className="mx-2 text-amber-400">•</span>
+                      PACKAGED TUESDAY
+                      <span className="mx-2 text-amber-400">•</span>
+                      SHIPS WEDNESDAY
+                    </span>
                   </div>
 
-                  {/* line 2: Next Roast Date: <value>  (same line now, both mobile + desktop) */}
+                  {/* line 2 */}
                   <div className="text-center md:text-left whitespace-nowrap">
                     <span>Next Roast Date: </span>
                     <span className="text-amber-400">{nextInfo}</span>
@@ -2031,7 +2037,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
         </div>
 
         {/* desktop / tablet: horizontal slider (all roasts) */}
-        <div className="hidden lg:block relative">
+        <div className="hidden lg:block relative -mt-14">
           {/* scroll row */}
           <div
             className="flex gap-12 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory pb-4 no-scrollbar scroll-smooth px-0 -mx-4 sm:-mx-6 lg:-mx-8 pl-4 sm:pl-6 lg:pl-8 pr-4 sm:pr-6 lg:pr-8 md:justify-center"
@@ -2072,7 +2078,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     }}
                   />
 
-                  <div className="pt-0 pb-5 px-5 flex flex-col flex-1 items-center text-center transition duration-300 group-hover:brightness-110">
+                  <div className="pt-0 pb-1 px-5 flex flex-col flex-1 items-center text-center transition duration-300 group-hover:brightness-110">
                     <h3
                       className="text-2xl font-extrabold text-amber-300 mt-[-4px] transition duration-300 group-hover:text-amber-200"
                       style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
@@ -2207,7 +2213,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             })}
           </div>
           {/* DESKTOP MUG PROMO */}
-          <div className="hidden md:block text-center mt-4">
+          <div className="hidden md:block text-center -mt-0">
             <p className="text-neutral-300 text-sm">
               The first 200 subscribers receive a free
               <span className="text-amber-300 font-semibold">
@@ -2319,21 +2325,21 @@ function HomePage() {
 
         <Container className="relative desktopHeroPad pt-[26rem] pb-10 sm:pt-[24rem] sm:pb-14">
           <style>{`
-            @media (min-width: 768px) {
-              #top .desktopHeroPad {
-                padding-top: 4.5rem;
-                padding-bottom: 4.5rem;
-              }
-              #top .heroCenter {
-                transform: translateY(-10px);
-              }
-            }
-          `}</style>
+@media (min-width: 768px) {
+  #top .desktopHeroPad {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+  #top .heroCenter {
+    transform: translateY(-10px);
+  }
+}
+`}</style>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-12 items-center text-center lg:text-left lg:-mx-24">
+          <div className="grid grid-cols-1 lg:grid-cols-10 xl:grid-cols-12 lg:gap-12 items-center text-center lg:text-left 2xl:-mx-24">
             {/* LEFT HERO VIDEO */}
-            <div className="hidden lg:flex lg:col-span-3 justify-start">
-              <div className="w-full max-w-[260px] lg:max-w-[420px] h-[420px] lg:h-[600px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
+            <div className="hidden lg:flex lg:col-span-2 xl:col-span-3 justify-start">
+              <div className="w-full max-w-[220px] md:max-w-[260px] lg:max-w-[330px] xl:max-w-[420px] h-[360px] md:h-[420px] lg:h-[400px] xl:h-[600px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <video
                   autoPlay
                   muted
@@ -2348,7 +2354,7 @@ function HomePage() {
             </div>
 
             {/* HERO TEXT */}
-            <div className="lg:col-span-6 flex flex-col items-center text-center heroCenter">
+            <div className="lg:col-span-6 xl:col-span-6 flex flex-col items-center text-center heroCenter">
               <div aria-hidden className="hidden md:block h-12 lg:h-16" />
 
               <h2
@@ -2356,7 +2362,7 @@ function HomePage() {
                 text-[1.5rem] sm:text-[1.9rem] md:text-[3rem]"
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
-                FRESH ROASTED COFFEE
+                ROASTED TO ORDER COFFEE
               </h2>
 
               <div className="mt-1 text-neutral-300 text-[13px] sm:text-[15px] md:text-lg whitespace-nowrap">
@@ -2462,22 +2468,31 @@ function HomePage() {
             </div>
 
             {/* RIGHT HERO IMAGE */}
-            <div className="hidden lg:flex lg:col-span-3 justify-end">
+            <div className="hidden lg:flex lg:col-span-2 xl:col-span-3 justify-end">
               <div className="w-full max-w-[220px] lg:max-w-[420px] ml-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
                   src="officer-window2.png"
                   alt="Old Ironsides hero"
-                  className="block w-full h-auto max-h-[60vh] sm:max-h-[70vh] md:max-h-[calc(100vh-300px)] object-cover"
+                  className="block w-full h-auto max-h-[60vh] sm:max-h-[70vh] md:max-h-[calc(100vh-300px)] lg:max-h-[85vh] xl:max-h-[calc(100vh-300px)] object-cover"
                 />
               </div>
             </div>
           </div>
         </Container>
       </header>
-
+      {/* FULL WIDTH FLEET IMAGE */}
+      <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-950 py-16">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <img
+            src="/fleet 2 pic.jpg"
+            alt="Old Ironsides Fleet"
+            className="w-full h-auto object-contain rounded-2xl"
+          />
+        </div>
+      </section>
       {/* MOBILE HERO VIDEO */}
-      <div className="lg:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-        <div className="overflow-hidden h-[420px]">
+      <div className="hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+        <div className="overflow-hidden h-[420px] sm:h-[420px] md:h-[360px] lg:h-[420px]">
           <video
             autoPlay
             muted
@@ -2490,7 +2505,8 @@ function HomePage() {
           </video>
         </div>
       </div>
-      {/* LAUNCHED FROM HARBOR SECTION (UNCHANGED) */}
+
+      {/* FLEET SECTION (UNCHANGED) */}
       <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950 md:mt-0">
         <img
           src="/World Amber.png"
@@ -2565,7 +2581,7 @@ function HomePage() {
 
           {/* ===== DESKTOP/TABLET: original layout (unchanged) ===== */}
           <div className="relative z-10 hidden lg:block">
-            <div className="min-h-[700px] py-16 flex flex-col justify-center">
+            <div className="min-h-[420px] py-6 flex flex-col justify-start">
               <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-6 items-center">
                 <div className="justify-self-center md:justify-self-start self-center">
                   <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
@@ -3668,12 +3684,12 @@ function RoastDetailPage() {
     <main className="relative overflow-hidden min-h-[calc(100vh-140px)] pt-0 pb-6 md:pt-16 md:pb-16">
       <div className="absolute inset-0 z-0 bg-neutral-950/30" aria-hidden />
 
-      <Container className="relative z-10 mt-0 md:mt-0">
+      <Container className="relative z-10 mt-0 md:mt-0 lg:max-xl:max-w-[1240px]">
         {/* ===== HERO ===== */}
         <div className="relative">
           {/* emblem moved to live behind the bag (image wrapper) */}
 
-          <div className="relative z-10 mt-0 md:mt-3 grid md:grid-cols-[auto,1fr] gap-0 md:gap-6 items-start">
+          <div className="relative z-10 mt-0 md:mt-3 grid lg:grid-cols-[auto,1fr] gap-0 lg:gap-6 items-start">
             {/* HERO IMAGE */}
             <div className="flex flex-col items-center md:items-start w-full md:w-auto relative">
               {/* emblem behind bag — mobile */}
@@ -5107,7 +5123,7 @@ function CareCard() {
       </aside>
 
       {/* DESKTOP VERSION */}
-      <aside className="hidden md:block w-[110%] rounded-xl border border-amber-400/60 bg-black/70 px-5 py-5 md:px-6 md:py-8 shadow-md shadow-amber-400/10">
+      <aside className="hidden md:block w-full 2xl:w-[110%] rounded-xl border border-amber-400/60 bg-black/70 px-5 py-5 md:px-6 md:py-8 shadow-md shadow-amber-400/10">
         <h3 className="m-0 text-center text-[1.15rem] md:text-[1.294rem] font-bold text-amber-300 tracking-wide">
           COFFEE STORAGE &amp; FRESHNESS
         </h3>
@@ -5838,7 +5854,7 @@ function TheCoffeeFlagship({
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
       <div className="bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] md:gap-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
             {/* LEFT: STORY ONLY */}
             <div className="max-w-[80ch] md:pt-6">
               <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
@@ -6036,7 +6052,7 @@ function TheCoffeeJava({
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
       <div className="bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] md:gap-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
             <div className="max-w-[80ch] md:pt-6">
               <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
                 <p className="text-amber-300 text-base md:text-lg">
@@ -6139,7 +6155,7 @@ function TheCoffeeOak({
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
       <div className="bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] md:gap-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
             {/* LEFT: STORY ONLY */}
             <div className="max-w-[80ch] md:pt-6">
               <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
@@ -6231,7 +6247,7 @@ function TheCoffeeBrass({
 
       <div className="bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] md:gap-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
             {/* LEFT: STORY */}
             <div className="max-w-[80ch] md:pt-6">
               <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
@@ -11599,7 +11615,7 @@ function Layout() {
                     <div className="mt-2 border-t border-neutral-800">
                       <div className="relative">
                         <div className="absolute inset-0 bg-neutral-950/95 backdrop-blur" />
-                        <Container className="relative py-4 md:py-6">
+                        <Container className="relative py-1 md:py-1">
                           {/* keep your inner openMega === 'coffee' / 'merch' / 'origins' exactly */}
                           {openMega === "coffee" && (
                             <div className="grid lg:grid-cols-[1fr,auto] gap-8 items-start">
@@ -11891,7 +11907,7 @@ function Layout() {
           className="fixed right-0 md:left-0 md:right-auto top-1/2 z-40"
           style={{ transform: "translateY(-50%)" }}
         >
-          <div className="flex flex-col items-center bg-amber-400 text-black rounded-r-md shadow-lg overflow-hidden promo-tab-pulse">
+          <div className="flex flex-col items-center bg-amber-400 text-black rounded-l-md md:rounded-r-md md:rounded-l-none shadow-lg overflow-hidden promo-tab-pulse">
             {/* close button */}
             <button
               onClick={() => {
@@ -11931,7 +11947,7 @@ function Layout() {
       {/* footer */}
       <footer className="border-t border-neutral-800 bg-neutral-950">
         <Container className="py-8 text-sm">
-        <div className="grid lg:grid-cols-4 gap-8">
+          <div className="grid lg:grid-cols-4 gap-8">
             {/* Brand + Vet-owned + Flag (centered and nudged up) */}
             <div className="relative -top-4 lg:-top-5 flex flex-col items-center text-center">
               {/* Title */}
@@ -12136,97 +12152,7 @@ function getRoastState(nowET: DateTime) {
 }
 
 function RoastCTAInfo() {
-  const nowET = useEtNow(45000); // update every ~45s
-  const { state, roastMonday, cutoff } = getRoastState(nowET);
-
-  // For countdown, compute remaining to Sunday 5:00 PM ET (cutoff)
-  let left = "";
-  if (state === "countdown" && cutoff) {
-    const diff = cutoff.diff(nowET, ["days", "hours", "minutes"]).toObject();
-    const d = Math.max(0, Math.floor(diff.days ?? 0));
-    const h = Math.max(0, Math.floor(diff.hours ?? 0));
-    const m = Math.max(0, Math.floor(diff.minutes ?? 0));
-    left = `${d}d ${h}h ${m}m`;
-  }
-
-  const dateLabel = formatEtDate(roastMonday);
-
-  return (
-    <>
-      {/* MOBILE VERSION */}
-      <div className="mt-3 text-center leading-tight md:hidden">
-        {state === "countdown" ? (
-          // countdown phase (Thu morning -> Sun 5pm ET)
-          <div className="space-y-1">
-            <div className="text-m text-neutral-200">
-              Time left to make the next roast:{" "}
-              <span className="text-amber-300">{left}</span>
-            </div>
-            <div className="text-[14px] text-neutral-200">
-              Secure your fresh order now.
-            </div>
-          </div>
-        ) : state === "closed" ? (
-          // after cutoff passed, next roast date known, preorder
-          <div className="space-y-1">
-            <div className="text-m text-neutral-300 font-medium">
-              Next batch roasts:{" "}
-              <span className="text-amber-300">{dateLabel}</span>
-            </div>
-            <div className="text-[14px] text-neutral-400">
-              Reserve your bag today
-            </div>
-          </div>
-        ) : (
-          // normal early-week state
-          <div className="space-y-1">
-            <div className="text-sm text-neutral-300">
-              <span className="font-medium">Next batch roasts:</span>{" "}
-              <span className="text-amber-300">{dateLabel}</span>{" "}
-              <span className="text-neutral-400">(ET)</span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* DESKTOP / TABLET VERSION (unchanged behavior) */}
-      <div className="mt-3 text-center leading-tight hidden md:block">
-        {state === "countdown" ? (
-          <div className="space-y-1">
-            <div className="text-lg md:text-lg text-neutral-300 font-medium">
-              Next batch roasts:{" "}
-              <span className="text-amber-300">{dateLabel}</span>{" "}
-              <span className="text-neutral-400"></span>
-            </div>
-            <div className="text-m md:text-m text-neutral-200">
-              Time left to make the next roast:{" "}
-              <span className="text-amber-300">{left}</span> <br />
-              Secure your fresh order now.
-            </div>
-          </div>
-        ) : state === "closed" ? (
-          <div className="space-y-1">
-            <div className="text-lg md:text-lg text-neutral-300 font-medium">
-              Next batch roasts:{" "}
-              <span className="text-amber-300">{dateLabel}</span>{" "}
-              <span className="text-neutral-400"></span>
-            </div>
-            <div className="text-m md:text-m text-neutral-400">
-              Reserve your bag today
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-1">
-            <div className="text-xs md:text-sm text-neutral-300">
-              <span className="font-medium">Next batch roasts:</span>{" "}
-              <span className="text-amber-300">{dateLabel}</span>{" "}
-              <span className="text-neutral-400">(ET)</span>
-            </div>
-          </div>
-        )}
-      </div>
-    </>
-  );
+  return <>{/* Hero fold CTA messaging removed */}</>;
 }
 
 /* ================= App Entrypoint ================= */

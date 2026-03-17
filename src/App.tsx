@@ -1553,8 +1553,8 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
   const isStore = location.pathname.startsWith("/store");
   const mobileMerch = [
     { key: "tees", label: "Tees", img: "shirts-web.png" },
-    { key: "hats", label: "Hats", img: "hat1-web.png" },
-    { key: "mugs", label: "Mugs", img: "coffee-deck2.png" },
+    { key: "hats", label: "Hats", img: "hat1-web.jpg" },
+    { key: "mugs", label: "Mugs", img: "coffee-deck2.jpg" },
     { key: "accessories", label: "Accessories", img: "canister-web.png" },
   ];
 
@@ -2306,7 +2306,7 @@ function HomePage() {
         {/* MOBILE hero background */}
         <div className="absolute inset-0 lg:hidden bg-neutral-950">
           <img
-            src="officer-window2.1.jpg"
+            src="officer-window3.1.jpg"
             alt=""
             className="w-full h-full object-cover object-center"
           />
@@ -2467,7 +2467,7 @@ function HomePage() {
             <div className="hidden lg:flex lg:col-span-2 xl:col-span-3 justify-end">
               <div className="w-full max-w-[220px] lg:max-w-[420px] ml-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
-                  src="officer-window2.1.jpg"
+                  src="officer-window3.1.jpg"
                   alt="Old Ironsides hero"
                   className="block w-full h-auto max-h-[60vh] sm:max-h-[70vh] md:max-h-[calc(100vh-300px)] lg:max-h-[85vh] xl:max-h-[calc(100vh-300px)] object-cover"
                 />
@@ -2590,7 +2590,7 @@ function HomePage() {
                 <div className="justify-self-center md:justify-self-start self-center">
                   <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
                     <img
-                      src="/soliders-sunset.png"
+                      src="/soliders-sunset.jpg"
                       alt="Giving back"
                       className="w-full h-full object-cover hue-rotate-[-10deg] saturate-70"
                     />
@@ -6698,7 +6698,7 @@ function OriginsPage() {
       >
         {/* Mobile: no backdrop. Desktop: keep backdrop */}
         <img
-          src="/hands-bowl.jpeg"
+          src="/hands-bowl-1.jpeg"
           alt="Growers backdrop"
           className="absolute inset-0 w-full h-full object-cover object-center opacity-70 z-0 pointer-events-none hidden md:block"
         />
@@ -6730,7 +6730,7 @@ function OriginsPage() {
                   {/* Middle card (offset to RIGHT) */}
                   <div className="absolute left-[58%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-2xl">
                     <img
-                      src="/hands-beans.jpg"
+                      src="/hands-beans.jpeg"
                       alt="Hands with beans"
                       className="w-full h-full object-cover"
                     />
@@ -6738,7 +6738,7 @@ function OriginsPage() {
                   {/* Bottom card (far LEFT) */}
                   <div className="absolute left-0 bottom-0 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
                     <img
-                      src="/woman2.jpg"
+                      src="/woman2.jpeg"
                       alt="Care at every step"
                       className="w-full h-full object-cover"
                     />
@@ -7088,7 +7088,7 @@ function OriginsPage() {
               <div className="justify-self-center md:justify-self-start self-center">
                 <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
                   <img
-                    src="/soliders-sunset.png"
+                    src="/soliders-sunset.jpg"
                     alt="Giving back"
                     className="w-full h-full object-cover hue-rotate-[-10deg] saturate-70"
                   />
@@ -7159,7 +7159,7 @@ function OriginsPage() {
               <div className="justify-self-center self-center">
                 <div className="w-64 md:w-[32rem] mx-auto aspect-[10/13] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
                   <img
-                    src="/ironship.png"
+                    src="/ironship.jpg"
                     alt="Old Ironsides legacy"
                     className="w-full h-full object-cover"
                   />
@@ -10897,13 +10897,13 @@ function PromoSubscribeModal() {
             <div className="md:hidden">
               <div className="relative w-full h-[246px] sm:h-[282px] bg-neutral-900 overflow-hidden">
                 <img
-                  src="/captain-deck1.png"
+                  src="/captain-deck1.jpg"
                   alt=""
                   aria-hidden="true"
                   className="absolute inset-0 w-full h-full object-cover blur-sm scale-110 opacity-60"
                 />
                 <img
-                  src="/captain-deck1.png"
+                  src="/captain-deck1.jpg"
                   alt="Hero"
                   className="relative z-10 h-full mx-auto object-contain"
                 />
@@ -10916,7 +10916,7 @@ function PromoSubscribeModal() {
               <div className="rounded-2xl ring-1 ring-amber-400 bg-neutral-900/60 overflow-hidden shadow-2xl shadow-black/40">
                 <div className="w-[19rem] lg:w-[21rem] aspect-[4/5]">
                   <img
-                    src="/captain-deck1.png"
+                    src="/captain-deck1.jpg"
                     alt="Hero"
                     className="w-full h-full object-cover"
                   />
@@ -11251,12 +11251,12 @@ function Layout() {
   // Minimal merch cards to show in the dropdown (keys match your store)
   const merchTiles = [
     { key: "tees", label: "Tees", img: "shirts-web.png" },
-    { key: "hats", label: "Hats", img: "hat1-web.png" },
-    { key: "mugs", label: "Mugs", img: "coffee-deck2.png" },
+    { key: "hats", label: "Hats", img: "hat1-web.jpg" },
+    { key: "mugs", label: "Mugs", img: "coffee-deck2.jpg" },
     {
       key: "accessories",
       label: "Coffee Accessories",
-      img: "canister-web.png",
+      img: "canister-web.jpg",
     },
   ];
   const flagship = roastCards.find((c) => c.slug === "flagship");

@@ -2467,7 +2467,7 @@ function HomePage() {
             <div className="hidden lg:flex lg:col-span-2 xl:col-span-3 justify-end">
               <div className="w-full max-w-[220px] lg:max-w-[420px] ml-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
-                  src="officer-window2.1.png"
+                  src="officer-window2.1.jpg"
                   alt="Old Ironsides hero"
                   className="block w-full h-auto max-h-[60vh] sm:max-h-[70vh] md:max-h-[calc(100vh-300px)] lg:max-h-[85vh] xl:max-h-[calc(100vh-300px)] object-cover"
                 />

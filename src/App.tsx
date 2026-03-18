@@ -2304,7 +2304,7 @@ function HomePage() {
         style={{ isolation: "isolate" }}
       >
         {/* MOBILE hero background */}
-        <div className="absolute inset-0 lg:hidden bg-neutral-950">
+        <div className="absolute inset-0 lg:hidden bg-neutral-900">
           <img
             src="officer-window3.1.jpg"
             alt=""
@@ -2319,7 +2319,7 @@ function HomePage() {
           alt="Stormy sea"
           className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78vw] max-w-[780px] object-contain opacity-10 md:opacity-[0.15] lg:opacity-10 pointer-events-none select-none z-10"
         />
-        <div className="hidden md:block absolute inset-0 bg-black" />
+        <div className="hidden md:block absolute inset-0 bg-neutral-950" />
 
         <Container className="relative desktopHeroPad pt-[26rem] pb-10 sm:pt-[24rem] sm:pb-14">
           <style>{`
@@ -2467,7 +2467,7 @@ function HomePage() {
             <div className="hidden lg:flex lg:col-span-2 xl:col-span-3 justify-end">
               <div className="w-full max-w-[220px] lg:max-w-[420px] ml-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
                 <img
-                  src="officer-window3.1.jpg"
+                  src="officer-window2.2.jpg"
                   alt="Old Ironsides hero"
                   className="block w-full h-auto max-h-[60vh] sm:max-h-[70vh] md:max-h-[calc(100vh-300px)] lg:max-h-[85vh] xl:max-h-[calc(100vh-300px)] object-cover"
                 />
@@ -2477,7 +2477,7 @@ function HomePage() {
         </Container>
       </header>
       {/* FULL WIDTH FLEET IMAGE (DESKTOP/TABLET) */}
-      <section className="hidden md:block w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-950 py-16">
+      <section className="hidden md:block w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-925 py-16">
         <div className="max-w-[1400px] mx-auto px-6">
           <img
             src="/fleet 2 pic.jpg"
@@ -2488,7 +2488,7 @@ function HomePage() {
       </section>
 
       {/* MOBILE HERO VIDEO */}
-      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+      <div className="hidden md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
         <div className="overflow-hidden h-[420px]">
           <video
             autoPlay
@@ -2503,7 +2503,7 @@ function HomePage() {
         </div>
       </div>
       {/* MOBILE FLEET IMAGE */}
-      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-950 py-12">
+      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-900 py-12">
         <img
           src="/fleet 2 pic.jpg"
           alt="Old Ironsides Fleet"
@@ -3686,7 +3686,7 @@ function RoastDetailPage() {
 
   return (
     <main className="relative overflow-hidden min-h-[calc(100vh-140px)] pt-0 pb-6 md:pt-16 md:pb-16">
-      <div className="absolute inset-0 z-0 bg-neutral-950/30" aria-hidden />
+      <div className="absolute inset-0 z-0 bg-neutral-900/30" aria-hidden />
 
       <Container className="relative z-10 mt-0 md:mt-0 lg:max-xl:max-w-[1240px]">
         {/* ===== HERO ===== */}
@@ -5435,7 +5435,7 @@ function RoastLevelAnchors({
                   {/* Expanded View */}
                   {isOpen && (
                     <div
-                      className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
+                      className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-900 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
                       style={{ minHeight: 280 }}
                       onClick={() => toggleExpand(r.id)}
                     >
@@ -5718,7 +5718,7 @@ function RoastLevelAnchors({
                   {/* Expanded View */}
                   {isOpen && (
                     <div
-                      className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-950 shadow-2xl shadow-amber-500/20 p-3"
+                      className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-900 shadow-2xl shadow-amber-500/20 p-3"
                       style={{ minHeight: 240 }}
                       onClick={() => toggleExpand(r.id)}
                     >
@@ -6586,7 +6586,7 @@ function OriginsPage() {
           alt="Roasting process backdrop"
           className="absolute inset-0 w-full h-full object-cover object-center transform scale-[0.9] md:scale-100 opacity-50 z-0 pointer-events-none"
         />
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-neutral-900/40 z-0 pointer-events-none" />
 
         <Container>
           <div className={`${SECTION_INNER} flex items-center`}>
@@ -6702,9 +6702,9 @@ function OriginsPage() {
           alt="Growers backdrop"
           className="absolute inset-0 w-full h-full object-cover object-center opacity-70 z-0 pointer-events-none hidden md:block"
         />
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none hidden md:block" />
+        <div className="absolute inset-0 bg-neutral-900/40 z-0 pointer-events-none hidden md:block" />
         {/* Mobile-only flat bg */}
-        <div className="absolute inset-0 z-0 md:hidden bg-neutral-950" />
+        <div className="absolute inset-0 z-0 md:hidden bg-neutral-900" />
 
         <Container>
           <div
@@ -6973,9 +6973,9 @@ function OriginsPage() {
           alt="Service backdrop"
           className="absolute inset-0 w-full h-full object-cover object-center opacity-70 z-0 pointer-events-none hidden md:block"
         />
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none hidden md:block" />
+        <div className="absolute inset-0 bg-neutral-900/40 z-0 pointer-events-none hidden md:block" />
         {/* Mobile-only flat bg */}
-        <div className="absolute inset-0 z-0 md:hidden bg-neutral-950" />
+        <div className="absolute inset-0 z-0 md:hidden bg-neutral-900" />
 
         <Container>
           <div className="relative z-10 flex items-center min-h-0 md:min-h-[960px] py-3 md:py-16">
@@ -7150,7 +7150,7 @@ function OriginsPage() {
           alt="About backdrop"
           className="absolute inset-0 w-full h-full object-cover object-center transform scale-[0.9] md:scale-100 opacity-40 z-0 pointer-events-none"
         />
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-neutral-900/40 z-0 pointer-events-none" />
 
         <Container>
           <div className="relative z-10 flex items-center min-h-0 md:min-h-[820px] py-4 md:py-16">

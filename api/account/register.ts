@@ -54,7 +54,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // customer already exists
     if (!r.ok) {
       if (r.status === 422) {
-        return res.status(200).json({ ok: true, note: "already_exists" });
+        const searchRes = await fetch(
+          `https://${SHOPIFY_DOMAIN}/admin/api/${API_VERSION}/customers/search.json?query=email:${encodeURIComponent(
+            email
+          )}`,
+          {
+            headers: {
+              "X-Shopify-Access-Token": ADMIN_TOKEN,
+            },
+          }
+        );
+
+        const searchData = await searchRes.json();
+        const customer = searchData.customers?.[0];
+
+        if (!customer?.id) {
+          return res
+            .status(400)
+            .json({ error: "Customer exists but not found." });
+        }
+
+        await fetch(
+          `https://${SHOPIFY_DOMAIN}/admin/api/${API_VERSION}/customers/${customer.id}/send_invite.json`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Shopify-Access-Token": ADMIN_TOKEN,
+            },
+          }
+        );
+
+        return res.status(200).json({ ok: true, invited_existing: true });
       }
       return res.status(400).json({ error: data });
     }

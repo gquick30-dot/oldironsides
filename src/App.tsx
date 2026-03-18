@@ -3685,7 +3685,7 @@ function RoastDetailPage() {
   };
 
   return (
-    <main className="relative overflow-hidden min-h-[calc(100vh-140px)] pt-0 pb-6 md:pt-16 md:pb-16">
+    <main className="relative overflow-hidden min-h-[calc(100vh-140px)] -mt-3 pt-0 pb-6 md:mt-0 md:pt-16 md:pb-16 bg-neutral-900 md:bg-transparent">
       <div className="absolute inset-0 z-0 bg-neutral-900/30" aria-hidden />
 
       <Container className="relative z-10 mt-0 md:mt-0 lg:max-xl:max-w-[1240px]">
@@ -3695,13 +3695,13 @@ function RoastDetailPage() {
 
           <div className="relative z-10 mt-0 md:mt-3 grid lg:grid-cols-[auto,1fr] gap-0 lg:gap-6 items-start">
             {/* HERO IMAGE */}
-            <div className="flex flex-col items-center md:items-start w-full md:w-auto relative">
+            <div className="flex flex-col items-center md:items-start w-full md:w-auto relative mt-2 md:-mt-16 lg:mt-0">
               {/* emblem behind bag — mobile */}
               <img
                 src="/emblem-black.png"
                 alt=""
                 aria-hidden
-                className="md:hidden absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 w-[125%] max-w-[570px] opacity-10 object-contain z-0"
+                className="md:hidden absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[125%] max-w-[570px] opacity-10 object-contain z-0"
               />
 
               {/* emblem behind bag — desktop */}
@@ -3877,8 +3877,8 @@ function RoastDetailPage() {
                       className={
                         "w-full border-2 p-4 flex flex-col text-left " +
                         (purchaseMode === "sub"
-                          ? "border-amber-400 ring-1 ring-amber-400/40 bg-black/70"
-                          : "border-neutral-600 bg-black/40")
+                          ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
+                          : "border-neutral-700 bg-neutral-950 md:bg-black/40")
                       }
                       aria-pressed={purchaseMode === "sub"}
                     >
@@ -3973,8 +3973,8 @@ function RoastDetailPage() {
                       className={
                         "w-full border-2 p-4 flex items-start justify-between text-left " +
                         (purchaseMode === "one"
-                          ? "border-amber-400 ring-1 ring-amber-400/40 bg-black/70"
-                          : "border-neutral-600 bg-black/40")
+                          ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
+                          : "border-neutral-700 bg-neutral-950 md:bg-black/40")
                       }
                       aria-pressed={purchaseMode === "one"}
                     >
@@ -4022,7 +4022,7 @@ function RoastDetailPage() {
                   {/* BEAN TYPE SELECT */}
                   <div
                     className={
-                      "mt-4 w-full border-2 bg-black/70 " +
+                      "mt-4 w-full border-2 bg-neutral-950 md:bg-black/70 " +
                       (showBeanError
                         ? "border-red-500 ring-2 ring-red-500 animate-pulse"
                         : "border-amber-400/60")
@@ -4052,7 +4052,7 @@ function RoastDetailPage() {
                             setShowBeanError(false);
                           }}
                           className={
-                            "min-w-[15rem] border px-2 py-2 text-sm text-center outline-none bg-black/70 " +
+                            "min-w-[15rem] border px-2 py-2 text-sm text-center outline-none bg-neutral-950 md:bg-black/70" +
                             (beanType
                               ? "border-amber-400/70 text-amber-300"
                               : "border-neutral-700 text-neutral-400") +
@@ -5856,7 +5856,7 @@ function TheCoffeeFlagship({
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
-      <div className="bg-neutral-950 mt-[-1px]">
+      <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
             {/* LEFT: STORY ONLY */}
@@ -5918,7 +5918,7 @@ function TheCoffeeFlagship({
 
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
 
-        <div className="bg-neutral-950">
+        <div className="bg-neutral-900 md:bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
             <RoastLevelAnchors
               level={level}
@@ -5949,7 +5949,7 @@ function TheCoffeeBaptism({
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
       <div className="border-t-2 border-amber-400/70 relative -translate-y-6 md:-translate-y-8 w-[110%] -ml-[5%]" />
 
-      <div className="bg-neutral-950 mt-[-1px]">
+      <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
         <Container className="pt-0 md:pt-0 pb-6 md:pb-10 -mt-6 md:-mt-8">
           <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] md:gap-10 items-start -mt-6 md:-mt-8">
             {/* LEFT: STORY */}
@@ -6016,7 +6016,7 @@ function TheCoffeeBaptism({
 
         <div className="border-t-2 border-amber-400/70 relative mt-8 md:mt-12 w-[110%] -ml-[5%]" />
 
-        <div className="bg-neutral-950">
+        <div className="bg-neutral-900 md:bg-neutral-950">
           <Container className="pt-0 md:pt-1 pb-6 md:pb-10">
             <RoastLevelAnchors
               level={level}
@@ -6054,7 +6054,7 @@ function TheCoffeeJava({
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
-      <div className="bg-neutral-950 mt-[-1px]">
+      <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
             <div className="max-w-[80ch] md:pt-6">
@@ -6119,7 +6119,7 @@ function TheCoffeeJava({
 
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
 
-        <div className="bg-neutral-950">
+        <div className="bg-neutral-900 md:bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
             <RoastLevelAnchors
               level={level}
@@ -6157,7 +6157,7 @@ function TheCoffeeOak({
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
-      <div className="bg-neutral-950 mt-[-1px]">
+      <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
             {/* LEFT: STORY ONLY */}
@@ -6218,7 +6218,7 @@ function TheCoffeeOak({
 
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
 
-        <div className="bg-neutral-950">
+        <div className="bg-neutral-900 md:bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
             <RoastLevelAnchors
               level={level}
@@ -6248,8 +6248,7 @@ function TheCoffeeBrass({
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
-
-      <div className="bg-neutral-950 mt-[-1px]">
+      <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
             {/* LEFT: STORY */}
@@ -6322,7 +6321,7 @@ function TheCoffeeBrass({
 
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
 
-        <div className="bg-neutral-950">
+        <div className="bg-neutral-900 md:bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
             <RoastLevelAnchors
               level={level}

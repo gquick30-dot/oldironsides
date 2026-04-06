@@ -481,7 +481,7 @@ const roastCards = [
     slug: "brass-monkey",
     title: "BRASS MONKEY",
     subTitle: "Winter Seasonal",
-    note: "Southern Pecan",
+    note: "Warm Pecan",
     img: "/Brass Monkey Transparent Bag.png", // change to your actual filename
     price: 22, // change if needed
     canBuy: true, // or false if you want it visible but not purchasable yet

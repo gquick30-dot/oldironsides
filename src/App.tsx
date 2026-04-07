@@ -504,9 +504,9 @@ const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
   flagship: "9271153885405",
   "baptism-by-fire": "9271153754333",
   "java-action": "9271153918173",
-  "black-salvo": "9418482024669",
   "oak-and-copper": "9271153787101",
   "brass-monkey": "9271153819869",
+  "black-salvo": "9418482024669",
 };
 function RoastMegaCard({
   card,
@@ -4383,7 +4383,7 @@ function RoastDetailPage() {
               {(card.canBuy || isOak) && (
                 <>
                   <div
-                    className={`hidden md:block order-2 md:order-4 mt-4 w-full ${
+                    className={`hidden md:block order-2 md:order-4 mt-6 w-full ${
                       isBaptism
                         ? "md:-translate-y-16"
                         : isJava
@@ -4391,6 +4391,8 @@ function RoastDetailPage() {
                         : isOak
                         ? "md:-translate-y-12"
                         : isBrass
+                        ? "md:-translate-y-12"
+                        : isBlackSalvo
                         ? "md:-translate-y-12"
                         : ""
                     }`}
@@ -4569,6 +4571,8 @@ function RoastDetailPage() {
                         ? "md:-translate-y-10"
                         : isBrass
                         ? "md:-translate-y-10"
+                        : isBlackSalvo
+                        ? "md:-translate-y-12"
                         : ""
                     }`}
                   >
@@ -6500,8 +6504,19 @@ function TheCoffeeBlackSalvo({
                 </p>
 
                 <p>
-                  Story coming soon. This section will hold the narrative behind
-                  Black Salvo.
+                  In the age of sail, a well-timed salvo could turn the tide of
+                  battle in an instant. Old Ironsides, a 44-gun frigate built
+                  heavier and armed stronger than most of her class, delivered
+                  devastating broadsides that overwhelmed her opponents. At the
+                  command, her guns fired in unison, blackening the sky with
+                  fire and smoke as iron tore across the water. It was a moment
+                  of force, precision, and absolute control. <br />
+                  <br />
+                  Black Salvo is roasted with that same intent. Bold yet
+                  remarkably smooth, this balanced blend delivers the depth and
+                  richness of a true espresso while remaining clean and easy to
+                  drink across any brew method. Built for strength, refined for
+                  everyday use, and steady from the first cup to the last.
                 </p>
 
                 {/* Desktop tagline */}

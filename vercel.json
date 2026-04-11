@@ -1,0 +1,14 @@
+{
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/" }
+    ],
+    "headers": [
+      {
+        "source": "/(.*)\\.(js|css|png|jpg|jpeg|gif|svg|webp|ico|txt|woff2?)",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        ]
+      }
+    ]
+  }
+  

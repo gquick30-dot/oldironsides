@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Cinzel for main brand + product titles -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Merriweather:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Oswald for section titles -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Old Ironsides Coffee</title>
+    <!-- Google Analytics (GA4) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA_MEASUREMENT_ID%"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "%VITE_GA_MEASUREMENT_ID%");
+    </script>
+    <!-- Meta Pixel Code -->
+    <script>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js"
+      );
+      fbq("init", "2359288917817123");
+      fbq("track", "PageView");
+    </script>
+    <!-- End Meta Pixel Code -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon-emblem.png"
+    />
+    <link rel="icon" href="/favicon-emblem.png" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script async src="https://auth.govx.com/js/govxid.js"></script>
+
+    <!-- Tidio chat widget control -->
+    <script>
+      window.tidioChatApi = window.tidioChatApi || [];
+      window.tidioChatApi.push({
+        on: "ready",
+        callback: function () {
+          // Force widget to stay closed on load
+          window.tidioChatApi.hide();
+        },
+      });
+
+      window.tidioChatApi.push({
+        on: "open",
+        callback: function () {
+          try {
+            window.tidioChatApi.openTab("home");
+          } catch (e) {}
+        },
+      });
+    </script>
+
+    <!-- Tidio chat widget -->
+    <script
+      src="//code.tidio.co/fvua8pqirxw8egpkw9ey3bsc9q0o9v7o.js"
+      async
+    ></script>
+  </body>
+</html>

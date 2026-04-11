@@ -3446,78 +3446,11 @@ function RoastDetailPage() {
         content_name: card.title,
         content_ids: [card.slug],
         content_type: "product",
-        value: isOak ? 27 : card.price ?? 22,
+        value: card.slug === "oak-and-copper" ? 27 : card.price ?? 22,
         currency: "USD",
       });
     }
   }, []);
-
-  // drop-in replacement for craftSubtitleMap (no names/emojis in the text)
-  const craftSubtitleMap: Record<string, React.ReactNode> = {
-    flagship: (
-      <>
-        A smooth, full-bodied medium roast made for everyday drinking. Balanced,
-        never bitter, and rich enough to enjoy black or with cream and sugar.
-      </>
-    ),
-    "baptism-by-fire": (
-      <>
-        The darkest roast in the fleet. Bold, commanding, and full-bodied,
-        delivering deep chocolate richness with a smooth finish that never turns
-        bitter. Strength and flavor, without the burn.
-      </>
-    ),
-    "java-action": (
-      <>
-        A smooth, balanced medium roast with a creamy sweet finish and just
-        enough depth to keep things interesting. Rich, satisfying, and easy to
-        drink black or with a touch of cream.
-      </>
-    ),
-    "black-salvo": (
-      <>
-        Our most versatile blend in the fleet. Makes amazing espressos while
-        also delivering a very smooth, easy drinking cup across any brew method.
-      </>
-    ),
-    "oak-and-copper": (
-      <>
-        Coffee beans aged in freshly emptied bourbon barrels, slowly absorbing
-        notes of oak, caramel, and warm spice. Roasted to reveal a rich, smooth
-        cup with subtle bourbon character and deep complexity. Never
-        artificially flavored.
-      </>
-    ),
-    "brass-monkey": (
-      <>
-        A Southern pecan roast crafted for winter comfort. Smooth and
-        full-bodied with subtle notes of toasted pecan, brown sugar, and warm
-        spice — lightly flavored and perfectly balanced.
-      </>
-    ),
-  };
-  const craftSubtitle = craftSubtitleMap[card.slug] ?? null;
-
-  // Roast flags (slug-based so copy changes don't break logic)
-  const isFlagship = card.slug === "flagship";
-  const isBaptism = card.slug === "baptism-by-fire";
-  const isJava = card.slug === "java-action";
-  const isOak = card.slug === "oak-and-copper";
-  const isBrass = card.slug === "brass-monkey";
-  const isBlackSalvo = card.slug === "black-salvo";
-
-  // ⬇️ INSERT THIS BLOCK RIGHT HERE ⬇️
-  const AMBER_DESC = isFlagship
-    ? "Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!"
-    : isBaptism
-    ? "Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!"
-    : isJava
-    ? "Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!"
-    : isOak
-    ? "Oak & Copper pours a steady bourbon barrel aged cup of caramel, warm vanilla, and toasted oak with a calm finish you’ll want every morning."
-    : isBrass
-    ? "Brass Monkey is a winter seasonal Southern Pecan roast built for cold mornings and bad decisions."
-    : "";
 
   // review data used for stars + counts beside the subtitle and in the histogram
 
@@ -3609,7 +3542,7 @@ function RoastDetailPage() {
   const reviews: Review[] = reviewList;
 
   const { add } = useCart();
-  const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("sub");
+  const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("one");
   const [subEvery, setSubEvery] = useState<14 | 30 | 60>(30);
   const [qty, setQty] = useState(1);
   const [beanType, setBeanType] = useState<"" | "whole" | "ground">("");
@@ -3766,6 +3699,8 @@ function RoastDetailPage() {
       ro.disconnect();
     };
   }, []);
+
+  const isOak = card.slug === "oak-and-copper";
 
   const basePrice = isOak ? 27 : card.price ?? 22;
   const discounted = isOak ? basePrice : Number((basePrice * 0.85).toFixed(2));
@@ -3957,11 +3892,7 @@ function RoastDetailPage() {
                     className="m-0 text-3xl md:text-4xl font-extrabold tracking-tight text-amber-300"
                     style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
                   >
-                    {isFlagship
-                      ? "FLAGSHIP"
-                      : isBaptism
-                      ? "BAPTISM BY FIRE"
-                      : card.title}
+                    {card.title}
                   </h1>
 
                   {/* Subtitle + stars + count */}
@@ -3969,11 +3900,7 @@ function RoastDetailPage() {
                     <div className="flex flex-col gap-1 text-neutral-400 md:flex-row md:items-baseline md:justify-between md:gap-3">
                       {/* roast style text */}
                       <div className="text-base md:text-[1.2rem]">
-                        {isFlagship
-                          ? "Medium Roast"
-                          : isBaptism
-                          ? "Dark Roast"
-                          : card.subTitle}
+                        {card.subTitle}
                       </div>
 
                       {/* Stars + avg + count */}
@@ -4088,6 +4015,57 @@ function RoastDetailPage() {
                 <div className="order-2 w-full md:order-4 md:hidden mt-4">
                   {/* OPTION CARDS */}
                   <div className="space-y-3">
+                    {/* ONE-TIME CARD */}
+                    <button
+                      type="button"
+                      onClick={() => setPurchaseMode("one")}
+                      className={
+                        "w-full border-2 p-4 flex items-start justify-between text-left " +
+                        (purchaseMode === "one"
+                          ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
+                          : "border-neutral-700 bg-neutral-950 md:bg-black/40")
+                      }
+                      aria-pressed={purchaseMode === "one"}
+                    >
+                      <div className="flex items-start gap-3 w-full">
+                        {/* radio */}
+                        <div
+                          className={
+                            "h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 " +
+                            (purchaseMode === "one"
+                              ? "border-amber-400"
+                              : "border-neutral-400")
+                          }
+                        >
+                          <div
+                            className={
+                              "h-2.5 w-2.5 rounded-full " +
+                              (purchaseMode === "one"
+                                ? "bg-amber-400"
+                                : "bg-transparent")
+                            }
+                          />
+                        </div>
+
+                        {/* text/price in one line */}
+                        <div className="flex flex-col flex-1">
+                          <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
+                            <span className="text-base text-neutral-100 font-medium leading-none">
+                              Single Purchase
+                            </span>
+
+                            <span className="text-sm text-neutral-300">
+                              <span className="font-semibold text-amber-300">
+                                {fmt(basePrice)}
+                              </span>
+                              <span className="text-xs text-neutral-500 ml-1">
+                                / 12oz bag
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </button>
                     {/* SUBSCRIBE & SAVE CARD */}
                     <button
                       type="button"
@@ -4183,57 +4161,6 @@ function RoastDetailPage() {
                           </div>
                         </div>
                       )}
-                    </button>
-                    {/* ONE-TIME CARD */}
-                    <button
-                      type="button"
-                      onClick={() => setPurchaseMode("one")}
-                      className={
-                        "w-full border-2 p-4 flex items-start justify-between text-left " +
-                        (purchaseMode === "one"
-                          ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
-                          : "border-neutral-700 bg-neutral-950 md:bg-black/40")
-                      }
-                      aria-pressed={purchaseMode === "one"}
-                    >
-                      <div className="flex items-start gap-3 w-full">
-                        {/* radio */}
-                        <div
-                          className={
-                            "h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 " +
-                            (purchaseMode === "one"
-                              ? "border-amber-400"
-                              : "border-neutral-400")
-                          }
-                        >
-                          <div
-                            className={
-                              "h-2.5 w-2.5 rounded-full " +
-                              (purchaseMode === "one"
-                                ? "bg-amber-400"
-                                : "bg-transparent")
-                            }
-                          />
-                        </div>
-
-                        {/* text/price in one line */}
-                        <div className="flex flex-col flex-1">
-                          <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
-                            <span className="text-base text-neutral-100 font-medium leading-none">
-                              Single Purchase
-                            </span>
-
-                            <span className="text-sm text-neutral-300">
-                              <span className="font-semibold text-amber-300">
-                                {fmt(basePrice)}
-                              </span>
-                              <span className="text-xs text-neutral-500 ml-1">
-                                / 12oz bag
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
                     </button>
                   </div>
 
@@ -4384,17 +4311,13 @@ function RoastDetailPage() {
                 <>
                   <div
                     className={`hidden md:block order-2 md:order-4 mt-6 w-full ${
-                      isBaptism
-                        ? "md:-translate-y-16"
-                        : isJava
-                        ? "md:-translate-y-8"
-                        : isOak
-                        ? "md:-translate-y-12"
-                        : isBrass
-                        ? "md:-translate-y-12"
-                        : isBlackSalvo
-                        ? "md:-translate-y-12"
-                        : ""
+                      {
+                        "baptism-by-fire": "md:-translate-y-16",
+                        "java-action": "md:-translate-y-8",
+                        "oak-and-copper": "md:-translate-y-12",
+                        "brass-monkey": "md:-translate-y-12",
+                        "black-salvo": "md:-translate-y-12",
+                      }[card.slug] || ""
                     }`}
                   >
                     <div className="flex flex-col md:flex-row md:items-stretch md:gap-4">
@@ -4563,17 +4486,13 @@ function RoastDetailPage() {
                   {/* ===== SUBSCRIBE & SAVE (Desktop only) ===== */}
                   <div
                     className={`hidden md:block order-3 md:order-3 mt-6 w-full ${
-                      isBaptism
-                        ? "md:-translate-y-12"
-                        : isJava
-                        ? "md:-translate-y-6"
-                        : isOak
-                        ? "md:-translate-y-10"
-                        : isBrass
-                        ? "md:-translate-y-10"
-                        : isBlackSalvo
-                        ? "md:-translate-y-12"
-                        : ""
+                      {
+                        "baptism-by-fire": "md:-translate-y-16",
+                        "java-action": "md:-translate-y-8",
+                        "oak-and-copper": "md:-translate-y-12",
+                        "brass-monkey": "md:-translate-y-12",
+                        "black-salvo": "md:-translate-y-12",
+                      }[card.slug] || ""
                     }`}
                   >
                     {/* mode selector */}
@@ -4654,683 +4573,7 @@ function RoastDetailPage() {
                   lang="en"
                   style={{ hyphens: "none" }}
                 >
-                  {isFlagship && (
-                    <div className="space-y-2 text-neutral-300 text-base md:text-lg leading-relaxed max-w-none pr-6">
-                      <h2 className="text-xl md:text-2xl font-bold text-amber-300 leading-tight">
-                        THE CRAFT IN THE CUP
-                      </h2>
-
-                      {craftSubtitle && (
-                        <div className="text-neutral-300 text-base md:text-lg leading-relaxed -mt-2">
-                          {craftSubtitle}
-                        </div>
-                      )}
-
-                      <div className="w-full max-w-[125%] h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* BEST FOR */}
-                      <div>
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                          Best For
-                        </h3>
-
-                        <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed">
-                          Daily coffee drinkers
-                          <span className="mx-1 text-amber-300">|</span>
-                          Drip
-                          <span className="mx-1 text-amber-300">|</span>
-                          French press
-                          <span className="mx-1 text-amber-300">|</span>
-                          Cold brew
-                        </div>
-                      </div>
-
-                      <div className="w-full max-w-[125%] h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* SIGNATURE NOTES + ROAST LEVEL */}
-                      <div className="md:flex md:items-center md:justify-between md:gap-6">
-                        {/* SIGNATURE NOTES */}
-                        <div>
-                          <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                            Signature Notes
-                          </h3>
-
-                          <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed whitespace-nowrap">
-                            Hazelnut
-                            <span className="mx-1 text-amber-300">|</span>
-                            Warm Spice
-                            <span className="mx-1 text-amber-300">|</span>
-                            Creamy Finish
-                          </div>
-                        </div>
-
-                        {/* ROAST LEVEL */}
-                        <div className="flex items-center gap-3 mt-2 md:mt-0 shrink-0">
-                          <span className="text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase whitespace-nowrap">
-                            Roast Level
-                          </span>
-
-                          <div className="flex items-center gap-3">
-                            {[1, 2, 3, 4, 5].map((n) => (
-                              <svg
-                                key={n}
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className={
-                                  "h-6 w-6 md:h-7 md:w-7 " +
-                                  (n <= 3
-                                    ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                                    : "text-neutral-600")
-                                }
-                              >
-                                <rect
-                                  x="11"
-                                  y="0"
-                                  width="2"
-                                  height="24"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle
-                                  cx="12"
-                                  cy="4"
-                                  r="1.6"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle cx="12" cy="4" r="2" />
-                                <path d="M12 6v11" />
-                                <path d="M8 10h8" />
-                                <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                                <path d="M7 17l-2 2" />
-                                <path d="M17 17l2 2" />
-                              </svg>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="w-full max-w-[125%] h-[0.5px] bg-amber-400 -mt-16 mb-1.5 md:mt-1.5 md:mb-1.5" />
-
-                      {/* BEAN ORIGINS */}
-                      <div className="flex items-center gap-4 py-0 -my-1">
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                          Bean Origins
-                        </h3>
-
-                        <div className="flex items-end gap-3 scale-[0.75] origin-left">
-                          <OriginImg name="El Salvador" />
-                          <OriginImg name="Indonesia" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {isBaptism && (
-                    <div className="space-y-2 text-neutral-300 text-base md:text-lg leading-relaxed max-w-none pr-6">
-                      <h2 className="text-xl md:text-2xl font-bold text-amber-300 leading-tight">
-                        THE CRAFT IN THE CUP
-                      </h2>
-
-                      {craftSubtitle && (
-                        <div className="text-neutral-300 text-base md:text-lg leading-relaxed -mt-8">
-                          {craftSubtitle}
-                        </div>
-                      )}
-
-                      <div className="w-full max-w-[125%] h-[0.5px] bg-amber-400 my-0.5" />
-                      {/* BEST FOR */}
-                      <div>
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                          Best For
-                        </h3>
-
-                        <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed">
-                          Dark roast lovers
-                          <span className="mx-1 text-amber-300">|</span>
-                          Bold coffee drinkers
-                          <span className="mx-1 text-amber-300">|</span>
-                          Espresso
-                          <span className="mx-1 text-amber-300">|</span>
-                          Black or with cream
-                        </div>
-                      </div>
-
-                      <div className="w-full max-w-[125%] h-[0.5px] bg-amber-400 my-1.5" />
-                      {/* SIGNATURE NOTES + ROAST LEVEL */}
-                      <div className="md:flex md:items-center md:justify-between md:gap-6">
-                        {/* SIGNATURE NOTES */}
-                        <div>
-                          <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                            Signature Notes
-                          </h3>
-
-                          <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed whitespace-nowrap">
-                            Dark Chocolate
-                            <span className="mx-1 text-amber-300">|</span>
-                            Molasses
-                            <span className="mx-1 text-amber-300">|</span>
-                            Subtle Smoke
-                          </div>
-                        </div>
-
-                        {/* ROAST LEVEL */}
-                        <div className="flex items-center gap-3 mt-2 md:mt-0 shrink-0">
-                          <span className="text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase whitespace-nowrap">
-                            Roast Level
-                          </span>
-
-                          <div className="flex items-center gap-3">
-                            {[1, 2, 3, 4, 5].map((n) => (
-                              <svg
-                                key={n}
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className={
-                                  "h-6 w-6 md:h-7 md:w-7 " +
-                                  (n <= 4
-                                    ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                                    : "text-neutral-600")
-                                }
-                              >
-                                <rect
-                                  x="11"
-                                  y="0"
-                                  width="2"
-                                  height="24"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle
-                                  cx="12"
-                                  cy="4"
-                                  r="1.6"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle cx="12" cy="4" r="2" />
-                                <path d="M12 6v11" />
-                                <path d="M8 10h8" />
-                                <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                                <path d="M7 17l-2 2" />
-                                <path d="M17 17l2 2" />
-                              </svg>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="w-full max-w-[125%] h-[0.5px] bg-amber-400 mt-[2px] mb-0" />
-
-                      {/* BEAN ORIGINS */}
-                      <div className="flex items-center gap-3 py-0 -translate-y-6">
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                          Bean Origins
-                        </h3>
-
-                        <div className="flex items-end gap-3 ml-3 scale-[0.72] origin-left">
-                          <OriginImg name="Indonesia" />
-                          <OriginImg name="Colombia" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {isJava && (
-                    <div className="space-y-2 text-neutral-300 text-base md:text-lg leading-relaxed max-w-none pr-6">
-                      <h2 className="text-xl md:text-2xl font-bold text-amber-300 leading-tight">
-                        THE CRAFT IN THE CUP
-                      </h2>
-
-                      {craftSubtitle && (
-                        <div className="text-neutral-300 text-base md:text-lg leading-relaxed -mt-2">
-                          {craftSubtitle}
-                        </div>
-                      )}
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* BEST FOR */}
-                      <div>
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                          Best For
-                        </h3>
-
-                        <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed">
-                          Daily coffee drinkers
-                          <span className="mx-1 text-amber-300">|</span>
-                          Drip
-                          <span className="mx-1 text-amber-300">|</span>
-                          Pour over
-                          <span className="mx-1 text-amber-300">|</span>
-                          French press
-                        </div>
-                      </div>
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* SIGNATURE NOTES + ROAST LEVEL */}
-                      <div className="md:flex md:items-center md:justify-between md:gap-6">
-                        <div>
-                          <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                            Signature Notes
-                          </h3>
-
-                          <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed whitespace-nowrap">
-                            Hazelnut
-                            <span className="mx-1 text-amber-300">|</span>
-                            Caramel
-                            <span className="mx-1 text-amber-300">|</span>
-                            Red Apple
-                          </div>
-                        </div>
-
-                        {/* ROAST LEVEL */}
-                        <div className="flex items-center gap-3 mt-2 md:mt-0 shrink-0">
-                          <span className="text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase whitespace-nowrap">
-                            Roast Level
-                          </span>
-
-                          <div className="flex items-center gap-3">
-                            {[1, 2, 3, 4, 5].map((n) => (
-                              <svg
-                                key={n}
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className={
-                                  "h-6 w-6 md:h-7 md:w-7 " +
-                                  (n <= 3
-                                    ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                                    : "text-neutral-600")
-                                }
-                              >
-                                <rect
-                                  x="11"
-                                  y="0"
-                                  width="2"
-                                  height="24"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle
-                                  cx="12"
-                                  cy="4"
-                                  r="1.6"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle cx="12" cy="4" r="2" />
-                                <path d="M12 6v11" />
-                                <path d="M8 10h8" />
-                                <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                                <path d="M7 17l-2 2" />
-                                <path d="M17 17l2 2" />
-                              </svg>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* BEAN ORIGINS */}
-                      <div className="flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6">
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90 shrink-0">
-                          Bean Origins
-                        </h3>
-
-                        <div className="min-w-0 overflow-hidden">
-                          <div className="flex items-end gap-2 scale-[0.56] md:scale-[0.72] origin-left">
-                            <OriginImg name="Guatemala" />
-                            <OriginImg name="Ethiopia" />
-                            <OriginImg name="Colombia" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {isBlackSalvo && (
-                    <div className="space-y-2 text-neutral-300 text-base md:text-lg leading-relaxed max-w-none pr-6">
-                      <h2 className="text-xl md:text-2xl font-bold text-amber-300 leading-tight">
-                        THE CRAFT IN THE CUP
-                      </h2>
-
-                      {craftSubtitle && (
-                        <div className="text-neutral-300 text-base md:text-lg leading-relaxed -mt-2">
-                          {craftSubtitle}
-                        </div>
-                      )}
-
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* BEST FOR */}
-                      <div>
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                          Best For
-                        </h3>
-
-                        <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed">
-                          Espresso
-                          <span className="mx-1 text-amber-300">|</span>
-                          Drip
-                          <span className="mx-1 text-amber-300">|</span>
-                          Pour Over
-                        </div>
-                      </div>
-
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* SIGNATURE NOTES + ROAST LEVEL */}
-                      <div className="md:flex md:items-center md:justify-between md:gap-6">
-                        {/* NOTES */}
-                        <div>
-                          <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                            Signature Notes
-                          </h3>
-
-                          <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed whitespace-nowrap">
-                            Warm Vanilla
-                            <span className="mx-1 text-amber-300">|</span>
-                            Cocoa
-                            <span className="mx-1 text-amber-300">|</span>
-                            Toasted Almond
-                          </div>
-                        </div>
-
-                        {/* ROAST LEVEL */}
-                        <div className="flex items-center gap-3 mt-2 md:mt-0 shrink-0">
-                          <span className="text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase whitespace-nowrap">
-                            Roast Level
-                          </span>
-
-                          <div className="flex items-center gap-3">
-                            {[1, 2, 3, 4, 5].map((n) => (
-                              <svg
-                                key={n}
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className={
-                                  "h-6 w-6 md:h-7 md:w-7 " +
-                                  (n <= 3
-                                    ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                                    : "text-neutral-600")
-                                }
-                              >
-                                <rect
-                                  x="11"
-                                  y="0"
-                                  width="2"
-                                  height="24"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle
-                                  cx="12"
-                                  cy="4"
-                                  r="1.6"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle cx="12" cy="4" r="2" />
-                                <path d="M12 6v11" />
-                                <path d="M8 10h8" />
-                                <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                                <path d="M7 17l-2 2" />
-                                <path d="M17 17l2 2" />
-                              </svg>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* BEAN ORIGINS */}
-                      <div className="flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6">
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                          Bean Origins
-                        </h3>
-
-                        <div className="flex items-end gap-3 scale-[0.72] origin-left">
-                          <OriginImg name="Ethiopia" />
-                          <OriginImg name="Brazil" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {isOak && (
-                    <div className="space-y-2 text-neutral-300 text-base md:text-lg leading-relaxed max-w-none pr-6">
-                      <h2 className="text-xl md:text-2xl font-bold text-amber-300 leading-tight">
-                        THE CRAFT IN THE CUP
-                      </h2>
-
-                      {craftSubtitle && (
-                        <div className="text-neutral-300 text-base md:text-lg leading-relaxed -mt-2">
-                          {craftSubtitle}
-                        </div>
-                      )}
-
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* BEST FOR */}
-                      <div>
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                          Best For
-                        </h3>
-
-                        <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed">
-                          Bourbon lovers
-                          <span className="mx-1 text-amber-300">|</span>
-                          Premium drip
-                          <span className="mx-1 text-amber-300">|</span>
-                          Pour over
-                          <span className="mx-1 text-amber-300">|</span>
-                          Espresso
-                        </div>
-                      </div>
-
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* SIGNATURE NOTES + ROAST LEVEL */}
-                      <div className="md:flex md:items-center md:justify-between md:gap-6">
-                        <div>
-                          <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                            Signature Notes
-                          </h3>
-                          <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed whitespace-nowrap">
-                            Warm Vanilla
-                            <span className="mx-1 text-amber-300">|</span>
-                            Caramel
-                            <span className="mx-1 text-amber-300">|</span>
-                            Toasted Oak
-                          </div>
-                        </div>
-
-                        {/* ROAST LEVEL */}
-                        <div className="flex items-center gap-3 mt-2 md:mt-0 shrink-0">
-                          <span className="text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase whitespace-nowrap">
-                            Roast Level
-                          </span>
-
-                          <div className="flex items-center gap-3">
-                            {[1, 2, 3, 4, 5].map((n) => (
-                              <svg
-                                key={n}
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className={
-                                  "h-6 w-6 md:h-7 md:w-7 " +
-                                  (n <= 3
-                                    ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                                    : "text-neutral-600")
-                                }
-                              >
-                                <rect
-                                  x="11"
-                                  y="0"
-                                  width="2"
-                                  height="24"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle
-                                  cx="12"
-                                  cy="4"
-                                  r="1.6"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle cx="12" cy="4" r="2" />
-                                <path d="M12 6v11" />
-                                <path d="M8 10h8" />
-                                <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                                <path d="M7 17l-2 2" />
-                                <path d="M17 17l2 2" />
-                              </svg>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* BEAN ORIGINS */}
-                      <div className="flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6">
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                          Bean Origins
-                        </h3>
-
-                        <div className="flex items-end gap-3 scale-[0.72] origin-left">
-                          <OriginImg name="Colombia" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {isBrass && (
-                    <div className="space-y-2 text-neutral-300 text-base md:text-lg leading-relaxed max-w-none pr-6">
-                      <h2 className="text-xl md:text-2xl font-bold text-amber-300 leading-tight">
-                        THE CRAFT IN THE CUP
-                      </h2>
-
-                      {craftSubtitle && (
-                        <div className="text-neutral-300 text-base md:text-lg leading-relaxed -mt-2">
-                          {craftSubtitle}
-                        </div>
-                      )}
-
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* BEST FOR */}
-                      <div>
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                          Best For
-                        </h3>
-
-                        <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed">
-                          Cold weather mornings
-                          <span className="mx-1 text-amber-300">|</span>
-                          Drip
-                          <span className="mx-1 text-amber-300">|</span>
-                          French press
-                        </div>
-                      </div>
-
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* SIGNATURE NOTES + ROAST LEVEL */}
-                      <div className="md:flex md:items-center md:justify-between md:gap-6">
-                        <div>
-                          <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                            Signature Notes
-                          </h3>
-
-                          <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed md:whitespace-nowrap">
-                            Southern Pecan
-                            <span className="mx-1 text-amber-300">|</span>
-                            Brown Sugar
-                            <span className="mx-1 text-amber-300">|</span>
-                            Warm Spice
-                          </div>
-                        </div>
-
-                        {/* ROAST LEVEL */}
-                        <div className="flex items-center gap-3 mt-2 md:mt-0 shrink-0">
-                          <span className="text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase whitespace-nowrap">
-                            Roast Level
-                          </span>
-
-                          <div className="flex items-center gap-3">
-                            {[1, 2, 3, 4, 5].map((n) => (
-                              <svg
-                                key={n}
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className={
-                                  "h-6 w-6 md:h-7 md:w-7 " +
-                                  (n <= 3
-                                    ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                                    : "text-neutral-600")
-                                }
-                              >
-                                <rect
-                                  x="11"
-                                  y="0"
-                                  width="2"
-                                  height="24"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle
-                                  cx="12"
-                                  cy="4"
-                                  r="1.6"
-                                  fill="currentColor"
-                                  className="text-neutral-950"
-                                />
-                                <circle cx="12" cy="4" r="2" />
-                                <path d="M12 6v11" />
-                                <path d="M8 10h8" />
-                                <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                                <path d="M7 17l-2 2" />
-                                <path d="M17 17l2 2" />
-                              </svg>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="w-full h-[0.5px] bg-amber-400 my-1.5" />
-
-                      {/* BEAN ORIGINS */}
-                      <div className="flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6">
-                        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
-                          Bean Origins
-                        </h3>
-
-                        <div className="flex items-end gap-3 scale-[0.72] origin-left">
-                          <OriginImg name="Brazil" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  <CraftInTheCupBlock slug={card.slug} />
                 </div>
               </div>
               {/* ===== END STORY ===== */}
@@ -5347,7 +4590,6 @@ function RoastDetailPage() {
       {/* ===== PER-ROAST "THE CRAFT IN THE CUP" SECTION ===== */}
       <RoastCoffeeSection
         slug={card.slug}
-        craftSubtitle={craftSubtitle}
         reviewData={reviewData}
         reviews={reviews}
         anchorLevel={anchorLevel}
@@ -5355,80 +4597,27 @@ function RoastDetailPage() {
     </main>
   );
 }
-
-/* ================== COFFEE SECTION ROUTER ================== */
 function RoastCoffeeSection({
   slug,
-  craftSubtitle,
+
   reviewData,
   reviews,
   anchorLevel,
 }: {
   slug: string;
-  craftSubtitle: React.ReactNode | null;
+
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
   anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
-  switch (slug) {
-    case "flagship":
-      return (
-        <TheCoffeeFlagship
-          craftSubtitle={craftSubtitle}
-          reviewData={reviewData}
-          reviews={reviews}
-          anchorLevel={anchorLevel}
-        />
-      );
-    case "baptism-by-fire":
-      return (
-        <TheCoffeeBaptism
-          craftSubtitle={craftSubtitle}
-          reviewData={reviewData}
-          reviews={reviews}
-          anchorLevel={anchorLevel}
-        />
-      );
-    case "java-action":
-      return (
-        <TheCoffeeJava
-          craftSubtitle={craftSubtitle}
-          reviewData={reviewData}
-          reviews={reviews}
-          anchorLevel={anchorLevel}
-        />
-      );
-    case "black-salvo":
-      return (
-        <TheCoffeeBlackSalvo
-          craftSubtitle={craftSubtitle}
-          reviewData={reviewData}
-          reviews={reviews}
-          anchorLevel={anchorLevel}
-        />
-      );
-    case "oak-and-copper":
-      return (
-        <TheCoffeeOak
-          craftSubtitle={craftSubtitle}
-          reviewData={reviewData}
-          reviews={reviews}
-          anchorLevel={anchorLevel}
-        />
-      );
-    case "brass-monkey":
-      return (
-        <TheCoffeeBrass
-          craftSubtitle={craftSubtitle}
-          reviewData={reviewData}
-          reviews={reviews}
-          anchorLevel={anchorLevel}
-        />
-      );
-
-    default:
-      return null;
-  }
+  return (
+    <RoastUnified
+      slug={slug}
+      reviewData={reviewData}
+      reviews={reviews}
+      anchorLevel={anchorLevel}
+    />
+  );
 }
 /* ================== SHARED PARTS ================== */
 function CareCard() {
@@ -5573,6 +4762,237 @@ function OriginImg({
 }
 function LocalFlashBanner() {
   return null;
+}
+
+const CRAFT_IN_THE_CUP_DATA: Record<
+  string,
+  {
+    description?: string; // <-- ADD THIS LINE
+    bestFor: string[];
+    notes: string[];
+    origins: string[];
+    roastLevel: 1 | 2 | 3 | 4 | 5;
+    lineClass?: string;
+    originWrapClass?: string;
+    originRowClass?: string;
+    originScaleClass?: string;
+  }
+> = {
+  flagship: {
+    description:
+      "Your go-to daily coffee. Smooth, balanced, and dependable with a clean finish that never gets old.",
+    bestFor: ["Daily drinkers", "Drip", "French press", "Cold brew"],
+    notes: ["Hazelnut", "Warm Spice", "Creamy Finish"],
+    origins: ["El Salvador", "Indonesia"],
+    roastLevel: 3,
+
+    // spacing fix for mobile
+    originRowClass: "flex items-center gap-4 py-0 translate-y-4",
+
+    // 👇 THIS fixes the overlap + missing indonesia label on mobile
+    originScaleClass:
+      "flex items-end gap-6 scale-[0.75] md:scale-[0.70] origin-left",
+  },
+  "baptism-by-fire": {
+    description:
+      "Dark, bold, and unapologetic. Built for those who want a heavier cup with depth, bite, and a smooth finish.",
+    bestFor: [
+      "Dark roast lovers",
+      "Strong coffee drinkers",
+      "Espresso",
+      "Black or with cream",
+    ],
+    notes: ["Dark Chocolate", "Molasses", "Subtle Smoke"],
+    origins: ["Indonesia", "Colombia"],
+    roastLevel: 4,
+    lineClass: "w-full max-w-[125%] h-[0.5px] bg-amber-400 my-1.5",
+    originRowClass:
+      "flex items-center gap-3 py-0 translate-y-0 md:-translate-y-9",
+    originScaleClass: "flex items-end gap-3 ml-3 scale-[0.72] origin-left",
+  },
+
+  "java-action": {
+    description:
+      "Smooth with character. A balanced medium roast with layered sweetness and a crisp, clean finish.",
+    bestFor: ["Daily drinkers", "Drip", "Pour over", "French press"],
+    notes: ["Hazelnut", "Caramel", "Red Apple"],
+    origins: ["Guatemala", "Ethiopia", "Colombia"],
+    roastLevel: 3,
+
+    lineClass: "w-full h-[0.5px] bg-amber-400 my-1.5",
+
+    originRowClass:
+      "flex items-center gap-4 py-0 min-w-0 overflow-hidden md:-translate-y-6",
+
+    originWrapClass: "min-w-0 overflow-hidden",
+
+    // 👇 THIS is the fix (more spacing + better mobile scale)
+    originScaleClass:
+      "flex items-end gap-6 scale-[0.70] md:scale-[0.72] origin-left",
+  },
+
+  "black-salvo": {
+    description:
+      "Power and precision in one cup. Espresso-driven with bold depth, smooth texture, and a clean finish.",
+    bestFor: ["Espresso", "Drip", "Pour over"],
+    notes: ["Warm Vanilla", "Cocoa", "Toasted Almond"],
+    origins: ["Ethiopia", "Brazil"],
+    roastLevel: 3,
+    lineClass: "w-full h-[0.5px] bg-amber-400 my-1.5",
+    originRowClass:
+      "flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6",
+    originScaleClass: "flex items-end gap-3 scale-[0.72] origin-left",
+  },
+
+  "oak-and-copper": {
+    description:
+      "Refined and elevated. A bourbon barrel-aged roast with smooth warmth, subtle oak, and a clean, premium finish.",
+    bestFor: ["Bourbon lovers", "Premium drip", "Pour over", "Espresso"],
+    notes: ["Warm Vanilla", "Caramel", "Toasted Oak"],
+    origins: ["Colombia"],
+    roastLevel: 3,
+    lineClass: "w-full h-[0.5px] bg-amber-400 my-1.5",
+    originRowClass:
+      "flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6",
+    originScaleClass: "flex items-end gap-3 scale-[0.72] origin-left",
+  },
+
+  "brass-monkey": {
+    description:
+      "Built for cold mornings. Warm, rich, and comforting with deep sweetness and a bold, satisfying finish.",
+    bestFor: ["Cold weather mornings", "Drip", "French press"],
+    notes: ["Southern Pecan", "Brown Sugar", "Warm Spice"],
+    origins: ["Brazil"],
+    roastLevel: 3,
+    lineClass: "w-full h-[0.5px] bg-amber-400 my-1.5",
+    originRowClass:
+      "flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6",
+    originScaleClass: "flex items-end gap-3 scale-[0.72] origin-left",
+  },
+};
+
+function CraftInTheCupBlock({ slug }: { slug: string }) {
+  const data = CRAFT_IN_THE_CUP_DATA[slug];
+  if (!data) return null;
+
+  const lineClass = data.lineClass ?? "w-full h-[0.5px] bg-amber-400 my-1.5";
+  const originRowClass =
+    data.originRowClass ??
+    "flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6";
+  const originScaleClass =
+    data.originScaleClass ?? "flex items-end gap-3 scale-[0.72] origin-left";
+
+  return (
+    <div className="space-y-2 text-neutral-300 text-base md:text-lg leading-relaxed max-w-none pr-6">
+      <h2 className="text-xl md:text-2xl font-bold text-amber-300 leading-tight">
+        THE CRAFT IN THE CUP
+      </h2>
+      {data.description && (
+        <p className="mt-2 text-neutral-300 text-base md:text-lg leading-relaxed">
+          {data.description}
+        </p>
+      )}
+      <div className={lineClass} />
+
+      <div>
+        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+          Best For
+        </h3>
+
+        <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed">
+          {data.bestFor.map((item, i) => (
+            <span key={item}>
+              {i > 0 && <span className="mx-1 text-amber-300">|</span>}
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className={lineClass} />
+
+      <div className="md:flex md:items-center md:justify-between md:gap-6">
+        <div>
+          <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+            Signature Notes
+          </h3>
+
+          <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed whitespace-nowrap">
+            {data.notes.map((item, i) => (
+              <span key={item}>
+                {i > 0 && <span className="mx-1 text-amber-300">|</span>}
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 mt-2 md:mt-0 shrink-0">
+          <span className="text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase whitespace-nowrap">
+            Roast Level
+          </span>
+
+          <div className="flex items-center gap-3">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <svg
+                key={n}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={
+                  "h-6 w-6 md:h-7 md:w-7 " +
+                  (n <= data.roastLevel
+                    ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
+                    : "text-neutral-600")
+                }
+              >
+                <rect
+                  x="11"
+                  y="0"
+                  width="2"
+                  height="24"
+                  fill="currentColor"
+                  className="text-neutral-950"
+                />
+                <circle
+                  cx="12"
+                  cy="4"
+                  r="1.6"
+                  fill="currentColor"
+                  className="text-neutral-950"
+                />
+                <circle cx="12" cy="4" r="2" />
+                <path d="M12 6v11" />
+                <path d="M8 10h8" />
+                <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
+                <path d="M7 17l-2 2" />
+                <path d="M17 17l2 2" />
+              </svg>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className={lineClass} />
+
+      <div className={originRowClass}>
+        <h3 className="text-base md:text-lg font-semibold text-amber-300/90 shrink-0">
+          Bean Origins
+        </h3>
+
+        <div className={data.originWrapClass ?? ""}>
+          <div className={originScaleClass}>
+            {data.origins.map((origin) => (
+              <OriginImg key={origin} name={origin} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function RoastLevelAnchors({
@@ -6183,18 +5603,118 @@ function RoastLevelAnchors({
     </>
   );
 }
-function TheCoffeeFlagship({
-  craftSubtitle,
+function RoastStoryBlock({
+  title,
+  paragraphs,
+}: {
+  title: string;
+  paragraphs: string[];
+}) {
+  return (
+    <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+      <p className="text-amber-300 text-base md:text-lg">{title}</p>
+
+      {paragraphs.map((p, i) => (
+        <p key={i}>{p}</p>
+      ))}
+
+      {/* Desktop tagline */}
+      <p className="hidden md:block text-left text-xl font-semibold text-amber-300 break-words pt-2">
+        Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
+      </p>
+
+      {/* Mobile tagline */}
+      <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words pt-2">
+        Old Ironsides Coffee
+        <br />
+        <span className="block text-sm">
+          Ignite the Spirit, Savor the Victory!
+        </span>
+      </p>
+    </div>
+  );
+}
+function RoastUnified({
+  slug,
   reviewData,
   reviews,
   anchorLevel,
 }: {
-  craftSubtitle: React.ReactNode | null;
+  slug: string;
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
   anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
-  const level: 1 | 2 | 3 | 4 | 5 = 3;
+  const DATA: Record<
+    string,
+    {
+      title: string;
+      paragraphs: string[];
+      level: 1 | 2 | 3 | 4 | 5;
+    }
+  > = {
+    flagship: {
+      title: "USS Constitution - Commissioned October 21, 1797",
+      paragraphs: [
+        "Commissioned by President George Washington, the USS Constitution was built to stand as the strength and pride of a new Republic. She was one of six great frigates launched to secure America’s place on the seas, yet time and war would claim all but one.",
+        "Through every storm and every battle, the Constitution endured. Today she stands as a living symbol of the nation she was made to defend.",
+        "This roast honors that legacy, steady and enduring as the ship herself. Smooth, balanced, and bold, our Flagship Medium Roast carries her spirit in every cup.",
+      ],
+      level: 3,
+    },
+    "baptism-by-fire": {
+      title: "USS Constitution vs HMS Guerriere - August 19, 1812",
+      paragraphs: [
+        "Off the coast of Nova Scotia, the Constitution met the British frigate Guerriere in her first great trial at sea. As they drew within range, the sea erupted with the thunder of broadside cannons. British shot struck hard against the hull of the American frigate but failed to pierce it. A British sailor, awestruck by what he saw, shouted, “Her sides are made of iron!”",
+        "Through smoke and cannon fire, the Guerriere’s masts splintered and her decks shattered. She fought bravely, but her rigging fell to ruin and her colors were struck. As flames consumed what remained, Old Ironsides sailed on, scarred yet unbroken, carrying a nation’s pride upon the sea.",
+        "This bold roast carries that victory forward in every cup and enduring as the ship herself.",
+      ],
+      level: 4,
+    },
+    "java-action": {
+      title: "USS Constitution vs HMS Java - December 29, 1812",
+      paragraphs: [
+        "In the wake of HMS Guerriere’s defeat, the Royal Navy cast its hope upon the formidable HMS Java to restore British honor. Swift, heavily armed, and set upon the hunt for the USS Constitution, she was expected to sink the American frigate once and for all.",
+        "Off Brazil’s sunlit coast, the sea became the battlefield. Broadsides clashed, cannons roared, masts splintered, and the resolve of a young nation was tested once again. Out from the smoke and chaos, scarred but victorious, Old Ironsides watched as the Java burned in fiery defeat.",
+        "This medium roast carries that victory forward in every cup, with a smooth, full-bodied flavor and a finish as enduring as Old Ironsides herself.",
+      ],
+      level: 3,
+    },
+    "black-salvo": {
+      title: "Black Salvo",
+      paragraphs: [
+        "In the age of sail, a well-timed salvo could turn the tide of battle in an instant. Old Ironsides, a 44-gun frigate built heavier and armed stronger than most of her class, delivered devastating broadsides that overwhelmed her opponents. At the command, her guns fired in unison, blackening the sky with fire and smoke as iron tore across the water. It was a moment of force, precision, and absolute control.",
+        "Black Salvo is roasted with that same intent. Bold yet remarkably smooth, this balanced blend delivers the depth and richness of a true espresso while remaining clean and easy to drink across any brew method.",
+        "Built for strength, refined for everyday use, and steady from the first cup to the last.",
+      ],
+      level: 3,
+    },
+    "oak-and-copper": {
+      title: "Wrapped in Oak Above, Clad in Copper Below",
+      paragraphs: [
+        "Her copper hull kissed the waves beneath, above, her timbers stood firm against the British cannon’s plea, her heart of oak and copper built for battle on the open sea.",
+        "Born for speed, maneuver, and endurance, she cut through the waves, mastered the cannons, and earned her place among the legends of the sea.",
+        "This bourbon barrel aged roast honors the shipwrights whose craft carried her through storms, battle, and into history.",
+      ],
+      level: 3,
+    },
+    "brass-monkey": {
+      title: 'The "Brass Monkey" Myth',
+      paragraphs: [
+        'For generations sailors joked about weather so cold it could "freeze the balls off a brass monkey." Great line. Terrible story.',
+        "Despite the legend, the Royal Navy never stored cannonballs on a brass tray, and nothing on Old Ironsides ever dumped its shot into the snow like spilled marbles. Cannonballs were kept in wooden racks or below deck, far from the frost and spray.",
+        "So why did the saying stick? Because sailors spent half their lives freezing their asses off. Iced-over rigging, frozen canvas, breath hanging in the lantern light. That was the real winter at sea.",
+        "This roast salutes that folklore with a grin and a shiver. Bold, warming, and cold-weather approved. It cuts through the cold with rich, comforting flavor.",
+        "Perfect for mornings so cold you question every choice that brought you outside.",
+      ],
+      level: 3,
+    },
+  };
+
+  const data = DATA[slug];
+  if (!data) return null;
+
+  const level = anchorLevel ?? data.level;
 
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
@@ -6202,55 +5722,19 @@ function TheCoffeeFlagship({
       <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
-            {/* LEFT: STORY ONLY */}
             <div className="max-w-[80ch] md:pt-6">
-              <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
-                <p className="text-amber-300 text-base md:text-lg">
-                  USS Constitution - Commissioned October 21, 1797
-                </p>
-
-                <p>
-                  Commissioned by President George Washington, the USS
-                  Constitution was built to stand as the strength and pride of a
-                  new Republic. She was one of six great frigates launched to
-                  secure America’s place on the seas, yet time and war would
-                  claim all but one.
-                </p>
-
-                <p>
-                  Through every storm and every battle, the Constitution
-                  endured. Today she stands as a living symbol of the nation she
-                  was made to defend.
-                </p>
-
-                <p>
-                  This roast honors that legacy, steady and enduring as the ship
-                  herself. Smooth, balanced, and bold, our Flagship Medium Roast
-                  carries her spirit in every cup.
-                </p>
-
-                <p className="hidden md:block text-left text-xl font-semibold text-amber-300 break-words pt-2">
-                  Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
-                </p>
-
-                <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words pt-2">
-                  Old Ironsides Coffee
-                  <br />
-                  <span className="block text-sm">
-                    Ignite the Spirit, Savor the Victory!
-                  </span>
-                </p>
-              </div>
+              <RoastStoryBlock
+                title={data.title}
+                paragraphs={data.paragraphs}
+              />
             </div>
 
-            {/* RIGHT: CareCard desktop */}
             <aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
               <CareCard />
             </aside>
           </div>
         </Container>
 
-        {/* MOBILE CareCard */}
         <div className="block md:hidden bg-neutral-950">
           <Container className="pt-2 pb-0">
             <div className="mt-0">
@@ -6267,7 +5751,7 @@ function TheCoffeeFlagship({
               level={level}
               reviewData={reviewData}
               reviews={reviews}
-              roastTitle="Flagship"
+              roastTitle={data.title}
             />
           </Container>
         </div>
@@ -6275,498 +5759,6 @@ function TheCoffeeFlagship({
     </section>
   );
 }
-function TheCoffeeBaptism({
-  craftSubtitle,
-  reviewData,
-  reviews,
-  anchorLevel,
-}: {
-  craftSubtitle: React.ReactNode | null;
-  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
-  reviews: Review[];
-  anchorLevel?: 1 | 2 | 3 | 4 | 5;
-}) {
-  const level: 1 | 2 | 3 | 4 | 5 = 4;
-
-  return (
-    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
-      <div className="border-t-2 border-amber-400/70 relative -translate-y-6 md:-translate-y-8 w-[110%] -ml-[5%]" />
-
-      <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
-        <Container className="pt-0 md:pt-0 pb-6 md:pb-10 -mt-6 md:-mt-8">
-          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] md:gap-10 items-start -mt-6 md:-mt-8">
-            {/* LEFT: STORY */}
-            <div className="max-w-[80ch] md:pt-6">
-              <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
-                <p className="text-amber-300 text-base md:text-lg">
-                  USS Constitution vs HMS Guerriere - August 19, 1812
-                </p>
-
-                <p>
-                  Off the coast of Nova Scotia, the Constitution met the British
-                  frigate Guerriere in her first great trial at sea. As they
-                  drew within range, the sea erupted with the thunder of
-                  broadside cannons. British shot struck hard against the hull
-                  of the American frigate but failed to pierce it. A British
-                  sailor, awestruck by what he saw, shouted, “Her sides are made
-                  of iron!”
-                </p>
-
-                <p>
-                  Through smoke and cannon fire, the Guerriere’s masts
-                  splintered and her decks shattered. She fought bravely, but
-                  her rigging fell to ruin and her colors were struck. As flames
-                  consumed what remained, Old Ironsides sailed on, scarred yet
-                  unbroken, carrying a nation’s pride upon the sea.
-                </p>
-
-                <p>
-                  This bold roast carries that victory forward in every cup and
-                  enduring as the ship herself.
-                </p>
-
-                {/* Desktop tagline */}
-                <p className="hidden md:block text-left text-xl font-normal text-amber-300 break-words md:font-semibold pt-2">
-                  Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
-                </p>
-
-                {/* Mobile tagline */}
-                <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words pt-2">
-                  Old Ironsides Coffee
-                  <br />
-                  <span className="block text-sm">
-                    Ignite the Spirit, Savor the Victory!
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            {/* RIGHT: CareCard desktop */}
-            <aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
-              <CareCard />
-            </aside>
-          </div>
-        </Container>
-
-        {/* MOBILE CareCard */}
-        <div className="block md:hidden bg-neutral-950">
-          <Container className="pt-2 pb-0">
-            <div className="mt-0">
-              <CareCard />
-            </div>
-          </Container>
-        </div>
-
-        <div className="border-t-2 border-amber-400/70 relative mt-8 md:mt-12 w-[110%] -ml-[5%]" />
-
-        <div className="bg-neutral-900 md:bg-neutral-950">
-          <Container className="pt-0 md:pt-1 pb-6 md:pb-10">
-            <RoastLevelAnchors
-              level={level}
-              reviewData={reviewData}
-              reviews={reviews}
-              roastTitle="Baptism by Fire"
-            />
-          </Container>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function TheCoffeeJava({
-  craftSubtitle,
-  reviewData,
-  reviews,
-  anchorLevel,
-}: {
-  craftSubtitle: React.ReactNode | null;
-  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
-  reviews: Review[];
-  anchorLevel?: 1 | 2 | 3 | 4 | 5;
-}) {
-  const notes = ["Hazelnut", "Caramel", "Apple"];
-  const origins = ["Guatemala", "Ethiopia", "Colombia"];
-  const level: 1 | 2 | 3 | 4 | 5 = 3;
-  const GRID =
-    origins.length === 2
-      ? "grid-cols-[auto_auto]"
-      : "grid-cols-[auto_auto_auto]";
-  const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
-
-  return (
-    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
-      <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
-      <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
-        <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
-            <div className="max-w-[80ch] md:pt-6">
-              <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
-                <p className="text-amber-300 text-base md:text-lg">
-                  USS Constitution vs HMS Java - December 29, 1812
-                </p>
-
-                <p>
-                  In the wake of HMS Guerriere’s defeat, the Royal Navy cast its
-                  hope upon the formidable HMS Java to restore British honor.
-                  Swift, heavily armed, and set upon the hunt for the USS
-                  Constitution, she was expected to sink the American frigate
-                  once and for all.
-                </p>
-
-                <p>
-                  Off Brazil’s sunlit coast, the sea became the battlefield.
-                  Broadsides clashed, cannons roared, masts splintered, and the
-                  resolve of a young nation was tested once again. Out from the
-                  smoke and chaos, scarred but victorious, Old Ironsides watched
-                  as the Java burned in fiery defeat.
-                </p>
-
-                <p>
-                  This medium roast carries that victory forward in every cup,
-                  with a smooth, full-bodied flavor and a finish as enduring as
-                  Old Ironsides herself.
-                </p>
-
-                {/* Desktop tagline */}
-                <p className="hidden md:block text-left text-xl font-semibold text-amber-300 break-words pt-2">
-                  Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
-                </p>
-
-                {/* Mobile tagline */}
-                <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words pt-2">
-                  Old Ironsides Coffee
-                  <br />
-                  <span className="block text-sm">
-                    Ignite the Spirit, Savor the Victory!
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            {/* RIGHT: CareCard desktop */}
-            <aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
-              <CareCard />
-            </aside>
-          </div>
-        </Container>
-
-        {/* MOBILE CareCard (stacked above RoastLevel, tight spacing) */}
-        <div className="block md:hidden bg-neutral-950">
-          <Container className="pt-2 pb-0">
-            <div className="mt-0">
-              <CareCard />
-            </div>
-          </Container>
-        </div>
-
-        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
-
-        <div className="bg-neutral-900 md:bg-neutral-950">
-          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-            <RoastLevelAnchors
-              level={level}
-              reviewData={reviewData}
-              reviews={reviews}
-              roastTitle="The Java Action"
-            />
-          </Container>
-        </div>
-      </div>
-    </section>
-  );
-}
-function TheCoffeeBlackSalvo({
-  craftSubtitle,
-  reviewData,
-  reviews,
-  anchorLevel,
-}: {
-  craftSubtitle: React.ReactNode | null;
-  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
-  reviews: Review[];
-  anchorLevel?: 1 | 2 | 3 | 4 | 5;
-}) {
-  const level: 1 | 2 | 3 | 4 | 5 = 3;
-
-  return (
-    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
-      <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
-
-      <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
-        <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
-            {/* LEFT: STORY PLACEHOLDER */}
-            <div className="max-w-[80ch] md:pt-6">
-              <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
-                <p className="text-amber-300 text-base md:text-lg">
-                  Black Salvo
-                </p>
-
-                <p>
-                  In the age of sail, a well-timed salvo could turn the tide of
-                  battle in an instant. Old Ironsides, a 44-gun frigate built
-                  heavier and armed stronger than most of her class, delivered
-                  devastating broadsides that overwhelmed her opponents. At the
-                  command, her guns fired in unison, blackening the sky with
-                  fire and smoke as iron tore across the water. It was a moment
-                  of force, precision, and absolute control. <br />
-                  <br />
-                  Black Salvo is roasted with that same intent. Bold yet
-                  remarkably smooth, this balanced blend delivers the depth and
-                  richness of a true espresso while remaining clean and easy to
-                  drink across any brew method. Built for strength, refined for
-                  everyday use, and steady from the first cup to the last.
-                </p>
-
-                {/* Desktop tagline */}
-                <p className="hidden md:block text-left text-xl font-semibold text-amber-300 break-words pt-2">
-                  Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
-                </p>
-
-                {/* Mobile tagline */}
-                <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words pt-2">
-                  Old Ironsides Coffee
-                  <br />
-                  <span className="block text-sm">
-                    Ignite the Spirit, Savor the Victory!
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            {/* RIGHT: CareCard */}
-            <aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
-              <CareCard />
-            </aside>
-          </div>
-        </Container>
-
-        {/* MOBILE CareCard */}
-        <div className="block md:hidden bg-neutral-950">
-          <Container className="pt-2 pb-0">
-            <CareCard />
-          </Container>
-        </div>
-
-        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
-
-        <div className="bg-neutral-900 md:bg-neutral-950">
-          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-            <RoastLevelAnchors
-              level={level}
-              reviewData={reviewData}
-              reviews={reviews}
-              roastTitle="Black Salvo"
-            />
-          </Container>
-        </div>
-      </div>
-    </section>
-  );
-}
-function TheCoffeeOak({
-  craftSubtitle,
-  reviewData,
-  reviews,
-  anchorLevel,
-}: {
-  craftSubtitle: React.ReactNode | null;
-  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
-  reviews: Review[];
-  anchorLevel?: 1 | 2 | 3 | 4 | 5;
-}) {
-  const notes = ["Warm Vanilla", "Caramel", "Toasted Oak"];
-  const origins = ["Colombia"];
-  const level: 1 | 2 | 3 | 4 | 5 = 3;
-  const GRID =
-    origins.length === 2
-      ? "grid-cols-[auto_auto]"
-      : "grid-cols-[auto_auto_auto]";
-  const anchors = typeof anchorLevel === "number" ? anchorLevel : level;
-
-  return (
-    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
-      <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
-      <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
-        <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
-            {/* LEFT: STORY ONLY */}
-            <div className="max-w-[80ch] md:pt-6">
-              <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
-                <p className="text-amber-300 text-base md:text-lg">
-                  Wrapped in Oak Above, Clad in Copper Below
-                </p>
-
-                <p>
-                  Her copper hull kissed the waves beneath, above, her timbers
-                  stood firm against the British cannon’s plea, her heart of oak
-                  and copper built for battle on the open sea.
-                </p>
-
-                <p>
-                  Born for speed, maneuver, and endurance, she cut through the
-                  waves, mastered the cannons, and earned her place among the
-                  legends of the sea.
-                </p>
-
-                <p>
-                  This bourbon barrel aged roast honors the shipwrights whose
-                  craft carried her through storms, battle, and into history.
-                </p>
-
-                {/* Desktop tagline */}
-                <p className="hidden md:block text-left text-xl font-semibold text-amber-300 break-words pt-2">
-                  Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
-                </p>
-
-                {/* Mobile tagline */}
-                <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words pt-2">
-                  Old Ironsides Coffee
-                  <br />
-                  <span className="block text-sm">
-                    Ignite the Spirit, Savor the Victory!
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            {/* RIGHT: CareCard desktop */}
-            <aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
-              <CareCard />
-            </aside>
-          </div>
-        </Container>
-
-        {/* MOBILE CareCard (stacked above RoastLevel, tight spacing) */}
-        <div className="block md:hidden bg-neutral-950">
-          <Container className="pt-2 pb-0">
-            <div className="mt-0">
-              <CareCard />
-            </div>
-          </Container>
-        </div>
-
-        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
-
-        <div className="bg-neutral-900 md:bg-neutral-950">
-          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-            <RoastLevelAnchors
-              level={level}
-              reviewData={reviewData}
-              reviews={reviews}
-              roastTitle="Oak & Copper"
-            />
-          </Container>
-        </div>
-      </div>
-    </section>
-  );
-}
-function TheCoffeeBrass({
-  craftSubtitle,
-  reviewData,
-  reviews,
-  anchorLevel,
-}: {
-  craftSubtitle: React.ReactNode | null;
-  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
-  reviews: Review[];
-  anchorLevel?: 1 | 2 | 3 | 4 | 5;
-}) {
-  const level: 1 | 2 | 3 | 4 | 5 = 3;
-
-  return (
-    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
-      <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
-      <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
-        <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
-            {/* LEFT: STORY */}
-            <div className="max-w-[80ch] md:pt-6">
-              <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
-                <p className="text-amber-300 text-base md:text-lg">
-                  The "Brass Monkey" Myth
-                </p>
-
-                <p>
-                  For generations sailors joked about weather so cold it could
-                  "freeze the balls off a brass monkey." Great line. Terrible
-                  story.
-                </p>
-
-                <p>
-                  Despite the legend, the Royal Navy never stored cannonballs on
-                  a brass tray, and nothing on Old Ironsides ever dumped its
-                  shot into the snow like spilled marbles. Cannonballs were kept
-                  in wooden racks or below deck, far from the frost and spray.
-                </p>
-
-                <p>
-                  So why did the saying stick? Because sailors spent half their
-                  lives freezing their asses off. Iced-over rigging, frozen
-                  canvas, breath hanging in the lantern light. That was the real
-                  winter at sea.
-                </p>
-
-                <p>
-                  This roast salutes that folklore with a grin and a shiver.
-                  Bold, warming, and cold-weather approved. It cuts through the
-                  cold with rich, comforting flavor.
-                </p>
-
-                <p>
-                  Perfect for mornings so cold you question every choice that
-                  brought you outside.
-                </p>
-
-                {/* Desktop tagline */}
-                <p className="hidden md:block text-left text-xl font-semibold text-amber-300 break-words pt-2">
-                  Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
-                </p>
-
-                {/* Mobile tagline */}
-                <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words pt-2">
-                  Old Ironsides Coffee
-                  <br />
-                  <span className="block text-sm">
-                    Ignite the Spirit, Savor the Victory!
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            {/* RIGHT: CareCard */}
-            <aside className="hidden md:block md:self-start md:justify-self-end w-full max-w-[520px] md:sticky md:top-14 md:mt-6">
-              <CareCard />
-            </aside>
-          </div>
-        </Container>
-
-        {/* MOBILE CareCard */}
-        <div className="block md:hidden bg-neutral-950">
-          <Container className="pt-2 pb-0">
-            <CareCard />
-          </Container>
-        </div>
-
-        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
-
-        <div className="bg-neutral-900 md:bg-neutral-950">
-          <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-            <RoastLevelAnchors
-              level={level}
-              reviewData={reviewData}
-              reviews={reviews}
-              roastTitle="Brass Monkey"
-            />
-          </Container>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function StorePage() {
   const tiles = [
     {

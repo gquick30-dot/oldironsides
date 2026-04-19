@@ -3565,29 +3565,11 @@ function BuyBoxSection({
             </div>
 
             {purchaseMode === "sub" && (
-              <div className="mt-4">
-                <div className="text-sm text-amber-300 font-medium mb-2">
-                  Deliver every:
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  {[14, 30, 60].map((d) => (
-                    <button
-                      key={d}
-                      type="button"
-                      onClick={() => setSubEvery(d as 14 | 30 | 60)}
-                      className={
-                        "px-3 py-2 border text-sm " +
-                        (subEvery === d
-                          ? "border-amber-400/70 text-amber-300 bg-black"
-                          : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
-                      }
-                      aria-pressed={subEvery === d}
-                    >
-                      {d} days
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <SubscriptionFrequencyPicker
+                subEvery={subEvery}
+                setSubEvery={setSubEvery}
+                mobile
+              />
             )}
           </button>
         </div>
@@ -3787,35 +3769,10 @@ function BuyBoxSection({
         </div>
 
         {purchaseMode === "sub" && (
-          <div className="mt-3 mb-4 w-full max-w-[36rem]">
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="text-base md:text-[1.15rem] text-amber-300 font-medium">
-                Deliver every:
-              </div>
-              <div className="flex items-center gap-2">
-                {[14, 30, 60].map((d) => (
-                  <button
-                    key={d}
-                    type="button"
-                    onClick={() => setSubEvery(d as 14 | 30 | 60)}
-                    className={
-                      "px-3 py-1.5 rounded-lg border text-sm transition " +
-                      (subEvery === d
-                        ? "border-amber-400/70 text-amber-300 bg-black"
-                        : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
-                    }
-                    aria-pressed={subEvery === d}
-                  >
-                    {d} days
-                  </button>
-                ))}
-
-                <span className="ml-3 text-xs text-amber-300 whitespace-nowrap font-medium">
-                  Skip or cancel anytime
-                </span>
-              </div>
-            </div>
-          </div>
+          <SubscriptionFrequencyPicker
+            subEvery={subEvery}
+            setSubEvery={setSubEvery}
+          />
         )}
       </div>
     </>
@@ -4202,25 +4159,64 @@ function ReviewCard({
     </article>
   );
 }
+function SubscriptionFrequencyPicker({
+  subEvery,
+  setSubEvery,
+  mobile = false,
+}: {
+  subEvery: 14 | 30 | 60;
+  setSubEvery: React.Dispatch<React.SetStateAction<14 | 30 | 60>>;
+  mobile?: boolean;
+}) {
+  return (
+    <div className={mobile ? "mt-4" : "mt-3 mb-4 w-full max-w-[36rem]"}>
+      <div className={mobile ? "" : "flex flex-wrap items-center gap-3"}>
+        <div
+          className={
+            mobile
+              ? "text-sm text-amber-300 font-medium mb-2"
+              : "text-base md:text-[1.15rem] text-amber-300 font-medium"
+          }
+        >
+          Deliver every:
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {[14, 30, 60].map((d) => (
+            <button
+              key={d}
+              type="button"
+              onClick={() => setSubEvery(d as 14 | 30 | 60)}
+              className={
+                (mobile
+                  ? "px-3 py-2 border text-sm "
+                  : "px-3 py-1.5 rounded-lg border text-sm transition ") +
+                (subEvery === d
+                  ? "border-amber-400/70 text-amber-300 bg-black"
+                  : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
+              }
+              aria-pressed={subEvery === d}
+            >
+              {d} days
+            </button>
+          ))}
+
+          {!mobile && (
+            <span className="ml-3 text-xs text-amber-300 whitespace-nowrap font-medium">
+              Skip or cancel anytime
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 function RoastDetailPage() {
   const { slug } = useParams();
-
-  // Roast-level anchors mapping
-  const roastLevelBySlug: Partial<Record<string, 1 | 2 | 3 | 4 | 5>> = {
-    flagship: 3,
-    "java-action": 3,
-    "oak-and-copper": 3,
-    "baptism-by-fire": 4,
-    "brass-monkey": 3,
-    "black-salvo": 3,
-  };
-
   const [mobileToast, setMobileToast] = useState<null | {
     title: string;
     qty: number;
   }>(null);
-
-  const anchorLevel = roastLevelBySlug[String(slug)];
 
   const card = roastCards.find((c) => c.slug === slug);
 
@@ -4813,32 +4809,20 @@ function RoastDetailPage() {
         slug={card.slug}
         reviewData={reviewData}
         reviews={reviews}
-        anchorLevel={anchorLevel}
       />
     </main>
   );
 }
 function RoastCoffeeSection({
   slug,
-
   reviewData,
   reviews,
-  anchorLevel,
 }: {
   slug: string;
-
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
-  anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
-  return (
-    <RoastUnified
-      slug={slug}
-      reviewData={reviewData}
-      reviews={reviews}
-      anchorLevel={anchorLevel}
-    />
-  );
+  return <RoastUnified slug={slug} reviewData={reviewData} reviews={reviews} />;
 }
 /* ================== SHARED PARTS ================== */
 function CareCard() {
@@ -5502,12 +5486,10 @@ function RoastUnified({
   slug,
   reviewData,
   reviews,
-  anchorLevel,
 }: {
   slug: string;
   reviewData: { avg: number; count: number; breakdown: Record<number, number> };
   reviews: Review[];
-  anchorLevel?: 1 | 2 | 3 | 4 | 5;
 }) {
   const DATA: Record<
     string,
@@ -5578,7 +5560,7 @@ function RoastUnified({
   const data = DATA[slug];
   if (!data) return null;
 
-  const level = anchorLevel ?? data.level;
+  const level = data.level;
 
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">

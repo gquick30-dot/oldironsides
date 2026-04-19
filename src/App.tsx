@@ -3453,125 +3453,32 @@ function BuyBoxSection({
   addToChest: () => void;
   adding: boolean;
   buyBoxRef?: React.RefObject<HTMLDivElement | null>;
-  buyBoxDims?: { w: number; h: number };
+  buyBoxDims?: { h: number };
 }) {
   if (mobile) {
     return (
       <div className="order-2 w-full md:order-4 md:hidden mt-4">
         <div className="space-y-3">
-          <button
-            type="button"
+          <PurchaseModeButton
+            mode="one"
+            active={purchaseMode === "one"}
             onClick={() => setPurchaseMode("one")}
-            className={
-              "w-full border-2 p-4 flex items-start justify-between text-left " +
-              (purchaseMode === "one"
-                ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
-                : "border-neutral-700 bg-neutral-950 md:bg-black/40")
-            }
-            aria-pressed={purchaseMode === "one"}
-          >
-            <div className="flex items-start gap-3 w-full">
-              <div
-                className={
-                  "h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 " +
-                  (purchaseMode === "one"
-                    ? "border-amber-400"
-                    : "border-neutral-400")
-                }
-              >
-                <div
-                  className={
-                    "h-2.5 w-2.5 rounded-full " +
-                    (purchaseMode === "one" ? "bg-amber-400" : "bg-transparent")
-                  }
-                />
-              </div>
+            basePrice={basePrice}
+            discounted={discounted}
+            isOak={isOak}
+          />
 
-              <div className="flex flex-col flex-1">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
-                  <span className="text-base text-neutral-100 font-medium leading-none">
-                    Single Purchase
-                  </span>
-
-                  <span className="text-sm text-neutral-300">
-                    <PriceDisplay
-                      basePrice={basePrice}
-                      discounted={discounted}
-                      purchaseMode="one"
-                      isOak={isOak}
-                    />
-                  </span>
-                </div>
-              </div>
-            </div>
-          </button>
-
-          <button
-            type="button"
+          <PurchaseModeButton
+            mode="sub"
+            active={purchaseMode === "sub"}
             onClick={() => setPurchaseMode("sub")}
-            className={
-              "w-full border-2 p-4 flex flex-col text-left " +
-              (purchaseMode === "sub"
-                ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
-                : "border-neutral-700 bg-neutral-950 md:bg-black/40")
-            }
-            aria-pressed={purchaseMode === "sub"}
-          >
-            <div className="w-full flex items-start gap-3">
-              <div
-                className={
-                  "h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 " +
-                  (purchaseMode === "sub"
-                    ? "border-amber-400"
-                    : "border-neutral-400")
-                }
-              >
-                <div
-                  className={
-                    "h-2.5 w-2.5 rounded-full " +
-                    (purchaseMode === "sub" ? "bg-amber-400" : "bg-transparent")
-                  }
-                />
-              </div>
-
-              <div className="flex flex-col flex-1">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 w-full">
-                  <span className="text-base text-neutral-100 font-medium leading-none">
-                    Join The Fleet
-                  </span>
-
-                  <span className="text-sm text-neutral-300">
-                    <PriceDisplay
-                      basePrice={basePrice}
-                      discounted={discounted}
-                      purchaseMode="sub"
-                      isOak={isOak}
-                    />
-                  </span>
-                </div>
-
-                {!isOak && (
-                  <div className="mt-2 flex items-center gap-2">
-                    <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-red-600 text-white tracking-tight">
-                      SAVE 15%
-                    </span>
-
-                    <span className="text-[11px] text-amber-300 font-medium">
-                      Skip or cancel anytime
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {purchaseMode === "sub" && (
-              <SubscriptionFrequencyPicker
-                subEvery={subEvery}
-                setSubEvery={setSubEvery}
-                mobile
-              />
-            )}
-          </button>
+            basePrice={basePrice}
+            discounted={discounted}
+            isOak={isOak}
+            subEvery={subEvery}
+            setSubEvery={setSubEvery}
+            showSubOptions={purchaseMode === "sub"}
+          />
         </div>
 
         <div
@@ -3699,7 +3606,6 @@ function BuyBoxSection({
             style={{
               minHeight: buyBoxDims?.h ? `${buyBoxDims.h}px` : undefined,
               height: buyBoxDims?.h ? `${buyBoxDims.h}px` : undefined,
-              width: buyBoxDims?.w ? undefined : undefined,
             }}
           >
             <div className="text-sm text-neutral-300">
@@ -3840,6 +3746,105 @@ function PriceDisplay({
     </>
   );
 }
+function PurchaseModeButton({
+  mode,
+  active,
+  onClick,
+  basePrice,
+  discounted,
+  isOak,
+  subEvery,
+  setSubEvery,
+  showSubOptions = false,
+}: {
+  mode: "one" | "sub";
+  active: boolean;
+  onClick: () => void;
+  basePrice: number;
+  discounted: number;
+  isOak: boolean;
+  subEvery?: 14 | 30 | 60;
+  setSubEvery?: React.Dispatch<React.SetStateAction<14 | 30 | 60>>;
+  showSubOptions?: boolean;
+}) {
+  const isSub = mode === "sub";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={
+        "w-full border-2 p-4 " +
+        (isSub
+          ? "flex flex-col text-left "
+          : "flex items-start justify-between text-left ") +
+        (active
+          ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
+          : "border-neutral-700 bg-neutral-950 md:bg-black/40")
+      }
+      aria-pressed={active}
+    >
+      <div
+        className={
+          isSub
+            ? "w-full flex items-start gap-3"
+            : "flex items-start gap-3 w-full"
+        }
+      >
+        <div
+          className={
+            "h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 " +
+            (active ? "border-amber-400" : "border-neutral-400")
+          }
+        >
+          <div
+            className={
+              "h-2.5 w-2.5 rounded-full " +
+              (active ? "bg-amber-400" : "bg-transparent")
+            }
+          />
+        </div>
+
+        <div className="flex flex-col flex-1">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 w-full">
+            <span className="text-base text-neutral-100 font-medium leading-none">
+              {isSub ? "Join The Fleet" : "Single Purchase"}
+            </span>
+
+            <span className="text-sm text-neutral-300">
+              <PriceDisplay
+                basePrice={basePrice}
+                discounted={discounted}
+                purchaseMode={mode}
+                isOak={isOak}
+              />
+            </span>
+          </div>
+
+          {isSub && !isOak && (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-red-600 text-white tracking-tight">
+                SAVE 15%
+              </span>
+
+              <span className="text-[11px] text-amber-300 font-medium">
+                Skip or cancel anytime
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {isSub && showSubOptions && subEvery && setSubEvery && (
+        <SubscriptionFrequencyPicker
+          subEvery={subEvery}
+          setSubEvery={setSubEvery}
+          mobile
+        />
+      )}
+    </button>
+  );
+}
 function QuantityControl({
   qty,
   setQty,
@@ -3929,6 +3934,9 @@ function BeanTypeSelect({
     </select>
   );
 }
+const STAR_PATH =
+  "M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z";
+
 function StarRatingDisplay({
   avg,
   sizeClass = "h-4 w-4",
@@ -3970,20 +3978,20 @@ function StarRatingDisplay({
               </defs>
 
               <path
-                d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                d={STAR_PATH}
                 className="text-neutral-800"
                 fill="currentColor"
               />
 
               <path
-                d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                d={STAR_PATH}
                 className="text-amber-400"
                 fill="currentColor"
                 clipPath={`url(#${clipId})`}
               />
 
               <path
-                d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                d={STAR_PATH}
                 fill="none"
                 stroke="currentColor"
                 className="text-neutral-600"
@@ -3996,7 +4004,7 @@ function StarRatingDisplay({
         <span className="sr-only">{avg.toFixed(1)} out of 5 stars</span>
       </div>
 
-      {showCount && typeof count === "number" && (
+      {showCount && count !== undefined && (
         <span className={countClassName}>{count} REVIEWS</span>
       )}
     </>
@@ -4047,12 +4055,20 @@ function ReviewStars({
           }
           stroke="currentColor"
         >
-          <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+          <path d={STAR_PATH} />
         </svg>
       ))}
     </div>
   );
 }
+function formatReviewDate(date: string) {
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "2-digit",
+  });
+}
+
 function ReviewCard({
   r,
   isMobile = false,
@@ -4062,11 +4078,7 @@ function ReviewCard({
 }) {
   const [expanded, setExpanded] = useState(false);
 
-  const formattedDate = new Date(r.date).toLocaleDateString("en-US", {
-    month: "2-digit",
-    day: "2-digit",
-    year: "2-digit",
-  });
+  const formattedDate = formatReviewDate(r.date);
 
   return (
     <article
@@ -4122,9 +4134,11 @@ function ReviewCard({
       )}
 
       {/* Verified */}
-      <div className="mt-3 text-[10px] md:text-[11px] uppercase tracking-wide text-amber-300/90">
-        Verified Buyer
-      </div>
+      {r.verified && (
+        <div className="mt-3 text-[10px] md:text-[11px] uppercase tracking-wide text-amber-300/90">
+          Verified Buyer
+        </div>
+      )}
 
       {/* Expanded */}
       {expanded && (
@@ -4151,14 +4165,17 @@ function ReviewCard({
             </p>
           )}
 
-          <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
-            Verified Buyer
-          </div>
+          {r.verified && (
+            <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
+              Verified Buyer
+            </div>
+          )}
         </div>
       )}
     </article>
   );
 }
+const SUB_OPTIONS = [14, 30, 60] as const;
 function SubscriptionFrequencyPicker({
   subEvery,
   setSubEvery,
@@ -4182,7 +4199,7 @@ function SubscriptionFrequencyPicker({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {[14, 30, 60].map((d) => (
+          {SUB_OPTIONS.map((d) => (
             <button
               key={d}
               type="button"
@@ -4211,6 +4228,20 @@ function SubscriptionFrequencyPicker({
     </div>
   );
 }
+type ReviewData = {
+  avg: number;
+  count: number;
+  breakdown: Record<number, number>;
+};
+
+const EMPTY_REVIEW_BREAKDOWN: Record<number, number> = {
+  5: 0,
+  4: 0,
+  3: 0,
+  2: 0,
+  1: 0,
+};
+
 function RoastDetailPage() {
   const { slug } = useParams();
   const [mobileToast, setMobileToast] = useState<null | {
@@ -4237,23 +4268,14 @@ function RoastDetailPage() {
   }, []);
 
   // review data used for stars + counts beside the subtitle and in the histogram
-
   type Review = {
     id: string;
     name: string;
     date: string;
-    rating: number; // 1..5
+    rating: number;
     title?: string;
     body?: string;
-
-    verified?: boolean; // true when coming from Judge.me or your checkout pipeline
-    source?: "judge";
-  };
-
-  type ReviewStats = {
-    avg: number;
-    count: number;
-    breakdown: Record<number, number>;
+    verified?: boolean;
   };
 
   const shopifyProductId = PRODUCT_IDS_BY_SLUG[card.slug];
@@ -4261,8 +4283,8 @@ function RoastDetailPage() {
   function computeStats(list: Review[]): ReviewStats {
     const count = list.length;
     if (count === 0)
-      return { avg: 0, count: 0, breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } };
-    const breakdown: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+      return { avg: 0, count: 0, breakdown: { ...EMPTY_REVIEW_BREAKDOWN } };
+    const breakdown: Record<number, number> = { ...EMPTY_REVIEW_BREAKDOWN };
     let sum = 0;
     for (const r of list) {
       sum += r.rating;
@@ -4273,7 +4295,7 @@ function RoastDetailPage() {
   }
 
   const [reviewList, setReviewList] = useState<Review[]>([]);
-  const [reviewData, setReviewData] = useState<ReviewStats>(() =>
+  const [reviewData, setReviewData] = useState<ReviewData>(() =>
     computeStats([])
   );
 
@@ -4319,12 +4341,7 @@ function RoastDetailPage() {
 
     return () => controller.abort();
   }, [shopifyProductId]);
-
-  const hasReviews = reviewData.count > 0;
-
-  // Order used in the UI - currently just raw Judge.me list
   const reviews: Review[] = reviewList;
-
   const { add } = useCart();
   const {
     isOak,
@@ -4449,11 +4466,9 @@ function RoastDetailPage() {
 
   // Mirror BUY BOX width/height so Bean Type box matches exactly
   const buyBoxRef = useRef<HTMLDivElement>(null);
-  const [buyBoxDims, setBuyBoxDims] = useState<{ w: number; h: number }>({
-    w: 0,
+  const [buyBoxDims, setBuyBoxDims] = useState<{ h: number }>({
     h: 0,
   });
-  const BEAN_BOX_RATIO = 0.83; // width = 83% of buy box
 
   useEffect(() => {
     const el = buyBoxRef.current;
@@ -4462,7 +4477,7 @@ function RoastDetailPage() {
       const measure = () => {
         if (!buyBoxRef.current) return;
         const r = buyBoxRef.current.getBoundingClientRect();
-        setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
+        setBuyBoxDims({ h: Math.round(r.height) });
       };
       measure();
       const onResize = () => requestAnimationFrame(measure);
@@ -4473,13 +4488,13 @@ function RoastDetailPage() {
     const ro = new ResizeObserver(() => {
       if (!buyBoxRef.current) return;
       const r = buyBoxRef.current.getBoundingClientRect();
-      setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
+      setBuyBoxDims({ h: Math.round(r.height) });
     });
 
     ro.observe(el);
 
     const r = el.getBoundingClientRect();
-    setBuyBoxDims({ w: Math.round(r.width), h: Math.round(r.height) });
+    setBuyBoxDims({ h: Math.round(r.height) });
 
     return () => {
       ro.disconnect();
@@ -4487,9 +4502,8 @@ function RoastDetailPage() {
   }, []);
 
   const addToChest = async () => {
-    const n = Math.max(1, Math.min(99, Math.trunc(qty || 1)));
+    const n = qty > 0 ? Math.min(99, Math.trunc(qty)) : 1;
     setQty(n);
-
     if (!beanType) {
       setShowBeanError(true);
       window.dispatchEvent(
@@ -4805,7 +4819,7 @@ function RoastDetailPage() {
         </div>
       </Container>
       {/* ===== PER-ROAST "THE CRAFT IN THE CUP" SECTION ===== */}
-      <RoastCoffeeSection
+      <RoastUnified
         slug={card.slug}
         reviewData={reviewData}
         reviews={reviews}
@@ -4813,17 +4827,7 @@ function RoastDetailPage() {
     </main>
   );
 }
-function RoastCoffeeSection({
-  slug,
-  reviewData,
-  reviews,
-}: {
-  slug: string;
-  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
-  reviews: Review[];
-}) {
-  return <RoastUnified slug={slug} reviewData={reviewData} reviews={reviews} />;
-}
+
 /* ================== SHARED PARTS ================== */
 function CareCard() {
   return (
@@ -4901,13 +4905,7 @@ function CareCard() {
   );
 }
 
-function OriginImg({
-  name,
-  bumpIndonesia = false,
-}: {
-  name: string;
-  bumpIndonesia?: boolean;
-}) {
+function OriginImg({ name }: { name: string }) {
   const FILE_ALIAS: Record<string, string> = {
     Colombia: "columbia filled2",
     "El Salvador": "el salvador filled2",
@@ -4928,10 +4926,6 @@ function OriginImg({
 
   const fileKey = FILE_ALIAS[name] || name.toLowerCase().replace(/\s+/g, "-");
   const scaleCls = SCALE_BY_COUNTRY[name] || "scale-100";
-
-  // Desktop positioning nudge stays exactly how you wrote it.
-  const nudgeDesktop = "";
-  const nudgeMobile = "";
 
   return (
     <>
@@ -4964,9 +4958,6 @@ function OriginImg({
       </div>
     </>
   );
-}
-function LocalFlashBanner() {
-  return null;
 }
 
 const DESKTOP_BUYBOX_SHIFT: Record<string, string> = {
@@ -5208,16 +5199,76 @@ function CraftInTheCupBlock({ slug }: { slug: string }) {
   );
 }
 
+function Pager({
+  page,
+  setPage,
+  pageCount,
+  small = false,
+}: {
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  pageCount: number;
+  small?: boolean;
+}) {
+  return (
+    <div className="mt-6 flex items-center justify-center gap-2">
+      <button
+        onClick={() => setPage((p) => Math.max(1, p - 1))}
+        disabled={page === 1}
+        className={
+          "px-3 py-1.5 rounded-md border " +
+          (small ? "text-xs " : "text-sm ") +
+          (page === 1
+            ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+            : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+        }
+      >
+        ‹ Prev
+      </button>
+
+      {[...Array(pageCount)].map((_, i) => {
+        const n = i + 1;
+        const active = n === page;
+        return (
+          <button
+            key={n}
+            onClick={() => setPage(n)}
+            className={
+              "h-8 min-w-[2rem] px-2 rounded-md border " +
+              (small ? "text-xs " : "text-sm ") +
+              (active
+                ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
+                : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+            }
+          >
+            {n}
+          </button>
+        );
+      })}
+
+      <button
+        onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+        disabled={page === pageCount}
+        className={
+          "px-3 py-1.5 rounded-md border " +
+          (small ? "text-xs " : "text-sm ") +
+          (page === pageCount
+            ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
+            : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+        }
+      >
+        Next ›
+      </button>
+    </div>
+  );
+}
+
 function RoastLevelAnchors({
-  level,
   reviewData,
   reviews,
-  roastTitle: _roastTitle, // kept for callsites, unused now
 }: {
-  level: 1 | 2 | 3 | 4 | 5;
-  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
+  reviewData: ReviewData;
   reviews: Review[];
-  roastTitle: string;
 }) {
   const total = reviewData?.count || 0;
   const b = reviewData?.breakdown || { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
@@ -5231,7 +5282,6 @@ function RoastLevelAnchors({
 
   return (
     <>
-      <LocalFlashBanner />
       <section className="mt-0 md:mt-2">
         {/* ================= DESKTOP (unchanged from your original) ================= */}
         <div className="hidden md:block">
@@ -5286,56 +5336,7 @@ function RoastLevelAnchors({
 
           {/* Pager */}
           {pageCount > 1 && (
-            <div className="mt-6 flex items-center justify-center gap-2">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className={
-                  "px-3 py-1.5 rounded-md border text-sm " +
-                  (page === 1
-                    ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-                    : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-                }
-                aria-label="Previous reviews page"
-              >
-                ‹ Prev
-              </button>
-
-              {[...Array(pageCount)].map((_, i) => {
-                const n = i + 1;
-                const active = n === page;
-                return (
-                  <button
-                    key={n}
-                    onClick={() => setPage(n)}
-                    className={
-                      "h-8 min-w-[2rem] px-2 rounded-md border text-sm " +
-                      (active
-                        ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
-                        : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-                    }
-                    aria-current={active ? "page" : undefined}
-                    aria-label={`Go to page ${n}`}
-                  >
-                    {n}
-                  </button>
-                );
-              })}
-
-              <button
-                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-                disabled={page === pageCount}
-                className={
-                  "px-3 py-1.5 rounded-md border text-sm " +
-                  (page === pageCount
-                    ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-                    : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-                }
-                aria-label="Next reviews page"
-              >
-                Next ›
-              </button>
-            </div>
+            <Pager page={page} setPage={setPage} pageCount={pageCount} />
           )}
         </div>
         {/* ================= END DESKTOP ================= */}
@@ -5392,56 +5393,7 @@ function RoastLevelAnchors({
 
           {/* Pager (mobile) */}
           {pageCount > 1 && (
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className={
-                  "px-3 py-1.5 rounded-md border text-xs " +
-                  (page === 1
-                    ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-                    : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-                }
-                aria-label="Previous reviews page"
-              >
-                ‹ Prev
-              </button>
-
-              {[...Array(pageCount)].map((_, i) => {
-                const n = i + 1;
-                const active = n === page;
-                return (
-                  <button
-                    key={n}
-                    onClick={() => setPage(n)}
-                    className={
-                      "h-8 min-w-[2rem] px-2 rounded-md border text-xs " +
-                      (active
-                        ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
-                        : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-                    }
-                    aria-current={active ? "page" : undefined}
-                    aria-label={`Go to page ${n}`}
-                  >
-                    {n}
-                  </button>
-                );
-              })}
-
-              <button
-                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-                disabled={page === pageCount}
-                className={
-                  "px-3 py-1.5 rounded-md border text-xs " +
-                  (page === pageCount
-                    ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-                    : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
-                }
-                aria-label="Next reviews page"
-              >
-                Next ›
-              </button>
-            </div>
+            <Pager page={page} setPage={setPage} pageCount={pageCount} small />
           )}
         </div>
         {/* ================= END MOBILE ================= */}
@@ -5488,7 +5440,7 @@ function RoastUnified({
   reviews,
 }: {
   slug: string;
-  reviewData: { avg: number; count: number; breakdown: Record<number, number> };
+  reviewData: ReviewData;
   reviews: Review[];
 }) {
   const DATA: Record<
@@ -5560,8 +5512,6 @@ function RoastUnified({
   const data = DATA[slug];
   if (!data) return null;
 
-  const level = data.level;
-
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
@@ -5593,12 +5543,7 @@ function RoastUnified({
 
         <div className="bg-neutral-900 md:bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
-            <RoastLevelAnchors
-              level={level}
-              reviewData={reviewData}
-              reviews={reviews}
-              roastTitle={data.title}
-            />
+            <RoastLevelAnchors reviewData={reviewData} reviews={reviews} />
           </Container>
         </div>
       </div>

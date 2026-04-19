@@ -3414,6 +3414,413 @@ function FleetStoryPage() {
 }
 
 /* ================== ROAST DETAIL PAGE (CLEAN) ================== */
+function BuyBoxSection({
+  mobile = false,
+  card,
+  isOak,
+  purchaseMode,
+  setPurchaseMode,
+  subEvery,
+  setSubEvery,
+  basePrice,
+  discounted,
+  beanType,
+  setBeanType,
+  showBeanError,
+  setShowBeanError,
+  qty,
+  setQty,
+  addToChest,
+  adding,
+  buyBoxRef,
+  buyBoxDims,
+}: {
+  mobile?: boolean;
+  card: any;
+  isOak: boolean;
+  purchaseMode: "one" | "sub";
+  setPurchaseMode: React.Dispatch<React.SetStateAction<"one" | "sub">>;
+  subEvery: 14 | 30 | 60;
+  setSubEvery: React.Dispatch<React.SetStateAction<14 | 30 | 60>>;
+  basePrice: number;
+  discounted: number;
+  beanType: "" | "whole" | "ground";
+  setBeanType: React.Dispatch<React.SetStateAction<"" | "whole" | "ground">>;
+  showBeanError: boolean;
+  setShowBeanError: React.Dispatch<React.SetStateAction<boolean>>;
+  qty: number;
+  setQty: React.Dispatch<React.SetStateAction<number>>;
+  addToChest: () => void;
+  adding: boolean;
+  buyBoxRef?: React.RefObject<HTMLDivElement | null>;
+  buyBoxDims?: { w: number; h: number };
+}) {
+  if (mobile) {
+    return (
+      <div className="order-2 w-full md:order-4 md:hidden mt-4">
+        <div className="space-y-3">
+          <button
+            type="button"
+            onClick={() => setPurchaseMode("one")}
+            className={
+              "w-full border-2 p-4 flex items-start justify-between text-left " +
+              (purchaseMode === "one"
+                ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
+                : "border-neutral-700 bg-neutral-950 md:bg-black/40")
+            }
+            aria-pressed={purchaseMode === "one"}
+          >
+            <div className="flex items-start gap-3 w-full">
+              <div
+                className={
+                  "h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 " +
+                  (purchaseMode === "one"
+                    ? "border-amber-400"
+                    : "border-neutral-400")
+                }
+              >
+                <div
+                  className={
+                    "h-2.5 w-2.5 rounded-full " +
+                    (purchaseMode === "one" ? "bg-amber-400" : "bg-transparent")
+                  }
+                />
+              </div>
+
+              <div className="flex flex-col flex-1">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
+                  <span className="text-base text-neutral-100 font-medium leading-none">
+                    Single Purchase
+                  </span>
+
+                  <span className="text-sm text-neutral-300">
+                    <PriceDisplay
+                      basePrice={basePrice}
+                      discounted={discounted}
+                      purchaseMode="one"
+                      isOak={isOak}
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setPurchaseMode("sub")}
+            className={
+              "w-full border-2 p-4 flex flex-col text-left " +
+              (purchaseMode === "sub"
+                ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
+                : "border-neutral-700 bg-neutral-950 md:bg-black/40")
+            }
+            aria-pressed={purchaseMode === "sub"}
+          >
+            <div className="w-full flex items-start gap-3">
+              <div
+                className={
+                  "h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 " +
+                  (purchaseMode === "sub"
+                    ? "border-amber-400"
+                    : "border-neutral-400")
+                }
+              >
+                <div
+                  className={
+                    "h-2.5 w-2.5 rounded-full " +
+                    (purchaseMode === "sub" ? "bg-amber-400" : "bg-transparent")
+                  }
+                />
+              </div>
+
+              <div className="flex flex-col flex-1">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 w-full">
+                  <span className="text-base text-neutral-100 font-medium leading-none">
+                    Join The Fleet
+                  </span>
+
+                  <span className="text-sm text-neutral-300">
+                    <PriceDisplay
+                      basePrice={basePrice}
+                      discounted={discounted}
+                      purchaseMode="sub"
+                      isOak={isOak}
+                    />
+                  </span>
+                </div>
+
+                {!isOak && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-red-600 text-white tracking-tight">
+                      SAVE 15%
+                    </span>
+
+                    <span className="text-[11px] text-amber-300 font-medium">
+                      Skip or cancel anytime
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {purchaseMode === "sub" && (
+              <div className="mt-4">
+                <div className="text-sm text-amber-300 font-medium mb-2">
+                  Deliver every:
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  {[14, 30, 60].map((d) => (
+                    <button
+                      key={d}
+                      type="button"
+                      onClick={() => setSubEvery(d as 14 | 30 | 60)}
+                      className={
+                        "px-3 py-2 border text-sm " +
+                        (subEvery === d
+                          ? "border-amber-400/70 text-amber-300 bg-black"
+                          : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
+                      }
+                      aria-pressed={subEvery === d}
+                    >
+                      {d} days
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </button>
+        </div>
+
+        <div
+          className={
+            "mt-4 w-full border-2 bg-neutral-950 md:bg-black/70 " +
+            (showBeanError
+              ? "border-red-500 ring-2 ring-red-500 animate-pulse"
+              : "border-amber-400/60")
+          }
+        >
+          <div className="p-3">
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="font-semibold text-amber-300">Bean Type:</span>
+
+              <label htmlFor="beanTypeSelectMobile" className="sr-only">
+                Bean Type
+              </label>
+
+              <BeanTypeSelect
+                id="beanTypeSelectMobile"
+                beanType={beanType}
+                setBeanType={setBeanType}
+                setShowBeanError={setShowBeanError}
+                className={
+                  "min-w-[15rem] border px-2 py-2 text-sm text-center outline-none bg-neutral-950 md:bg-black/70 " +
+                  (beanType
+                    ? "border-amber-400/70 text-amber-300"
+                    : "border-neutral-700 text-neutral-400") +
+                  " focus-visible:ring-2 focus-visible:ring-amber-400"
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 flex items-center gap-3">
+          <QuantityControl
+            qty={qty}
+            setQty={setQty}
+            className="inline-flex items-center border border-neutral-700"
+            buttonClassName="px-3 py-2 text-neutral-200"
+            inputClassName="w-12 text-center bg-neutral-900/70 py-2 text-sm text-neutral-100 outline-none"
+          />
+
+          <button
+            type="button"
+            onClick={addToChest}
+            disabled={adding}
+            className={
+              "flex-1 border border-amber-400/70 px-4 py-3 text-base font-semibold text-amber-300 bg-black shadow-md shadow-amber-400/10 " +
+              (adding
+                ? "opacity-60 cursor-not-allowed"
+                : "hover:bg-amber-400 hover:text-neutral-900")
+            }
+            aria-label={`Add ${card.title} to Chest`}
+          >
+            {adding ? "Adding..." : "Add to Chest"}
+          </button>
+        </div>
+
+        <div className="mt-2 text-sm text-neutral-400 text-right">
+          <span className="text-amber-300 font-semibold">
+            3+ bags ship free
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div
+        className={`hidden md:block order-2 md:order-4 mt-6 w-full ${
+          DESKTOP_BUYBOX_SHIFT[card.slug] || ""
+        }`}
+      >
+        <div className="flex flex-col md:flex-row md:items-stretch md:gap-4">
+          <div
+            ref={buyBoxRef}
+            className="inline-flex w-full md:w-auto items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-3 px-4 shadow-md shadow-amber-400/10"
+          >
+            <div className="text-sm text-neutral-300">
+              <PriceDisplay
+                basePrice={basePrice}
+                discounted={discounted}
+                purchaseMode={purchaseMode}
+                isOak={isOak}
+                sizeLabel="/ bag"
+              />
+            </div>
+
+            <div className="ml-auto inline-flex items-center gap-4">
+              <QuantityControl
+                qty={qty}
+                setQty={setQty}
+                className="inline-flex items-center rounded-lg border border-neutral-700"
+                buttonClassName="px-2 py-1 hover:bg-neutral-800"
+                inputClassName="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
+              />
+
+              <button
+                type="button"
+                onClick={addToChest}
+                disabled={adding}
+                className={
+                  "px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm md:text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
+                  (adding
+                    ? "opacity-60 cursor-not-allowed"
+                    : "hover:bg-amber-400 hover:text-neutral-900")
+                }
+                aria-label={`Add ${card.title} to Chest`}
+              >
+                {adding ? "Adding..." : "Add to Chest"}
+              </button>
+            </div>
+          </div>
+
+          <div
+            className={
+              "group inline-flex w-full md:w-auto items-center justify-between gap-4 rounded-xl p-3 px-4 shadow-md transition mt-3 md:mt-0 " +
+              (showBeanError
+                ? "border border-red-500 ring-2 ring-red-500 animate-pulse bg-black/70"
+                : "border border-amber-400/60 bg-black/70 shadow-amber-400/10 hover:border-amber-400/80 hover:shadow-[0_0_0_2px_rgba(251,191,36,0.25)]")
+            }
+            style={{
+              minHeight: buyBoxDims?.h ? `${buyBoxDims.h}px` : undefined,
+              height: buyBoxDims?.h ? `${buyBoxDims.h}px` : undefined,
+              width: buyBoxDims?.w ? undefined : undefined,
+            }}
+          >
+            <div className="text-sm text-neutral-300">
+              <div className="font-semibold text-amber-300">Bean Type</div>
+              <div className="text-xs text-neutral-400 mt-0.5">12oz bags</div>
+            </div>
+
+            <label htmlFor="beanTypeSelectDesktop" className="sr-only">
+              Bean Type
+            </label>
+
+            <BeanTypeSelect
+              id="beanTypeSelectDesktop"
+              beanType={beanType}
+              setBeanType={setBeanType}
+              setShowBeanError={setShowBeanError}
+              ariaInvalid={showBeanError}
+              className={
+                "min-w-[10rem] md:min-w-[12rem] rounded-lg border px-3 py-2 text-sm outline-none bg-black/70 " +
+                (beanType
+                  ? "border-amber-400/70 text-amber-300"
+                  : "border-neutral-700 text-neutral-400") +
+                " focus-visible:ring-2 focus-visible:ring-amber-400"
+              }
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={`hidden md:block order-3 md:order-3 mt-6 w-full ${
+          DESKTOP_BUYBOX_SHIFT[card.slug] || ""
+        }`}
+      >
+        <div className="inline-flex items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-4 px-5 shadow-md shadow-amber-400/10 w-full md:w-fit">
+          <button
+            type="button"
+            onClick={() => setPurchaseMode("one")}
+            className={
+              "px-3 py-1.5 rounded-lg border text-xs md:text-sm leading-none tracking-tight font-semibold transition w-full sm:w-auto text-center " +
+              (purchaseMode === "one"
+                ? "bg-amber-400 text-neutral-900 border-amber-400"
+                : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
+            }
+            aria-pressed={purchaseMode === "one"}
+          >
+            Single Purchase
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setPurchaseMode("sub")}
+            className={
+              "px-4 py-2 rounded-lg border text-sm md:text-base font-semibold transition w-full sm:w-auto text-center " +
+              (purchaseMode === "sub"
+                ? "bg-amber-400 text-neutral-900 border-amber-400"
+                : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
+            }
+            aria-pressed={purchaseMode === "sub"}
+          >
+            {isOak ? "Join the Fleet" : "Join the Fleet & Save 15%"}
+          </button>
+
+          <span className="hidden md:block text-sm text-amber-300 font-semibold whitespace-nowrap">
+            Combine any 3+ roasts and get free shipping
+          </span>
+        </div>
+
+        {purchaseMode === "sub" && (
+          <div className="mt-3 mb-4 w-full max-w-[36rem]">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="text-base md:text-[1.15rem] text-amber-300 font-medium">
+                Deliver every:
+              </div>
+              <div className="flex items-center gap-2">
+                {[14, 30, 60].map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() => setSubEvery(d as 14 | 30 | 60)}
+                    className={
+                      "px-3 py-1.5 rounded-lg border text-sm transition " +
+                      (subEvery === d
+                        ? "border-amber-400/70 text-amber-300 bg-black"
+                        : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
+                    }
+                    aria-pressed={subEvery === d}
+                  >
+                    {d} days
+                  </button>
+                ))}
+
+                <span className="ml-3 text-xs text-amber-300 whitespace-nowrap font-medium">
+                  Skip or cancel anytime
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
 function useBuyBox(card: any) {
   const isOak = card.slug === "oak-and-copper";
 
@@ -4309,429 +4716,49 @@ function RoastDetailPage() {
 
               {/* ===== MOBILE BUY BOX STYLE (md:hidden) ===== */}
               {(card.canBuy || isOak) && (
-                <div className="order-2 w-full md:order-4 md:hidden mt-4">
-                  {/* OPTION CARDS */}
-                  <div className="space-y-3">
-                    {/* ONE-TIME CARD */}
-                    <button
-                      type="button"
-                      onClick={() => setPurchaseMode("one")}
-                      className={
-                        "w-full border-2 p-4 flex items-start justify-between text-left " +
-                        (purchaseMode === "one"
-                          ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
-                          : "border-neutral-700 bg-neutral-950 md:bg-black/40")
-                      }
-                      aria-pressed={purchaseMode === "one"}
-                    >
-                      <div className="flex items-start gap-3 w-full">
-                        {/* radio */}
-                        <div
-                          className={
-                            "h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 " +
-                            (purchaseMode === "one"
-                              ? "border-amber-400"
-                              : "border-neutral-400")
-                          }
-                        >
-                          <div
-                            className={
-                              "h-2.5 w-2.5 rounded-full " +
-                              (purchaseMode === "one"
-                                ? "bg-amber-400"
-                                : "bg-transparent")
-                            }
-                          />
-                        </div>
-
-                        {/* text/price in one line */}
-                        <div className="flex flex-col flex-1">
-                          <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
-                            <span className="text-base text-neutral-100 font-medium leading-none">
-                              Single Purchase
-                            </span>
-                            <span className="text-sm text-neutral-300">
-                              <PriceDisplay
-                                basePrice={basePrice}
-                                discounted={discounted}
-                                purchaseMode="one"
-                                isOak={isOak}
-                              />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </button>
-                    {/* SUBSCRIBE & SAVE CARD */}
-                    <button
-                      type="button"
-                      onClick={() => setPurchaseMode("sub")}
-                      className={
-                        "w-full border-2 p-4 flex flex-col text-left " +
-                        (purchaseMode === "sub"
-                          ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
-                          : "border-neutral-700 bg-neutral-950 md:bg-black/40")
-                      }
-                      aria-pressed={purchaseMode === "sub"}
-                    >
-                      <div className="w-full flex items-start gap-3">
-                        {/* radio */}
-                        <div
-                          className={
-                            "h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 " +
-                            (purchaseMode === "sub"
-                              ? "border-amber-400"
-                              : "border-neutral-400")
-                          }
-                        >
-                          <div
-                            className={
-                              "h-2.5 w-2.5 rounded-full " +
-                              (purchaseMode === "sub"
-                                ? "bg-amber-400"
-                                : "bg-transparent")
-                            }
-                          />
-                        </div>
-
-                        <div className="flex flex-col flex-1">
-                          {/* top row: Join the Fleet + prices all inline */}
-                          <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 w-full">
-                            <span className="text-base text-neutral-100 font-medium leading-none">
-                              {isOak ? "Join The Fleet" : "Join The Fleet"}
-                            </span>
-                            <span className="text-sm text-neutral-300">
-                              <PriceDisplay
-                                basePrice={basePrice}
-                                discounted={discounted}
-                                purchaseMode="sub"
-                                isOak={isOak}
-                              />
-                            </span>
-                          </div>
-                          {/* under-row: SAVE 15% pill */}
-                          {!isOak && (
-                            <div className="mt-2 flex items-center gap-2">
-                              <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-red-600 text-white tracking-tight">
-                                SAVE 15%
-                              </span>
-
-                              <span className="text-[11px] text-amber-300 font-medium">
-                                Skip or cancel anytime
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* SUB FREQUENCY lives right under subscribe card */}
-                      {purchaseMode === "sub" && (
-                        <div className="mt-4">
-                          <div className="text-sm text-amber-300 font-medium mb-2">
-                            Deliver every:
-                          </div>
-                          <div className="flex flex-wrap items-center gap-2">
-                            {[14, 30, 60].map((d) => (
-                              <button
-                                key={d}
-                                type="button"
-                                onClick={() => setSubEvery(d as 14 | 30 | 60)}
-                                className={
-                                  "px-3 py-2 border text-sm " +
-                                  (subEvery === d
-                                    ? "border-amber-400/70 text-amber-300 bg-black"
-                                    : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
-                                }
-                                aria-pressed={subEvery === d}
-                              >
-                                {d} days
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </button>
-                  </div>
-
-                  {/* BEAN TYPE SELECT */}
-                  <div
-                    className={
-                      "mt-4 w-full border-2 bg-neutral-950 md:bg-black/70 " +
-                      (showBeanError
-                        ? "border-red-500 ring-2 ring-red-500 animate-pulse"
-                        : "border-amber-400/60")
-                    }
-                  >
-                    {/* slimmer padding now */}
-                    <div className="p-3">
-                      {/* Bean Type row compressed */}
-                      <div className="flex flex-wrap items-center gap-2 text-sm">
-                        <span className="font-semibold text-amber-300">
-                          Bean Type:
-                        </span>
-
-                        <label
-                          htmlFor="beanTypeSelectMobile"
-                          className="sr-only"
-                        >
-                          Bean Type
-                        </label>
-                        <BeanTypeSelect
-                          id="beanTypeSelectMobile"
-                          beanType={beanType}
-                          setBeanType={setBeanType}
-                          setShowBeanError={setShowBeanError}
-                          className={
-                            "min-w-[15rem] border px-2 py-2 text-sm text-center outline-none bg-neutral-950 md:bg-black/70 " +
-                            (beanType
-                              ? "border-amber-400/70 text-amber-300"
-                              : "border-neutral-700 text-neutral-400") +
-                            " focus-visible:ring-2 focus-visible:ring-amber-400"
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* QTY + ADD ROW */}
-                  <div className="mt-4 flex items-center gap-3">
-                    {/* qty box */}
-                    <QuantityControl
-                      qty={qty}
-                      setQty={setQty}
-                      className="inline-flex items-center border border-neutral-700"
-                      buttonClassName="px-3 py-2 text-neutral-200"
-                      inputClassName="w-12 text-center bg-neutral-900/70 py-2 text-sm text-neutral-100 outline-none"
-                    />
-
-                    {/* ADD TO CHEST */}
-                    <button
-                      type="button"
-                      onClick={addToChest}
-                      disabled={adding}
-                      className={
-                        "flex-1 border border-amber-400/70 px-4 py-3 text-base font-semibold text-amber-300 bg-black shadow-md shadow-amber-400/10 " +
-                        (adding
-                          ? "opacity-60 cursor-not-allowed"
-                          : "hover:bg-amber-400 hover:text-neutral-900")
-                      }
-                      aria-label={`Add ${card.title} to Chest`}
-                    >
-                      {adding ? "Adding..." : "Add to Chest"}
-                    </button>
-                  </div>
-
-                  {/* shipping / perk line (tighter) */}
-                  <div className="mt-2 text-sm text-neutral-400 text-right">
-                    <span className="text-amber-300 font-semibold">
-                      3+ bags ship free
-                    </span>
-                  </div>
-                </div>
-              )}
-              {mobileToast && (
-                <div className="fixed left-0 right-0 top-1/2 transform -translate-y-1/2 z-[9999] px-4 md:hidden">
-                  <div className="w-full rounded-lg border border-amber-400/70 bg-amber-400/90 text-black shadow-lg shadow-amber-400/20 px-6 py-4 flex items-center justify-center gap-4">
-                    <div className="flex-1 text-center">
-                      <div className="text-xl font-bold text-black">
-                        Added to Chest
-                      </div>
-                      <div className="text-lg font-bold text-neutral-800 leading-snug">
-                        {mobileToast.qty} × {mobileToast.title}
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setMobileToast(null)}
-                      className="text-[12px] text-neutral-500 hover:text-neutral-200"
-                      aria-label="Close message"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                </div>
+                <BuyBoxSection
+                  mobile
+                  card={card}
+                  isOak={isOak}
+                  purchaseMode={purchaseMode}
+                  setPurchaseMode={setPurchaseMode}
+                  subEvery={subEvery}
+                  setSubEvery={setSubEvery}
+                  basePrice={basePrice}
+                  discounted={discounted}
+                  beanType={beanType}
+                  setBeanType={setBeanType}
+                  showBeanError={showBeanError}
+                  setShowBeanError={setShowBeanError}
+                  qty={qty}
+                  setQty={setQty}
+                  addToChest={addToChest}
+                  adding={adding}
+                />
               )}
 
               {/* ================= DESKTOP VERSION (hidden on mobile) ================= */}
               {(card.canBuy || isOak) && (
-                <>
-                  <div
-                    className={`hidden md:block order-2 md:order-4 mt-6 w-full ${
-                      DESKTOP_BUYBOX_SHIFT[card.slug] || ""
-                    }`}
-                  >
-                    <div className="flex flex-col md:flex-row md:items-stretch md:gap-4">
-                      {/* BUY BOX */}
-                      <div
-                        ref={buyBoxRef}
-                        className="inline-flex w-full md:w-auto items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-3 px-4 shadow-md shadow-amber-400/10"
-                      >
-                        {/* Price */}
-                        <div className="text-sm text-neutral-300">
-                          <PriceDisplay
-                            basePrice={basePrice}
-                            discounted={discounted}
-                            purchaseMode={purchaseMode}
-                            isOak={isOak}
-                            sizeLabel="/ bag"
-                          />
-                        </div>
-
-                        {/* Qty + Add */}
-                        <div className="ml-auto inline-flex items-center gap-4">
-                          <QuantityControl
-                            qty={qty}
-                            setQty={setQty}
-                            className="inline-flex items-center rounded-lg border border-neutral-700"
-                            buttonClassName="px-2 py-1 hover:bg-neutral-800"
-                            inputClassName="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
-                          />
-
-                          <button
-                            type="button"
-                            onClick={addToChest}
-                            disabled={adding}
-                            className={
-                              "px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm md:text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
-                              (adding
-                                ? "opacity-60 cursor-not-allowed"
-                                : "hover:bg-amber-400 hover:text-neutral-900")
-                            }
-                            aria-label={`Add ${card.title} to Chest`}
-                          >
-                            {adding ? "Adding..." : "Add to Chest"}
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* BEAN TYPE BOX */}
-                      <div
-                        className={
-                          "group inline-flex w-full md:w-auto items-center justify-between gap-4 rounded-xl p-3 px-4 shadow-md transition mt-3 md:mt-0 " +
-                          (showBeanError
-                            ? "border border-red-500 ring-2 ring-red-500 animate-pulse bg-black/70"
-                            : "border border-amber-400/60 bg-black/70 shadow-amber-400/10 hover:border-amber-400/80 hover:shadow-[0_0_0_2px_rgba(251,191,36,0.25)]")
-                        }
-                        style={{
-                          minHeight: buyBoxDims.h
-                            ? `${buyBoxDims.h}px`
-                            : undefined,
-                          height: buyBoxDims.h
-                            ? `${buyBoxDims.h}px`
-                            : undefined,
-                          width: buyBoxDims.w ? undefined : undefined,
-                        }}
-                      >
-                        <div className="text-sm text-neutral-300">
-                          <div className="font-semibold text-amber-300">
-                            Bean Type
-                          </div>
-                          <div className="text-xs text-neutral-400 mt-0.5">
-                            12oz bags
-                          </div>
-                        </div>
-
-                        <label
-                          htmlFor="beanTypeSelectDesktop"
-                          className="sr-only"
-                        >
-                          Bean Type
-                        </label>
-                        <BeanTypeSelect
-                          id="beanTypeSelectDesktop"
-                          beanType={beanType}
-                          setBeanType={setBeanType}
-                          setShowBeanError={setShowBeanError}
-                          ariaInvalid={showBeanError}
-                          className={
-                            "min-w-[10rem] md:min-w-[12rem] rounded-lg border px-3 py-2 text-sm outline-none bg-black/70 " +
-                            (beanType
-                              ? "border-amber-400/70 text-amber-300"
-                              : "border-neutral-700 text-neutral-400") +
-                            " focus-visible:ring-2 focus-visible:ring-amber-400"
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  {/* ===== END DESKTOP BUY BOX ===== */}
-
-                  {/* ===== SUBSCRIBE & SAVE (Desktop only) ===== */}
-                  <div
-                    className={`hidden md:block order-3 md:order-3 mt-6 w-full ${
-                      DESKTOP_BUYBOX_SHIFT[card.slug] || ""
-                    }`}
-                  >
-                    {/* mode selector */}
-                    <div className="inline-flex items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-4 px-5 shadow-md shadow-amber-400/10 w-full md:w-fit">
-                      <button
-                        type="button"
-                        onClick={() => setPurchaseMode("one")}
-                        className={
-                          "px-3 py-1.5 rounded-lg border text-xs md:text-sm leading-none tracking-tight font-semibold transition w-full sm:w-auto text-center " +
-                          (purchaseMode === "one"
-                            ? "bg-amber-400 text-neutral-900 border-amber-400"
-                            : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
-                        }
-                        aria-pressed={purchaseMode === "one"}
-                      >
-                        Single Purchase
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setPurchaseMode("sub")}
-                        className={
-                          "px-4 py-2 rounded-lg border text-sm md:text-base font-semibold transition w-full sm:w-auto text-center " +
-                          (purchaseMode === "sub"
-                            ? "bg-amber-400 text-neutral-900 border-amber-400"
-                            : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
-                        }
-                        aria-pressed={purchaseMode === "sub"}
-                      >
-                        {isOak ? "Join the Fleet" : "Join the Fleet & Save 15%"}
-                      </button>
-                      <span className="hidden md:block text-sm text-amber-300 font-semibold whitespace-nowrap">
-                        Combine any 3+ roasts and get free shipping
-                      </span>
-                    </div>
-
-                    {/* sub frequency */}
-                    {purchaseMode === "sub" && (
-                      <div className="mt-3 mb-4 w-full max-w-[36rem]">
-                        <div className="flex flex-wrap items-center gap-3">
-                          <div className="text-base md:text-[1.15rem] text-amber-300 font-medium">
-                            Deliver every:
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {[14, 30, 60].map((d) => (
-                              <button
-                                key={d}
-                                type="button"
-                                onClick={() => setSubEvery(d as 14 | 30 | 60)}
-                                className={
-                                  "px-3 py-1.5 rounded-lg border text-sm transition " +
-                                  (subEvery === d
-                                    ? "border-amber-400/70 text-amber-300 bg-black"
-                                    : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
-                                }
-                                aria-pressed={subEvery === d}
-                              >
-                                {d} days
-                              </button>
-                            ))}
-
-                            <span className="ml-3 text-xs text-amber-300 whitespace-nowrap font-medium">
-                              Skip or cancel anytime
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  {/* ===== END SUBSCRIBE ===== */}
-                </>
+                <BuyBoxSection
+                  card={card}
+                  isOak={isOak}
+                  purchaseMode={purchaseMode}
+                  setPurchaseMode={setPurchaseMode}
+                  subEvery={subEvery}
+                  setSubEvery={setSubEvery}
+                  basePrice={basePrice}
+                  discounted={discounted}
+                  beanType={beanType}
+                  setBeanType={setBeanType}
+                  showBeanError={showBeanError}
+                  setShowBeanError={setShowBeanError}
+                  qty={qty}
+                  setQty={setQty}
+                  addToChest={addToChest}
+                  adding={adding}
+                  buyBoxRef={buyBoxRef}
+                  buyBoxDims={buyBoxDims}
+                />
               )}
 
               {/* ===== STORY CONTENT (Mobile #4, Desktop #2) ===== */}

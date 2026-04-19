@@ -3607,21 +3607,13 @@ function RoastDetailPage() {
   const [merchandiseId, setMerchandiseId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   // Use the real Shopify product handles now
-  const handleMap: Record<string, string> = {
-    flagship: "flagship",
-    "baptism-by-fire": "baptism-by-fire",
-    "java-action": "java-action",
-    "oak-and-copper": "oak-and-copper",
-    "brass-monkey": "brass-monkey",
-    "black-salvo": "black-salvo",
-  };
 
   // Reset Bean Type selector whenever you navigate to a different roast page
   useEffect(() => {
     let cancelled = false;
     async function run() {
       try {
-        const handle = handleMap[String(slug)] ?? String(slug);
+        const handle = String(slug);
         const p = await getProductByHandle(handle);
 
         // DEBUG: confirm selling plans are coming through
@@ -4311,13 +4303,7 @@ function RoastDetailPage() {
                 <>
                   <div
                     className={`hidden md:block order-2 md:order-4 mt-6 w-full ${
-                      {
-                        "baptism-by-fire": "md:-translate-y-16",
-                        "java-action": "md:-translate-y-8",
-                        "oak-and-copper": "md:-translate-y-12",
-                        "brass-monkey": "md:-translate-y-12",
-                        "black-salvo": "md:-translate-y-12",
-                      }[card.slug] || ""
+                      DESKTOP_BUYBOX_SHIFT[card.slug] || ""
                     }`}
                   >
                     <div className="flex flex-col md:flex-row md:items-stretch md:gap-4">
@@ -4486,13 +4472,7 @@ function RoastDetailPage() {
                   {/* ===== SUBSCRIBE & SAVE (Desktop only) ===== */}
                   <div
                     className={`hidden md:block order-3 md:order-3 mt-6 w-full ${
-                      {
-                        "baptism-by-fire": "md:-translate-y-16",
-                        "java-action": "md:-translate-y-8",
-                        "oak-and-copper": "md:-translate-y-12",
-                        "brass-monkey": "md:-translate-y-12",
-                        "black-salvo": "md:-translate-y-12",
-                      }[card.slug] || ""
+                      DESKTOP_BUYBOX_SHIFT[card.slug] || ""
                     }`}
                   >
                     {/* mode selector */}
@@ -4763,6 +4743,14 @@ function OriginImg({
 function LocalFlashBanner() {
   return null;
 }
+
+const DESKTOP_BUYBOX_SHIFT: Record<string, string> = {
+  "baptism-by-fire": "md:-translate-y-16",
+  "java-action": "md:-translate-y-8",
+  "oak-and-copper": "md:-translate-y-12",
+  "brass-monkey": "md:-translate-y-12",
+  "black-salvo": "md:-translate-y-12",
+};
 
 const CRAFT_IN_THE_CUP_DATA: Record<
   string,

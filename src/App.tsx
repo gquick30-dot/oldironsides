@@ -4984,7 +4984,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
 > = {
   flagship: {
     description:
-      "Your go-to daily coffee. Smooth, balanced, and dependable with a clean finish that never gets old.",
+      "A smooth, full-bodied medium roast made for everyday drinking. Balanced, never bitter, and rich enough to enjoy black or with cream and sugar.",
     bestFor: ["Daily drinkers", "Drip", "French press", "Cold brew"],
     notes: ["Hazelnut", "Warm Spice", "Creamy Finish"],
     origins: ["El Salvador", "Indonesia"],
@@ -4999,7 +4999,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
   },
   "baptism-by-fire": {
     description:
-      "Dark, bold, and unapologetic. Built for those who want a heavier cup with depth, bite, and a smooth finish.",
+      "The darkest roast in the fleet. Bold, commanding, and full-bodied, delivering deep chocolate richness with a smooth finish that never turns bitter. Strength and flavor, without the burnt taste.",
     bestFor: [
       "Dark roast lovers",
       "Strong coffee drinkers",
@@ -5017,7 +5017,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
 
   "java-action": {
     description:
-      "Smooth with character. A balanced medium roast with layered sweetness and a crisp, clean finish.",
+      "A smooth, balanced medium roast with a creamy sweet finish and just enough depth to keep things interesting. Rich, satisfying, and easy to drink black or with a touch of cream.",
     bestFor: ["Daily drinkers", "Drip", "Pour over", "French press"],
     notes: ["Hazelnut", "Caramel", "Red Apple"],
     origins: ["Guatemala", "Ethiopia", "Colombia"],
@@ -5037,7 +5037,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
 
   "black-salvo": {
     description:
-      "Power and precision in one cup. Espresso-driven with bold depth, smooth texture, and a clean finish.",
+      "Our most versatile blend in the fleet. Makes amazing espressos while also delivering a very smooth, easy drinking cup across any brew method.",
     bestFor: ["Espresso", "Drip", "Pour over"],
     notes: ["Warm Vanilla", "Cocoa", "Toasted Almond"],
     origins: ["Ethiopia", "Brazil"],
@@ -5050,7 +5050,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
 
   "oak-and-copper": {
     description:
-      "Refined and elevated. A bourbon barrel-aged roast with smooth warmth, subtle oak, and a clean, premium finish.",
+      "Coffee beans aged in freshly emptied bourbon barrels, slowly absorbing notes of oak, caramel, and warm spice. Roasted to reveal a rich, smooth cup with subtle bourbon character and deep complexity. Never artificially flavored.",
     bestFor: ["Bourbon lovers", "Premium drip", "Pour over", "Espresso"],
     notes: ["Warm Vanilla", "Caramel", "Toasted Oak"],
     origins: ["Colombia"],
@@ -5063,7 +5063,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
 
   "brass-monkey": {
     description:
-      "Built for cold mornings. Warm, rich, and comforting with deep sweetness and a bold, satisfying finish.",
+      "A Southern pecan roast crafted for winter comfort. Smooth and full-bodied with subtle notes of toasted pecan, brown sugar, and warm spice — lightly flavored and perfectly balanced.",
     bestFor: ["Cold weather mornings", "Drip", "French press"],
     notes: ["Southern Pecan", "Brown Sugar", "Warm Spice"],
     origins: ["Brazil"],

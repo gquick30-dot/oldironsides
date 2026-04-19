@@ -4716,25 +4716,51 @@ function RoastDetailPage() {
 
               {/* ===== MOBILE BUY BOX STYLE (md:hidden) ===== */}
               {(card.canBuy || isOak) && (
-                <BuyBoxSection
-                  mobile
-                  card={card}
-                  isOak={isOak}
-                  purchaseMode={purchaseMode}
-                  setPurchaseMode={setPurchaseMode}
-                  subEvery={subEvery}
-                  setSubEvery={setSubEvery}
-                  basePrice={basePrice}
-                  discounted={discounted}
-                  beanType={beanType}
-                  setBeanType={setBeanType}
-                  showBeanError={showBeanError}
-                  setShowBeanError={setShowBeanError}
-                  qty={qty}
-                  setQty={setQty}
-                  addToChest={addToChest}
-                  adding={adding}
-                />
+                <>
+                  <BuyBoxSection
+                    mobile
+                    card={card}
+                    isOak={isOak}
+                    purchaseMode={purchaseMode}
+                    setPurchaseMode={setPurchaseMode}
+                    subEvery={subEvery}
+                    setSubEvery={setSubEvery}
+                    basePrice={basePrice}
+                    discounted={discounted}
+                    beanType={beanType}
+                    setBeanType={setBeanType}
+                    showBeanError={showBeanError}
+                    setShowBeanError={setShowBeanError}
+                    qty={qty}
+                    setQty={setQty}
+                    addToChest={addToChest}
+                    adding={adding}
+                  />
+
+                  {mobileToast && (
+                    <div className="fixed left-0 right-0 top-1/2 transform -translate-y-1/2 z-[9999] px-4 md:hidden">
+                      <div className="w-full rounded-lg border border-amber-400/70 bg-amber-400/90 text-black shadow-lg shadow-amber-400/20 px-6 py-4 flex items-center justify-center gap-4">
+                        <div className="flex-1 text-center">
+                          <div className="text-xl font-bold text-black">
+                            Added to Chest
+                          </div>
+                          <div className="text-lg font-bold text-neutral-800 leading-snug">
+                            {mobileToast.qty} × {mobileToast.title}
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => setMobileToast(null)}
+                          className="text-[12px] text-neutral-500 hover:text-neutral-200"
+                          aria-label="Close message"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
 
               {/* ================= DESKTOP VERSION (hidden on mobile) ================= */}

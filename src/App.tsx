@@ -3476,6 +3476,193 @@ function PriceDisplay({
     </>
   );
 }
+function QuantityControl({
+  qty,
+  setQty,
+  className = "",
+  inputClassName = "",
+  buttonClassName = "",
+}: {
+  qty: number;
+  setQty: React.Dispatch<React.SetStateAction<number>>;
+  className?: string;
+  inputClassName?: string;
+  buttonClassName?: string;
+}) {
+  const displayQty = qty === 0 ? "" : String(qty);
+  return (
+    <div className={className}>
+      <button
+        type="button"
+        onClick={() => setQty((q) => Math.max(1, (q || 1) - 1))}
+        className={`${buttonClassName} rounded-l-lg`}
+        aria-label="Decrease quantity"
+      >
+        <Minus className="h-4 w-4" />
+      </button>
+
+      <input
+        value={displayQty}
+        onChange={(e) => {
+          const digits = e.target.value.replace(/\D/g, "");
+          if (digits === "") {
+            setQty(0);
+            return;
+          }
+          setQty(Math.min(99, Number(digits)));
+        }}
+        inputMode="numeric"
+        pattern="[0-9]*"
+        aria-label="Quantity"
+        className={inputClassName}
+        onBlur={() => {
+          setQty((q) => {
+            const n = Number.isFinite(q) ? q : 1;
+            return Math.min(99, Math.max(1, n));
+          });
+        }}
+      />
+      <button
+        type="button"
+        onClick={() => setQty((q) => Math.min(99, (q || 1) + 1))}
+        className={`${buttonClassName} rounded-r-lg`}
+        aria-label="Increase quantity"
+      >
+        <Plus className="h-4 w-4" />
+      </button>
+    </div>
+  );
+}
+function BeanTypeSelect({
+  id,
+  beanType,
+  setBeanType,
+  setShowBeanError,
+  className = "",
+  ariaInvalid,
+}: {
+  id: string;
+  beanType: "" | "whole" | "ground";
+  setBeanType: React.Dispatch<React.SetStateAction<"" | "whole" | "ground">>;
+  setShowBeanError: React.Dispatch<React.SetStateAction<boolean>>;
+  className?: string;
+  ariaInvalid?: boolean;
+}) {
+  return (
+    <select
+      id={id}
+      value={beanType}
+      onChange={(e) => {
+        setBeanType(e.target.value as "" | "whole" | "ground");
+        setShowBeanError(false);
+      }}
+      className={className}
+      aria-invalid={ariaInvalid || undefined}
+    >
+      <option value="">Choose...</option>
+      <option value="whole">12oz Whole Bean</option>
+      <option value="ground">12oz Ground</option>
+    </select>
+  );
+}
+function StarRatingDisplay({
+  avg,
+  sizeClass = "h-4 w-4",
+  clipWidthBase = 24,
+  clipIdPrefix = "star",
+  numberClassName = "",
+  count,
+  countClassName = "",
+  showNumber = false,
+  showCount = false,
+  linkToReviews = false,
+}: {
+  avg: number;
+  sizeClass?: string;
+  clipWidthBase?: number;
+  clipIdPrefix?: string;
+  numberClassName?: string;
+  count?: number;
+  countClassName?: string;
+  showNumber?: boolean;
+  showCount?: boolean;
+  linkToReviews?: boolean;
+}) {
+  const stars = (
+    <>
+      {showNumber && <span className={numberClassName}>{avg.toFixed(1)}</span>}
+
+      <div className="inline-flex items-center gap-0.5">
+        {[0, 1, 2, 3, 4].map((i) => {
+          const starFill = Math.max(0, Math.min(1, avg - i));
+          const clipWidth = clipWidthBase * starFill;
+          const clipId = `${clipIdPrefix}-${i}`;
+          return (
+            <svg key={i} viewBox="0 0 24 24" className={sizeClass} aria-hidden>
+              <defs>
+                <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+                  <rect x="0" y="0" width={clipWidth} height="24" />
+                </clipPath>
+              </defs>
+
+              <path
+                d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                className="text-neutral-800"
+                fill="currentColor"
+              />
+
+              <path
+                d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                className="text-amber-400"
+                fill="currentColor"
+                clipPath={`url(#${clipId})`}
+              />
+
+              <path
+                d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
+                fill="none"
+                stroke="currentColor"
+                className="text-neutral-600"
+                strokeWidth="1.6"
+                strokeLinejoin="round"
+              />
+            </svg>
+          );
+        })}
+        <span className="sr-only">{avg.toFixed(1)} out of 5 stars</span>
+      </div>
+
+      {showCount && typeof count === "number" && (
+        <span className={countClassName}>{count} REVIEWS</span>
+      )}
+    </>
+  );
+
+  if (linkToReviews) {
+    return (
+      <a
+        href="#reviews"
+        onClick={(e) => {
+          e.preventDefault();
+          const el = document.getElementById("reviews");
+          if (!el) return;
+          const mobileOffset = 200;
+          const desktopOffset = 260;
+          const offset = window.innerWidth < 768 ? mobileOffset : desktopOffset;
+          const top = el.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top, behavior: "smooth" });
+        }}
+        className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+        aria-label="Jump to customer reviews"
+        title="Jump to customer reviews"
+      >
+        {stars}
+      </a>
+    );
+  }
+
+  return <div className="inline-flex items-center gap-2">{stars}</div>;
+}
 function RoastDetailPage() {
   const { slug } = useParams();
 
@@ -3964,98 +4151,17 @@ function RoastDetailPage() {
 
                       {/* Stars + avg + count */}
                       <div className="flex items-center gap-2 shrink-0">
-                        {/* numeric value */}
-                        <span className="text-amber-300 font-semibold tabular-nums text-sm md:text-base">
-                          {reviewData.avg.toFixed(1)}
-                        </span>
-
-                        {/* stars */}
-                        <a
-                          href="#reviews"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            const el = document.getElementById("reviews");
-                            if (!el) return;
-                            const mobileOffset = 200;
-                            const desktopOffset = 260;
-                            const offset =
-                              window.innerWidth < 768
-                                ? mobileOffset
-                                : desktopOffset;
-                            const top =
-                              el.getBoundingClientRect().top +
-                              window.scrollY -
-                              offset;
-                            window.scrollTo({ top, behavior: "smooth" });
-                          }}
-                          className="inline-flex items-center gap-0.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-                          aria-label="Jump to customer reviews"
-                          title="Jump to customer reviews"
-                        >
-                          {[0, 1, 2, 3, 4].map((i) => {
-                            const starFill = Math.max(
-                              0,
-                              Math.min(1, (reviewData.avg ?? 0) - i)
-                            );
-                            const clipWidth = 24 * starFill;
-                            const clipId = `titleStarClip-${i}`;
-                            return (
-                              <svg
-                                key={i}
-                                viewBox="0 0 24 24"
-                                className="h-4 w-4 md:h-5 md:w-5"
-                                aria-hidden
-                              >
-                                <defs>
-                                  <clipPath
-                                    id={clipId}
-                                    clipPathUnits="userSpaceOnUse"
-                                  >
-                                    <rect
-                                      x="0"
-                                      y="0"
-                                      width={clipWidth}
-                                      height="24"
-                                    />
-                                  </clipPath>
-                                </defs>
-
-                                {/* base (neutral) */}
-                                <path
-                                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                  className="text-neutral-800"
-                                  fill="currentColor"
-                                />
-
-                                {/* amber fill clipped */}
-                                <path
-                                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                  className="text-amber-400"
-                                  fill="currentColor"
-                                  clipPath={`url(#${clipId})`}
-                                />
-
-                                {/* outline */}
-                                <path
-                                  d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  className="text-neutral-600"
-                                  strokeWidth="1.4"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                            );
-                          })}
-                          <span className="sr-only">
-                            {reviewData.avg.toFixed(1)} out of 5 stars
-                          </span>
-                        </a>
-
-                        {/* review count */}
-                        <span className="text-[10px] md:text-xs text-neutral-400/80 tracking-wide whitespace-nowrap">
-                          {reviewData.count} REVIEWS
-                        </span>
+                        <StarRatingDisplay
+                          avg={reviewData.avg ?? 0}
+                          count={reviewData.count}
+                          sizeClass="h-4 w-4 md:h-5 md:w-5"
+                          clipIdPrefix="titleStar"
+                          numberClassName="text-amber-300 font-semibold tabular-nums text-sm md:text-base"
+                          countClassName="text-[10px] md:text-xs text-neutral-400/80 tracking-wide whitespace-nowrap"
+                          showNumber
+                          showCount
+                          linkToReviews
+                        />
                       </div>
                     </div>
 
@@ -4238,27 +4344,19 @@ function RoastDetailPage() {
                         >
                           Bean Type
                         </label>
-                        <select
+                        <BeanTypeSelect
                           id="beanTypeSelectMobile"
-                          value={beanType}
-                          onChange={(e) => {
-                            setBeanType(
-                              e.target.value as "" | "whole" | "ground"
-                            );
-                            setShowBeanError(false);
-                          }}
+                          beanType={beanType}
+                          setBeanType={setBeanType}
+                          setShowBeanError={setShowBeanError}
                           className={
-                            "min-w-[15rem] border px-2 py-2 text-sm text-center outline-none bg-neutral-950 md:bg-black/70" +
+                            "min-w-[15rem] border px-2 py-2 text-sm text-center outline-none bg-neutral-950 md:bg-black/70 " +
                             (beanType
                               ? "border-amber-400/70 text-amber-300"
                               : "border-neutral-700 text-neutral-400") +
                             " focus-visible:ring-2 focus-visible:ring-amber-400"
                           }
-                        >
-                          <option value="">Choose...</option>
-                          <option value="whole">12oz Whole Bean</option>
-                          <option value="ground">12oz Ground</option>
-                        </select>
+                        />
                       </div>
                     </div>
                   </div>
@@ -4266,47 +4364,13 @@ function RoastDetailPage() {
                   {/* QTY + ADD ROW */}
                   <div className="mt-4 flex items-center gap-3">
                     {/* qty box */}
-                    <div className="inline-flex items-center border border-neutral-700">
-                      <button
-                        type="button"
-                        onClick={() => setQty((q) => Math.max(1, (q || 1) - 1))}
-                        className="px-3 py-2 text-neutral-200"
-                        aria-label="Decrease quantity"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </button>
-
-                      <input
-                        value={String(qty)}
-                        onChange={(e) => {
-                          const digits = e.target.value.replace(/\D/g, "");
-                          const next =
-                            digits === "" ? 1 : Math.min(99, Number(digits));
-                          setQty(next);
-                        }}
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        aria-label="Quantity"
-                        className="w-12 text-center bg-neutral-900/70 py-2 text-sm text-neutral-100 outline-none"
-                        onBlur={() => {
-                          setQty((q) => {
-                            const n = Number.isFinite(q) ? q : 1;
-                            return Math.min(99, Math.max(1, n));
-                          });
-                        }}
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setQty((q) => Math.min(99, (q || 1) + 1))
-                        }
-                        className="px-3 py-2 text-neutral-200"
-                        aria-label="Increase quantity"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
-                    </div>
+                    <QuantityControl
+                      qty={qty}
+                      setQty={setQty}
+                      className="inline-flex items-center border border-neutral-700"
+                      buttonClassName="px-3 py-2 text-neutral-200"
+                      inputClassName="w-12 text-center bg-neutral-900/70 py-2 text-sm text-neutral-100 outline-none"
+                    />
 
                     {/* ADD TO CHEST */}
                     <button
@@ -4384,54 +4448,13 @@ function RoastDetailPage() {
 
                         {/* Qty + Add */}
                         <div className="ml-auto inline-flex items-center gap-4">
-                          <div className="inline-flex items-center rounded-lg border border-neutral-700">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setQty((q) => Math.max(1, (q || 1) - 1))
-                              }
-                              className="px-2 py-1 hover:bg-neutral-800 rounded-l-lg"
-                              aria-label="Decrease quantity"
-                            >
-                              <Minus className="h-4 w-4" />
-                            </button>
-
-                            <input
-                              value={String(qty)}
-                              onChange={(e) => {
-                                const digits = e.target.value.replace(
-                                  /\D/g,
-                                  ""
-                                );
-                                const next =
-                                  digits === ""
-                                    ? 1
-                                    : Math.min(99, Number(digits));
-                                setQty(next);
-                              }}
-                              inputMode="numeric"
-                              pattern="[0-9]*"
-                              aria-label="Quantity"
-                              className="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
-                              onBlur={() => {
-                                setQty((q) => {
-                                  const n = Number.isFinite(q) ? q : 1;
-                                  return Math.min(99, Math.max(1, n));
-                                });
-                              }}
-                            />
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setQty((q) => Math.min(99, (q || 1) + 1))
-                              }
-                              className="px-2 py-1 hover:bg-neutral-800 rounded-r-lg"
-                              aria-label="Increase quantity"
-                            >
-                              <Plus className="h-4 w-4" />
-                            </button>
-                          </div>
+                          <QuantityControl
+                            qty={qty}
+                            setQty={setQty}
+                            className="inline-flex items-center rounded-lg border border-neutral-700"
+                            buttonClassName="px-2 py-1 hover:bg-neutral-800"
+                            inputClassName="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
+                          />
 
                           <button
                             type="button"
@@ -4483,15 +4506,12 @@ function RoastDetailPage() {
                         >
                           Bean Type
                         </label>
-                        <select
+                        <BeanTypeSelect
                           id="beanTypeSelectDesktop"
-                          value={beanType}
-                          onChange={(e) => {
-                            setBeanType(
-                              e.target.value as "" | "whole" | "ground"
-                            );
-                            setShowBeanError(false);
-                          }}
+                          beanType={beanType}
+                          setBeanType={setBeanType}
+                          setShowBeanError={setShowBeanError}
+                          ariaInvalid={showBeanError}
                           className={
                             "min-w-[10rem] md:min-w-[12rem] rounded-lg border px-3 py-2 text-sm outline-none bg-black/70 " +
                             (beanType
@@ -4499,12 +4519,7 @@ function RoastDetailPage() {
                               : "border-neutral-700 text-neutral-400") +
                             " focus-visible:ring-2 focus-visible:ring-amber-400"
                           }
-                          aria-invalid={showBeanError || undefined}
-                        >
-                          <option value="">Choose...</option>
-                          <option value="whole">12oz Whole Bean</option>
-                          <option value="ground">12oz Ground</option>
-                        </select>
+                        />
                       </div>
                     </div>
                   </div>
@@ -5064,65 +5079,16 @@ function RoastLevelAnchors({
 
             {/* Row under title: rating num, stars, count */}
             <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-center">
-              {/* rating number */}
-              <span className="text-amber-300 font-semibold tabular-nums text-base">
-                {(reviewData?.avg ?? 0).toFixed(1)}
-              </span>
-
-              {/* stars */}
-              <div className="inline-flex items-center gap-0.5">
-                {[0, 1, 2, 3, 4].map((i) => {
-                  const avg = reviewData?.avg ?? 0;
-                  const starFill = Math.max(0, Math.min(1, avg - i));
-                  const clipWidth = 24 * starFill;
-                  const clipId = `reviewsStarClip-desktop-header-${i}`;
-                  return (
-                    <svg
-                      key={i}
-                      viewBox="0 0 24 24"
-                      className="h-6 w-6"
-                      aria-hidden
-                    >
-                      <defs>
-                        <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
-                          <rect x="0" y="0" width={clipWidth} height="24" />
-                        </clipPath>
-                      </defs>
-
-                      {/* base (neutral) */}
-                      <path
-                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                        className="text-neutral-800"
-                        fill="currentColor"
-                      />
-
-                      {/* amber fill clipped */}
-                      <path
-                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                        className="text-amber-400"
-                        fill="currentColor"
-                        clipPath={`url(#${clipId})`}
-                      />
-
-                      {/* outline stroke */}
-                      <path
-                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                        fill="none"
-                        stroke="currentColor"
-                        className="text-neutral-600"
-                        strokeWidth="1.6"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  );
-                })}
-                <span className="sr-only">
-                  {(reviewData?.avg ?? 0).toFixed(1)} out of 5 stars
-                </span>
-              </div>
-
-              {/* review count */}
-              <div className="text-neutral-400 text-lg">{total} REVIEWS</div>
+              <StarRatingDisplay
+                avg={reviewData?.avg ?? 0}
+                count={total}
+                sizeClass="h-6 w-6"
+                clipIdPrefix="reviewsStarDesktopHeader"
+                numberClassName="text-amber-300 font-semibold tabular-nums text-base"
+                countClassName="text-neutral-400 text-lg"
+                showNumber
+                showCount
+              />
             </div>
           </div>
 
@@ -5350,65 +5316,18 @@ function RoastLevelAnchors({
 
           {/* Avg / Stars / Count */}
           <div className="mt-2 flex flex-col items-center justify-center gap-2 mb-4">
-            {/* rating number + stars on same row now */}
-            <div className="flex items-center gap-2">
-              <div className="text-amber-300 font-semibold tabular-nums text-base leading-none">
-                {(reviewData?.avg ?? 0).toFixed(1)}
-              </div>
-
-              <div className="inline-flex items-center gap-0.5">
-                {[0, 1, 2, 3, 4].map((i) => {
-                  const avg = reviewData?.avg ?? 0;
-                  const starFill = Math.max(0, Math.min(1, avg - i));
-                  const clipWidth = 20 * starFill;
-                  const clipId = `reviewsStarClip-mobile-${i}`;
-                  return (
-                    <svg
-                      key={i}
-                      viewBox="0 0 24 24"
-                      className="h-5 w-5"
-                      aria-hidden
-                    >
-                      <defs>
-                        <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
-                          <rect x="0" y="0" width={clipWidth} height="24" />
-                        </clipPath>
-                      </defs>
-
-                      <path
-                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                        className="text-neutral-800"
-                        fill="currentColor"
-                      />
-                      <path
-                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                        className="text-amber-400"
-                        fill="currentColor"
-                        clipPath={`url(#${clipId})`}
-                      />
-                      <path
-                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                        fill="none"
-                        stroke="currentColor"
-                        className="text-neutral-600"
-                        strokeWidth="1.6"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  );
-                })}
-                <span className="sr-only">
-                  {(reviewData?.avg ?? 0).toFixed(1)} out of 5 stars
-                </span>
-              </div>
-            </div>
-
-            {/* review count below */}
-            <div className="text-neutral-400 text-xs tracking-wide">
-              {total} REVIEWS
-            </div>
+            <StarRatingDisplay
+              avg={reviewData?.avg ?? 0}
+              count={total}
+              sizeClass="h-5 w-5"
+              clipWidthBase={20}
+              clipIdPrefix="reviewsStarMobileHeader"
+              numberClassName="text-amber-300 font-semibold tabular-nums text-base leading-none"
+              countClassName="text-neutral-400 text-xs tracking-wide"
+              showNumber
+              showCount
+            />
           </div>
-
           {/* Histogram: tighter padding to pull text closer to border */}
           <div className="mt-2 mx-auto w-full rounded-xl border border-amber-400/40 bg-black/40 p-3">
             {[5, 4, 3, 2, 1].map((s) => (

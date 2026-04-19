@@ -3442,6 +3442,40 @@ function useBuyBox(card: any) {
     discounted,
   };
 }
+function PriceDisplay({
+  basePrice,
+  discounted,
+  purchaseMode,
+  isOak,
+  sizeLabel = "/ 12oz bag",
+}: {
+  basePrice: number;
+  discounted: number;
+  purchaseMode: "one" | "sub";
+  isOak: boolean;
+  sizeLabel?: string;
+}) {
+  if (purchaseMode === "sub") {
+    return (
+      <>
+        {!isOak && (
+          <span className="line-through text-neutral-400 mr-2">
+            {fmt(basePrice)}
+          </span>
+        )}
+        <span className="font-semibold text-amber-300">{fmt(discounted)}</span>
+        <span className="text-xs text-neutral-500 ml-1">{sizeLabel}</span>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <span className="font-semibold text-amber-300">{fmt(basePrice)}</span>
+      <span className="text-xs text-neutral-500 ml-1">{sizeLabel}</span>
+    </>
+  );
+}
 function RoastDetailPage() {
   const { slug } = useParams();
 
@@ -4078,14 +4112,13 @@ function RoastDetailPage() {
                             <span className="text-base text-neutral-100 font-medium leading-none">
                               Single Purchase
                             </span>
-
                             <span className="text-sm text-neutral-300">
-                              <span className="font-semibold text-amber-300">
-                                {fmt(basePrice)}
-                              </span>
-                              <span className="text-xs text-neutral-500 ml-1">
-                                / 12oz bag
-                              </span>
+                              <PriceDisplay
+                                basePrice={basePrice}
+                                discounted={discounted}
+                                purchaseMode="one"
+                                isOak={isOak}
+                              />
                             </span>
                           </div>
                         </div>
@@ -4129,20 +4162,13 @@ function RoastDetailPage() {
                             <span className="text-base text-neutral-100 font-medium leading-none">
                               {isOak ? "Join The Fleet" : "Join The Fleet"}
                             </span>
-
                             <span className="text-sm text-neutral-300">
-                              {!isOak && (
-                                <span className="line-through text-neutral-400 mr-2">
-                                  {fmt(basePrice)}
-                                </span>
-                              )}
-                              <span className="font-semibold text-amber-300">
-                                {fmt(discounted)}
-                              </span>
-
-                              <span className="text-xs text-neutral-500 ml-1">
-                                / 12oz bag
-                              </span>
+                              <PriceDisplay
+                                basePrice={basePrice}
+                                discounted={discounted}
+                                purchaseMode="sub"
+                                isOak={isOak}
+                              />
                             </span>
                           </div>
                           {/* under-row: SAVE 15% pill */}
@@ -4347,31 +4373,13 @@ function RoastDetailPage() {
                       >
                         {/* Price */}
                         <div className="text-sm text-neutral-300">
-                          {purchaseMode === "sub" ? (
-                            <>
-                              {!isOak && (
-                                <span className="line-through text-amber-300/80 mr-1">
-                                  {fmt(basePrice)}
-                                </span>
-                              )}
-                              <span className="font-semibold text-amber-300">
-                                {fmt(discounted)}
-                              </span>
-
-                              <span className="text-xs text-neutral-400 ml-1">
-                                / bag
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <span className="font-semibold text-amber-300">
-                                {fmt(basePrice)}
-                              </span>
-                              <span className="text-xs text-neutral-400 ml-1">
-                                / bag
-                              </span>
-                            </>
-                          )}
+                          <PriceDisplay
+                            basePrice={basePrice}
+                            discounted={discounted}
+                            purchaseMode={purchaseMode}
+                            isOak={isOak}
+                            sizeLabel="/ bag"
+                          />
                         </div>
 
                         {/* Qty + Add */}

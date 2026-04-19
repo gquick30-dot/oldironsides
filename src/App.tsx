@@ -3663,6 +3663,32 @@ function StarRatingDisplay({
 
   return <div className="inline-flex items-center gap-2">{stars}</div>;
 }
+function ReviewStars({
+  rating,
+  sizeClass = "h-4 w-4",
+}: {
+  rating: number;
+  sizeClass?: string;
+}) {
+  return (
+    <div className="mt-1 flex items-center gap-1">
+      {[...Array(5)].map((_, i) => (
+        <svg
+          key={i}
+          viewBox="0 0 24 24"
+          fill={i < rating ? "currentColor" : "none"}
+          className={
+            `${sizeClass} ` +
+            (i < rating ? "text-amber-400" : "text-neutral-700")
+          }
+          stroke="currentColor"
+        >
+          <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
+        </svg>
+      ))}
+    </div>
+  );
+}
 function RoastDetailPage() {
   const { slug } = useParams();
 
@@ -5154,22 +5180,7 @@ function RoastLevelAnchors({
                   </div>
 
                   {/* Rating Stars */}
-                  <div className="mt-1 flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <svg
-                        key={i}
-                        viewBox="0 0 24 24"
-                        fill={i < r.rating ? "currentColor" : "none"}
-                        className={
-                          "h-4 w-4 " +
-                          (i < r.rating ? "text-amber-400" : "text-neutral-700")
-                        }
-                        stroke="currentColor"
-                      >
-                        <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                      </svg>
-                    ))}
-                  </div>
+                  <ReviewStars rating={r.rating} />
 
                   {/* Title for the Review */}
                   {r.title && (
@@ -5207,24 +5218,7 @@ function RoastLevelAnchors({
                       </div>
 
                       {/* Rating Stars */}
-                      <div className="mt-1 flex items-center gap-1">
-                        {[...Array(5)].map((_, i) => (
-                          <svg
-                            key={i}
-                            viewBox="0 0 24 24"
-                            fill={i < r.rating ? "currentColor" : "none"}
-                            className={
-                              "h-4 w-4 " +
-                              (i < r.rating
-                                ? "text-amber-400"
-                                : "text-neutral-700")
-                            }
-                            stroke="currentColor"
-                          >
-                            <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                          </svg>
-                        ))}
-                      </div>
+                      <ReviewStars rating={r.rating} />
 
                       {/* Title and Review Body */}
                       {r.title && (
@@ -5390,22 +5384,7 @@ function RoastLevelAnchors({
                   </div>
 
                   {/* Rating Stars */}
-                  <div className="mt-1 flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <svg
-                        key={i}
-                        viewBox="0 0 24 24"
-                        fill={i < r.rating ? "currentColor" : "none"}
-                        className={
-                          "h-4 w-4 " +
-                          (i < r.rating ? "text-amber-400" : "text-neutral-700")
-                        }
-                        stroke="currentColor"
-                      >
-                        <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                      </svg>
-                    ))}
-                  </div>
+                  <ReviewStars rating={r.rating} />
 
                   {/* Title */}
                   {r.title && (
@@ -5442,24 +5421,7 @@ function RoastLevelAnchors({
                         </div>
                       </div>
 
-                      <div className="mt-1 flex items-center gap-1">
-                        {[...Array(5)].map((_, i) => (
-                          <svg
-                            key={i}
-                            viewBox="0 0 24 24"
-                            fill={i < r.rating ? "currentColor" : "none"}
-                            className={
-                              "h-4 w-4 " +
-                              (i < r.rating
-                                ? "text-amber-400"
-                                : "text-neutral-700")
-                            }
-                            stroke="currentColor"
-                          >
-                            <path d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z" />
-                          </svg>
-                        ))}
-                      </div>
+                      <ReviewStars rating={r.rating} />
 
                       {r.title && (
                         <div className="mt-2 text-[0.8rem] font-semibold text-neutral-300 leading-snug">

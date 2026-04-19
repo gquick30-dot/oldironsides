@@ -3689,6 +3689,112 @@ function ReviewStars({
     </div>
   );
 }
+function ReviewCard({
+  r,
+  isMobile = false,
+}: {
+  r: Review;
+  isMobile?: boolean;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  const formattedDate = new Date(r.date).toLocaleDateString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "2-digit",
+  });
+
+  return (
+    <article
+      role="button"
+      tabIndex={0}
+      onClick={() => {
+        if (!expanded) setExpanded(true);
+      }}
+      onKeyDown={(e) => {
+        if (!expanded && (e.key === "Enter" || e.key === " ")) {
+          setExpanded(true);
+        }
+      }}
+      aria-expanded={expanded}
+      className={
+        "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
+        (expanded ? "z-[70]" : "") +
+        (isMobile ? " p-3" : " p-4")
+      }
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div className="font-semibold text-amber-300 text-sm leading-tight">
+          {r.name}
+        </div>
+        <div className="text-[10px] md:text-xs text-neutral-400">
+          {formattedDate}
+        </div>
+      </div>
+
+      {/* Stars */}
+      <ReviewStars rating={r.rating} />
+
+      {/* Title */}
+      {r.title && (
+        <div className="mt-2 text-[0.8rem] md:text-sm font-semibold text-neutral-300">
+          {r.title}
+        </div>
+      )}
+
+      {/* Body */}
+      {r.body && (
+        <p
+          className={
+            "mt-1 text-neutral-300 leading-relaxed " +
+            (isMobile
+              ? "text-[0.8rem] max-h-24 overflow-hidden"
+              : "text-sm max-h-16 overflow-hidden")
+          }
+        >
+          {r.body}
+        </p>
+      )}
+
+      {/* Verified */}
+      <div className="mt-3 text-[10px] md:text-[11px] uppercase tracking-wide text-amber-300/90">
+        Verified Buyer
+      </div>
+
+      {/* Expanded */}
+      {expanded && (
+        <div
+          className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-900 shadow-2xl shadow-amber-500/20 p-4"
+          onClick={() => setExpanded(false)}
+        >
+          <div className="flex items-start justify-between">
+            <div className="font-semibold text-amber-300">{r.name}</div>
+            <div className="text-xs text-neutral-400">{formattedDate}</div>
+          </div>
+
+          <ReviewStars rating={r.rating} />
+
+          {r.title && (
+            <div className="mt-2 text-sm font-semibold text-neutral-300">
+              {r.title}
+            </div>
+          )}
+
+          {r.body && (
+            <p className="mt-1 text-sm text-neutral-300 leading-relaxed">
+              {r.body}
+            </p>
+          )}
+
+          <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
+            Verified Buyer
+          </div>
+        </div>
+      )}
+    </article>
+  );
+}
 function RoastDetailPage() {
   const { slug } = useParams();
 
@@ -5086,10 +5192,6 @@ function RoastLevelAnchors({
   const start = (page - 1) * pageSize;
   const pageItems = (reviews || []).slice(start, start + pageSize);
 
-  const [expandedId, setExpandedId] = useState<string | null>(null);
-  const toggleExpand = (id: string) =>
-    setExpandedId((prev) => (prev === id ? null : id));
-
   return (
     <>
       <LocalFlashBanner />
@@ -5140,107 +5242,9 @@ function RoastLevelAnchors({
 
           {/* Testimonials grid */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-visible">
-            {pageItems.map((r) => {
-              const isOpen = expandedId === r.id;
-
-              // Format the date to MM/DD/YY
-              const formattedDate = new Date(r.date).toLocaleDateString(
-                "en-US",
-                {
-                  month: "2-digit",
-                  day: "2-digit",
-                  year: "2-digit",
-                }
-              );
-
-              return (
-                <article
-                  key={r.id}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => {
-                    if (!isOpen) toggleExpand(r.id);
-                  }}
-                  onKeyDown={(e) => {
-                    if (!isOpen && (e.key === "Enter" || e.key === " "))
-                      toggleExpand(r.id);
-                  }}
-                  aria-expanded={isOpen}
-                  className={
-                    "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-4 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
-                    (isOpen ? "z-[70]" : "")
-                  }
-                >
-                  {/* Name and Formatted Date */}
-                  <div className="flex items-center justify-between">
-                    <div className="font-semibold text-amber-300">{r.name}</div>
-                    <div className="text-xs text-neutral-400">
-                      {formattedDate}
-                    </div>
-                  </div>
-
-                  {/* Rating Stars */}
-                  <ReviewStars rating={r.rating} />
-
-                  {/* Title for the Review */}
-                  {r.title && (
-                    <div className="mt-2 text-sm font-semibold text-neutral-300">
-                      {r.title}
-                    </div>
-                  )}
-
-                  {/* Review Body */}
-                  {r.body ? (
-                    <p className="mt-1 text-sm text-neutral-300 leading-relaxed overflow-hidden max-h-16">
-                      {r.body}
-                    </p>
-                  ) : null}
-
-                  {/* Verified Buyer */}
-                  <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
-                    Verified Buyer
-                  </div>
-
-                  {/* Expanded View */}
-                  {isOpen && (
-                    <div
-                      className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-900 shadow-2xl shadow-amber-500/20 p-4 md:p-5"
-                      style={{ minHeight: 280 }}
-                      onClick={() => toggleExpand(r.id)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="font-semibold text-amber-300">
-                          {r.name}
-                        </div>
-                        <div className="text-xs text-neutral-400">
-                          {formattedDate}
-                        </div>
-                      </div>
-
-                      {/* Rating Stars */}
-                      <ReviewStars rating={r.rating} />
-
-                      {/* Title and Review Body */}
-                      {r.title && (
-                        <div className="mt-2 text-sm font-semibold text-neutral-300">
-                          {r.title}
-                        </div>
-                      )}
-                      {r.body ? (
-                        <p className="mt-1 text-sm text-neutral-300 leading-relaxed">
-                          {r.body}
-                        </p>
-                      ) : null}
-
-                      {/* Verified Buyer */}
-                      <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
-                        Verified Buyer
-                      </div>
-                    </div>
-                  )}
-                </article>
-              );
-            })}
+            {pageItems.map((r) => (
+              <ReviewCard key={r.id} r={r} />
+            ))}
           </div>
 
           {/* Pager */}
@@ -5344,105 +5348,9 @@ function RoastLevelAnchors({
 
           {/* Testimonials: tighter padding inside each card too */}
           <div className="mt-6 grid grid-cols-1 gap-4 overflow-visible">
-            {pageItems.map((r) => {
-              const isOpen = expandedId === r.id;
-              const formattedDate = new Date(r.date).toLocaleDateString(
-                "en-US",
-                {
-                  month: "2-digit",
-                  day: "2-digit",
-                  year: "2-digit",
-                }
-              );
-
-              return (
-                <article
-                  key={r.id}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => {
-                    if (!isOpen) toggleExpand(r.id);
-                  }}
-                  onKeyDown={(e) => {
-                    if (!isOpen && (e.key === "Enter" || e.key === " "))
-                      toggleExpand(r.id);
-                  }}
-                  aria-expanded={isOpen}
-                  className={
-                    "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 p-3 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
-                    (isOpen ? "z-[70]" : "")
-                  }
-                >
-                  {/* Header row */}
-                  <div className="flex items-start justify-between">
-                    <div className="font-semibold text-amber-300 text-sm leading-tight">
-                      {r.name}
-                    </div>
-                    <div className="text-[10px] text-neutral-400">
-                      {formattedDate}
-                    </div>
-                  </div>
-
-                  {/* Rating Stars */}
-                  <ReviewStars rating={r.rating} />
-
-                  {/* Title */}
-                  {r.title && (
-                    <div className="mt-2 text-[0.8rem] font-semibold text-neutral-300 leading-snug">
-                      {r.title}
-                    </div>
-                  )}
-
-                  {/* Body */}
-                  {r.body ? (
-                    <p className="mt-1 text-[0.8rem] text-neutral-300 leading-relaxed overflow-hidden max-h-24">
-                      {r.body}
-                    </p>
-                  ) : null}
-
-                  {/* Verified Buyer */}
-                  <div className="mt-3 text-[10px] uppercase tracking-wide text-amber-300/90">
-                    Verified Buyer
-                  </div>
-
-                  {/* Expanded View */}
-                  {isOpen && (
-                    <div
-                      className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-900 shadow-2xl shadow-amber-500/20 p-3"
-                      style={{ minHeight: 240 }}
-                      onClick={() => toggleExpand(r.id)}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="font-semibold text-amber-300 text-sm leading-tight">
-                          {r.name}
-                        </div>
-                        <div className="text-[10px] text-neutral-400">
-                          {formattedDate}
-                        </div>
-                      </div>
-
-                      <ReviewStars rating={r.rating} />
-
-                      {r.title && (
-                        <div className="mt-2 text-[0.8rem] font-semibold text-neutral-300 leading-snug">
-                          {r.title}
-                        </div>
-                      )}
-
-                      {r.body ? (
-                        <p className="mt-1 text-[0.8rem] text-neutral-300 leading-relaxed">
-                          {r.body}
-                        </p>
-                      ) : null}
-
-                      <div className="mt-3 text-[10px] uppercase tracking-wide text-amber-300/90">
-                        Verified Buyer
-                      </div>
-                    </div>
-                  )}
-                </article>
-              );
-            })}
+            {pageItems.map((r) => (
+              <ReviewCard key={r.id} r={r} isMobile />
+            ))}
           </div>
 
           {/* Pager (mobile) */}
@@ -5502,13 +5410,6 @@ function RoastLevelAnchors({
         {/* ================= END MOBILE ================= */}
 
         {/* Fullscreen dim behind expanded tile (both views) */}
-        {expandedId && (
-          <div
-            className="fixed inset-0 z-40 bg-black/40"
-            onClick={() => toggleExpand(expandedId)}
-            aria-hidden
-          />
-        )}
       </section>
     </>
   );

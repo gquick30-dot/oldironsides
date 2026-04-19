@@ -3414,6 +3414,34 @@ function FleetStoryPage() {
 }
 
 /* ================== ROAST DETAIL PAGE (CLEAN) ================== */
+function useBuyBox(card: any) {
+  const isOak = card.slug === "oak-and-copper";
+
+  const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("one");
+  const [subEvery, setSubEvery] = useState<14 | 30 | 60>(30);
+  const [qty, setQty] = useState(1);
+  const [beanType, setBeanType] = useState<"" | "whole" | "ground">("");
+  const [showBeanError, setShowBeanError] = useState(false);
+
+  const basePrice = isOak ? 27 : card.price ?? 22;
+  const discounted = isOak ? basePrice : Number((basePrice * 0.85).toFixed(2));
+
+  return {
+    isOak,
+    purchaseMode,
+    setPurchaseMode,
+    subEvery,
+    setSubEvery,
+    qty,
+    setQty,
+    beanType,
+    setBeanType,
+    showBeanError,
+    setShowBeanError,
+    basePrice,
+    discounted,
+  };
+}
 function RoastDetailPage() {
   const { slug } = useParams();
 
@@ -3542,11 +3570,21 @@ function RoastDetailPage() {
   const reviews: Review[] = reviewList;
 
   const { add } = useCart();
-  const [purchaseMode, setPurchaseMode] = useState<"one" | "sub">("one");
-  const [subEvery, setSubEvery] = useState<14 | 30 | 60>(30);
-  const [qty, setQty] = useState(1);
-  const [beanType, setBeanType] = useState<"" | "whole" | "ground">("");
-  const [showBeanError, setShowBeanError] = useState(false);
+  const {
+    isOak,
+    purchaseMode,
+    setPurchaseMode,
+    subEvery,
+    setSubEvery,
+    qty,
+    setQty,
+    beanType,
+    setBeanType,
+    showBeanError,
+    setShowBeanError,
+    basePrice,
+    discounted,
+  } = useBuyBox(card);
   // Shopify product + chosen variant
   const [shopifyProduct, setShopifyProduct] = useState<any>(null);
   // Map Seal plan names -> 14/30/60
@@ -3691,11 +3729,6 @@ function RoastDetailPage() {
       ro.disconnect();
     };
   }, []);
-
-  const isOak = card.slug === "oak-and-copper";
-
-  const basePrice = isOak ? 27 : card.price ?? 22;
-  const discounted = isOak ? basePrice : Number((basePrice * 0.85).toFixed(2));
 
   const addToChest = async () => {
     const n = Math.max(1, Math.min(99, Math.trunc(qty || 1)));

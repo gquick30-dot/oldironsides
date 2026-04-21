@@ -82,8 +82,27 @@ function PromoSubscribeTrigger() {
   return null;
 }
 
+function TrackPageview() {
+  React.useEffect(() => {
+    // Google Analytics (if installed)
+    if ((window as any).gtag) {
+      (window as any).gtag("event", "page_view", {
+        page_path: window.location.pathname,
+      });
+    }
+
+    // Meta Pixel (if installed)
+    if ((window as any).fbq) {
+      (window as any).fbq("track", "PageView");
+    }
+  }, []);
+
+  return null;
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    <TrackPageview />
     <App />
   </React.StrictMode>
 );

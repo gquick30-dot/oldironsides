@@ -36,6 +36,23 @@ import {
 } from "react-router-dom";
 
 import { DateTime } from "luxon";
+function RouteTracker() {
+  const location = useLocation();
+
+  React.useEffect(() => {
+    if ((window as any).gtag) {
+      (window as any).gtag("event", "page_view", {
+        page_path: location.pathname,
+      });
+    }
+
+    if ((window as any).fbq) {
+      (window as any).fbq("track", "PageView");
+    }
+  }, [location]);
+
+  return null;
+}
 // ---------- REVIEW TYPES & DEFAULT SUMMARY (no seeded text) ----------
 export type Review = {
   id: string;
@@ -12856,6 +12873,7 @@ export default function App() {
   useSmokeTests();
   return (
     <BrowserRouter>
+     <RouteTracker />
       <CartProvider>
         <ErrorBoundary>
           <AppShell />

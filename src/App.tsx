@@ -12873,7 +12873,7 @@ export default function App() {
   useSmokeTests();
   return (
     <BrowserRouter>
-     <RouteTracker />
+      <RouteTracker />
       <CartProvider>
         <ErrorBoundary>
           <AppShell />

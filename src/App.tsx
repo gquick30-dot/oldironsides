@@ -2534,16 +2534,30 @@ function HomePage() {
           <div className="absolute inset-0 bg-black/60" />
         </div>
 
-        <Container className="relative desktopHeroPad min-h-screen flex items-start pt-[26rem] pb-10 sm:pt-[24rem] sm:pb-14">
+        <Container className="relative desktopHeroPad min-h-[100svh] flex items-center pb-8 sm:pb-10">
           <style>{`
 @media (min-width: 768px) {
   #top .desktopHeroPad {
-    min-height: 100vh;
-    padding-top: 18rem;
-    padding-bottom: 5rem;
+    min-height: 100svh;
+    padding-top: clamp(7rem, 12svh, 11rem);
+    padding-bottom: clamp(2rem, 5svh, 4rem);
   }
+
   #top .heroCenter {
-    transform: translateY(0);
+    transform-origin: left center;
+    transform: translateY(1.5rem);
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 820px) {
+  #top .heroCenter {
+    transform: translateY(-0.5rem) scale(0.82);
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 740px) {
+  #top .heroCenter {
+    transform: translateY(-1rem) scale(0.74);
   }
 }
 `}</style>
@@ -2555,15 +2569,15 @@ function HomePage() {
 
               <h2
                 className="font-bebas leading-none tracking-wide text-left
-  text-[3.5rem] sm:text-[4.5rem] md:text-[5.5rem]"
+  text-[3.5rem] sm:text-[4.5rem] md:text-[4.4rem] xl:text-[5.5rem]"
               >
                 <span className="block text-ironsideWhite">VETERAN OWNED</span>
-                <span className="block text-ironsideBronze mt-4">
+                <span className="block text-ironsideBronze/90 mt-4">
                   VETERAN ROASTED
                 </span>
               </h2>
 
-              <div className="mt-10 space-y-3 font-oswald italic font-bold text-2xl md:text-3xl leading-tight">
+              <div className="mt-10 space-y-3 font-oswald italic font-bold text-xl md:text-2xl xl:text-3xl leading-tight">
                 <div className="text-ironsideWhite/85">
                   Roasted to order. Delivered fresh.
                 </div>
@@ -2575,7 +2589,7 @@ function HomePage() {
                 </div>
               </div>
 
-              <div className="w-full max-w-[28rem] mt-14">
+              <div className="w-full max-w-[24rem] xl:max-w-[28rem] mt-8 xl:mt-14">
                 <Link
                   to="/store"
                   className="w-full inline-flex items-center justify-center

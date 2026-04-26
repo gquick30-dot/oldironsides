@@ -2534,7 +2534,7 @@ function HomePage() {
           <div className="absolute inset-0 bg-black/60" />
         </div>
 
-        <Container className="relative desktopHeroPad min-h-[100svh] flex items-center pb-8 sm:pb-10">
+        <Container className="relative desktopHeroPad min-h-[100svh] flex items-center pb-8 sm:pb-10 px-10 xl:px-6">
           <style>{`
 @media (min-width: 768px) {
   #top .desktopHeroPad {
@@ -2551,13 +2551,15 @@ function HomePage() {
 
 @media (min-width: 1024px) and (max-height: 820px) {
   #top .heroCenter {
-    transform: translateY(-0.5rem) scale(0.82);
+    margin-left: 3rem;
+    transform: translateY(2rem) scale(0.82);
   }
 }
 
 @media (min-width: 1024px) and (max-height: 740px) {
   #top .heroCenter {
-    transform: translateY(-1rem) scale(0.74);
+    margin-left: 3.5rem;
+    transform: translateY(1.5rem) scale(0.74);
   }
 }
 `}</style>
@@ -10651,7 +10653,7 @@ function Layout() {
             (shrunk ? "bg-black" : "bg-transparent")
           }
         >
-          <Container className="flex flex-col items-start">
+          <Container className="flex flex-col items-start px-10 xl:px-6">
             <div
               className={
                 (shrunk ? "pt-3 pb-2" : "pt-8 pb-3") + " relative z-30"
@@ -10660,7 +10662,7 @@ function Layout() {
               {/* centered brand block with emblem on the left */}
               <div className="flex items-center justify-between w-full">
                 {/* LEFT: emblem + title */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 translate-x-14 2xl:translate-x-0">
                   <Link to="/" aria-label="Go to Home Port">
                     <img
                       src="/emblem-black.png"

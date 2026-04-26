@@ -2520,93 +2520,74 @@ function HomePage() {
     <>
       <header
         id="top"
-        className="relative overflow-hidden border-b border-neutral-800 z-[0]"
+        className="relative overflow-hidden border-b border-neutral-800 z-[0] min-h-screen"
         style={{ isolation: "isolate" }}
       >
-        {/* MOBILE hero background */}
-        <div className="absolute inset-0 lg:hidden bg-neutral-900">
+        {/* HERO background */}
+        <div className="absolute inset-0 bg-black flex items-start justify-center overflow-hidden">
           <img
-            src="officer-window3.1.jpg"
+            src="/first-fold.jpg"
             alt=""
-            className="w-full h-full object-cover object-center"
+            aria-hidden="true"
+            className="w-full h-full object-cover object-[center_30%] xl:object-[center_75%] 2xl:object-[center_90%]"
           />
-          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 bg-black/60" />
         </div>
 
-        {/* DESKTOP emblem */}
-        <img
-          src="emblem-black.png"
-          alt="Stormy sea"
-          className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78vw] max-w-[780px] object-contain opacity-10 md:opacity-[0.15] lg:opacity-10 pointer-events-none select-none z-10"
-        />
-        <div className="hidden md:block absolute inset-0 bg-neutral-950" />
-
-        <Container className="relative desktopHeroPad pt-[26rem] pb-10 sm:pt-[24rem] sm:pb-14">
+        <Container className="relative desktopHeroPad min-h-screen flex items-start pt-[26rem] pb-10 sm:pt-[24rem] sm:pb-14">
           <style>{`
 @media (min-width: 768px) {
   #top .desktopHeroPad {
-    padding-top: 4.5rem;
-    padding-bottom: 4.5rem;
+    min-height: 100vh;
+    padding-top: 18rem;
+    padding-bottom: 5rem;
   }
   #top .heroCenter {
-    transform: translateY(-10px);
+    transform: translateY(0);
   }
 }
 `}</style>
 
-          <div className="grid grid-cols-1 lg:grid-cols-10 xl:grid-cols-12 lg:gap-12 items-center text-center lg:text-left 2xl:-mx-24">
-            {/* LEFT HERO VIDEO */}
-            <div className="hidden lg:flex lg:col-span-2 xl:col-span-3 justify-start">
-              <div className="w-full max-w-[220px] md:max-w-[260px] lg:max-w-[330px] xl:max-w-[420px] h-[360px] md:h-[420px] lg:h-[400px] xl:h-[600px] rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  className="block w-full h-full object-cover"
-                >
-                  <source src="/short vid.mp4" type="video/mp4" />
-                </video>
-              </div>
-            </div>
-
+          <div className="grid grid-cols-1 items-center text-center lg:text-left">
             {/* HERO TEXT */}
-            <div className="lg:col-span-6 xl:col-span-6 flex flex-col items-center text-center heroCenter">
+            <div className="max-w-[560px] flex flex-col items-start text-left heroCenter">
               <div aria-hidden className="hidden md:block h-12 lg:h-16" />
 
               <h2
-                className="text-amber-400 font-extrabold leading-tight tracking-tight
-                text-[1.5rem] sm:text-[1.9rem] md:text-[3rem]"
-                style={{ fontFamily: "'Cinzel', serif" }}
+                className="font-bebas leading-none tracking-wide text-left
+  text-[3.5rem] sm:text-[4.5rem] md:text-[5.5rem]"
               >
-                ROASTED TO ORDER COFFEE
+                <span className="block text-ironsideWhite">VETERAN OWNED</span>
+                <span className="block text-ironsideBronze mt-4">
+                  VETERAN ROASTED
+                </span>
               </h2>
-              <div className="mt-1 text-neutral-300 text-[13px] sm:text-[15px] md:text-lg whitespace-nowrap">
-                Roasted Monday • Packed Tuesday • Ships Wednesday
-              </div>
-              <div aria-hidden className="h-2 md:h-3" />
 
-              <div className="w-full max-w-[28rem]">
+              <div className="mt-10 space-y-3 font-oswald italic font-bold text-2xl md:text-3xl leading-tight">
+                <div className="text-ironsideWhite/85">
+                  Roasted to order. Delivered fresh.
+                </div>
+                <div className="text-ironsideBronzeDark">
+                  Small batch, no compromises.
+                </div>
+                <div className="text-ironsideMuted">
+                  Peak freshness in every bag.
+                </div>
+              </div>
+
+              <div className="w-full max-w-[28rem] mt-14">
                 <Link
                   to="/store"
                   className="w-full inline-flex items-center justify-center
   px-10 py-5 sm:px-12 sm:py-6
-  rounded-xl bg-neutral-900 text-amber-400 font-extrabold
+  rounded-none bg-ironsideBronzeDark/60 text-black font-extrabold
   text-xl sm:text-lg md:text-[1.6rem] tracking-wide
-  border-2 border-amber-400 shadow-2xl shadow-amber-500/35
-  hover:bg-amber-400 hover:text-neutral-900
+  border-0 shadow-none
+hover:bg-ironsideBronze/60 hover:text-black
   transition-all duration-200"
                 >
-                  SHOP FRESH COFFEE
+                  SHOP COFFEE
                 </Link>
-                <div className="mt-2 text-[12px] sm:text-sm text-neutral-300 text-center">
-                  Small Batch
-                  <span className="mx-2 text-amber-400/70">•</span>
-                  Ethically Sourced
-                  <span className="mx-2 text-amber-400/70">•</span>
-                  Guaranteed Fresh
-                </div>
                 {/* STAR RATING */}
                 <div className="mt-3 text-center">
                   {siteRating && (
@@ -2680,17 +2661,6 @@ function HomePage() {
                   </div>
                 </div>
                 <RoastCTAInfo />
-              </div>
-            </div>
-
-            {/* RIGHT HERO IMAGE */}
-            <div className="hidden lg:flex lg:col-span-2 xl:col-span-3 justify-end">
-              <div className="w-full max-w-[220px] lg:max-w-[420px] ml-auto rounded-3xl overflow-hidden ring-1 ring-amber-400/40 shadow-2xl shadow-amber-500/20">
-                <img
-                  src="officer-window2.2.jpg"
-                  alt="Old Ironsides hero"
-                  className="block w-full h-auto max-h-[60vh] sm:max-h-[70vh] md:max-h-[calc(100vh-300px)] lg:max-h-[85vh] xl:max-h-[calc(100vh-300px)] object-cover"
-                />
               </div>
             </div>
           </div>
@@ -9886,8 +9856,8 @@ function HeaderNavLink({
       className={
         "px-1.5 py-1 rounded-md " +
         (isActive
-          ? "text-amber-300 font-semibold"
-          : "text-neutral-300 hover:text-amber-200") +
+          ? "text-ironsideBronzeDark font-semibold"
+          : "text-ironsideBronzeDark") +
         " text-base md:text-lg transition-colors"
       }
     >
@@ -10505,7 +10475,14 @@ function Layout() {
       <PromoSubscribeModal />
 
       {/* ===== HEADER (desktop + mobile) ===== */}
-      <header className="fixed top-0 inset-x-0 z-[999999] md:z-50 bg-black border-b border-neutral-800">
+      <header
+        className={
+          "fixed top-0 inset-x-0 z-[999999] md:z-50 transition-colors duration-300 " +
+          (shrunk
+            ? "bg-black border-b border-neutral-800 shadow-lg"
+            : "bg-transparent border-b border-transparent")
+        }
+      >
         {/* === MOBILE HEADER TALL v3 === */}
         <div className="lg:hidden border-b border-neutral-800 bg-neutral-950 pb-1">
           {/* promo strip */}
@@ -10544,12 +10521,6 @@ function Layout() {
               style={{ fontFamily: "'Cinzel', serif", fontWeight: 1000 }}
             >
               OLD IRONSIDES COFFEE
-            </div>
-            <div className="text-[14px] md:text-[21px] lg:text-[14px] text-amber-300">
-              Ignite the Spirit, Savor the Victory!
-            </div>
-            <div className="text-neutral-300 text-[12px] md:text-[18px] lg:text-[12px] tracking-wide mt-1">
-              Proudly Veteran Owned
             </div>
           </Link>
 
@@ -10596,11 +10567,11 @@ function Layout() {
         </div>
 
         {/* === DESKTOP TOP BAR === */}
-        <div className="hidden lg:block border-b border-neutral-800 bg-neutral-950">
+        <div className="hidden lg:block border-b border-neutral-800 bg-ironsideBronze/60 text-black">
           <Container>
             <div className="h-10 flex items-center relative">
               {/* promo text centered */}
-              <div className="absolute left-1/2 -translate-x-1/2 text-amber-300 text-sm font-semibold tracking-wide text-center space-x-3">
+              <div className="absolute left-1/2 -translate-x-1/2 text-black text-sm font-semibold tracking-wide text-center space-x-3">
                 <button
                   type="button"
                   onClick={() =>
@@ -10611,7 +10582,7 @@ function Layout() {
                       })
                     )
                   }
-                  className="hover:text-amber-200 underline-offset-2 hover:underline"
+                  className="hover:text-ironsideBronzeDark underline-offset-2 hover:underline"
                 >
                   20% OFF First Order
                 </button>
@@ -10620,7 +10591,7 @@ function Layout() {
 
                 <Link
                   to="/account/login"
-                  className="hover:text-amber-200 underline-offset-2 hover:underline"
+                  className="hover:text-ironsideBronzeDark underline-offset-2 hover:underline"
                 >
                   Join The Fleet &amp; Save 15%
                 </Link>
@@ -10640,7 +10611,7 @@ function Layout() {
                   href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-amber-200 underline-offset-2 hover:underline"
+                  className="hover:text-ironsideBronzeDark underline-offset-2 hover:underline"
                 >
                   GovX Partner
                 </a>
@@ -10649,13 +10620,10 @@ function Layout() {
               {/* right My Fleet */}
               <Link
                 to="/account"
-                className="ml-auto inline-flex items-center gap-2 text-amber-300 hover:text-amber-200 text-base font-semibold"
+                className="ml-auto inline-flex items-center gap-2 text-black hover:text-ironsideBronzeDark text-base font-semibold"
                 aria-label="My Fleet"
                 title="My Fleet"
               >
-                <span aria-hidden className="text-xl">
-                  ⚓
-                </span>
                 <span>My Fleet</span>
               </Link>
             </div>
@@ -10663,359 +10631,67 @@ function Layout() {
         </div>
 
         {/* === DESKTOP HEADER STACK + NAV (unchanged look) === */}
-        <div className="hidden lg:block relative bg-black z-20">
-          <Container>
+        <div
+          className={
+            "hidden lg:block relative z-20 transition-colors duration-300 " +
+            (shrunk ? "bg-black" : "bg-transparent")
+          }
+        >
+          <Container className="flex flex-col items-start">
             <div
               className={
                 (shrunk ? "pt-3 pb-2" : "pt-8 pb-3") + " relative z-30"
               }
             >
               {/* centered brand block with emblem on the left */}
-              <div className="relative mx-auto w-max">
-                {/* emblem left of stack */}
-                <Link to="/" aria-label="Go to Home Port">
-                  <img
-                    src="/emblem-black.png"
-                    alt="Old Ironsides emblem"
-                    className={
-                      (shrunk
-                        ? "h-28 md:h-32 top-[calc(50%+6px)]"
-                        : "h-40 md:h-48 top-[calc(50%+12px)]") +
-                      " w-auto object-contain select-none transition-all cursor-pointer " +
-                      "absolute md:-translate-y-[65%] lg:-translate-y-1/2 md:scale-[1.15] lg:scale-[1] right-[calc(100%+72px)]"
-                    }
-                  />
-                </Link>
+              <div className="flex items-center justify-between w-full">
+                {/* LEFT: emblem + title */}
+                <div className="flex items-center gap-4">
+                  <Link to="/" aria-label="Go to Home Port">
+                    <img
+                      src="/emblem-black.png"
+                      alt="Old Ironsides emblem"
+                      className={
+                        (shrunk ? "h-10" : "h-14") + " w-auto object-contain"
+                      }
+                    />
+                  </Link>
 
-                {/* Title + taglines (desktop only now) */}
-                <div className="flex flex-col items-center">
                   <div
                     className={
                       shrunk
-                        ? "text-4xl font-bold tracking-[0.18em] text-neutral-300 text-center"
-                        : "text-5xl font-bold tracking-[0.18em] text-neutral-300 text-center"
+                        ? "text-2xl font-bold tracking-[0.18em] text-neutral-300"
+                        : "text-3xl font-bold tracking-[0.18em] text-neutral-300"
                     }
                     style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
                   >
                     OLD IRONSIDES COFFEE
                   </div>
-
-                  <div
-                    className={
-                      shrunk
-                        ? "text-sm text-amber-300 text-center"
-                        : "text-lg text-amber-300 text-center"
-                    }
-                  >
-                    Ignite the Spirit, Savor the Victory!
-                  </div>
-                  <div
-                    className={
-                      shrunk
-                        ? "text-sm text-neutral-300 text-center"
-                        : "text-base text-neutral-300 text-center"
-                    }
-                  >
-                    Proudly Veteran-owned
-                  </div>
                 </div>
-              </div>
 
-              {/* NAV + CHEST row */}
-              <div
-                className="relative mt-3"
-                onMouseEnter={cancelClose}
-                onMouseLeave={scheduleClose}
-              >
-                {/* CHEST pinned right (desktop drawer trigger) */}
+                {/* CENTER: nav */}
+                <nav className="hidden md:flex items-center gap-6 text-ironsideBronzeDark font-semibold ml-60">
+                  <HeaderNavLink to="/store">SHOP COFFEE</HeaderNavLink>
+                  <HeaderNavLink to="/origins">
+                    ORIGINS AND VOYAGES
+                  </HeaderNavLink>
+                  <HeaderNavLink to="/contact">CONTACT</HeaderNavLink>
+                </nav>
+
+                {/* RIGHT: chest */}
                 <button
                   type="button"
                   onClick={() => setDesktopCartOpen(true)}
-                  className="hidden md:flex items-center gap-3 h-11 px-4 rounded-xl
-          ring-1 ring-amber-400/60 bg-neutral-900/60 text-amber-300
-          hover:bg-amber-400 hover:text-neutral-900 transition shadow-lg
-          divide-x divide-neutral-700 z-30 absolute right-0 top-1/2 -translate-y-1/2"
                   aria-label="Open Chest (Cart)"
                   title="Chest"
+                  className="hidden md:flex relative items-center justify-center text-ironsideBronzeDark ml-16"
                 >
-                  <span className="flex items-center gap-2 pr-3">
-                    <ChestIcon className="h-6 w-6" />
-                    <span className="uppercase tracking-wide font-bold text-lg">
-                      CHEST
-                    </span>
-                  </span>
-                  <span className="pl-3 font-bold tabular-nums text-lg">
+                  <ChestIcon className="h-7 w-7" />
+
+                  <span className="absolute -top-1 -right-2 text-[10px] font-bold tabular-nums bg-ironsideBronzeDark rounded px-1 py-[1px] ring-1 ring-amber-400/60 text-amber-300 leading-none">
                     {count ?? 0}
                   </span>
                 </button>
-
-                {/* desktop nav */}
-                <nav className="hidden md:flex justify-center">
-                  <div className="flex items-center gap-6 text-neutral-100 font-semibold">
-                    <div
-                      onMouseEnter={() => {
-                        cancelClose();
-                        setOpenMega("coffee");
-                      }}
-                      className="relative"
-                    >
-                      <HeaderNavLink to="/store">SHOP COFFEE</HeaderNavLink>
-                    </div>
-
-                    <div
-                      onMouseEnter={() => {
-                        cancelClose();
-                        setOpenMega("merch");
-                      }}
-                      className="relative"
-                    >
-                      <HeaderNavLink to="/store#merch">GEAR</HeaderNavLink>
-                    </div>
-
-                    <div
-                      onMouseEnter={() => {
-                        cancelClose();
-                        setOpenMega("origins");
-                      }}
-                      className="relative"
-                    >
-                      <HeaderNavLink to="/origins">
-                        ORIGINS AND VOYAGES
-                      </HeaderNavLink>
-                    </div>
-
-                    <HeaderNavLink to="/contact">
-                      CONTACT THE CREW
-                    </HeaderNavLink>
-                  </div>
-                </nav>
-
-                {/* mega menu unchanged */}
-                {openMega && (
-                  /* keep your same mega menu block exactly like you already have */
-                  <div
-                    ref={panelRef}
-                    className="absolute left-1/2 -translate-x-1/2 w-screen z-40"
-                    onMouseEnter={() => {
-                      const p = panelRef.current as any;
-                      if (p) p.__sticky = true;
-                    }}
-                    onMouseLeave={() => {
-                      const p = panelRef.current as any;
-                      if (p) p.__sticky = false;
-                      setTimeout(() => {
-                        const active =
-                          document.activeElement as HTMLElement | null;
-                        const within =
-                          !!panelRef.current &&
-                          ((!!active && panelRef.current.contains(active)) ||
-                            (panelRef.current as any).matches?.(
-                              ":focus-within"
-                            ));
-                        const until =
-                          (panelRef.current as any)?.__suppressUntil || 0;
-                        if (!within && Date.now() > until) setOpenMega(null);
-                      }, 600);
-                    }}
-                    onFocusCapture={() => {
-                      const p = panelRef.current as any;
-                      if (p) p.__sticky = true;
-                    }}
-                    onBlurCapture={() => {
-                      setTimeout(() => {
-                        const active =
-                          document.activeElement as HTMLElement | null;
-                        const within =
-                          !!panelRef.current &&
-                          ((!!active && panelRef.current.contains(active)) ||
-                            (panelRef.current as any).matches?.(
-                              ":focus-within"
-                            ));
-                        const until =
-                          (panelRef.current as any)?.__suppressUntil || 0;
-                        if (!within && Date.now() > until) setOpenMega(null);
-                      }, 600);
-                    }}
-                    onPointerDownCapture={() => {
-                      const p = panelRef.current as any;
-                      if (p) p.__suppressUntil = Date.now() + 2000;
-                    }}
-                    onKeyDownCapture={(e) => {
-                      if (e.key === "Tab" || e.key === "Enter") {
-                        const p = panelRef.current as any;
-                        if (p) p.__suppressUntil = Date.now() + 1200;
-                      }
-                    }}
-                  >
-                    <div className="mt-2 border-t border-neutral-800">
-                      <div className="relative">
-                        <div className="absolute inset-0 bg-neutral-950/95 backdrop-blur" />
-                        <Container className="relative py-1 md:py-1">
-                          {/* keep your inner openMega === 'coffee' / 'merch' / 'origins' exactly */}
-                          {openMega === "coffee" && (
-                            <div className="grid lg:grid-cols-[1fr,auto] gap-8 items-start">
-                              <div className="grid grid-cols-5 gap-4">
-                                {roastCards.map((card) => (
-                                  <RoastMegaCard
-                                    key={`mega-roast-${card.id}`}
-                                    card={card}
-                                    onClick={() => setOpenMega(null)}
-                                  />
-                                ))}
-                              </div>
-
-                              <MegaSubscribeBox
-                                email={mmEmail}
-                                setEmail={setMmEmail}
-                                done={mmDone}
-                                onSubmit={submitMegaSubscribe}
-                              />
-                            </div>
-                          )}
-
-                          {openMega === "merch" && (
-                            <div className="grid lg:grid-cols-[1fr,auto] gap-8 items-start">
-                              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {merchTiles.map((t) => (
-                                  <div
-                                    key={`mega-merch-${t.key}`}
-                                    className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 transition shadow-lg flex flex-col"
-                                  >
-                                    <div className="h-32 sm:h-36 lg:h-36 w-full overflow-hidden">
-                                      <img
-                                        src={t.img}
-                                        alt={`${t.label} preview`}
-                                        className="h-full w-full object-cover"
-                                      />
-                                    </div>
-                                    <div className="p-3">
-                                      <div className="text-lg font-extrabold text-amber-300">
-                                        {t.label}
-                                      </div>
-                                      <div className="text-xs text-neutral-400">
-                                        Coming soon
-                                      </div>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-
-                              <MegaSubscribeBox
-                                email={mmEmail}
-                                setEmail={setMmEmail}
-                                done={mmDone}
-                                onSubmit={submitMegaSubscribe}
-                                title="RING THAT BELL"
-                                subtitle={`Get first access to gear.
-                          Plus 20% off your first coffee order.`}
-                                buttonText="GET 20% OFF"
-                              />
-                            </div>
-                          )}
-
-                          {openMega === "origins" && (
-                            <div className="grid md:grid-cols-[auto,1fr,auto] gap-8 items-start">
-                              <Link
-                                to="/store"
-                                onClick={() => setOpenMega(null)}
-                                className="group block rounded-2xl overflow-hidden ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition text-center justify-self-center md:justify-self-start w-40 sm:w-48 md:w-56"
-                              >
-                                <div className="aspect-[4/3] w-full overflow-hidden">
-                                  <img
-                                    src={
-                                      flagship?.img?.startsWith("/") ||
-                                      flagship?.img?.startsWith("http")
-                                        ? flagship?.img
-                                        : `/${
-                                            flagship?.img || "Flagship-web.png"
-                                          }`
-                                    }
-                                    alt="Shop Coffee"
-                                    className="h-full w-full object-cover"
-                                  />
-                                </div>
-                                <div className="p-3">
-                                  <div className="text-sm md:text-base text-amber-300 font-semibold group-hover:underline">
-                                    Shop Coffee
-                                  </div>
-                                </div>
-                              </Link>
-
-                              <div className="justify-self-center">
-                                <ul className="space-y-2 text-neutral-300 text-sm md:text-base">
-                                  <li>
-                                    <Link
-                                      to="/origins#origins-roasting"
-                                      onClick={() => setOpenMega(null)}
-                                      className="hover:text-amber-300"
-                                    >
-                                      Roasting Process
-                                    </Link>
-                                  </li>
-                                  <li>
-                                    <Link
-                                      to="/origins#origins-lands"
-                                      className="hover:text-amber-300"
-                                    >
-                                      The Lands Where Our Beans Are Grown
-                                    </Link>
-                                  </li>
-                                  <li>
-                                    <Link
-                                      to="/origins#origins-hands"
-                                      className="hover:text-amber-300"
-                                    >
-                                      The Hands That Grow Our Beans
-                                    </Link>
-                                  </li>
-                                  <li>
-                                    <Link
-                                      to="/origins#origins-history"
-                                      className="hover:text-amber-300"
-                                    >
-                                      The History Behind The Fleet
-                                    </Link>
-                                  </li>
-                                  <li>
-                                    <Link
-                                      to="/origins#origins-service"
-                                      className="hover:text-amber-300"
-                                    >
-                                      Founder’s Bio
-                                    </Link>
-                                  </li>
-                                  <li>
-                                    <Link
-                                      to="/origins#origins-giving-back"
-                                      className="hover:text-amber-300"
-                                    >
-                                      Giving Back To Those Who Served
-                                    </Link>
-                                  </li>
-                                  <li>
-                                    <Link
-                                      to="/origins#origins-about"
-                                      className="hover:text-amber-300"
-                                    >
-                                      About Old Ironsides Coffee
-                                    </Link>
-                                  </li>
-                                </ul>
-                              </div>
-
-                              <MegaSubscribeBox
-                                email={mmEmail}
-                                setEmail={setMmEmail}
-                                done={mmDone}
-                                onSubmit={submitMegaSubscribe}
-                              />
-                            </div>
-                          )}
-                        </Container>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </Container>
@@ -11123,7 +10799,7 @@ function Layout() {
       <div
         className={
           isHome
-            ? "h-[105px] md:h-[170px] lg:h-[205px]"
+            ? "h-[105px] md:h-[170px] lg:h-0"
             : isStore
             ? "h-[120px] md:h-[140px] lg:h-[150px]"
             : isAccount

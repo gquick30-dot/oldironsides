@@ -2525,18 +2525,21 @@ function HomePage() {
       >
         {/* HERO background */}
         <div className="absolute inset-0 bg-black overflow-hidden">
-          <picture className="absolute inset-0 block w-full h-full">
-            {/* MOBILE */}
-            <source media="(max-width: 767px)" srcSet="/mobile concept 1.png" />
+          {/* MOBILE ONLY */}
+          <img
+            src="/mobile concept 1.jpg"
+            alt=""
+            aria-hidden="true"
+            className="md:hidden absolute inset-0 w-full h-full object-contain object-[40%_top] translate-y-[12%]"
+          />
 
-            {/* DESKTOP / TABLET */}
-            <img
-              src="/first fold concept.png"
-              alt=""
-              aria-hidden="true"
-              className="w-full h-full object-contain object-top translate-y-[12%] scale-[1.05] md:object-cover md:object-[center_30%] md:translate-y-0 md:scale-95 xl:scale-90 2xl:scale-85 xl:object-[center_75%] 2xl:object-[center_90%]"
-            />
-          </picture>
+          {/* DESKTOP / TABLET ONLY */}
+          <img
+            src="/first fold concept.png"
+            alt=""
+            aria-hidden="true"
+            className="hidden md:block w-full h-full object-contain object-top translate-y-[12%] scale-[1.05] md:object-cover md:object-[center_30%] md:translate-y-0 md:scale-95 xl:scale-90 2xl:scale-85 xl:object-[center_75%] 2xl:object-[center_90%]"
+          />
 
           <div className="absolute inset-0 bg-black/10 md:bg-black/40" />
         </div>
@@ -2573,39 +2576,53 @@ function HomePage() {
 
           <div className="grid grid-cols-1 items-center text-center lg:text-left">
             {/* HERO TEXT */}
-            <div className="max-w-[560px] lg:max-w-[900px] flex flex-col items-start text-left heroCenter mt-[110px] md:mt-0">
+            <div className="max-w-[560px] lg:max-w-[900px] flex flex-col items-start text-left heroCenter mt-[110px] translate-y-[10%] md:translate-y-0 md:mt-0">
               <div aria-hidden className="hidden md:block h-12 lg:h-16" />
 
               <h2
-                className="font-bebas leading-none tracking-wide text-left
-  text-[1.75rem] sm:text-[2.25rem] md:text-[4.4rem] xl:text-[5.5rem]"
+                className="font-bebas font-extrabold leading-none tracking-wide text-left translate-y-[10%]
+text-[2.3rem] sm:text-[2.9rem] md:text-[4.4rem] xl:text-[5.5rem]"
               >
                 <span className="block lg:inline-block lg:whitespace-nowrap text-ironsideWhite">
                   FRESH ROASTED COFFEE
                 </span>
-                <span className="block lg:inline-block lg:whitespace-nowrap text-ironsideBronze/90 mt-4">
-                  NOT WAREHOUSE COFFEE
+                <span className="block lg:inline-block lg:whitespace-nowrap text-ironsideBronze mt-4 opacity-70">
+                  NO SHORTCUTS, JUST BETTER COFFEE
                 </span>
               </h2>
 
-              <div className="mt-10 space-y-3 font-oswald italic font-bold text-xl md:text-2xl xl:text-3xl leading-tight">
-                <div className="text-ironsideWhite/85">
-                  Roasted to order. Delivered fresh.
+              <div className="mt-12 md:mt-14 font-oswald italic font-bold text-[1.05rem] sm:text-[1.15rem] md:text-[1.7rem] xl:text-[2.5rem] leading-tight">
+                {/* MOBILE */}
+                <div className="flex md:hidden flex-col gap-y-1">
+                  <div className="flex flex-wrap gap-x-2">
+                    <span className="text-ironsideWhite/90">
+                      ROASTED TO ORDER.
+                    </span>
+                    <span className="text-ironsideWhite/90">
+                      SHIPPED FRESH.
+                    </span>
+                  </div>
+                  <div className="text-ironsideBronzeDark">
+                    YOU'LL TASTE THE DIFFERENCE.
+                  </div>
                 </div>
-                <div className="text-ironsideBronzeDark">
-                  Small batch, no compromises.
-                </div>
-                <div className="text-ironsideMuted">
-                  Peak freshness in every bag.
+
+                {/* DESKTOP (original layout) */}
+                <div className="hidden md:block space-y-3">
+                  <div className="text-ironsideWhite/85">
+                    ROASTED TO ORDER. SHIPPED FRESH
+                  </div>
+                  <div className="text-ironsideBronzeDark">
+                    YOU'LL TASTE THE DIFFERENCE.
+                  </div>
                 </div>
               </div>
-
-              <div className="w-full max-w-[24rem] xl:max-w-[28rem] mt-8 xl:mt-14">
-                <div className="flex flex-col gap-3 w-full">
+              <div className="w-full max-w-none mt-8 md:mt-12 xl:mt-14">
+                <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
                   {/* EXISTING BUTTON */}
                   <Link
                     to="/store"
-                    className="w-full inline-flex items-center justify-center
+                    className="w-full md:w-[24rem] xl:w-[28rem] inline-flex items-center justify-center
     px-10 py-5 sm:px-12 sm:py-6
     rounded-none bg-ironsideBronzeDark/60 text-black font-extrabold
     text-xl sm:text-lg md:text-[1.6rem] tracking-wide
@@ -2619,7 +2636,7 @@ function HomePage() {
                   {/* NEW BUTTON */}
                   <Link
                     to="/store"
-                    className="w-full inline-flex items-center justify-center
+                    className="w-full md:w-[24rem] xl:w-[28rem] inline-flex items-center justify-center
     px-10 py-3 sm:px-12 sm:py-4
     rounded-none bg-transparent text-ironsideBronzeDark font-extrabold
     text-lg sm:text-base md:text-[1.3rem] tracking-wide
@@ -2631,10 +2648,10 @@ function HomePage() {
                   </Link>
                 </div>
                 {/* STAR RATING */}
-                <div className="mt-3 text-center">
+                <div className="mt-3 w-full md:w-[24rem] xl:w-[28rem]">
                   {siteRating && (
-                    <div className="flex items-center justify-center gap-2">
-                      <span className="text-amber-300 font-semibold tabular-nums text-sm">
+                    <div className="flex items-center justify-center gap-2 text-center">
+                      <span className="text-amber-300 font-semibold tabular-nums text-[1.15rem]">
                         {siteRating.avg.toFixed(1)}
                       </span>
 
@@ -2650,7 +2667,7 @@ function HomePage() {
                           <svg
                             key={i}
                             viewBox="0 0 24 24"
-                            className="h-4 w-4"
+                            className="h-[1.15rem] w-[1.15rem]"
                             aria-hidden
                           >
                             <defs>
@@ -2692,13 +2709,13 @@ function HomePage() {
                         );
                       })}
 
-                      <span className="text-s text-neutral-300">
+                      <span className="text-[0.95rem] text-neutral-300">
                         {siteRating.count} Verified Reviews
                       </span>
                     </div>
                   )}
 
-                  <div className="flex items-center justify-center gap-2 text-neutral-300 text-xs sm:text-sm">
+                  <div className="flex items-center justify-center gap-2 text-neutral-300 text-[0.95rem] sm:text-[1.1rem] text-center">
                     <span>SMALL BATCH ROASTED IN THE USA</span>
                     <img
                       src="/stars-stripes.png"
@@ -2714,10 +2731,10 @@ function HomePage() {
         </Container>
       </header>
       {/* FULL WIDTH FLEET IMAGE (DESKTOP/TABLET) */}
-      <section className="hidden md:block w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-925 py-16">
+      <section className="hidden md:block w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-925 py-16 mt-0">
         <div className="max-w-[1400px] mx-auto px-6">
           <img
-            src="/bags:stone.jpg"
+            src="/bags-roast.jpg"
             alt="Old Ironsides Fleet"
             className="w-full h-auto object-contain rounded-2xl"
           />
@@ -2740,15 +2757,15 @@ function HomePage() {
         </div>
       </div>
       {/* MOBILE FLEET IMAGE */}
-      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-900 py-12">
+      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-900 mt-4 overflow-visible max-h-[330px]">
         <img
-          src="/fleet 2 pic.jpg"
+          src="/bags-roast.jpg"
           alt="Old Ironsides Fleet"
-          className="w-full h-auto object-contain"
+          className="w-full h-auto block scale-[1.20] origin-center translate-y-[10%]"
         />
       </div>
       {/* FLEET SECTION (UNCHANGED) */}
-      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950 md:mt-0">
+      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950 mt-20 md:mt-0">
         <img
           src="/World Amber.png"
           alt=""

@@ -2167,10 +2167,10 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     </p>
 
                     <p
-                      className="mt-2 text-[18px] italic leading-snug text-[#9C9791]"
+                      className="mt-2 text-[14px] italic leading-snug text-[#9C9791]"
                       style={{ fontFamily: "'Playfair Display', serif" }}
                     >
-                      {card.tastingNotes?.join("  •  ") || card.note}
+                      {card.note}
                     </p>
 
                     <div className="mt-3 flex items-center gap-2 whitespace-nowrap">

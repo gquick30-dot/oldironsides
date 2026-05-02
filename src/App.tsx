@@ -2535,13 +2535,12 @@ function HomePage() {
 
           {/* DESKTOP / TABLET ONLY */}
           <img
-            src="/first fold concept.png"
+            src="/ff-warm.jpg"
             alt=""
             aria-hidden="true"
-            className="hidden md:block w-full h-full object-contain object-top translate-y-[12%] scale-[1.05] md:object-cover md:object-[center_30%] md:translate-y-0 md:scale-95 xl:scale-90 2xl:scale-85 xl:object-[center_75%] 2xl:object-[center_90%]"
+            className="hidden md:block absolute top-0 left-0 w-[115%] h-full object-cover md:translate-x-[15%] md:scale-[0.9]"
           />
-
-          <div className="absolute inset-0 bg-black/10 md:bg-black/40" />
+          <div className="absolute inset-0 bg-black/10 md:bg-black/20" />
         </div>
 
         <Container className="relative desktopHeroPad min-h-[100svh] flex items-start pt-[120px] md:items-center md:pt-0 pb-8 sm:pb-10 px-10 xl:px-6">
@@ -2576,73 +2575,65 @@ function HomePage() {
 
           <div className="grid grid-cols-1 items-center text-center lg:text-left">
             {/* HERO TEXT */}
-            <div className="max-w-[560px] lg:max-w-[900px] flex flex-col items-start text-left heroCenter mt-[110px] translate-y-[10%] md:translate-y-0 md:mt-0">
+            <div
+              className="max-w-[560px] lg:max-w-[900px] flex flex-col items-start text-left heroCenter mt-[110px] translate-y-[10%] md:translate-y-0 md:mt-0"
+              style={{ maxWidth: "fit-content" }}
+            >
               <div aria-hidden className="hidden md:block h-12 lg:h-16" />
 
               <h2
                 className="font-bebas font-extrabold leading-none tracking-wide text-left translate-y-[10%]
-text-[2.3rem] sm:text-[2.9rem] md:text-[4.4rem] xl:text-[5.5rem]"
+    text-[2.3rem] sm:text-[2.9rem] md:text-[4.4rem] xl:text-[5.5rem]"
               >
-                <span className="block lg:inline-block lg:whitespace-nowrap text-ironsideWhite">
-                  FRESH ROASTED COFFEE
+                <span className="block text-ironsideWhite">
+                  FRESH ROASTED COFFEE.
                 </span>
-                <span className="block lg:inline-block lg:whitespace-nowrap text-ironsideBronze mt-4 opacity-70">
-                  NO SHORTCUTS, JUST BETTER COFFEE
+                <span className="block text-roastTitle mt-4">
+                  CRAFTED WITH PURPOSE.
                 </span>
               </h2>
 
-              <div className="mt-12 md:mt-14 font-oswald italic font-bold text-[1.05rem] sm:text-[1.15rem] md:text-[1.7rem] xl:text-[2.5rem] leading-tight">
-                {/* MOBILE */}
-                <div className="flex md:hidden flex-col gap-y-1">
-                  <div className="flex flex-wrap gap-x-2">
-                    <span className="text-ironsideWhite/90">
-                      ROASTED TO ORDER.
-                    </span>
-                    <span className="text-ironsideWhite/90">
-                      SHIPPED FRESH.
-                    </span>
-                  </div>
-                  <div className="text-ironsideBronzeDark">
-                    YOU'LL TASTE THE DIFFERENCE.
-                  </div>
-                </div>
-
-                {/* DESKTOP (original layout) */}
-                <div className="hidden md:block space-y-3">
-                  <div className="text-ironsideWhite/85">
-                    ROASTED TO ORDER. SHIPPED FRESH
-                  </div>
-                  <div className="text-ironsideBronzeDark">
-                    YOU'LL TASTE THE DIFFERENCE.
-                  </div>
-                </div>
+              {/* DIVIDER */}
+              <div className="hidden md:flex items-center w-full mt-6">
+                <div className="h-px flex-1 bg-roastTitle" />
+                <span className="px-3 text-roastTitle text-lg leading-none">
+                  ★
+                </span>
+                <div className="h-px flex-1 bg-roastTitle" />
               </div>
+
+              {/* SUBTEXT */}
+              <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-ironsideWhite/85">
+                Roasted to order. Finished for consistency, not volume.
+              </div>
+
               <div className="w-full max-w-none mt-8 md:mt-12 xl:mt-14">
-                <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-                  {/* EXISTING BUTTON */}
+                <div className="flex flex-col md:flex-row items-stretch gap-3 w-full md:w-fit">
+                  {/* SAMPLE BUTTON */}
                   <Link
                     to="/store"
-                    className="w-full md:w-[24rem] xl:w-[28rem] inline-flex items-center justify-center
-    px-10 py-5 sm:px-12 sm:py-6
-    rounded-none bg-ironsideBronzeDark/60 text-black font-extrabold
-    text-xl sm:text-lg md:text-[1.6rem] tracking-wide
-    border-0 shadow-none
-    hover:bg-ironsideBronze/60 hover:text-black
-    transition-all duration-200"
+                    className="inline-flex h-[58px] w-full md:w-fit items-center justify-center
+px-8 sm:px-9
+rounded-none bg-chestTexture bg-cover bg-center
+text-black font-extrabold
+text-xl sm:text-lg md:text-[1.6rem] tracking-wide
+border border-selectedBtnOutline shadow-none
+hover:brightness-110
+transition-all duration-200"
                   >
                     TRY A SAMPLE PACK - $5
                   </Link>
 
-                  {/* NEW BUTTON */}
+                  {/* SHOP FULL BAGS BUTTON */}
                   <Link
                     to="/store"
-                    className="w-full md:w-[24rem] xl:w-[28rem] inline-flex items-center justify-center
-    px-10 py-3 sm:px-12 sm:py-4
-    rounded-none bg-transparent text-ironsideBronzeDark font-extrabold
-    text-lg sm:text-base md:text-[1.3rem] tracking-wide
-    border border-ironsideBronzeDark
-    hover:bg-ironsideBronzeDark hover:text-black
-    transition-all duration-200"
+                    className="inline-flex h-[58px] w-full md:w-fit items-center justify-center
+px-8 sm:px-9
+rounded-none bg-black text-ironsideBronzeDark font-extrabold
+text-lg sm:text-base md:text-[1.3rem] tracking-wide
+border border-ironsideBronzeDark
+hover:bg-ironsideBronzeDark hover:text-black
+transition-all duration-200"
                   >
                     SHOP FULL BAGS
                   </Link>
@@ -9920,9 +9911,9 @@ function HeaderNavLink({
       className={
         "px-1.5 py-1 rounded-md " +
         (isActive
-          ? "text-ironsideBronzeDark font-semibold"
-          : "text-ironsideBronzeDark") +
-        " text-base md:text-lg transition-colors"
+          ? "text-ironsideWhite font-semibold"
+          : "text-ironsideWhite/80") +
+        " text-base md:text-lg transition-colors hover:text-ironsideWhite"
       }
     >
       {children}
@@ -10560,9 +10551,9 @@ function Layout() {
           {/* promo strip */}
           <div
             className={
-              "px-3 py-2 text-center text-[13px] font-semibold leading-tight text-ironsideBronzeDark truncate transition-colors duration-300 " +
+              "px-3 py-2 text-center text-[13px] font-semibold leading-tight text-[#C08C45] truncate transition-colors duration-300 " +
               (shrunk
-                ? "border-b border-neutral-800 bg-neutral-950"
+                ? "border-b border-[#C08C45] bg-neutral-950"
                 : "border-b border-transparent bg-transparent")
             }
           >
@@ -10576,16 +10567,16 @@ function Layout() {
                   })
                 )
               }
-              className="hover:text-ironsideBronze underline-offset-2 hover:underline"
+              className="text-[#C08C45] underline-offset-2 hover:underline"
             >
               20% Off First Order
             </button>
 
-            <span className="mx-2 text-ironsideBronzeDark">|</span>
+            <span className="mx-2 text-[#C08C45]">|</span>
 
             <Link
               to="/legal/shipping"
-              className="hover:text-ironsideBronze underline-offset-2 hover:underline"
+              className="text-[#C08C45] underline-offset-2 hover:underline"
             >
               Free Shipping on 3+ Bags
             </Link>
@@ -10611,26 +10602,26 @@ function Layout() {
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="flex flex-col justify-center gap-[4px] text-ironsideBronzeDark translate-y-[6px]"
+              className="flex flex-col justify-center gap-[4px] text-[#C08C45] translate-y-[6px]"
               aria-label="Open menu"
             >
-              <span className="block w-8 h-[3px] bg-ironsideBronzeDark" />
-              <span className="block w-8 h-[3px] bg-ironsideBronzeDark" />
-              <span className="block w-8 h-[3px] bg-ironsideBronzeDark" />
+              <span className="block w-8 h-[3px] bg-[#C08C45]" />
+              <span className="block w-8 h-[3px] bg-[#C08C45]" />
+              <span className="block w-8 h-[3px] bg-[#C08C45]" />
             </button>
 
             {/* right icons */}
-            <div className="flex gap-4 text-ironsideBronzeDark translate-y-[6px] lg:hidden relative z-[1000001]">
+            <div className="flex gap-4 text-[#C08C45] translate-y-[6px] lg:hidden relative z-[1000001]">
               {/* chest/cart */}
               <button
                 type="button"
                 onClick={() => window.dispatchEvent(new Event("oi-open-cart"))}
                 aria-label="Open Chest (Cart)"
                 title="Chest"
-                className="relative flex flex-col items-center text-center leading-none z-[1000002] text-ironsideBronzeDark"
+                className="relative flex flex-col items-center text-center leading-none z-[1000002] text-[#C08C45]"
               >
                 <ChestIcon className="h-8 w-8 pointer-events-none" />
-                <span className="absolute -top-1 -right-2 text-[10px] font-bold tabular-nums bg-neutral-900 rounded px-1 py-[1px] ring-1 ring-ironsideBronzeDark/60 text-ironsideBronzeDark leading-none pointer-events-none">
+                <span className="absolute -top-1 -right-2 text-[10px] font-bold tabular-nums bg-neutral-900 rounded px-1 py-[1px] ring-1 ring-[#C08C45]/60 text-[#C08C45] leading-none pointer-events-none">
                   {count ?? 0}
                 </span>
               </button>
@@ -10639,21 +10630,20 @@ function Layout() {
               <Link
                 to="/account"
                 aria-label="My Fleet / Sign In"
-                className="flex flex-col items-center text-center leading-none text-ironsideBronzeDark hover:text-ironsideBronze"
+                className="flex flex-col items-center text-center leading-none text-[#C08C45]"
               >
-                <span className="text-3xl leading-none text-ironsideBronzeDark">
-                  ⚓
-                </span>
+                <span className="text-3xl leading-none text-[#C08C45]">⚓</span>
               </Link>
             </div>
           </div>
         </div>
+
         {/* === DESKTOP TOP BAR === */}
-        <div className="hidden lg:block border-b border-neutral-800 bg-transparent text-neutral-300 relative z-30">
+        <div className="hidden lg:block border-b border-[#C08C45] bg-transparent text-neutral-300 relative z-30">
           <Container>
             <div className="h-10 flex items-center relative">
               {/* promo text centered */}
-              <div className="absolute left-1/2 -translate-x-1/2 text-neutral-300 text-sm font-semibold tracking-wide text-center flex items-center gap-3">
+              <div className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold tracking-wide text-center flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() =>
@@ -10664,35 +10654,37 @@ function Layout() {
                       })
                     )
                   }
-                  className="text-ironsideBronzeDark hover:text-ironsideBronze underline-offset-2 hover:underline"
+                  className="underline-offset-2 hover:underline"
                 >
-                  20% OFF First Order
+                  <span className="text-[#C08C45]">20% OFF</span>{" "}
+                  <span className="text-neutral-300">First Order</span>
                 </button>
-                <span className="text-ironsideBronzeDark">|</span>
+
+                <span className="text-[#C08C45]">|</span>
 
                 <Link
                   to="/account/login"
-                  className="hover:text-ironsideBronzeDark underline-offset-2 hover:underline"
+                  className="text-neutral-300 underline-offset-2 hover:underline"
                 >
                   Join The Fleet &amp; Save 15%
                 </Link>
 
-                <span className="text-ironsideBronzeDark">|</span>
+                <span className="text-[#C08C45]">|</span>
 
                 <Link
                   to="/legal/shipping"
-                  className="hover:text-amber-200 underline-offset-2 hover:underline"
+                  className="text-neutral-300 underline-offset-2 hover:underline"
                 >
                   Free Shipping on 3+ Bags
                 </Link>
 
-                <span className="text-ironsideBronzeDark">|</span>
+                <span className="text-[#C08C45]">|</span>
 
                 <a
                   href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-ironsideBronzeDark underline-offset-2 hover:underline"
+                  className="text-neutral-300 underline-offset-2 hover:underline"
                 >
                   GovX Partner
                 </a>
@@ -10701,10 +10693,11 @@ function Layout() {
               {/* right My Fleet */}
               <Link
                 to="/account"
-                className="ml-auto inline-flex items-center gap-2 text-black hover:text-ironsideBronzeDark text-base font-semibold"
+                className="ml-auto inline-flex items-center gap-2 text-[#C08C45] text-base font-semibold"
                 aria-label="My Fleet"
                 title="My Fleet"
               >
+                <span className="text-[#C08C45]">⚓</span>
                 <span>My Fleet</span>
               </Link>
             </div>
@@ -10758,17 +10751,17 @@ function Layout() {
                     </Link>
 
                     <div
-                      className="mt-2 text-[1.1rem] font-semibold tracking-[0.16em] text-ironsideBronzeDark/100 uppercase whitespace-nowrap"
+                      className="mt-2 text-[1.1rem] font-semibold tracking-[0.16em] text-roastTitle uppercase whitespace-nowrap"
                       style={{ fontFamily: "'Cinzel', serif" }}
                     >
-                      Veteran Owned <span className="text-neutral-400">•</span>{" "}
+                      Veteran Owned <span className="text-roastTitle">•</span>{" "}
                       Veteran Roasted
                     </div>
                   </div>
                 </div>
 
                 {/* CENTER: nav */}
-                <nav className="hidden md:flex items-center gap-6 text-ironsideBronzeDark font-semibold ml-20 whitespace-nowrap shrink-0">
+                <nav className="hidden md:flex items-center gap-6 text-idleBtnText font-semibold ml-20 whitespace-nowrap shrink-0">
                   <HeaderNavLink to="/store">SHOP COFFEE</HeaderNavLink>
                   <HeaderNavLink to="/origins">
                     ORIGINS AND VOYAGES
@@ -10782,13 +10775,18 @@ function Layout() {
                   onClick={() => setDesktopCartOpen(true)}
                   aria-label="Open Chest (Cart)"
                   title="Chest"
-                  className="hidden md:flex relative items-center justify-center text-ironsideBronzeDark ml-16"
+                  className="hidden md:flex items-center ml-16 border-2 border-[#C08C45] rounded-md overflow-hidden"
                 >
-                  <ChestIcon className="h-7 w-7" />
+                  {/* LEFT: icon + label */}
+                  <div className="flex items-center gap-2 px-4 py-2 text-[#C08C45] font-semibold tracking-wide">
+                    <ChestIcon className="h-5 w-5" />
+                    <span className="text-sm">CHEST</span>
+                  </div>
 
-                  <span className="absolute -top-1 -right-2 text-[10px] font-bold tabular-nums bg-ironsideBronzeDark rounded px-1 py-[1px] ring-1 ring-amber-400/60 text-amber-300 leading-none">
+                  {/* RIGHT: count */}
+                  <div className="flex items-center justify-center w-[44px] py-2 border-l-2 border-[#C08C45] text-[#C08C45] font-semibold text-sm tabular-nums">
                     {count ?? 0}
-                  </span>
+                  </div>
                 </button>
               </div>
             </div>

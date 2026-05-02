@@ -45,6 +45,9 @@ export default {
         // TASTING NOTES TEXT
         tastingText: "#B5976D",
 
+        // SOFT MOBILE
+        roastTitleSoft: "#C08C45CC",
+
         // OLD ORIGINAL COLORS
         ironsideBlack: "#0B0B0B",
         ironsideBlackSoft: "#111111",

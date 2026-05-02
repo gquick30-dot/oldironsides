@@ -1832,69 +1832,64 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
     >
       {/* Background image just for this section */}
       {!noBg && (
-        <img
-          src="/old-boston-harbor.jpg"
-          alt="Boston Harbor backdrop"
-          className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-40 -z-0"
-        />
+        <>
+          <img
+            src="/dark-theme.png"
+            alt="Dark coffee roastery backdrop"
+            className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-100 -z-0"
+          />
+          <div className="hidden md:block absolute inset-0 bg-black/40 -z-0" />
+        </>
       )}
 
       <Container
         className={`relative z-10 ${
-          isStore ? "md:pt-16" : ""
+          isStore ? "md:pt-10" : ""
         } px-0 sm:px-0 lg:px-0`}
       >
         {/* header row: title + (maybe) back button */}
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between text-center md:text-left px-0 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center text-center px-0 sm:px-6 lg:px-8">
           <SectionTitle
             title={
-              <span
-                className="
-        whitespace-nowrap
-        text-[25px] sm:text-[30px] md:text-[3.9rem]
-        leading-tight md:leading-[1.1]
-        tracking-[0.04em]
-        font-bold text-amber-400
-        mt-2 md:mt-0
-      "
-                style={{ fontFamily: "'Cinzel', serif" }}
-              >
-                THE FLEET
-              </span>
+              <div className="flex flex-col items-center w-full">
+                <span
+                  className="
+  whitespace-nowrap
+  text-[2.6rem] sm:text-[3.2rem] md:text-[4.6rem] xl:text-[5.3rem]
+  leading-none
+  tracking-[0.08em]
+  font-bold text-roastTitle
+"
+                  style={{ fontFamily: "'Cinzel', serif" }}
+                >
+                  THE FLEET
+                </span>
+
+                {/* STAR DIVIDER */}
+                <div className="flex items-center w-full max-w-[420px] md:max-w-[560px] -mt-1 md:mt-0">
+                  <div className="h-px flex-1 bg-roastTitle" />
+                  <span className="px-3 text-roastTitle text-base md:text-lg leading-none">
+                    ★
+                  </span>
+                  <div className="h-px flex-1 bg-roastTitle" />
+                </div>
+              </div>
             }
             subtitle={
               <>
-                {/* info lines */}
-                <div className="text-neutral-300 text-[10px] sm:text-base font-bold tracking-tight flex flex-col items-center md:items-start gap-1">
-                  {/* line 1 */}
-                  <div className="whitespace-nowrap">
-                    ROASTED MONDAY
-                    <span className="mx-2 text-amber-400">•</span>
-                    PACKAGED TUESDAY
-                    <span className="mx-2 text-amber-400">•</span>
-                    SHIPS WEDNESDAY
-                  </div>
-
-                  {/* line 2 */}
-                  <div className="text-center md:text-left whitespace-nowrap text-[12px] sm:text-base font-bold">
-                    <span>Next Roast Date: </span>
-                    <span className="text-amber-400">{nextInfo}</span>
-                  </div>
+                <div
+                  className="mt-2 text-[1rem] sm:text-[1.15rem] md:text-[1.45rem] italic text-roastSubtitle text-center"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  Six roasts. Built for every kind of coffee drinker.
                 </div>
               </>
             }
           />
-
-          {/* Back button drops under title on mobile, floats right on desktop */}
-          {!isHome && (
-            <div className="hidden md:block self-center md:self-start">
-              <BackButton size="sm" />
-            </div>
-          )}
         </div>
 
         {/* tighten gap before cards */}
-        <div className="mt-1 md:mt-1"></div>
+        <div className="mt-4 md:mt-8"></div>
         {/* mobile: 2-up tiles (no carousel) */}
         <div className="lg:hidden px-0 pt-2">
           <div className="grid grid-cols-2 gap-2">
@@ -2075,34 +2070,65 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
           </div>
         </div>
 
-        {/* desktop: two-row layout */}
-        <div className="hidden lg:block relative -mt-10">
-          {/* ROW 1 */}
-          <div className="flex flex-wrap justify-center gap-x-10 gap-y-8">
-            {mainFleetCards.map((card) => {
+        {/* desktop: mockup roast grid */}
+        <div className="hidden lg:block relative mt-2 pb-8">
+          <div className="grid grid-cols-3 gap-3 max-w-[1450px] mx-auto px-6 xl:px-4 2xl:px-0">
+            {roastCards.map((card) => {
               const base =
                 card.slug === "oak-and-copper" ? 27 : Number(card.price ?? 22);
-
               const sub =
                 card.slug === "oak-and-copper"
                   ? base
                   : Math.round(base * 0.85 * 100) / 100;
 
+              const badge = card.isNew
+                ? "NEW"
+                : card.slug === "brass-monkey"
+                ? "SEASONAL"
+                : card.slug === "oak-and-copper"
+                ? "LIMITED RELEASE"
+                : "";
+
               return (
-                <Link
+                <div
                   key={card.id}
-                  to={`/roast/${card.slug}`}
-                  aria-label={`${card.title} details`}
-                  className="group relative w-[240px] xl:w-[250px] flex flex-col items-center text-center transition"
+                  className="
+                  group relative overflow-hidden rounded-[10px]
+                  scale-[0.94] xl:scale-100 origin-top
+            border border-[#6D5333]/80
+            bg-[#070503]
+            h-[240px]
+            px-5 py-3
+            shadow-[0_0_28px_rgba(0,0,0,0.85),inset_0_0_24px_rgba(192,140,69,0.11)]
+          "
                 >
-                  {card.isNew && (
-                    <div className="absolute top-[110px] left-1/2 -translate-x-1/2 z-20 px-3 py-1 text-xs font-bold bg-amber-400 text-black rounded shadow-md">
-                      JUST RELEASED
+                  {/* inner glow wash */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#C08C45]/10 via-[#070503] to-black" />
+
+                  {/* concentrated bag glow */}
+                  <div className="absolute left-[22%] top-1/2 h-[210px] w-[240px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C08C45]/35 blur-3xl" />
+
+                  {/* shelf */}
+                  <div className="absolute left-[22%] bottom-[28px] h-px w-[36%] -translate-x-1/2 bg-gradient-to-r from-transparent via-[#6D5333]/65 to-transparent" />
+
+                  {/* shadow */}
+                  <div className="absolute left-[22%] bottom-[18px] h-[22px] w-[165px] -translate-x-1/2 rounded-full bg-black/90 blur-xl" />
+
+                  {badge && (
+                    <div
+                      className="
+                absolute left-3 top-3 z-20
+                rounded-[5px] border border-[#6D5333]
+                bg-black/70 backdrop-blur-[2px] px-3 py-2
+                text-center text-[11px] font-black leading-tight
+                tracking-[0.06em] text-[#E6C07F]
+              "
+                      style={{ fontFamily: "'Cinzel', serif" }}
+                    >
+                      {badge}
                     </div>
                   )}
 
-                  <div className="pointer-events-none absolute top-[110px] left-1/2 -translate-x-1/2 h-[300px] w-[300px] rounded-full bg-amber-300/30 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
                   <img
                     src={
                       card.img?.startsWith("/") || card.img?.startsWith("http")
@@ -2110,7 +2136,12 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                         : `/${card.img}`
                     }
                     alt={card.title}
-                    className="w-auto h-[420px] object-contain mx-auto mb-[-72px] relative z-10 transition duration-300 group-hover:brightness-110"
+                    className="
+              absolute left-[22%] bottom-[-10px] z-10
+              h-[260px] w-auto -translate-x-1/2
+              object-contain transition duration-300
+              group-hover:brightness-110
+            "
                     loading="lazy"
                     decoding="async"
                     onError={(e) => {
@@ -2120,326 +2151,125 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     }}
                   />
 
-                  <div className="pt-0 pb-1 px-5 flex flex-col flex-1 items-center text-center transition duration-300 group-hover:brightness-110">
+                  <div className="relative z-20 ml-[40%] flex h-full flex-col justify-center pr-1">
                     <h3
-                      className="text-2xl font-extrabold text-amber-300 mt-[-4px] transition duration-300 group-hover:text-amber-200"
-                      style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
+                      className="text-[29px] font-black leading-none tracking-[0.02em] text-[#C08C45]"
+                      style={{ fontFamily: "'Cinzel', serif" }}
                     >
                       {card.title}
                     </h3>
 
-                    <p className="text-[1.05rem] italic text-neutral-500 -mt-1">
+                    <p
+                      className="mt-2 text-[17px] italic leading-[1.12] text-[#B39871]"
+                      style={{ fontFamily: "'Playfair Display', serif" }}
+                    >
                       {card.subTitle}
-                      <span className="mx-1.5 text-amber-300/80" aria-hidden>
-                        -
-                      </span>
-                      <span className="not-italic">12 oz</span>
                     </p>
 
                     <p
-                      className={
-                        "text-sm text-neutral-400 leading-snug mt-1 " +
-                        (card.slug === "brass-monkey"
-                          ? "line-clamp-1"
-                          : "line-clamp-2")
-                      }
+                      className="mt-2 text-[18px] italic leading-snug text-[#9C9791]"
+                      style={{ fontFamily: "'Playfair Display', serif" }}
                     >
-                      {card.note}
+                      {card.tastingNotes?.join("  •  ") || card.note}
                     </p>
 
-                    <div className="mt-2 flex items-center justify-center gap-3">
-                      {card.slug !== "oak-and-copper" && (
-                        <span className="text-neutral-300 text-[13px] whitespace-nowrap">
-                          From {fmt(base)}
-                        </span>
-                      )}
+                    <div className="mt-3 flex items-center gap-2 whitespace-nowrap">
+                      <span className="text-[14px] text-neutral-200">
+                        From {fmt(base)}
+                      </span>
 
-                      {card.slug === "oak-and-copper" ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[13px] whitespace-nowrap font-extrabold tabular-nums">
-                          {fmt(base)}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-2 px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[13px] whitespace-nowrap">
-                          <span className="font-semibold">Subscribe</span>
-                          <span className="font-extrabold tabular-nums">
-                            {fmt(sub)}
-                          </span>
-                        </span>
-                      )}
+                      <span className="rounded-[5px] bg-[#32220D] px-3 py-2 text-[12px] font-black leading-none text-[#E6C07F]">
+                        Subscribe {fmt(sub)}
+                      </span>
                     </div>
 
-                    <div className="mt-2 flex flex-col items-center text-[13px] text-neutral-400">
-                      <div className="flex items-center justify-center gap-2">
-                        {(() => {
-                          const summary = summaryBySlug[card.slug] || {
-                            avg: 0,
-                            count: 0,
-                          };
-                          const avg = summary.avg ?? 0;
-                          const count = summary.count ?? 0;
-
-                          return (
-                            <>
-                              <span className="text-amber-300 font-semibold tabular-nums">
-                                {avg.toFixed(1)}
-                              </span>
-
-                              <div className="inline-flex items-center gap-0.5">
-                                {[0, 1, 2, 3, 4].map((i) => {
-                                  const starFill = Math.max(
-                                    0,
-                                    Math.min(1, avg - i)
-                                  );
-                                  const clipWidth = 24 * starFill;
-                                  const clipId = `cardStarClipDesk-main-${card.slug}-${i}`;
-
-                                  return (
-                                    <svg
-                                      key={i}
-                                      viewBox="0 0 24 24"
-                                      className="h-4 w-4"
-                                      aria-hidden
-                                    >
-                                      <defs>
-                                        <clipPath
-                                          id={clipId}
-                                          clipPathUnits="userSpaceOnUse"
-                                        >
-                                          <rect
-                                            x="0"
-                                            y="0"
-                                            width={clipWidth}
-                                            height="24"
-                                          />
-                                        </clipPath>
-                                      </defs>
-
-                                      <path
-                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                        className="text-neutral-800"
-                                        fill="currentColor"
-                                      />
-                                      <path
-                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                        className="text-amber-400"
-                                        fill="currentColor"
-                                        clipPath={`url(#${clipId})`}
-                                      />
-                                      <path
-                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        className="text-neutral-600"
-                                        strokeWidth="1.4"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                  );
-                                })}
-                              </div>
-
-                              <span className="text-[11px] text-neutral-400/80 tracking-wide whitespace-nowrap">
-                                {count} REVIEWS
-                              </span>
-                            </>
-                          );
-                        })()}
-                      </div>
-                    </div>
+                    <Link
+                      to={`/roast/${card.slug}`}
+                      className="
+  mt-3 w-[230px]
+  rounded-[5px] border border-[#6D5333]
+  bg-black px-6 py-3
+  text-center text-[14px] font-black tracking-[0.08em]
+  text-[#E6C07F]
+  shadow-[inset_0_0_18px_rgba(192,140,69,0.18)]
+"
+                    >
+                      VIEW ROAST
+                    </Link>
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>
 
-          {/* ROW 2 TITLE */}
-          <div className="mt-8 mb-1 text-center">
-            <h3
-              className="text-[1.7rem] font-bold text-amber-300 tracking-[0.08em]"
-              style={{ fontFamily: "'Cinzel', serif" }}
-            >
-              LIMITED RELEASES
-            </h3>
-          </div>
-
-          {/* ROW 2 */}
-          <div className="flex flex-wrap justify-center gap-x-14 gap-y-6 -mt-2">
-            {limitedReleaseCards.map((card) => {
-              const base =
-                card.slug === "oak-and-copper" ? 27 : Number(card.price ?? 22);
-
-              const sub =
-                card.slug === "oak-and-copper"
-                  ? base
-                  : Math.round(base * 0.85 * 100) / 100;
-
-              return (
-                <Link
-                  key={card.id}
-                  to={`/roast/${card.slug}`}
-                  aria-label={`${card.title} details`}
-                  className="group relative w-[250px] flex flex-col items-center text-center transition"
-                >
-                  <div className="pointer-events-none absolute top-[110px] left-1/2 -translate-x-1/2 h-[300px] w-[300px] rounded-full bg-amber-300/30 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
+          {/* bottom trust row */}
+          <div className="mt-7 grid grid-cols-4 max-w-[1450px] mx-auto px-4 xl:px-0 border-t border-[#6D5333]/30 pt-6">
+            {[
+              {
+                title: "ROASTED TO ORDER",
+                copy: "Never warehouse coffee.",
+                icon: "/anchor.png",
+              },
+              {
+                title: "SMALL BATCH ROASTED",
+                copy: "Carefully crafted in the USA.",
+                icon: "/compass.png",
+              },
+              {
+                title: "SHIPS FRESH",
+                copy: "Roasted Monday. Ships Wednesday.",
+                icon: "/truck.png",
+              },
+              {
+                title: "VETERAN OWNED",
+                copy: "Veteran owned. Veteran roasted.",
+                icon: "/army-star.png",
+              },
+            ].map((item, idx) => (
+              <div
+                key={item.title}
+                className={`relative flex items-center justify-center px-6 ${
+                  idx !== 0 ? "border-l border-[#6D5333]/55" : ""
+                }`}
+              >
+                {/* oversized icon (no layout shift) */}
+                <div className="relative w-[40px] h-[40px]">
                   <img
-                    src={
-                      card.img?.startsWith("/") || card.img?.startsWith("http")
-                        ? card.img
-                        : `/${card.img}`
-                    }
-                    alt={card.title}
-                    className="w-auto h-[320px] object-contain mx-auto mb-[-52px] relative z-10 transition duration-300 group-hover:brightness-110"
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => {
-                      const el = e.currentTarget as HTMLImageElement;
-                      if (!el.src.includes("/placeholder.png"))
-                        el.src = "/placeholder.png";
-                    }}
+                    src={item.icon}
+                    alt=""
+                    className={`
+      absolute left-1/2 top-1/2
+      -translate-x-1/2 -translate-y-1/2
+      object-contain opacity-90 pointer-events-none
+      ${
+        item.title === "ROASTED TO ORDER"
+          ? "h-[80px] w-[80px] scale-[3]" // anchor stays same
+          : item.title === "SMALL BATCH ROASTED"
+          ? "h-[80px] w-[80px] scale-[4]" // big boost
+          : item.title === "SHIPS FRESH"
+          ? "h-[80px] w-[80px] scale-[5]" // big boost
+          : "h-[80px] w-[80px] scale-[3]" // star +25–40%
+      }
+    `}
                   />
-
-                  <div className="pt-0 pb-1 px-5 flex flex-col flex-1 items-center text-center transition duration-300 group-hover:brightness-110">
-                    <h3
-                      className="text-2xl font-extrabold text-amber-300 mt-[-4px] transition duration-300 group-hover:text-amber-200"
-                      style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
-                    >
-                      {card.title}
-                    </h3>
-
-                    <p className="text-[1.05rem] italic text-neutral-500 -mt-1">
-                      {card.subTitle}
-                      <span className="mx-1.5 text-amber-300/80" aria-hidden>
-                        -
-                      </span>
-                      <span className="not-italic">12 oz</span>
-                    </p>
-
-                    <p
-                      className={
-                        "text-sm text-neutral-400 leading-snug mt-1 " +
-                        (card.slug === "brass-monkey"
-                          ? "line-clamp-1"
-                          : "line-clamp-2")
-                      }
-                    >
-                      {card.note}
-                    </p>
-
-                    <div className="mt-2 flex items-center justify-center gap-3">
-                      {card.slug !== "oak-and-copper" && (
-                        <span className="text-neutral-300 text-[13px] whitespace-nowrap">
-                          From {fmt(base)}
-                        </span>
-                      )}
-
-                      {card.slug === "oak-and-copper" ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[13px] whitespace-nowrap font-extrabold tabular-nums">
-                          {fmt(base)}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-2 px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 text-[13px] whitespace-nowrap">
-                          <span className="font-semibold">Subscribe</span>
-                          <span className="font-extrabold tabular-nums">
-                            {fmt(sub)}
-                          </span>
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="mt-2 flex flex-col items-center text-[13px] text-neutral-400">
-                      <div className="flex items-center justify-center gap-2">
-                        {(() => {
-                          const summary = summaryBySlug[card.slug] || {
-                            avg: 0,
-                            count: 0,
-                          };
-                          const avg = summary.avg ?? 0;
-                          const count = summary.count ?? 0;
-
-                          return (
-                            <>
-                              <span className="text-amber-300 font-semibold tabular-nums">
-                                {avg.toFixed(1)}
-                              </span>
-
-                              <div className="inline-flex items-center gap-0.5">
-                                {[0, 1, 2, 3, 4].map((i) => {
-                                  const starFill = Math.max(
-                                    0,
-                                    Math.min(1, avg - i)
-                                  );
-                                  const clipWidth = 24 * starFill;
-                                  const clipId = `cardStarClipDesk-limited-${card.slug}-${i}`;
-
-                                  return (
-                                    <svg
-                                      key={i}
-                                      viewBox="0 0 24 24"
-                                      className="h-4 w-4"
-                                      aria-hidden
-                                    >
-                                      <defs>
-                                        <clipPath
-                                          id={clipId}
-                                          clipPathUnits="userSpaceOnUse"
-                                        >
-                                          <rect
-                                            x="0"
-                                            y="0"
-                                            width={clipWidth}
-                                            height="24"
-                                          />
-                                        </clipPath>
-                                      </defs>
-
-                                      <path
-                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                        className="text-neutral-800"
-                                        fill="currentColor"
-                                      />
-                                      <path
-                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                        className="text-amber-400"
-                                        fill="currentColor"
-                                        clipPath={`url(#${clipId})`}
-                                      />
-                                      <path
-                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        className="text-neutral-600"
-                                        strokeWidth="1.4"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                  );
-                                })}
-                              </div>
-
-                              <span className="text-[11px] text-neutral-400/80 tracking-wide whitespace-nowrap">
-                                {count} REVIEWS
-                              </span>
-                            </>
-                          );
-                        })()}
-                      </div>
-                    </div>
+                </div>
+                {/* text */}
+                <div className="ml-4">
+                  <div
+                    className="text-[15px] font-black tracking-[0.12em] text-neutral-300"
+                    style={{ fontFamily: "'Cinzel', serif" }}
+                  >
+                    {item.title}
                   </div>
-                </Link>
-              );
-            })}
-          </div>
-
-          <div className="hidden md:block text-center mt-6">
-            <p className="text-neutral-300 text-sm">
-              The first 200 subscribers receive a free
-              <span className="text-amber-300 font-semibold">
-                {" "}
-                Old Ironsides diner mug
-              </span>{" "}
-              with their 2nd subscription purchase.
-            </p>
+                  <div
+                    className="mt-1 text-[14px] italic text-[#B39871]"
+                    style={{ fontFamily: "'Playfair Display', serif" }}
+                  >
+                    {item.copy}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </Container>
@@ -2588,22 +2418,22 @@ function HomePage() {
                 <span className="block text-ironsideWhite">
                   FRESH ROASTED COFFEE.
                 </span>
-                <span className="block text-roastTitle mt-4">
+                <span className="block text-roastTitle/85 md:text-roastTitle mt-4">
                   CRAFTED WITH PURPOSE.
                 </span>
               </h2>
 
               {/* DIVIDER */}
-              <div className="hidden md:flex items-center w-full mt-6">
-                <div className="h-px flex-1 bg-roastTitle" />
-                <span className="px-3 text-roastTitle text-lg leading-none">
+              <div className="flex items-center w-full mt-5 md:mt-6">
+                <div className="h-px flex-1 bg-roastTitle/85 md:bg-roastTitle/75" />
+                <span className="px-2 md:px-3 text-roastTitle text-base md:text-lg leading-none">
                   ★
                 </span>
-                <div className="h-px flex-1 bg-roastTitle" />
+                <div className="h-px flex-1 bg-roastTitle/85 md:bg-roastTitle/75" />
               </div>
 
               {/* SUBTEXT */}
-              <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-ironsideWhite/85">
+              <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-ironsideWhite">
                 Roasted to order. Finished for consistency, not volume.
               </div>
 
@@ -2612,16 +2442,24 @@ function HomePage() {
                   {/* SAMPLE BUTTON */}
                   <Link
                     to="/store"
-                    className="inline-flex h-[58px] w-full md:w-fit items-center justify-center
+                    className="relative inline-flex h-[58px] w-full md:w-fit items-center justify-center
 px-8 sm:px-9
-rounded-none bg-chestTexture bg-cover bg-center
+rounded-none overflow-hidden
 text-black font-extrabold
 text-xl sm:text-lg md:text-[1.6rem] tracking-wide
 border border-selectedBtnOutline shadow-none
-hover:brightness-110
 transition-all duration-200"
                   >
-                    TRY A SAMPLE PACK - $5
+                    {/* BACKGROUND */}
+                    <div className="absolute inset-0 bg-chestTexture bg-cover bg-center" />
+
+                    {/* MOBILE TONE DOWN OVERLAY */}
+                    <div className="absolute inset-0 bg-black/25 md:bg-transparent" />
+
+                    {/* TEXT */}
+                    <span className="relative z-10">
+                      TRY A SAMPLE PACK - $5
+                    </span>
                   </Link>
 
                   {/* SHOP FULL BAGS BUTTON */}
@@ -2642,7 +2480,7 @@ transition-all duration-200"
                 <div className="mt-3 w-full md:w-[24rem] xl:w-[28rem]">
                   {siteRating && (
                     <div className="flex items-center justify-center gap-2 text-center">
-                      <span className="text-amber-300 font-semibold tabular-nums text-[1.15rem]">
+                      <span className="text-roastTitle font-semibold tabular-nums text-[1.15rem]">
                         {siteRating.avg.toFixed(1)}
                       </span>
 
@@ -2683,7 +2521,7 @@ transition-all duration-200"
 
                             <path
                               d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                              className="text-amber-400"
+                              className="text-roastTitle"
                               fill="currentColor"
                               clipPath={`url(#${clipId})`}
                             />
@@ -2707,7 +2545,7 @@ transition-all duration-200"
                   )}
 
                   <div className="flex items-center justify-center gap-2 text-neutral-300 text-[0.95rem] sm:text-[1.1rem] text-center">
-                    <span>SMALL BATCH ROASTED IN THE USA</span>
+                    <span>SMALL BATCH. VETERAN ROASTED</span>
                     <img
                       src="/stars-stripes.png"
                       alt="American flag"
@@ -2758,13 +2596,13 @@ transition-all duration-200"
       {/* FLEET SECTION (UNCHANGED) */}
       <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950 mt-20 md:mt-0">
         <img
-          src="/World Amber.png"
+          src="/dark-theme.png"
           alt=""
           aria-hidden
-          className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-30"
+          className="hidden md:block absolute inset-0 w-full h-full object-cover object-[center_20%] opacity-100 translate-y-[40px] scale-110"
         />
 
-        <div className="hidden md:block lg:block absolute inset-0 bg-black/70 md:bg-black/80 lg:bg-black/70" />
+        <div className="hidden md:block absolute inset-0 bg-black/40 md:bg-black/45 lg:bg-black/40" />
 
         <div className="relative">
           <LaunchedFromHarbor noBg />

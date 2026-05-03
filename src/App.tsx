@@ -474,7 +474,7 @@ const roastCards = [
     slug: "black-salvo",
     title: "BLACK SALVO",
     subTitle: "Medium Roast",
-    note: "Warm Vanilla, Cocoa, Toasted Almond",
+    note: "Versatile, Smooth, Unique",
     img: "black-salvo-emblem.png",
     price: 22,
     canBuy: true,
@@ -1890,21 +1890,17 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
 
         {/* tighten gap before cards */}
         <div className="mt-4 md:mt-8"></div>
-        {/* mobile: 2-up tiles (no carousel) */}
-        <div className="lg:hidden px-0 pt-2">
-          <div className="grid grid-cols-2 gap-2">
+        {/* mobile: 2-up roast tiles */}
+        <div className="lg:hidden px-3 pt-4">
+          <div className="grid grid-cols-2 gap-3">
             {roastCards.map((card) => {
-              const base =
-                card.slug === "oak-and-copper" ? 27 : Number(card.price ?? 22);
-
-              const sub =
-                card.slug === "oak-and-copper"
-                  ? base
-                  : Math.round(base * 0.85 * 100) / 100;
-
-              const summary = summaryBySlug[card.slug] || { avg: 0, count: 0 };
-              const avg = summary.avg ?? 0;
-              const count = summary.count ?? 0;
+              const badge = card.isNew
+                ? "NEW"
+                : card.slug === "brass-monkey"
+                ? "SEASONAL"
+                : card.slug === "oak-and-copper"
+                ? "LIMITED RELEASE"
+                : "";
 
               return (
                 <Link
@@ -1912,157 +1908,97 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                   to={`/roast/${card.slug}`}
                   aria-label={`${card.title} details`}
                   className="
-            group relative overflow-hidden rounded-2xl
-            bg-neutral-800/70 ring-1 ring-neutral-700/80
-            shadow-lg shadow-black/40
-            px-2.5 pt-2 pb-2
-            flex flex-col items-center text-center
+            group relative overflow-hidden rounded-[10px]
+            border border-[#6D5333]/80
+            bg-[#030201]
+            h-[275px]
+            px-3 py-3
+            no-underline
+            shadow-[0_0_18px_rgba(192,140,69,0.16),0_0_24px_rgba(0,0,0,0.9),inset_0_0_22px_rgba(192,140,69,0.10)]
           "
                 >
-                  {card.isNew && (
-                    <div className="absolute top-2 left-2 z-20 px-2 py-1 text-[10px] font-bold bg-amber-400 text-black rounded">
-                      NEW
+                  {/* subtle inner wash */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#C08C45]/5 via-[#030201] to-black" />
+                  {/* visible inner edge glow */}
+                  <div className="pointer-events-none absolute inset-0 z-[5] rounded-[10px] ring-1 ring-[#C08C45]/35 shadow-[inset_0_0_28px_rgba(192,140,69,0.22)]" />
+                  {/* controlled glow */}
+                  <div className="absolute left-1/2 top-[38%] h-[165px] w-[175px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C08C45]/24 blur-2xl" />
+
+                  {/* shelf */}
+                  <div className="absolute left-1/2 top-[66%] h-px w-[75%] -translate-x-1/2 bg-gradient-to-r from-transparent via-[#6D5333]/60 to-transparent" />
+
+                  {/* shadow */}
+                  <div className="absolute left-1/2 top-[68%] h-[18px] w-[120px] -translate-x-1/2 rounded-full bg-black/90 blur-xl" />
+
+                  {badge && (
+                    <div
+                      className="
+                absolute left-2 top-2 z-20
+                rounded-[5px] border border-[#6D5333]/70
+                bg-black/75 backdrop-blur-[2px]
+                px-2 py-1
+                text-center text-[9px] font-black tracking-[0.06em]
+                text-[#E6C07F]
+              "
+                      style={{ fontFamily: "'Cinzel', serif" }}
+                    >
+                      {badge}
                     </div>
                   )}
-                  {/* FULL TILE GLOW */}
-                  <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute inset-[-40px] bg-amber-300/15 blur-3xl" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-amber-300/10 via-transparent to-transparent" />
-                  </div>
 
-                  {/* BAG IMAGE BEHIND CONTENT (uncaged) */}
-                  <div className="pointer-events-none absolute inset-0">
-                    {/* soft vignette so text reads over the bag */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/0 to-black/35" />
+                  <img
+                    src={
+                      card.img?.startsWith("/") || card.img?.startsWith("http")
+                        ? card.img
+                        : `/${card.img}`
+                    }
+                    alt={card.title}
+                    className="
+              absolute left-1/2 top-[6px] z-10
+              h-[150px] w-auto -translate-x-1/2
+              object-contain transition duration-300
+              group-hover:brightness-110
+            "
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      if (!el.src.includes("/placeholder.png"))
+                        el.src = "/placeholder.png";
+                    }}
+                  />
 
-                    <img
-                      src={
-                        card.img?.startsWith("/") ||
-                        card.img?.startsWith("http")
-                          ? card.img
-                          : `/${card.img}`
-                      }
-                      alt={card.title}
-                      className="
-                      absolute left-1/2 -translate-x-1/2
-                      top-[-90px] md:top-[40px]
-                      w-auto h-[360px]
-                      object-contain
-                      opacity-95
-                      transition duration-300
-                      group-hover:brightness-110
-                    "
-                      loading="lazy"
-                      decoding="async"
-                      onError={(e) => {
-                        const el = e.currentTarget as HTMLImageElement;
-                        if (!el.src.includes("/placeholder.png"))
-                          el.src = "/placeholder.png";
-                      }}
-                    />
-                  </div>
-
-                  {/* SPACER to reserve vertical room while image overlaps */}
-                  <div className="h-[165px] md:h-[360px] w-full" />
-
-                  {/* CONTENT ON TOP */}
-                  <div className="relative z-10 w-full flex flex-col items-center">
-                    {/* title (bigger) */}
-                    <div
-                      className="mt-0 text-[18px] leading-[1.05] font-extrabold text-amber-300"
-                      style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                  <div className="relative z-20 flex h-full flex-col justify-end text-center">
+                    <h3
+                      className="text-[18px] font-black leading-none tracking-[0.02em] text-[#D0A15C]"
+                      style={{ fontFamily: "'Cinzel', serif" }}
                     >
                       {card.title}
-                    </div>
+                    </h3>
 
-                    {/* roast + size */}
-                    <div className="mt-0.5 text-[12px] italic text-neutral-200/90 whitespace-nowrap">
-                      {card.subTitle}
-                      <span className="mx-1 text-amber-300/70" aria-hidden>
-                        -
-                      </span>
-                      <span className="not-italic">12 oz</span>
-                    </div>
+                    <p
+                      className="mt-1 text-[15px] italic leading-tight text-[#C08C45]"
+                      style={{ fontFamily: "'Playfair Display', serif" }}
+                    >
+                      {card.slug === "oak-and-copper"
+                        ? "Barrel Aged"
+                        : card.slug === "baptism-by-fire"
+                        ? "Dark Roast"
+                        : card.slug === "java-action"
+                        ? "Medium Roast"
+                        : card.slug === "flagship"
+                        ? "Medium Roast"
+                        : card.slug === "brass-monkey"
+                        ? "Seasonal Roast"
+                        : card.subTitle}
+                    </p>
 
-                    {/* STARS (same logic as desktop, keep Judge.me wiring) */}
-                    <div className="mt-1 flex flex-col items-center text-[11px] text-neutral-300/80">
-                      <div className="flex items-center justify-center gap-2">
-                        {(() => {
-                          const summary = summaryBySlug[card.slug] || {
-                            avg: 0,
-                            count: 0,
-                          };
-                          const avg = summary.avg ?? 0;
-                          const count = summary.count ?? 0;
-
-                          return (
-                            <>
-                              <span className="text-amber-300 font-semibold tabular-nums">
-                                {avg.toFixed(1)}
-                              </span>
-
-                              <div className="inline-flex items-center gap-0.5">
-                                {[0, 1, 2, 3, 4].map((i) => {
-                                  const starFill = Math.max(
-                                    0,
-                                    Math.min(1, avg - i)
-                                  );
-                                  const clipWidth = 24 * starFill;
-                                  const clipId = `cardStarClipMob-${card.slug}-${i}`;
-
-                                  return (
-                                    <svg
-                                      key={i}
-                                      viewBox="0 0 24 24"
-                                      className="h-3 w-3"
-                                      aria-hidden
-                                    >
-                                      <defs>
-                                        <clipPath
-                                          id={clipId}
-                                          clipPathUnits="userSpaceOnUse"
-                                        >
-                                          <rect
-                                            x="0"
-                                            y="0"
-                                            width={clipWidth}
-                                            height="24"
-                                          />
-                                        </clipPath>
-                                      </defs>
-
-                                      <path
-                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                        className="text-neutral-800"
-                                        fill="currentColor"
-                                      />
-                                      <path
-                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                        className="text-amber-400"
-                                        fill="currentColor"
-                                        clipPath={`url(#${clipId})`}
-                                      />
-                                      <path
-                                        d="M12 .587l3.668 7.568L24 9.753l-6 5.854L19.335 24 12 19.771 4.665 24 6 15.607 0 9.753l8.332-1.598z"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        className="text-neutral-600"
-                                        strokeWidth="1.4"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                  );
-                                })}
-                              </div>
-
-                              <span className="text-[10px] text-neutral-300/80 tracking-wide whitespace-nowrap">
-                                {count} REVIEWS
-                              </span>
-                            </>
-                          );
-                        })()}
-                      </div>
-                    </div>
+                    <p
+                      className="mt-1 text-[14px] italic leading-snug text-neutral-200/85 font-semibold line-clamp-2"
+                      style={{ fontFamily: "'Playfair Display', serif" }}
+                    >
+                      {card.note?.replace(/micro[- ]batch\s*/i, "")}
+                    </p>
                   </div>
                 </Link>
               );
@@ -2167,7 +2103,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     </p>
 
                     <p
-                      className="mt-2 text-[14px] italic leading-snug text-[#9C9791]"
+                      className="mt-2 text-[18px] italic leading-snug text-neutral-200/85"
                       style={{ fontFamily: "'Playfair Display', serif" }}
                     >
                       {card.note}
@@ -2203,16 +2139,16 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
           </div>
 
           {/* bottom trust row */}
-          <div className="mt-7 grid grid-cols-4 max-w-[1450px] mx-auto px-4 xl:px-0 border-t border-[#6D5333]/30 pt-6">
+          <div className="hidden lg:grid mt-7 grid-cols-4 max-w-[1450px] mx-auto px-4 xl:px-0 pt-6">
             {[
               {
                 title: "ROASTED TO ORDER",
-                copy: "Never warehouse coffee.",
+                copy: "Never stale coffee.",
                 icon: "/anchor.png",
               },
               {
                 title: "SMALL BATCH ROASTED",
-                copy: "Carefully crafted in the USA.",
+                copy: "Ethically sourced beans.",
                 icon: "/compass.png",
               },
               {
@@ -2262,7 +2198,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     {item.title}
                   </div>
                   <div
-                    className="mt-1 text-[14px] italic text-[#B39871]"
+                    className="mt-1 text-[16px] italic-bold text-[#B39871]"
                     style={{ fontFamily: "'Playfair Display', serif" }}
                   >
                     {item.copy}
@@ -2270,6 +2206,63 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* MOBILE TRUST ROW */}
+        <div className="lg:hidden mt-6 grid grid-cols-2 gap-y-4 pt-5 px-3">
+          <div className="flex items-center gap-3">
+            <div className="relative w-[42px] h-[42px] flex items-center justify-center">
+              <img
+                src="/anchor.png"
+                className="h-[32px] w-[32px] object-contain scale-[2.3]"
+              />
+            </div>
+            <div
+              className="text-[13px] font-black"
+              style={{ color: "rgba(255,255,255,0.38)" }}
+            >
+              ROASTED TO ORDER
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <img
+              src="/compass.png"
+              className="h-[32px] w-[32px] object-contain scale-[3.2]"
+            />
+            <div
+              className="text-[13px] font-black"
+              style={{ color: "rgba(255,255,255,0.38)" }}
+            >
+              SMALL BATCH ROASTED
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <img
+              src="/truck.png"
+              className="h-[32px] w-[32px] object-contain scale-[3]"
+            />
+            <div
+              className="text-[13px] font-black"
+              style={{ color: "rgba(255,255,255,0.38)" }}
+            >
+              SHIPS FRESH
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <img
+              src="/army-star.png"
+              className="h-[32px] w-[32px] object-contain scale-[2.4]"
+            />
+            <div
+              className="text-[13px] font-black"
+              style={{ color: "rgba(255,255,255,0.38)" }}
+            >
+              VETERAN OWNED
+            </div>
           </div>
         </div>
       </Container>
@@ -2350,7 +2343,7 @@ function HomePage() {
     <>
       <header
         id="top"
-        className="relative overflow-hidden border-b border-neutral-800 z-0 min-h-screen"
+        className="relative overflow-hidden border-b-0 z-0 min-h-screen"
         style={{ isolation: "isolate" }}
       >
         {/* HERO background */}
@@ -2545,7 +2538,7 @@ transition-all duration-200"
                   )}
 
                   <div className="flex items-center justify-center gap-2 text-neutral-300 text-[0.95rem] sm:text-[1.1rem] text-center">
-                    <span>SMALL BATCH. VETERAN ROASTED</span>
+                    <span>SMALL BATCH. VETERAN OWNED</span>
                     <img
                       src="/stars-stripes.png"
                       alt="American flag"
@@ -2560,7 +2553,7 @@ transition-all duration-200"
         </Container>
       </header>
       {/* FULL WIDTH FLEET IMAGE (DESKTOP/TABLET) */}
-      <section className="hidden md:block w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-925 py-16 mt-0">
+      <section className="hidden md:block w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-black pt-8 pb-14">
         <div className="max-w-[1400px] mx-auto px-6">
           <img
             src="/bags-roast.jpg"
@@ -2570,168 +2563,258 @@ transition-all duration-200"
         </div>
       </section>
 
-      {/* MOBILE HERO VIDEO */}
-      <div className="hidden md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-        <div className="overflow-hidden h-[420px]">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            className="w-full h-full object-cover"
-          >
-            <source src="/short vid.mp4" type="video/mp4" />
-          </video>
-        </div>
-      </div>
       {/* MOBILE FLEET IMAGE */}
-      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-neutral-900 mt-4 overflow-visible max-h-[330px]">
+      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-black pt-4 pb-6 overflow-hidden">
         <img
           src="/bags-roast.jpg"
           alt="Old Ironsides Fleet"
-          className="w-full h-auto block scale-[1.20] origin-center translate-y-[10%]"
+          className="w-full h-auto block"
         />
       </div>
-      {/* FLEET SECTION (UNCHANGED) */}
-      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-neutral-950 mt-20 md:mt-0">
+
+      {/* FLEET SECTION */}
+      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-black py-16 md:py-24">
+        {/* BACKGROUND IMAGE */}
         <img
           src="/dark-theme.png"
           alt=""
           aria-hidden
-          className="hidden md:block absolute inset-0 w-full h-full object-cover object-[center_20%] opacity-100 translate-y-[40px] scale-110"
+          className="hidden md:block absolute inset-0 w-full h-full object-cover object-[center_20%] opacity-100 scale-110"
         />
 
-        <div className="hidden md:block absolute inset-0 bg-black/40 md:bg-black/45 lg:bg-black/40" />
+        {/* OVERLAY */}
+        <div className="hidden md:block absolute inset-0 bg-black/45" />
 
+        {/* CONTENT */}
         <div className="relative">
           <LaunchedFromHarbor noBg />
         </div>
       </section>
-      {/* ===== MOBILE SITE ONLY ===== */}
-      <div className="py-6 text-center md:hidden">
-        <p className="text-neutral-300 text-sm md:text-base">
-          The first 200 subscribers receive a free
-          <span className="text-amber-300 font-semibold">
-            {" "}
-            Old Ironsides diner mug
-          </span>{" "}
-          with their 2nd subscription purchase.
-        </p>
-      </div>
 
-      {/* ===== GIVING BACK (copied from Origins) ===== */}
+      {/* ===== ROASTING PROCESS ===== */}
       <section
-        id="origins-giving-back"
-        className="relative overflow-hidden border-t border-neutral-800 scroll-mt-28 md:scroll-mt-36 -mt-0 md:-mt-6"
+        id="roasting-process"
+        className="relative overflow-hidden bg-black border-t border-[#6D5333]/40 py-16 md:py-24"
       >
-        {/* Background image, cooled and desaturated */}
-        <img
-          src="/flag-close.jpg"
-          alt=""
-          role="presentation"
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover object-center z-0 pointer-events-none brightness-70 saturate-70 hue-rotate-[-10deg]"
-        />
+        <Container>
+          {/* MOBILE */}
+          <div className="lg:hidden text-left space-y-5 px-2">
+            <h3 className="font-playfair text-2xl font-bold italic text-[#C08C45] tracking-wide uppercase">
+              Our Roasting Process
+            </h3>
 
-        <div className="pointer-events-none absolute inset-0 z-0">
-          {/* global darken */}
-          <div className="absolute inset-0 bg-black/45" />
-          {/* left shield over copy only */}
-          <div className="absolute inset-y-0 left-0 w-full md:w-[62%] lg:w-[55%] bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
-          {/* mild texture blur */}
-          <div className="absolute inset-0 md:backdrop-blur-[2px]" />
-          {/* top/bottom vignette to kill remaining glare */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/35" />
+            <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#6D5333]/50 shadow-xl shadow-black/60 bg-black">
+              <img
+                src="/roaster.jpg"
+                alt="Coffee roasting process"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <p className="text-neutral-300 text-[1.05rem] leading-relaxed tracking-[0.02em]">
+              Coffee is at its best in the first days after roasting, when the
+              oils are alive, the aroma is full, and the flavor is at its peak.
+            </p>
+
+            <p className="text-[#C08C45] text-[1.05rem] leading-relaxed tracking-[0.02em]">
+              We roast to order every Monday and Thursday. We time the degassing
+              process with shipping so you receive your coffee at peak
+              freshness, hitting your cup at its prime exactly the way it was
+              meant to be experienced.
+            </p>
+          </div>
+
+          {/* DESKTOP */}
+          <div className="hidden lg:grid grid-cols-[auto,1fr] gap-10 xl:gap-14 items-center">
+            <div className="justify-self-start">
+              <div className="relative w-[30rem] aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#6D5333]/50 shadow-xl shadow-black/60 bg-black">
+                <img
+                  src="/roaster.jpg"
+                  alt="Coffee roasting process"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-5 text-left max-w-[760px]">
+              <h3 className="font-playfair text-4xl font-bold italic text-[#C08C45] tracking-wide uppercase">
+                Our Roasting Process
+              </h3>
+
+              <p className="text-neutral-100/90 text-[1.45rem] leading-relaxed tracking-[0.02em]">
+                Coffee is at its best in the first days after roasting, when the
+                oils are alive, the aroma is full, and the flavor is at its
+                peak.
+              </p>
+
+              <p className="text-[#C08C45] text-[1.45rem] leading-relaxed tracking-[0.02em]">
+                We roast to order every Monday and Thursday. We time the
+                degassing process with shipping so you receive your coffee at
+                peak freshness, hitting your cup at its prime exactly the way it
+                was meant to be experienced.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ===== THE LANDS WHERE OUR BEANS ARE GROWN ===== */}
+      <section
+        id="origins-lands"
+        className="relative overflow-hidden bg-black scroll-mt-28 md:scroll-mt-36 py-16 md:py-0"
+      >
+        {/* MOBILE */}
+        <div className="md:hidden">
+          <h3 className="px-4 pb-5 font-playfair text-2xl font-bold italic text-[#C08C45] tracking-wide uppercase text-left">
+            The Lands Where Our Beans Are Grown
+          </h3>
+
+          <img
+            src="/farm1-web.jpeg"
+            alt="Origins & Voyages backdrop"
+            className="w-screen max-w-none relative left-1/2 -translate-x-1/2 h-auto block"
+          />
+
+          <div className="px-4 pt-6 text-left space-y-4">
+            <p className="text-[#C08C45] text-[1.1rem] leading-relaxed tracking-[0.01em]">
+              From the volcanic slopes of Guatemala to the highlands of Ethiopia
+              and the misty mountains of Colombia, our beans are born in lands
+              where rich soil and thin air create extraordinary flavor.
+            </p>
+
+            <p className="text-neutral-300 text-[1.1rem] leading-relaxed tracking-[0.01em]">
+              These distant regions each lend their own character, shaped by
+              altitude, climate, and tradition. It is here that our journey
+              begins, where the spirit of the land becomes the soul of every cup
+              of Old Ironsides Coffee.
+            </p>
+          </div>
         </div>
 
+        {/* DESKTOP */}
+        <div className="hidden md:block relative">
+          <img
+            src="/farm1-web.jpeg"
+            alt="Origins & Voyages backdrop"
+            className="absolute inset-0 w-full h-full object-cover object-[50%_68%] opacity-80 z-0 pointer-events-none"
+          />
+
+          <div className="absolute inset-0 bg-black/55 z-0 pointer-events-none" />
+
+          <Container>
+            <div className="relative z-10 flex items-center min-h-[820px] py-24 xl:py-32">
+              <div className="grid w-full grid-cols-[1fr,auto] gap-10 xl:gap-14 items-center">
+                <div className="space-y-5 text-left">
+                  <h3 className="font-playfair text-4xl font-bold italic text-[#C08C45] tracking-wide uppercase">
+                    The Lands Where Our Beans Are Grown
+                  </h3>
+
+                  <p className="text-neutral-300 text-2xl leading-relaxed tracking-[0.01em]">
+                    From the volcanic slopes of Guatemala to the highlands of
+                    Ethiopia and the misty mountains of Colombia, our beans are
+                    born in lands where rich soil and thin air create
+                    extraordinary flavor.
+                    <br />
+                    <br />
+                    These distant regions each lend their own character, shaped
+                    by altitude, climate, and tradition. It is here that our
+                    journey begins, where the spirit of the land becomes the
+                    soul of every cup of Old Ironsides Coffee.
+                  </p>
+                </div>
+
+                <div className="justify-self-center self-center">
+                  <div className="w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-[#6D5333]/50 bg-black">
+                    <img
+                      src="/bean-stock3.jpeg"
+                      alt="Beans lands"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Container>
+        </div>
+      </section>
+
+      {/* ===== THE HANDS THAT GROW OUR BEANS ===== */}
+      <section
+        id="origins-hands"
+        className="relative overflow-hidden bg-black scroll-mt-28 md:scroll-mt-36 py-16 md:py-24"
+      >
         <Container>
-          {/* ===== MOBILE-ONLY: amber line + GovX button ===== */}
-          <div className="relative z-10 lg:hidden min-h-[320px] py-5 flex items-center">
-            <div className="mx-auto max-w-screen-sm space-y-4 text-center">
-              <p className="text-amber-300 text-xl leading-relaxed tracking-[0.02em]">
-                Active duty, veterans, and first responders including fire, law
-                enforcement, and EMTs receive $1 off every bag of fresh roasted
-                coffee, every day. The discount stacks with subscriptions.
+          {/* MOBILE */}
+          <div className="md:hidden text-left">
+            <h3 className="pb-5 font-playfair text-2xl font-bold italic text-[#C08C45] tracking-wide uppercase">
+              The Hands That Grow Our Beans
+            </h3>
+
+            <img
+              src="/hands-beans.jpeg"
+              alt="The hands that grow our beans"
+              className="w-screen max-w-none relative left-1/2 -translate-x-1/2 h-auto block"
+            />
+
+            <div className="pt-6 space-y-4">
+              <p className="text-[#C08C45] text-[1.1rem] leading-relaxed tracking-[0.01em]">
+                Behind every harvest are the families who make it possible.
+                Generations of farmers rise before dawn, nurturing each tree by
+                hand and protecting the land that sustains them. Their
+                knowledge, patience, and respect for nature give our coffee its
+                strength and character.
               </p>
-              <a
-                href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
-                className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
-       text-amber-400 font-semibold text-[1rem]
-       px-[1.1rem] py-[0.45rem]
-       hover:bg-amber-400 hover:text-neutral-900 transition-all"
-              >
-                Get GovX discount code
-              </a>
+
+              <p className="text-neutral-300 text-[1.1rem] leading-relaxed tracking-[0.01em]">
+                These small family farms are the heart of what we do. Every bean
+                is ethically sourced, every grower treated with fairness and
+                dignity. Their craftsmanship and pride live on in every roast,
+                carrying forward the spirit of Old Ironsides Coffee.
+              </p>
             </div>
           </div>
 
-          {/* ===== DESKTOP/TABLET: original layout (unchanged) ===== */}
-          <div className="relative z-10 hidden lg:block">
-            <div className="min-h-[420px] py-6 flex flex-col justify-start">
-              <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-6 items-center">
-                <div className="justify-self-center md:justify-self-start self-center">
-                  <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
-                    <img
-                      src="/soliders-sunset.jpg"
-                      alt="Giving back"
-                      className="w-full h-full object-cover hue-rotate-[-10deg] saturate-70"
-                    />
-                    {/* top and bottom vignettes reduce perceived warmth */}
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10" />
-                  </div>
-                </div>
-
-                {/* text: center on mobile, left on md+ */}
-                <div className="space-y-3 text-center md:text-left">
-                  <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
-                    Giving Back To Those Who Served
-                  </h3>
-                  <br />
-
-                  <p className="text-neutral-100 text-xl md:text-[1.4rem] lg:text-2xl leading-relaxed tracking-[0.02em]">
-                    Even as a young company where every dollar counts, giving
-                    back is a big part of who we are and what Old Ironsides
-                    Coffee stands for. As a veteran, I believe service is a
-                    promise kept when no one is watching. It is standards held
-                    high, teamwork under pressure, and loyalty to the people
-                    beside you. <br />
-                    <br />
-                    This brand exists to honor that code, to stand with those
-                    who protect our freedoms, and to keep their legacy present
-                    in the work we do every day.
-                  </p>
-                  <br />
-                  <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                    Active duty, veterans, and first responders receive $1 off
-                    every bag of fresh roasted coffee, every day. The discount
-                    stacks with subscriptions.
-                  </p>
-                  <br />
-                  <a
-                    href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
-                    className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
-       text-amber-400 font-semibold text-[1rem]
-       px-[1.1rem] py-[0.45rem]
-       hover:bg-amber-400 hover:text-neutral-900 transition-all"
-                  >
-                    Get GovX discount code
-                  </a>
-                </div>
+          {/* DESKTOP */}
+          <div className="hidden md:grid grid-cols-[auto,1fr] gap-10 xl:gap-14 items-center">
+            <div className="justify-self-center self-center">
+              <div className="w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-[#6D5333]/50 bg-black">
+                <img
+                  src="/hands-beans.jpeg"
+                  alt="Hands with beans"
+                  className="w-full h-full object-cover"
+                />
               </div>
+            </div>
+
+            <div className="space-y-5 text-left">
+              <h3 className="font-playfair text-4xl font-bold italic text-[#C08C45] tracking-wide uppercase">
+                The Hands That Grow Our Beans
+              </h3>
+
+              <p className="text-neutral-300 text-2xl leading-relaxed tracking-[0.01em]">
+                Behind every harvest are the families who make it possible.
+                Generations of farmers rise before dawn, nurturing each tree by
+                hand and protecting the land that sustains them. Their
+                knowledge, patience, and respect for nature give our coffee its
+                strength and character.
+                <br />
+                <br />
+                These small family farms are the heart of what we do. Every bean
+                is ethically sourced, every grower treated with fairness and
+                dignity. Their craftsmanship and pride live on in every roast,
+                carrying forward the spirit of Old Ironsides Coffee.
+              </p>
             </div>
           </div>
         </Container>
       </section>
       <section
         id="contact"
-        className="py-16 md:py-24 border-b border-neutral-800"
+        className="py-16 md:py-24 border-b border-[#6D5333]/40 bg-black"
       >
         <Container>
-          <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 items-start">
-            {/* LEFT COLUMN */}
-            <div className="max-w-[560px] md:mx-auto lg:mx-0 text-center md:text-center lg:text-center">
+          <div className="grid md:grid-cols-1 gap-6 md:gap-12 items-start">
+            <div className="max-w-[560px] md:mx-auto text-center">
               <SectionTitle
                 title="Hail The Quarterdeck"
                 subtitle="Questions • Comments • Press – We’ll get back to you fast."
@@ -2739,29 +2822,29 @@ transition-all duration-200"
 
               <div className="mt-8 flex flex-col gap-5 text-sm">
                 {/* CONTACT BOX */}
-                <div className="rounded-xl ring-1 ring-neutral-800 bg-neutral-900/40 px-5 py-3 text-center">
-                  <div className="flex items-center justify-center gap-2 text-neutral-300">
-                    <Mail className="h-4 w-4 text-amber-300" />
+                <div className="rounded-xl ring-1 ring-[#6D5333]/50 bg-black px-5 py-3 text-center">
+                  <div className="flex items-center justify-center gap-2 text-[#B39871]">
+                    <Mail className="h-4 w-4 text-[#C08C45]" />
                     HQ@oldironsidescoffee.org
                   </div>
 
-                  <div className="mt-1 text-neutral-400 text-xs">
+                  <div className="mt-1 text-[#9C9791] text-xs">
                     6 Liberty Square #2564, Boston, MA 02109
                   </div>
                 </div>
 
                 {/* SOCIAL */}
-                <div className="rounded-xl ring-1 ring-neutral-800 bg-neutral-900/40 px-5 py-3 text-center">
-                  <div className="text-amber-300 text-sm font-semibold">
+                <div className="rounded-xl ring-1 ring-[#6D5333]/50 bg-black px-5 py-3 text-center">
+                  <div className="text-[#C08C45] text-sm font-semibold">
                     Follow Us
                   </div>
 
-                  <div className="mt-2 flex justify-center gap-6 text-amber-300 text-sm">
+                  <div className="mt-2 flex justify-center gap-6 text-[#C08C45] text-sm">
                     <a
                       href="https://instagram.com/oldironsidescoffee"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:text-amber-200 transition"
+                      className="inline-flex items-center gap-2 hover:text-[#E6C07F] transition"
                     >
                       <Instagram className="h-4 w-4" />
                       Instagram
@@ -2771,7 +2854,7 @@ transition-all duration-200"
                       href="https://facebook.com/oldironsidescoffee"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:text-amber-200 transition"
+                      className="inline-flex items-center gap-2 hover:text-[#E6C07F] transition"
                     >
                       <Facebook className="h-4 w-4" />
                       Facebook
@@ -2780,17 +2863,10 @@ transition-all duration-200"
                 </div>
 
                 {/* SDVOSB */}
-                <div>
-                  <div className="hidden md:block">
-                    <SDVOSBHighlight />
-                  </div>
+                <div className="hidden md:block">
+                  <SDVOSBHighlight />
                 </div>
               </div>
-            </div>
-
-            {/* RIGHT COLUMN */}
-            <div className="order-first md:order-first lg:order-none -mt-8 md:mt-0 lg:pt-12">
-              <RingThatBellBox />
             </div>
           </div>
         </Container>

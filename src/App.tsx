@@ -400,6 +400,8 @@ const roastCards = [
     subTitle: "Medium Roast",
     note: "Balanced, Enduring, Everyday",
     img: "Flagship Transparent Mockup.png", // Main image for hero section
+    // Detail page hero image. Homepage tile still uses img.
+    detailImg: "flagship-1.jpg",
     imgLeft: "washington-cannon.jpg", // New property for left image in duel
     imgRight: "barry-ship.jpg", // New property for right image in duel
     heroImg: "Flagship-web.jpg", // New property for hero section image
@@ -426,6 +428,8 @@ const roastCards = [
     subTitle: "Dark Roast",
     note: "Bold, Smooth, Unyielding",
     img: "Baptism By Fire Transparent .png", // Main image for hero section
+    // Detail page hero image. Homepage tile still uses img.
+    detailImg: "Baptism-1.jpg",
     imgLeft: "capt-hull.jpeg", // New property for left image in duel
     imgRight: "james-surrender.jpeg", // New property for right image in duel
     heroImg: "baptism-web.jpg", // New property for hero section image
@@ -452,6 +456,8 @@ const roastCards = [
     subTitle: "Medium Roast",
     note: "Captivating, Decisive Finish.",
     img: "Java Action Transparent.png", // Main image for hero section
+    // Detail page hero image. Homepage tile still uses img.
+    detailImg: "java-action-1.jpg",
     imgLeft: "bainbridge-java.jpg", // New property for left image in duel
     imgRight: "lambert-pic.jpg", // New property for right image in duel
     heroImg: "java-web.jpg", // New property for hero section image
@@ -488,6 +494,8 @@ const roastCards = [
     subTitle: "Bourbon Barrel Aged",
     note: "Limited Release, Micro-Batch",
     img: "Oak&Copper Bag Transparent.png", // Main image for hero section
+    // Detail page hero image. Homepage tile still uses img.
+    detailImg: "oak&copper-1.jpg",
     imgLeft: "ship-hull.jpg", // New property for left image in duel
     imgRight: "ship-restore.jpeg", // New property for right image in duel
     heroImg: "ironship.jpg", // New property for hero section image
@@ -511,6 +519,8 @@ const roastCards = [
     title: "BRASS MONKEY",
     subTitle: "Winter Seasonal",
     note: "Warm Pecan",
+    // Detail page hero image. Homepage tile still uses img.
+    detailImg: "Brass Monkey-1.jpg",
     img: "/Brass Monkey Transparent Bag.png", // change to your actual filename
     price: 22, // change if needed
     canBuy: true, // or false if you want it visible but not purchasable yet
@@ -2031,12 +2041,17 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                   className="
                   group relative overflow-hidden rounded-[10px]
                   scale-[0.94] xl:scale-100 origin-top
-            border border-[#6D5333]/80
-            bg-[#070503]
-            h-[240px]
-            px-5 py-3
-            shadow-[0_0_28px_rgba(0,0,0,0.85),inset_0_0_24px_rgba(192,140,69,0.11)]
-          "
+                  border border-[#6D5333]/80
+                  bg-[#070503]
+                  h-[240px]
+                  px-5 py-3
+              
+                  shadow-[0_0_28px_rgba(0,0,0,0.85),inset_0_0_24px_rgba(192,140,69,0.11)]
+                  transition-all duration-300
+              
+                  hover:border-[#C08C45]/70
+                  hover:shadow-[0_0_34px_rgba(0,0,0,0.9),0_0_16px_rgba(192,140,69,0.18),inset_0_0_24px_rgba(192,140,69,0.12)]
+                "
                 >
                   {/* inner glow wash */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[#C08C45]/10 via-[#070503] to-black" />
@@ -2122,13 +2137,19 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     <Link
                       to={`/roast/${card.slug}`}
                       className="
-  mt-3 w-[230px]
-  rounded-[5px] border border-[#6D5333]
-  bg-black px-6 py-3
-  text-center text-[14px] font-black tracking-[0.08em]
-  text-[#E6C07F]
-  shadow-[inset_0_0_18px_rgba(192,140,69,0.18)]
-"
+                      mt-3 w-[230px]
+                      rounded-[5px] border border-[#6D5333]
+                      bg-black px-6 py-3
+                      text-center text-[14px] font-black tracking-[0.08em]
+                      text-[#E6C07F]
+                      shadow-[inset_0_0_18px_rgba(192,140,69,0.18)]
+                      transition-all duration-200
+                      hover:bg-[#C08C45]
+                      hover:text-black
+                      hover:border-[#C08C45]
+                      hover:shadow-[0_4px_14px_rgba(192,140,69,0.25),inset_0_0_18px_rgba(192,140,69,0.12)]
+                      hover:-translate-y-[1px]
+                    "
                     >
                       VIEW ROAST
                     </Link>
@@ -2153,7 +2174,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
               },
               {
                 title: "SHIPS FRESH",
-                copy: "Roasted Monday. Ships Wednesday.",
+                copy: "Ships directly to you.",
                 icon: "/truck.png",
               },
               {
@@ -2411,22 +2432,22 @@ function HomePage() {
                 <span className="block text-ironsideWhite">
                   FRESH ROASTED COFFEE.
                 </span>
-                <span className="block text-roastTitle/85 md:text-roastTitle mt-4">
-                  CRAFTED WITH PURPOSE.
+                <span className="block text-[#C08C45] md:text-[#D3A052] mt-4">
+                  BUILT ON TRADITION.
                 </span>
               </h2>
 
               {/* DIVIDER */}
               <div className="flex items-center w-full mt-5 md:mt-6">
-                <div className="h-px flex-1 bg-roastTitle/85 md:bg-roastTitle/75" />
-                <span className="px-2 md:px-3 text-roastTitle text-base md:text-lg leading-none">
+                <div className="h-px flex-1 bg-[#C08C45]/70" />
+                <span className="px-2 md:px-3 text-[#E6C07F] text-base md:text-lg leading-none">
                   ★
                 </span>
-                <div className="h-px flex-1 bg-roastTitle/85 md:bg-roastTitle/75" />
+                <div className="h-px flex-1 bg-[#C08C45]/70" />
               </div>
 
               {/* SUBTEXT */}
-              <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-ironsideWhite">
+              <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-ironsideWhite/80">
                 Roasted to order. Finished for consistency, not volume.
               </div>
 
@@ -2436,12 +2457,15 @@ function HomePage() {
                   <Link
                     to="/store"
                     className="relative inline-flex h-[58px] w-full md:w-fit items-center justify-center
-px-8 sm:px-9
-rounded-none overflow-hidden
-text-black font-extrabold
-text-xl sm:text-lg md:text-[1.6rem] tracking-wide
-border border-selectedBtnOutline shadow-none
-transition-all duration-200"
+                    px-8 sm:px-9
+                    rounded-none overflow-hidden
+                    text-black font-extrabold
+                    text-xl sm:text-lg md:text-[1.6rem] tracking-wide
+                    border border-[#6D5333]
+                    shadow-[0_0_18px_rgba(192,140,69,0.18)]
+                    transition-all duration-200
+                    hover:-translate-y-[1px]
+                    hover:shadow-[0_0_24px_rgba(230,192,127,0.22)]"
                   >
                     {/* BACKGROUND */}
                     <div className="absolute inset-0 bg-chestTexture bg-cover bg-center" />
@@ -2459,12 +2483,17 @@ transition-all duration-200"
                   <Link
                     to="/store"
                     className="inline-flex h-[58px] w-full md:w-fit items-center justify-center
-px-8 sm:px-9
-rounded-none bg-black text-ironsideBronzeDark font-extrabold
-text-lg sm:text-base md:text-[1.3rem] tracking-wide
-border border-ironsideBronzeDark
-hover:bg-ironsideBronzeDark hover:text-black
-transition-all duration-200"
+                    px-8 sm:px-9
+                    rounded-none bg-black text-[#E6C07F] font-extrabold
+                    text-lg sm:text-base md:text-[1.3rem] tracking-wide
+                    border border-[#C08C45]
+                    shadow-[inset_0_0_12px_rgba(255,255,255,0.08),0_0_18px_rgba(192,140,69,0.18)]
+                    transition-all duration-200
+                    hover:-translate-y-[1px]
+                    hover:bg-[#C08C45]
+                    hover:text-black
+                    hover:border-[#C08C45]
+                    hover:shadow-[0_0_22px_rgba(192,140,69,0.22)]"
                   >
                     SHOP FULL BAGS
                   </Link>
@@ -2553,8 +2582,31 @@ transition-all duration-200"
         </Container>
       </header>
       {/* FULL WIDTH FLEET IMAGE (DESKTOP/TABLET) */}
-      <section className="hidden md:block w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-black pt-8 pb-14">
-        <div className="max-w-[1400px] mx-auto px-6">
+      <section className="hidden md:block w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-black pt-12 pb-14">
+        <div className="relative max-w-[1400px] mx-auto px-6">
+          {/* TOP OVERLAY */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[40%] z-10 text-center">
+            <h2 className="font-cinzel text-[#E6C07F] text-[2.6rem] xl:text-[3.4rem] font-black tracking-[0.08em]">
+              MEET THE FLEET
+            </h2>
+
+            <p className="mt-2 font-playfair italic text-ironsideWhite/85 text-[1.2rem] xl:text-[1.35rem]">
+              Six roasts. Roasted to order. No compromises.
+            </p>
+
+            <a
+              href="#fleet"
+              className="mt-4 inline-flex items-center justify-center
+        border border-[#C08C45] bg-black/70 px-7 py-2.5
+        text-[#E6C07F] font-extrabold tracking-[0.12em] text-[0.8rem]
+        transition-all duration-200
+        hover:bg-[#C08C45] hover:text-black hover:-translate-y-[1px]
+        hover:shadow-[0_0_22px_rgba(192,140,69,0.22)]"
+            >
+              EXPLORE THE LINEUP ↓
+            </a>
+          </div>
+
           <img
             src="/bags-roast.jpg"
             alt="Old Ironsides Fleet"
@@ -2594,7 +2646,7 @@ transition-all duration-200"
       {/* ===== ROASTING PROCESS ===== */}
       <section
         id="roasting-process"
-        className="relative overflow-hidden bg-black border-t border-[#6D5333]/40 py-16 md:py-24"
+        className="relative overflow-hidden bg-black pt-8 pb-24 md:pt-12 md:pb-36"
       >
         <Container>
           {/* MOBILE */}
@@ -2611,12 +2663,12 @@ transition-all duration-200"
               />
             </div>
 
-            <p className="text-neutral-300 text-[1.05rem] leading-relaxed tracking-[0.02em]">
+            <p className="text-[#C08C45] text-[1.05rem] leading-relaxed tracking-[0.02em]">
               Coffee is at its best in the first days after roasting, when the
               oils are alive, the aroma is full, and the flavor is at its peak.
             </p>
 
-            <p className="text-[#C08C45] text-[1.05rem] leading-relaxed tracking-[0.02em]">
+            <p className="text-neutral-300 text-[1.05rem] leading-relaxed tracking-[0.02em]">
               We roast to order every Monday and Thursday. We time the degassing
               process with shipping so you receive your coffee at peak
               freshness, hitting your cup at its prime exactly the way it was
@@ -2669,11 +2721,16 @@ transition-all duration-200"
             The Lands Where Our Beans Are Grown
           </h3>
 
-          <img
-            src="/farm1-web.jpeg"
-            alt="Origins & Voyages backdrop"
-            className="w-screen max-w-none relative left-1/2 -translate-x-1/2 h-auto block"
-          />
+          <div className="relative w-screen max-w-none left-1/2 -translate-x-1/2">
+            <img
+              src="/farm1-web.jpeg"
+              alt="Origins & Voyages backdrop"
+              className="w-full h-auto block"
+            />
+
+            {/* OVERLAY */}
+            <div className="absolute inset-0 bg-black/45" />
+          </div>
 
           <div className="px-4 pt-6 text-left space-y-4">
             <p className="text-[#C08C45] text-[1.1rem] leading-relaxed tracking-[0.01em]">
@@ -3437,39 +3494,6 @@ function BuyBoxSection({
           />
         </div>
 
-        <div
-          className={
-            "mt-4 w-full border-2 bg-neutral-950 md:bg-black/70 " +
-            (showBeanError
-              ? "border-red-500 ring-2 ring-red-500 animate-pulse"
-              : "border-amber-400/60")
-          }
-        >
-          <div className="p-3">
-            <div className="flex flex-wrap items-center gap-2 text-sm">
-              <span className="font-semibold text-amber-300">Bean Type:</span>
-
-              <label htmlFor="beanTypeSelectMobile" className="sr-only">
-                Bean Type
-              </label>
-
-              <BeanTypeSelect
-                id="beanTypeSelectMobile"
-                beanType={beanType}
-                setBeanType={setBeanType}
-                setShowBeanError={setShowBeanError}
-                className={
-                  "min-w-[15rem] border px-2 py-2 text-sm text-center outline-none bg-neutral-950 md:bg-black/70 " +
-                  (beanType
-                    ? "border-amber-400/70 text-amber-300"
-                    : "border-neutral-700 text-neutral-400") +
-                  " focus-visible:ring-2 focus-visible:ring-amber-400"
-                }
-              />
-            </div>
-          </div>
-        </div>
-
         <div className="mt-4 flex items-center gap-3">
           <QuantityControl
             qty={qty}
@@ -3507,104 +3531,78 @@ function BuyBoxSection({
   return (
     <>
       <div
-        className={`hidden md:block order-2 md:order-4 mt-6 w-full ${
-          DESKTOP_BUYBOX_SHIFT[card.slug] || ""
+        className={`hidden md:block order-2 md:order-4 mt-6 w-full${
+          card.slug === "flagship" ? DESKTOP_BUYBOX_SHIFT[card.slug] || "" : ""
         }`}
       >
         <div className="flex flex-col md:flex-row md:items-stretch md:gap-4">
           <div
             ref={buyBoxRef}
-            className="inline-flex w-full md:w-auto items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-3 px-4 shadow-md shadow-amber-400/10"
+            className="inline-flex w-full md:w-auto items-center gap-4 rounded-md border border-[#6D5333] bg-black/70 p-3 px-4 shadow-md shadow-[#C08C45]/10"
           >
-            <div className="text-sm text-neutral-300">
-              <PriceDisplay
-                basePrice={basePrice}
-                discounted={discounted}
-                purchaseMode={purchaseMode}
-                isOak={isOak}
-                sizeLabel="/ bag"
-              />
+            <div className="text-sm">
+              {purchaseMode === "sub" && !isOak ? (
+                <>
+                  <span className="line-through text-[#9C9791] mr-2">
+                    {fmt(basePrice)}
+                  </span>
+                  <span className="font-bold text-[#E6C07F]">
+                    {fmt(discounted)}
+                  </span>
+                </>
+              ) : (
+                <span className="font-bold text-[#E6C07F]">
+                  {fmt(basePrice)}
+                </span>
+              )}
+
+              <span className="text-xs text-[#9C9791] ml-1">/ bag</span>
             </div>
 
             <div className="ml-auto inline-flex items-center gap-4">
               <QuantityControl
                 qty={qty}
                 setQty={setQty}
-                className="inline-flex items-center rounded-lg border border-neutral-700"
-                buttonClassName="px-2 py-1 hover:bg-neutral-800"
-                inputClassName="w-12 text-center bg-neutral-900/70 py-1.5 text-sm outline-none"
+                className="inline-flex items-center rounded-md border border-[#6D5333]"
+                buttonClassName="px-2 py-1 text-[#E6C07F] hover:bg-[#32220D]"
+                inputClassName="w-12 text-center bg-black/70 py-1.5 text-sm text-[#E6C07F] outline-none border-x border-[#6D5333]"
               />
 
-              <button
-                type="button"
-                onClick={addToChest}
-                disabled={adding}
-                className={
-                  "px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm md:text-base font-semibold border border-amber-400/70 text-amber-300 bg-black transition shadow-md shadow-amber-400/10 " +
-                  (adding
-                    ? "opacity-60 cursor-not-allowed"
-                    : "hover:bg-amber-400 hover:text-neutral-900")
-                }
-                aria-label={`Add ${card.title} to Chest`}
-              >
-                {adding ? "Adding..." : "Add to Chest"}
-              </button>
+              <div className="flex flex-col items-center">
+                <button
+                  type="button"
+                  onClick={addToChest}
+                  disabled={adding}
+                  className={
+                    "px-4 py-2 md:px-6 md:py-3 rounded-md text-sm md:text-base font-semibold border border-[#C08C45] text-[#E6C07F] bg-black transition shadow-md shadow-[#C08C45]/10 " +
+                    (adding
+                      ? "opacity-60 cursor-not-allowed"
+                      : "hover:bg-[#C08C45] hover:text-black")
+                  }
+                  aria-label={`Add ${card.title} to Chest`}
+                >
+                  {adding ? "Adding..." : "Add to Chest"}
+                </button>
+              </div>
             </div>
-          </div>
-
-          <div
-            className={
-              "group inline-flex w-full md:w-auto items-center justify-between gap-4 rounded-xl p-3 px-4 shadow-md transition mt-3 md:mt-0 " +
-              (showBeanError
-                ? "border border-red-500 ring-2 ring-red-500 animate-pulse bg-black/70"
-                : "border border-amber-400/60 bg-black/70 shadow-amber-400/10 hover:border-amber-400/80 hover:shadow-[0_0_0_2px_rgba(251,191,36,0.25)]")
-            }
-            style={{
-              minHeight: buyBoxDims?.h ? `${buyBoxDims.h}px` : undefined,
-              height: buyBoxDims?.h ? `${buyBoxDims.h}px` : undefined,
-            }}
-          >
-            <div className="text-sm text-neutral-300">
-              <div className="font-semibold text-amber-300">Bean Type</div>
-              <div className="text-xs text-neutral-400 mt-0.5">12oz bags</div>
-            </div>
-
-            <label htmlFor="beanTypeSelectDesktop" className="sr-only">
-              Bean Type
-            </label>
-
-            <BeanTypeSelect
-              id="beanTypeSelectDesktop"
-              beanType={beanType}
-              setBeanType={setBeanType}
-              setShowBeanError={setShowBeanError}
-              ariaInvalid={showBeanError}
-              className={
-                "min-w-[10rem] md:min-w-[12rem] rounded-lg border px-3 py-2 text-sm outline-none bg-black/70 " +
-                (beanType
-                  ? "border-amber-400/70 text-amber-300"
-                  : "border-neutral-700 text-neutral-400") +
-                " focus-visible:ring-2 focus-visible:ring-amber-400"
-              }
-            />
           </div>
         </div>
       </div>
 
       <div
-        className={`hidden md:block order-3 md:order-3 mt-6 w-full ${
-          DESKTOP_BUYBOX_SHIFT[card.slug] || ""
+        className={`hidden md:block order-3 md:order-3 mt-6 w-full${
+          card.slug === "flagship" ? DESKTOP_BUYBOX_SHIFT[card.slug] || "" : ""
         }`}
       >
-        <div className="inline-flex items-center gap-4 rounded-xl border border-amber-400/60 bg-black/70 p-4 px-5 shadow-md shadow-amber-400/10 w-full md:w-fit">
+        <div className="w-full max-w-[620px] grid grid-cols-2 gap-3">
           <button
             type="button"
             onClick={() => setPurchaseMode("one")}
             className={
-              "px-3 py-1.5 rounded-lg border text-xs md:text-sm leading-none tracking-tight font-semibold transition w-full sm:w-auto text-center " +
+              "h-[58px] rounded-md border text-sm md:text-base leading-none tracking-tight font-semibold transition text-center " +
               (purchaseMode === "one"
-                ? "bg-amber-400 text-neutral-900 border-amber-400"
-                : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
+                ? "bg-[#C08C45] text-black border-[#C08C45]"
+                : "bg-[#130E08] text-[#C08C45] border-[#6D5333] hover:border-[#C08C45] hover:text-[#E6C07F]")
             }
             aria-pressed={purchaseMode === "one"}
           >
@@ -3615,19 +3613,15 @@ function BuyBoxSection({
             type="button"
             onClick={() => setPurchaseMode("sub")}
             className={
-              "px-4 py-2 rounded-lg border text-sm md:text-base font-semibold transition w-full sm:w-auto text-center " +
+              "h-[58px] rounded-md border text-sm md:text-base font-semibold transition text-center " +
               (purchaseMode === "sub"
-                ? "bg-amber-400 text-neutral-900 border-amber-400"
-                : "text-amber-300 border-neutral-700 hover:border-amber-400/40")
+                ? "bg-[#32220D] text-[#E6C07F] border-[#C08C45]"
+                : "bg-[#130E08] text-[#C08C45] border-[#6D5333] hover:border-[#C08C45] hover:text-[#E6C07F]")
             }
             aria-pressed={purchaseMode === "sub"}
           >
             {isOak ? "Join the Fleet" : "Join the Fleet & Save 15%"}
           </button>
-
-          <span className="hidden md:block text-sm text-amber-300 font-semibold whitespace-nowrap">
-            Combine any 3+ roasts and get free shipping
-          </span>
         </div>
 
         {purchaseMode === "sub" && (
@@ -3730,13 +3724,13 @@ function PurchaseModeButton({
       type="button"
       onClick={onClick}
       className={
-        "w-full border-2 p-4 " +
+        "w-full border rounded-md p-4 transition " +
         (isSub
           ? "flex flex-col text-left "
           : "flex items-start justify-between text-left ") +
         (active
-          ? "border-amber-400 ring-1 ring-amber-400/40 bg-neutral-950 md:bg-black/70"
-          : "border-neutral-700 bg-neutral-950 md:bg-black/40")
+          ? "border-[#C08C45] bg-[#32220D] text-[#E6C07F] shadow-[0_0_14px_rgba(192,140,69,0.16)]"
+          : "border-[#6D5333] bg-[#130E08] text-[#9C9791]")
       }
       aria-pressed={active}
     >
@@ -3750,24 +3744,24 @@ function PurchaseModeButton({
         <div
           className={
             "h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 " +
-            (active ? "border-amber-400" : "border-neutral-400")
+            (active ? "border-[#C08C45]" : "border-[#6D5333]")
           }
         >
           <div
             className={
               "h-2.5 w-2.5 rounded-full " +
-              (active ? "bg-amber-400" : "bg-transparent")
+              (active ? "bg-[#C08C45]" : "bg-transparent")
             }
           />
         </div>
 
         <div className="flex flex-col flex-1">
           <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 w-full">
-            <span className="text-base text-neutral-100 font-medium leading-none">
+            <span className="text-base font-cinzel font-black leading-none">
               {isSub ? "Join The Fleet" : "Single Purchase"}
             </span>
 
-            <span className="text-sm text-neutral-300">
+            <span className="text-sm">
               <PriceDisplay
                 basePrice={basePrice}
                 discounted={discounted}
@@ -3779,11 +3773,11 @@ function PurchaseModeButton({
 
           {isSub && !isOak && (
             <div className="mt-2 flex items-center gap-2">
-              <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-red-600 text-white tracking-tight">
+              <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-[#C08C45] text-black tracking-tight">
                 SAVE 15%
               </span>
 
-              <span className="text-[11px] text-amber-300 font-medium">
+              <span className="text-[11px] text-[#B39871] font-medium">
                 Skip or cancel anytime
               </span>
             </div>
@@ -3873,21 +3867,72 @@ function BeanTypeSelect({
   className?: string;
   ariaInvalid?: boolean;
 }) {
+  const options = [
+    {
+      value: "whole" as const,
+      title: "WHOLE BEAN",
+      subtitle: "Best for grinders",
+      img: "/whole-bean.png",
+    },
+    {
+      value: "ground" as const,
+      title: "GROUND",
+      subtitle: "Ready to brew",
+      img: "/ground.png",
+    },
+  ];
+
   return (
-    <select
+    <div
       id={id}
-      value={beanType}
-      onChange={(e) => {
-        setBeanType(e.target.value as "" | "whole" | "ground");
-        setShowBeanError(false);
-      }}
-      className={className}
+      role="radiogroup"
       aria-invalid={ariaInvalid || undefined}
+      className={`grid grid-cols-2 gap-3 w-full ${className}`}
     >
-      <option value="">Choose...</option>
-      <option value="whole">12oz Whole Bean</option>
-      <option value="ground">12oz Ground</option>
-    </select>
+      {options.map((option) => {
+        const active = beanType === option.value;
+
+        return (
+          <button
+            key={option.value}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={() => {
+              setBeanType(option.value);
+              setShowBeanError(false);
+            }}
+            className={
+              "relative overflow-hidden min-w-0 h-[70px] rounded-none border px-3 text-left transition " +
+              (active
+                ? "bg-[#32220D] border-[#6D5333] text-[#E6C07F] shadow-[0_0_18px_rgba(192,140,69,0.18)]"
+                : "bg-[#130E08] border-[#6D5333]/70 text-[#9C9791] hover:border-[#6D5333]")
+            }
+          >
+            <img
+              src={option.img}
+              alt=""
+              aria-hidden
+              className={
+                "pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 object-contain opacity-90 " +
+                (option.value === "whole"
+                  ? "h-[34px] w-[34px]"
+                  : "h-[38px] w-[38px]")
+              }
+            />
+
+            <div className="pl-[48px] leading-tight">
+              <div className="text-[13px] font-black tracking-wide">
+                {option.title}
+              </div>
+              <div className="mt-1 text-[11px] font-semibold opacity-75">
+                {option.subtitle}
+              </div>
+            </div>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 const STAR_PATH =
@@ -4132,6 +4177,7 @@ function ReviewCard({
   );
 }
 const SUB_OPTIONS = [14, 30, 60] as const;
+
 function SubscriptionFrequencyPicker({
   subEvery,
   setSubEvery,
@@ -4142,13 +4188,13 @@ function SubscriptionFrequencyPicker({
   mobile?: boolean;
 }) {
   return (
-    <div className={mobile ? "mt-4" : "mt-3 mb-4 w-full max-w-[36rem]"}>
+    <div className={mobile ? "mt-4" : "mt-3 mb-4 w-full max-w-[620px]"}>
       <div className={mobile ? "" : "flex flex-wrap items-center gap-3"}>
         <div
           className={
             mobile
-              ? "text-sm text-amber-300 font-medium mb-2"
-              : "text-base md:text-[1.15rem] text-amber-300 font-medium"
+              ? "text-sm text-[#B39871] font-semibold mb-2"
+              : "text-sm text-[#B39871] font-semibold"
           }
         >
           Deliver every:
@@ -4162,11 +4208,11 @@ function SubscriptionFrequencyPicker({
               onClick={() => setSubEvery(d as 14 | 30 | 60)}
               className={
                 (mobile
-                  ? "px-3 py-2 border text-sm "
-                  : "px-3 py-1.5 rounded-lg border text-sm transition ") +
+                  ? "px-3 py-2 rounded-md border text-sm transition "
+                  : "px-3 py-1.5 rounded-md border text-sm transition ") +
                 (subEvery === d
-                  ? "border-amber-400/70 text-amber-300 bg-black"
-                  : "border-neutral-700 text-neutral-300 hover:border-amber-400/40")
+                  ? "border-[#C08C45] bg-[#32220D] text-[#E6C07F]"
+                  : "border-[#6D5333] bg-[#130E08] text-[#9C9791] hover:border-[#C08C45] hover:text-[#E6C07F]")
               }
               aria-pressed={subEvery === d}
             >
@@ -4175,7 +4221,7 @@ function SubscriptionFrequencyPicker({
           ))}
 
           {!mobile && (
-            <span className="ml-3 text-xs text-amber-300 whitespace-nowrap font-medium">
+            <span className="ml-3 text-xs text-[#B39871] whitespace-nowrap font-semibold">
               Skip or cancel anytime
             </span>
           )}
@@ -4583,17 +4629,15 @@ function RoastDetailPage() {
   };
 
   return (
-    <main className="relative overflow-hidden min-h-[calc(100vh-140px)] -mt-3 pt-0 pb-6 md:mt-0 md:pt-16 md:pb-16 bg-neutral-900 md:bg-transparent">
-      <div className="absolute inset-0 z-0 bg-neutral-900/30" aria-hidden />
-
-      <Container className="relative z-10 mt-0 md:mt-0 lg:max-xl:max-w-[1240px]">
+    <main className="relative overflow-hidden min-h-[calc(100vh-140px)] -mt-6 pt-0 pb-6 md:mt-0 md:pt-4 xl:pt-8 md:pb-10 xl:pb-16 bg-neutral-900 md:bg-transparent px-3 sm:px-4 lg:px-6 xl:px-12 2xl:px-16">
+      <Container className="relative z-10 mt-0 md:mt-0 max-w-[1080px] xl:max-w-[1400px] mx-auto">
         {/* ===== HERO ===== */}
         <div className="relative">
           {/* emblem moved to live behind the bag (image wrapper) */}
 
-          <div className="relative z-10 mt-0 md:mt-3 grid lg:grid-cols-[auto,1fr] gap-0 lg:gap-6 items-start">
+          <div className="relative z-10 mt-0 md:-mt-2 xl:-mt-4 grid xl:grid-cols-[460px,1fr] 2xl:grid-cols-[620px,1fr] gap-5 xl:gap-8 2xl:gap-12 items-start">
             {/* HERO IMAGE */}
-            <div className="flex flex-col items-center md:items-start w-full md:w-auto relative mt-2 md:-mt-16 lg:mt-0">
+            <div className="flex flex-col items-center md:items-start w-full md:w-auto relative mt-2 md:mt-0">
               {/* emblem behind bag — mobile */}
               <img
                 src="/emblem-black.png"
@@ -4617,17 +4661,22 @@ function RoastDetailPage() {
                   </div>
                 )}
 
-                <img
-                  src={
-                    card.img?.startsWith("/") || card.img?.startsWith("http")
-                      ? card.img
-                      : `/${card.img}`
-                  }
-                  alt={card.title}
-                  loading="eager"
-                  decoding="async"
-                  className="block w-full h-auto max-h-[52vh] md:w-auto md:max-h-[65vh] object-cover md:object-contain"
-                />
+                <div className="relative -mt-6 md:-mt-8 xl:-mt-12 2xl:-mt-16 w-full">
+                  <div className="pointer-events-none absolute inset-0 z-20 shadow-[inset_0_0_60px_40px_rgba(0,0,0,0.95)]" />
+
+                  <img
+                    src={
+                      (card.detailImg || card.img)?.startsWith("/") ||
+                      (card.detailImg || card.img)?.startsWith("http")
+                        ? card.detailImg || card.img
+                        : `/${card.detailImg || card.img}`
+                    }
+                    alt={card.title}
+                    loading="eager"
+                    decoding="async"
+                    className="relative z-10 block w-full max-w-[400px] md:max-w-[430px] xl:max-w-[520px] 2xl:max-w-[820px] h-auto object-contain mx-auto xl:mx-0"
+                  />
+                </div>
               </div>
             </div>
 
@@ -4640,8 +4689,12 @@ function RoastDetailPage() {
                 <div className="w-full">
                   {/* Title */}
                   <h1
-                    className="m-0 text-3xl md:text-4xl font-extrabold tracking-tight text-amber-300"
-                    style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
+                    className="m-0 text-4xl md:text-5xl xl:text-6xl font-extrabold tracking-tight leading-tight"
+                    style={{
+                      color: "#C08C45",
+                      fontFamily: "'Cinzel', serif",
+                      fontWeight: 800,
+                    }}
                   >
                     {card.title}
                   </h1>
@@ -4650,19 +4703,25 @@ function RoastDetailPage() {
                   <div className="mt-0 max-w-[72ch]">
                     <div className="flex flex-col gap-1 text-neutral-400 md:flex-row md:items-baseline md:justify-between md:gap-3">
                       {/* roast style text */}
-                      <div className="text-base md:text-[1.2rem]">
+                      <div
+                        className="text-base md:text-[1.2rem]"
+                        style={{ color: "#B39871" }}
+                      >
                         {card.subTitle}
                       </div>
 
                       {/* Stars + avg + count */}
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div
+                        className="flex items-center gap-2 shrink-0"
+                        style={{ color: "#C08C45" }}
+                      >
                         <StarRatingDisplay
                           avg={reviewData.avg ?? 0}
                           count={reviewData.count}
                           sizeClass="h-4 w-4 md:h-5 md:w-5"
                           clipIdPrefix="titleStar"
-                          numberClassName="text-amber-300 font-semibold tabular-nums text-sm md:text-base"
-                          countClassName="text-[10px] md:text-xs text-neutral-400/80 tracking-wide whitespace-nowrap"
+                          numberClassName="font-semibold tabular-nums text-sm md:text-base"
+                          countClassName="text-[10px] md:text-xs tracking-wide whitespace-nowrap"
                           showNumber
                           showCount
                           linkToReviews
@@ -4670,14 +4729,249 @@ function RoastDetailPage() {
                       </div>
                     </div>
 
-                    <div className="h-px bg-amber-400/30 mt-2 relative left-1/2 -ml-[60vw] w-[120vw] md:static md:left-auto md:ml-0 md:w-full" />
+                    {CRAFT_IN_THE_CUP_DATA[card.slug]?.description && (
+                      <p
+                        className="mt-4 max-w-[62ch] text-base md:text-lg leading-relaxed"
+                        style={{ color: "rgba(255,255,255,0.75)" }}
+                      >
+                        {CRAFT_IN_THE_CUP_DATA[card.slug].description}
+                      </p>
+                    )}
+
+                    {/* DIVIDER */}
+                    <div className="flex items-center w-full mt-3 md:mt-4">
+                      <div className="h-px flex-1 bg-[#C08C45]/70" />
+                      <span className="px-2 md:px-3 text-[#E6C07F] text-base md:text-lg leading-none">
+                        ★
+                      </span>
+                      <div className="h-px flex-1 bg-[#C08C45]/70" />
+                    </div>
+                    {/* ROAST PROFILE */}
+                    <div className="mt-4 md:mt-5 w-full max-w-[520px]">
+                      <div
+                        className="text-[11px] tracking-[0.2em] mb-2 font-semibold uppercase"
+                        style={{ color: "#B39871" }}
+                      >
+                        ROAST PROFILE
+                      </div>
+
+                      <div
+                        className="flex justify-between text-[11px] mb-1 font-semibold"
+                        style={{ color: "rgba(255,255,255,0.7)" }}
+                      >
+                        <span>LIGHT</span>
+                        <span>MEDIUM</span>
+                        <span>DARK</span>
+                      </div>
+
+                      <div
+                        className="relative h-[2px]"
+                        style={{ backgroundColor: "rgba(255,255,255,0.25)" }}
+                      >
+                        {[0, 25, 50, 75, 100].map((pos) => (
+                          <div
+                            key={pos}
+                            className="absolute top-1/2 w-3 h-3 rounded-full bg-black"
+                            style={{
+                              left: `${pos}%`,
+                              transform: "translate(-50%, -50%)",
+                              border: "1px solid rgba(255,255,255,0.4)",
+                            }}
+                          />
+                        ))}
+
+                        <div
+                          className="absolute top-1/2 w-4 h-4 rounded-full"
+                          style={{
+                            left:
+                              card.slug === "baptism-by-fire"
+                                ? "100%"
+                                : card.slug === "oak-and-copper"
+                                ? "75%"
+                                : "50%",
+                            transform: "translate(-50%, -50%)",
+                            backgroundColor: "#C08C45",
+                            boxShadow: "0 0 8px rgba(192,140,69,0.8)",
+                          }}
+                        />
+                      </div>
+                    </div>
+                    {/* TASTING NOTES */}
+                    <div className="mt-7 md:mt-8 w-full max-w-[620px]">
+                      <div
+                        className="text-[11px] tracking-[0.2em] mb-3 font-semibold"
+                        style={{ color: "#B39871" }}
+                      >
+                        TASTING NOTES
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {(CRAFT_IN_THE_CUP_DATA[card.slug]?.notes ?? []).map(
+                          (note) => (
+                            <div
+                              key={note}
+                              className="h-[38px] flex items-center justify-center border rounded-md text-[12px] md:text-[13px] font-semibold tracking-wide uppercase"
+                              style={{
+                                borderColor: "#6D5333",
+                                color: "#B5976D",
+                                backgroundColor: "rgba(0,0,0,0.25)",
+                              }}
+                            >
+                              {note}
+                            </div>
+                          )
+                        )}
+                      </div>
+
+                      {(card.canBuy || isOak) && (
+                        <div className="mt-6">
+                          <div
+                            className="text-[11px] tracking-[0.2em] mb-3 font-semibold uppercase"
+                            style={{ color: "#B39871" }}
+                          >
+                            SELECT YOUR PREP
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setBeanType("whole");
+                                setShowBeanError(false);
+                              }}
+                              className={
+                                "relative h-[52px] md:h-[58px] overflow-visible border rounded-md px-2 md:px-4 text-left transition " +
+                                (beanType === "whole"
+                                  ? "bg-[#32220D] border-[#6D5333] text-[#E6C07F]"
+                                  : "bg-[#130E08] border-[#6D5333]/70 text-[#9C9791]")
+                              }
+                            >
+                              <img
+                                src="/wb-symbol.png"
+                                alt=""
+                                className="pointer-events-none absolute left-[8px] md:left-[20px] top-1/2 h-[58px] w-[58px] md:h-[92px] md:w-[92px] -translate-y-1/2 object-contain"
+                              />
+                              <div className="flex h-full w-full items-center justify-center">
+                                <div className="pl-[42px] md:pl-[54px] text-center leading-tight">
+                                  <div className="text-[12px] md:text-[16px] font-black tracking-wide font-cinzel">
+                                    WHOLE BEAN
+                                  </div>
+                                  <div className="mt-0.5 text-[10px] md:text-[13px] font-semibold opacity-75">
+                                    Best for grinders
+                                  </div>
+                                </div>
+                              </div>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setBeanType("ground");
+                                setShowBeanError(false);
+                              }}
+                              className={
+                                "relative h-[52px] md:h-[58px] overflow-visible border rounded-md px-2 md:px-4 text-left transition " +
+                                (beanType === "ground"
+                                  ? "bg-[#32220D] border-[#6D5333] text-[#E6C07F]"
+                                  : "bg-[#130E08] border-[#6D5333]/70 text-[#9C9791]")
+                              }
+                            >
+                              <img
+                                src="/g-symbol.png"
+                                alt=""
+                                className="pointer-events-none absolute left-[10px] md:left-[20px] top-1/2 h-[46px] w-[46px] md:h-[70px] md:w-[70px] -translate-y-1/2 object-contain"
+                              />
+                              <div className="flex h-full w-full items-center justify-center">
+                                <div className="pl-[42px] md:pl-[54px] text-center leading-tight">
+                                  <div className="text-[12px] md:text-[16px] font-black tracking-wide font-cinzel">
+                                    GROUND
+                                  </div>
+                                  <div className="mt-0.5 text-[10px] md:text-[13px] font-semibold opacity-75">
+                                    Ready to brew
+                                  </div>
+                                </div>
+                              </div>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      {/* CHOOSE YOUR SIZE */}
+                      {(card.canBuy || isOak) && (
+                        <div className="mt-6 w-full max-w-[620px]">
+                          <div
+                            className="text-[11px] tracking-[0.2em] mb-3 font-semibold uppercase"
+                            style={{ color: "#B39871" }}
+                          >
+                            CHOOSE YOUR SIZE
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            {/* SAMPLE PACK */}
+                            <button
+                              type="button"
+                              disabled
+                              className="h-[72px] border rounded-md px-4 text-center opacity-60 cursor-not-allowed"
+                              style={{
+                                borderColor: "#6D5333",
+                                color: "#9C9791",
+                                backgroundColor: "#130E08",
+                              }}
+                            >
+                              <div className="font-cinzel text-[15px] font-black tracking-wide">
+                                SAMPLE (2.5 OZ)
+                              </div>
+                              <div className="mt-1 text-[12px] font-semibold">
+                                Coming Soon
+                              </div>
+                            </button>
+
+                            {/* 12 OZ BAG - ACTIVE */}
+                            <button
+                              type="button"
+                              className="h-[72px] border rounded-md px-4 text-center"
+                              style={{
+                                borderColor: "#6D5333",
+                                color: "#E6C07F",
+                                backgroundColor: "#32220D",
+                              }}
+                            >
+                              <div className="font-cinzel text-[15px] font-black tracking-wide">
+                                12 OZ BAG
+                              </div>
+                              <div className="mt-1 text-[12px] font-semibold">
+                                Most Popular
+                              </div>
+                              <div className="mt-1 text-[14px] font-black">
+                                {fmt(basePrice)}
+                              </div>
+                            </button>
+
+                            {/* 5 LB BAG */}
+                            <button
+                              type="button"
+                              disabled
+                              className="h-[72px] border rounded-md px-4 text-center opacity-60 cursor-not-allowed"
+                              style={{
+                                borderColor: "#6D5333",
+                                color: "#9C9791",
+                                backgroundColor: "#130E08",
+                              }}
+                            >
+                              <div className="font-cinzel text-[15px] font-black tracking-wide">
+                                5 LB BAG
+                              </div>
+                              <div className="mt-1 text-[12px] font-semibold">
+                                Coming Soon
+                              </div>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-
-                <div className="hidden md:inline-flex">
-                  <BackButton to="/store" size="sm" />
-                </div>
               </div>
+
               {/* ===== END TITLE BLOCK ===== */}
 
               {/* ===== MOBILE BUY BOX STYLE (md:hidden) ===== */}
@@ -4753,16 +5047,6 @@ function RoastDetailPage() {
                 />
               )}
 
-              {/* ===== STORY CONTENT (Mobile #4, Desktop #2) ===== */}
-              <div className="order-4 md:order-2">
-                <div
-                  className="max-w-none w-full"
-                  lang="en"
-                  style={{ hyphens: "none" }}
-                >
-                  <CraftInTheCupBlock slug={card.slug} />
-                </div>
-              </div>
               {/* ===== END STORY ===== */}
               {/* Hide on desktop, visible on mobile */}
               <div className="md:hidden">
@@ -5055,7 +5339,10 @@ function CraftInTheCupBlock({ slug }: { slug: string }) {
       <div className={lineClass} />
 
       <div>
-        <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+        <h3
+          className="text-base md:text-lg font-semibold"
+          style={{ color: "#C08C45" }}
+        >
           Best For
         </h3>
 
@@ -5073,7 +5360,10 @@ function CraftInTheCupBlock({ slug }: { slug: string }) {
 
       <div className="md:flex md:items-center md:justify-between md:gap-6">
         <div>
-          <h3 className="text-base md:text-lg font-semibold text-amber-300/90">
+          <h3
+            className="text-base md:text-lg font-semibold"
+            style={{ color: "#C08C45" }}
+          >
             Signature Notes
           </h3>
 
@@ -5102,12 +5392,10 @@ function CraftInTheCupBlock({ slug }: { slug: string }) {
                 strokeWidth="2.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className={
-                  "h-6 w-6 md:h-7 md:w-7 " +
-                  (n <= data.roastLevel
-                    ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110"
-                    : "text-neutral-600")
-                }
+                style={{
+                  color: n <= data.roastLevel ? "#C08C45" : "#3a2a14",
+                }}
+                className="h-6 w-6 md:h-7 md:w-7"
               >
                 <rect
                   x="11"
@@ -5255,7 +5543,7 @@ function RoastLevelAnchors({
                 count={total}
                 sizeClass="h-6 w-6"
                 clipIdPrefix="reviewsStarDesktopHeader"
-                numberClassName="text-amber-300 font-semibold tabular-nums text-base"
+                numberClassName="font-semibold tabular-nums text-sm md:text-base"
                 countClassName="text-neutral-400 text-lg"
                 showNumber
                 showCount
@@ -5314,7 +5602,7 @@ function RoastLevelAnchors({
               sizeClass="h-5 w-5"
               clipWidthBase={20}
               clipIdPrefix="reviewsStarMobileHeader"
-              numberClassName="text-amber-300 font-semibold tabular-nums text-base leading-none"
+              numberClassName="font-semibold tabular-nums text-sm md:text-base"
               countClassName="text-neutral-400 text-xs tracking-wide"
               showNumber
               showCount

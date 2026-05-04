@@ -534,6 +534,7 @@ const PRODUCT_IDS_BY_SLUG: Record<string, string> = {
   "oak-and-copper": "9271153787101",
   "brass-monkey": "9271153819869",
   "black-salvo": "9418482024669",
+  "armada-sample-pack": "9479395180765",
 };
 function RoastMegaCard({
   card,
@@ -2371,7 +2372,7 @@ function HomePage() {
         <div className="absolute inset-0 bg-black overflow-hidden">
           {/* MOBILE ONLY */}
           <img
-            src="/mobile concept 1.jpg"
+            src="/ff-warm.jpg"
             alt=""
             aria-hidden="true"
             className="md:hidden absolute inset-0 w-full h-full object-contain object-[40%_top] translate-y-[12%]"
@@ -2455,7 +2456,7 @@ function HomePage() {
                 <div className="flex flex-col md:flex-row items-stretch gap-3 w-full md:w-fit">
                   {/* SAMPLE BUTTON */}
                   <Link
-                    to="/store"
+                    to="/roast/armada-sample-pack"
                     className="relative inline-flex h-[58px] w-full md:w-fit items-center justify-center
                     px-8 sm:px-9
                     rounded-none overflow-hidden
@@ -2642,7 +2643,65 @@ function HomePage() {
           <LaunchedFromHarbor noBg />
         </div>
       </section>
+      {/* ===== SAMPLE PACK SECTION ===== */}
+      <section className="relative overflow-hidden bg-black py-14 md:py-20 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40">
+        <Container>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+            {/* MOBILE TITLE */}
+            <div className="md:hidden text-center order-1">
+              <h2 className="font-playfair text-2xl font-bold italic text-[#C08C45] tracking-wide uppercase">
+                UNDECIDED WHAT ROAST TO TRY?
+              </h2>
+            </div>
 
+            {/* TEXT */}
+            <div className="order-3 md:order-1 text-center md:text-left">
+              {/* DESKTOP TITLE */}
+              <h2 className="hidden md:block font-playfair text-4xl font-bold italic text-[#C08C45] tracking-wide uppercase">
+                UNDECIDED WHAT ROAST TO TRY?
+              </h2>
+
+              <p className="mt-4 font-playfair text-ironsideWhite/85 text-[1.1rem] md:text-[1.45rem] leading-relaxed">
+                Try a sample pack for only $5 each, or experience the full fleet
+                with the{" "}
+                <span className="font-semibold text-[#E6C07F]">
+                  Armada Discovery Box
+                </span>
+                , which gives you one free roast plus free shipping if you
+                choose the Discovery Box.
+              </p>
+
+              <Link
+                to="/roast/armada-sample-pack"
+                className="mt-6 inline-flex h-[54px] items-center justify-center
+          px-8 rounded-none bg-black text-[#E6C07F] font-extrabold
+          text-[1rem] md:text-[1.15rem] tracking-[0.14em]
+          border border-[#C08C45]
+          shadow-[inset_0_0_12px_rgba(255,255,255,0.08),0_0_18px_rgba(192,140,69,0.18)]
+          transition-all duration-200
+          hover:-translate-y-[1px]
+          hover:bg-[#C08C45]
+          hover:text-black
+          hover:border-[#C08C45]
+          hover:shadow-[0_0_22px_rgba(192,140,69,0.22)]"
+              >
+                SHOP SAMPLES
+              </Link>
+            </div>
+
+            {/* IMAGE */}
+            <div className="order-2 md:order-2 flex justify-center md:justify-end">
+              <div className="relative w-full max-w-[520px] aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#6D5333]/50 shadow-xl shadow-black/60 bg-black">
+                <img
+                  src="/sample-pack.jpg"
+                  alt="Old Ironsides Coffee sample packs"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
       {/* ===== ROASTING PROCESS ===== */}
       <section
         id="roasting-process"
@@ -3431,6 +3490,7 @@ function BuyBoxSection({
   mobile = false,
   card,
   isOak,
+  size,
   purchaseMode,
   setPurchaseMode,
   subEvery,
@@ -3451,6 +3511,7 @@ function BuyBoxSection({
   mobile?: boolean;
   card: any;
   isOak: boolean;
+  size: "12oz" | "sample";
   purchaseMode: "one" | "sub";
   setPurchaseMode: React.Dispatch<React.SetStateAction<"one" | "sub">>;
   subEvery: 14 | 30 | 60;
@@ -3474,6 +3535,7 @@ function BuyBoxSection({
         <div className="space-y-3">
           <PurchaseModeButton
             mode="one"
+            size={size}
             active={purchaseMode === "one"}
             onClick={() => setPurchaseMode("one")}
             basePrice={basePrice}
@@ -3483,6 +3545,7 @@ function BuyBoxSection({
 
           <PurchaseModeButton
             mode="sub"
+            size={size}
             active={purchaseMode === "sub"}
             onClick={() => setPurchaseMode("sub")}
             basePrice={basePrice}
@@ -3498,9 +3561,9 @@ function BuyBoxSection({
           <QuantityControl
             qty={qty}
             setQty={setQty}
-            className="inline-flex items-center border border-neutral-700"
-            buttonClassName="px-3 py-2 text-neutral-200"
-            inputClassName="w-12 text-center bg-neutral-900/70 py-2 text-sm text-neutral-100 outline-none"
+            className="inline-flex items-center rounded-md border border-[#6D5333]"
+            buttonClassName="px-3 py-2 text-[#E6C07F] hover:bg-[#32220D]"
+            inputClassName="w-12 text-center bg-black py-2 text-sm text-[#E6C07F] outline-none border-x border-[#6D5333]"
           />
 
           <button
@@ -3508,10 +3571,10 @@ function BuyBoxSection({
             onClick={addToChest}
             disabled={adding}
             className={
-              "flex-1 border border-amber-400/70 px-4 py-3 text-base font-semibold text-amber-300 bg-black shadow-md shadow-amber-400/10 " +
+              "flex-1 rounded-md border border-[#C08C45] px-4 py-3 text-base font-semibold text-[#E6C07F] bg-black shadow-md shadow-[#C08C45]/10 transition " +
               (adding
                 ? "opacity-60 cursor-not-allowed"
-                : "hover:bg-amber-400 hover:text-neutral-900")
+                : "hover:bg-[#C08C45] hover:text-black")
             }
             aria-label={`Add ${card.title} to Chest`}
           >
@@ -3519,8 +3582,8 @@ function BuyBoxSection({
           </button>
         </div>
 
-        <div className="mt-2 text-sm text-neutral-400 text-right">
-          <span className="text-amber-300 font-semibold">
+        <div className="mt-2 text-sm text-right">
+          <span className="text-[#B39871] font-semibold">
             3+ bags ship free
           </span>
         </div>
@@ -3611,10 +3674,16 @@ function BuyBoxSection({
 
           <button
             type="button"
-            onClick={() => setPurchaseMode("sub")}
+            disabled={size === "sample"}
+            onClick={() => {
+              if (size === "sample") return;
+              setPurchaseMode("sub");
+            }}
             className={
               "h-[58px] rounded-md border text-sm md:text-base font-semibold transition text-center " +
-              (purchaseMode === "sub"
+              (size === "sample"
+                ? "bg-[#130E08] text-[#6D6D6D] border-[#6D5333]/40 opacity-50 cursor-not-allowed"
+                : purchaseMode === "sub"
                 ? "bg-[#32220D] text-[#E6C07F] border-[#C08C45]"
                 : "bg-[#130E08] text-[#C08C45] border-[#6D5333] hover:border-[#C08C45] hover:text-[#E6C07F]")
             }
@@ -3641,9 +3710,17 @@ function useBuyBox(card: any) {
   const [subEvery, setSubEvery] = useState<14 | 30 | 60>(30);
   const [qty, setQty] = useState(1);
   const [beanType, setBeanType] = useState<"" | "whole" | "ground">("");
+  const [size, setSize] = useState<"12oz" | "sample">("12oz");
   const [showBeanError, setShowBeanError] = useState(false);
 
-  const basePrice = isOak ? 27 : card.price ?? 22;
+  const basePrice =
+    size === "sample"
+      ? card.slug === "oak-and-copper"
+        ? 6
+        : 5
+      : isOak
+      ? 27
+      : card.price ?? 22;
   const discounted = isOak ? basePrice : Number((basePrice * 0.85).toFixed(2));
 
   return {
@@ -3660,6 +3737,8 @@ function useBuyBox(card: any) {
     setShowBeanError,
     basePrice,
     discounted,
+    size,
+    setSize,
   };
 }
 function PriceDisplay({
@@ -3679,20 +3758,20 @@ function PriceDisplay({
     return (
       <>
         {!isOak && (
-          <span className="line-through text-neutral-400 mr-2">
+          <span className="line-through text-[#9C9791] mr-2">
             {fmt(basePrice)}
           </span>
         )}
-        <span className="font-semibold text-amber-300">{fmt(discounted)}</span>
-        <span className="text-xs text-neutral-500 ml-1">{sizeLabel}</span>
+        <span className="font-semibold text-[#E6C07F]">{fmt(discounted)}</span>
+        <span className="text-xs text-[#9C9791] ml-1">{sizeLabel}</span>
       </>
     );
   }
 
   return (
     <>
-      <span className="font-semibold text-amber-300">{fmt(basePrice)}</span>
-      <span className="text-xs text-neutral-500 ml-1">{sizeLabel}</span>
+      <span className="font-semibold text-[#E6C07F]">{fmt(basePrice)}</span>
+      <span className="text-xs text-[#9C9791] ml-1">{sizeLabel}</span>
     </>
   );
 }
@@ -3706,6 +3785,7 @@ function PurchaseModeButton({
   subEvery,
   setSubEvery,
   showSubOptions = false,
+  size,
 }: {
   mode: "one" | "sub";
   active: boolean;
@@ -3716,19 +3796,27 @@ function PurchaseModeButton({
   subEvery?: 14 | 30 | 60;
   setSubEvery?: React.Dispatch<React.SetStateAction<14 | 30 | 60>>;
   showSubOptions?: boolean;
+  size: "12oz" | "sample";
 }) {
   const isSub = mode === "sub";
+  const disabled = size === "sample" && isSub;
 
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={() => {
+        if (disabled) return;
+        onClick();
+      }}
+      disabled={disabled}
       className={
         "w-full border rounded-md p-4 transition " +
         (isSub
           ? "flex flex-col text-left "
           : "flex items-start justify-between text-left ") +
-        (active
+        (disabled
+          ? "border-[#6D5333]/40 bg-[#130E08] text-[#6D6D6D] opacity-50 cursor-not-allowed"
+          : active
           ? "border-[#C08C45] bg-[#32220D] text-[#E6C07F] shadow-[0_0_14px_rgba(192,140,69,0.16)]"
           : "border-[#6D5333] bg-[#130E08] text-[#9C9791]")
       }
@@ -3771,7 +3859,7 @@ function PurchaseModeButton({
             </span>
           </div>
 
-          {isSub && !isOak && (
+          {isSub && !isOak && !disabled && (
             <div className="mt-2 flex items-center gap-2">
               <span className="inline-block text-[11px] font-bold leading-none px-2 py-1 rounded-[4px] bg-[#C08C45] text-black tracking-tight">
                 SAVE 15%
@@ -3785,7 +3873,7 @@ function PurchaseModeButton({
         </div>
       </div>
 
-      {isSub && showSubOptions && subEvery && setSubEvery && (
+      {isSub && showSubOptions && subEvery && setSubEvery && !disabled && (
         <SubscriptionFrequencyPicker
           subEvery={subEvery}
           setSubEvery={setSubEvery}
@@ -4359,7 +4447,10 @@ function RoastDetailPage() {
     setShowBeanError,
     basePrice,
     discounted,
+    size,
+    setSize,
   } = useBuyBox(card);
+
   // Shopify product + chosen variant
   const [shopifyProduct, setShopifyProduct] = useState<any>(null);
   // Map Seal plan names -> 14/30/60
@@ -4525,7 +4616,19 @@ function RoastDetailPage() {
     }
 
     const variantLabel = beanType === "whole" ? "Whole Bean" : "Ground";
-    const merchId = merchandiseId;
+    let merchId = merchandiseId;
+
+    if (size === "sample") {
+      const sampleProduct = await getProductByHandle("sample-packs");
+      const variants = sampleProduct?.variants?.edges ?? [];
+
+      const match = variants.find((v: any) => {
+        const title = String(v?.node?.title || "").toLowerCase();
+        return title.includes(card.title.toLowerCase());
+      });
+
+      merchId = match?.node?.id ?? null;
+    }
     if (!merchId) {
       window.dispatchEvent(
         new CustomEvent("flash", { detail: "Variant not found in Shopify." })
@@ -4541,7 +4644,12 @@ function RoastDetailPage() {
 
       // 2) add to Shopify cart
       // pick selling plan if subscribing
-      const planId = purchaseMode === "sub" ? planMap[subEvery] : undefined;
+      const planId =
+        size === "sample"
+          ? undefined
+          : purchaseMode === "sub"
+          ? planMap[subEvery]
+          : undefined;
 
       if (purchaseMode === "sub" && !planId) {
         window.dispatchEvent(
@@ -4629,7 +4737,7 @@ function RoastDetailPage() {
   };
 
   return (
-    <main className="relative overflow-hidden min-h-[calc(100vh-140px)] -mt-6 pt-0 pb-6 md:mt-0 md:pt-4 xl:pt-8 md:pb-10 xl:pb-16 bg-neutral-900 md:bg-transparent px-3 sm:px-4 lg:px-6 xl:px-12 2xl:px-16">
+    <main className="relative overflow-hidden min-h-[calc(100vh-140px)] -mt-6 pt-0 pb-6 md:mt-0 md:pt-4 xl:pt-8 md:pb-10 xl:pb-16 bg-black md:bg-transparent px-3 sm:px-4 lg:px-6 xl:px-12 2xl:px-16">
       <Container className="relative z-10 mt-0 md:mt-0 max-w-[1080px] xl:max-w-[1400px] mx-auto">
         {/* ===== HERO ===== */}
         <div className="relative">
@@ -4637,23 +4745,7 @@ function RoastDetailPage() {
 
           <div className="relative z-10 mt-0 md:-mt-2 xl:-mt-4 grid xl:grid-cols-[460px,1fr] 2xl:grid-cols-[620px,1fr] gap-5 xl:gap-8 2xl:gap-12 items-start">
             {/* HERO IMAGE */}
-            <div className="flex flex-col items-center md:items-start w-full md:w-auto relative mt-2 md:mt-0">
-              {/* emblem behind bag — mobile */}
-              <img
-                src="/emblem-black.png"
-                alt=""
-                aria-hidden
-                className="md:hidden absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[125%] max-w-[570px] opacity-10 object-contain z-0"
-              />
-
-              {/* emblem behind bag — desktop */}
-              <img
-                src="/emblem-black.png"
-                alt=""
-                aria-hidden
-                className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[155%] max-w-[760px] opacity-[0.08] object-contain z-0"
-              />
-
+            <div className="flex flex-col items-center md:items-start w-full md:w-auto relative mt-0 md:mt-0">
               <div className="relative z-10 flex flex-col items-center md:items-start w-full md:w-auto">
                 {card.isNew && (
                   <div className="absolute top-4 left-1/2 -translate-x-1/2 md:top-10 md:left-8 md:translate-x-0 z-20 px-3 py-1 text-[11px] md:text-xs font-bold bg-amber-400 text-black rounded shadow-md">
@@ -4662,7 +4754,7 @@ function RoastDetailPage() {
                 )}
 
                 <div className="relative -mt-6 md:-mt-8 xl:-mt-12 2xl:-mt-16 w-full">
-                  <div className="pointer-events-none absolute inset-0 z-20 shadow-[inset_0_0_60px_40px_rgba(0,0,0,0.95)]" />
+                  <div className="pointer-events-none absolute inset-0 z-20 shadow-[inset_0_0_40px_20px_rgba(0,0,0,0.75)]" />
 
                   <img
                     src={
@@ -4683,9 +4775,9 @@ function RoastDetailPage() {
             {/* ...rest of your text column stays exactly the same */}
 
             {/* 2/3/4/5/6 live together in this column so desktop still sees one text column */}
-            <div className="order-2 md:order-none self-start flex flex-col space-y-4">
+            <div className="order-2 md:order-none self-start flex flex-col space-y-3 -mt-4 md:mt-0">
               {/* ===== TITLE / SUBTITLE / STARS (Mobile #1, Desktop #1) ===== */}
-              <div className="order-1 md:order-1 -mt-1 md:mt-0 mb-0 flex items-start justify-between gap-3">
+              <div className="order-1 md:order-1 -mt-4 md:mt-0 mb-0 flex items-start justify-between gap-3">
                 <div className="w-full">
                   {/* Title */}
                   <h1
@@ -4805,7 +4897,7 @@ function RoastDetailPage() {
                         TASTING NOTES
                       </div>
 
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      <div className="grid grid-cols-3 gap-1.5 md:gap-3">
                         {(CRAFT_IN_THE_CUP_DATA[card.slug]?.notes ?? []).map(
                           (note) => (
                             <div
@@ -4865,13 +4957,17 @@ function RoastDetailPage() {
 
                             <button
                               type="button"
+                              disabled={size === "sample"}
                               onClick={() => {
+                                if (size === "sample") return;
                                 setBeanType("ground");
                                 setShowBeanError(false);
                               }}
                               className={
                                 "relative h-[52px] md:h-[58px] overflow-visible border rounded-md px-2 md:px-4 text-left transition " +
-                                (beanType === "ground"
+                                (size === "sample"
+                                  ? "bg-[#130E08] border-[#6D5333]/40 text-[#6D6D6D] opacity-50 cursor-not-allowed"
+                                  : beanType === "ground"
                                   ? "bg-[#32220D] border-[#6D5333] text-[#E6C07F]"
                                   : "bg-[#130E08] border-[#6D5333]/70 text-[#9C9791]")
                               }
@@ -4905,44 +5001,48 @@ function RoastDetailPage() {
                             CHOOSE YOUR SIZE
                           </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div className="grid grid-cols-3 gap-1.5 md:gap-3">
                             {/* SAMPLE PACK */}
                             <button
                               type="button"
-                              disabled
-                              className="h-[72px] border rounded-md px-4 text-center opacity-60 cursor-not-allowed"
+                              onClick={() => {
+                                setSize("sample");
+                                setPurchaseMode("one");
+                                setBeanType("whole");
+                                setShowBeanError(false);
+                              }}
+                              className="h-[88px] md:h-[72px] border rounded-md px-4 text-center transition"
                               style={{
                                 borderColor: "#6D5333",
-                                color: "#9C9791",
-                                backgroundColor: "#130E08",
+                                color:
+                                  size === "sample" ? "#E6C07F" : "#9C9791",
+                                backgroundColor:
+                                  size === "sample" ? "#32220D" : "#130E08",
                               }}
                             >
                               <div className="font-cinzel text-[15px] font-black tracking-wide">
                                 SAMPLE (2.5 OZ)
                               </div>
-                              <div className="mt-1 text-[12px] font-semibold">
-                                Coming Soon
+
+                              <div className="mt-1 text-[11px] font-semibold text-[#B39871]">
+                                Whole Bean Only
                               </div>
                             </button>
 
                             {/* 12 OZ BAG - ACTIVE */}
                             <button
                               type="button"
-                              className="h-[72px] border rounded-md px-4 text-center"
+                              onClick={() => setSize("12oz")}
+                              className="h-[88px] md:h-[72px] border rounded-md px-4 text-center transition"
                               style={{
                                 borderColor: "#6D5333",
-                                color: "#E6C07F",
-                                backgroundColor: "#32220D",
+                                color: size === "12oz" ? "#E6C07F" : "#9C9791",
+                                backgroundColor:
+                                  size === "12oz" ? "#32220D" : "#130E08",
                               }}
                             >
                               <div className="font-cinzel text-[15px] font-black tracking-wide">
                                 12 OZ BAG
-                              </div>
-                              <div className="mt-1 text-[12px] font-semibold">
-                                Most Popular
-                              </div>
-                              <div className="mt-1 text-[14px] font-black">
-                                {fmt(basePrice)}
                               </div>
                             </button>
 
@@ -4950,7 +5050,7 @@ function RoastDetailPage() {
                             <button
                               type="button"
                               disabled
-                              className="h-[72px] border rounded-md px-4 text-center opacity-60 cursor-not-allowed"
+                              className="h-[88px] md:h-[72px] border rounded-md px-4 text-center opacity-60 cursor-not-allowed"
                               style={{
                                 borderColor: "#6D5333",
                                 color: "#9C9791",
@@ -4959,9 +5059,6 @@ function RoastDetailPage() {
                             >
                               <div className="font-cinzel text-[15px] font-black tracking-wide">
                                 5 LB BAG
-                              </div>
-                              <div className="mt-1 text-[12px] font-semibold">
-                                Coming Soon
                               </div>
                             </button>
                           </div>
@@ -4979,6 +5076,7 @@ function RoastDetailPage() {
                 <>
                   <BuyBoxSection
                     mobile
+                    size={size}
                     card={card}
                     isOak={isOak}
                     purchaseMode={purchaseMode}
@@ -5027,6 +5125,7 @@ function RoastDetailPage() {
               {(card.canBuy || isOak) && (
                 <BuyBoxSection
                   card={card}
+                  size={size}
                   isOak={isOak}
                   purchaseMode={purchaseMode}
                   setPurchaseMode={setPurchaseMode}
@@ -5067,7 +5166,333 @@ function RoastDetailPage() {
     </main>
   );
 }
+function ArmadaSamplePage() {
+  const { add } = useCart();
+  const [shopifyProduct, setShopifyProduct] = useState<any>(null);
+  const [selectedSample, setSelectedSample] = useState("Armada Sample Pack");
+  const [qty, setQty] = useState(1);
+  const [adding, setAdding] = useState(false);
 
+  const sampleOptions = [
+    {
+      title: "Flagship",
+      slug: "flagship",
+      price: 5,
+      description:
+        "A smooth, full-bodied medium roast made for everyday drinking. Balanced, rich, and never bitter.",
+    },
+    {
+      title: "The Java Action",
+      slug: "java-action",
+      price: 5,
+      description:
+        "A smooth medium roast with hazelnut, caramel, red apple, and a creamy sweet finish.",
+    },
+    {
+      title: "Baptism By Fire",
+      slug: "baptism-by-fire",
+      price: 5,
+      description:
+        "The darkest roast in the fleet. Bold, full-bodied, smooth, and built for dark roast drinkers.",
+    },
+    {
+      title: "Black Salvo",
+      slug: "black-salvo",
+      price: 5,
+      description:
+        "A versatile espresso-style blend with warm vanilla, cocoa, and toasted almond.",
+    },
+    {
+      title: "Oak & Copper",
+      slug: "oak-and-copper",
+      price: 6,
+      description:
+        "Bourbon barrel aged coffee with oak, caramel, warm spice, and subtle bourbon character.",
+    },
+    {
+      title: "Brass Monkey",
+      slug: "brass-monkey",
+      price: 5,
+      description:
+        "A Southern pecan roast with toasted pecan, brown sugar, and warm spice.",
+    },
+    {
+      title: "Armada Sample Pack",
+      slug: "armada-sample-pack",
+      price: 25,
+      description: "Try the full fleet. Get one roast free plus free shipping.",
+    },
+  ];
+
+  const selected = sampleOptions.find((x) => x.title === selectedSample)!;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+    let cancelled = false;
+
+    async function run() {
+      try {
+        const p = await getProductByHandle("sample-packs");
+        if (!cancelled) setShopifyProduct(p || null);
+      } catch (e) {
+        console.warn("[Shopify] sample-pack load failed", e);
+        if (!cancelled) setShopifyProduct(null);
+      }
+    }
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const merchandiseId = useMemo(() => {
+    const variants = shopifyProduct?.variants?.edges ?? [];
+
+    const match = variants.find((v: any) => {
+      const node = v?.node;
+      const title = String(node?.title || "").toLowerCase();
+      return title.includes(selectedSample.toLowerCase());
+    });
+
+    return match?.node?.id ?? null;
+  }, [shopifyProduct, selectedSample]);
+  const addToChest = async (
+    sampleOverride?: (typeof sampleOptions)[number]
+  ) => {
+    const item = sampleOverride ?? selected;
+    const n = qty > 0 ? Math.min(99, Math.trunc(qty)) : 1;
+    setQty(n);
+
+    if (!shopifyProduct) {
+      window.dispatchEvent(
+        new CustomEvent("flash", {
+          detail: "Product not loaded yet. Try again.",
+        })
+      );
+      return;
+    }
+
+    const variants = shopifyProduct?.variants?.edges ?? [];
+
+    const match = variants.find((v: any) => {
+      const node = v?.node;
+      const title = String(node?.title || "").toLowerCase();
+      return title.includes(item.title.toLowerCase());
+    });
+
+    const merchId = match?.node?.id ?? null;
+
+    if (!merchId) {
+      window.dispatchEvent(
+        new CustomEvent("flash", {
+          detail: "Sample variant not found in Shopify.",
+        })
+      );
+      return;
+    }
+
+    try {
+      setAdding(true);
+
+      const cart = await ensureCart();
+
+      await cartLinesAdd({
+        cartId: cart.id,
+        merchandiseId: merchId,
+        quantity: n,
+        attributes: {
+          sampleChoice: item.title,
+          purchaseMode: "sample",
+        },
+      });
+
+      add(
+        {
+          id: `sample-pack-${item.slug}`,
+          sku: `sample-pack-${item.slug}`,
+          slug: item.slug,
+          title: item.title,
+          price: item.price,
+          basePrice: item.price,
+          img: "/sample-pack.jpg",
+          detailImg: "/sample-pack.jpg",
+          merchandiseId: merchId,
+          purchaseMode: "sample",
+        },
+        n
+      );
+
+      if (typeof window !== "undefined" && (window as any).fbq) {
+        (window as any).fbq("track", "AddToCart", {
+          content_name: item.title,
+          content_ids: [item.slug],
+          content_type: "product",
+          value: item.price,
+          currency: "USD",
+        });
+      }
+
+      window.dispatchEvent(
+        new CustomEvent("flash", {
+          detail: `${n} × ${item.title} added to Chest`,
+        })
+      );
+    } catch (e) {
+      console.error(e);
+      window.dispatchEvent(
+        new CustomEvent("flash", {
+          detail: "Could not add to cart. Check console.",
+        })
+      );
+    } finally {
+      setAdding(false);
+    }
+  };
+
+  return (
+    <main className="relative overflow-hidden min-h-[calc(100vh-140px)] -mt-6 pt-0 pb-6 md:mt-0 md:pt-4 xl:pt-8 md:pb-10 xl:pb-16 bg-black md:bg-transparent px-3 sm:px-4 lg:px-6 xl:px-12 2xl:px-16">
+      <Container className="relative z-10 mt-0 md:mt-0 max-w-[1080px] xl:max-w-[1400px] mx-auto">
+        <div className="relative z-10 mt-0 md:-mt-2 xl:-mt-4 grid xl:grid-cols-[460px,1fr] 2xl:grid-cols-[620px,1fr] gap-5 xl:gap-8 2xl:gap-12 items-start">
+          <div className="flex flex-col items-center md:items-start w-full md:w-auto relative mt-2 md:mt-0">
+            <div className="relative -mt-6 md:-mt-8 xl:-mt-12 2xl:-mt-16 w-full">
+              <img
+                src="/sample-pack.jpg"
+                alt="The Armada Sample Pack"
+                loading="eager"
+                decoding="async"
+                className="relative z-10 block w-full max-w-[400px] md:max-w-[430px] xl:max-w-[520px] 2xl:max-w-[820px] h-auto object-contain mx-auto xl:mx-0"
+              />
+              <div className="relative z-10 mt-2 md:mt-4 w-full max-w-[620px] mx-auto xl:mx-0 text-center md:text-left">
+                <h1
+                  className="m-0 text-4xl md:text-5xl xl:text-6xl font-extrabold tracking-tight leading-tight"
+                  style={{
+                    color: "#C08C45",
+                    fontFamily: "'Cinzel', serif",
+                    fontWeight: 800,
+                  }}
+                >
+                  THE ARMADA
+                </h1>
+
+                <p
+                  className="mt-4 text-base md:text-lg leading-relaxed"
+                  style={{ color: "rgba(255,255,255,0.75)" }}
+                >
+                  Sample any roast in the fleet, or choose The Armada Sample
+                  Pack and get one roast free plus free shipping.
+                </p>
+
+                <div className="flex items-center w-full mt-3 md:mt-4">
+                  <div className="h-px flex-1 bg-[#C08C45]/70" />
+                  <span className="px-2 md:px-3 text-[#E6C07F] text-base md:text-lg leading-none">
+                    ★
+                  </span>
+                  <div className="h-px flex-1 bg-[#C08C45]/70" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="self-start flex flex-col space-y-4">
+            <div className="mt-0 w-full max-w-[720px]">
+              <div
+                className="text-[24px] tracking-[0.2em] mb-3 font-semibold uppercase"
+                style={{ color: "#B39871" }}
+              >
+                CHOOSE YOUR SAMPLE
+              </div>
+
+              <div className="w-full border-t border-[#6D5333]/70">
+                {sampleOptions.map((item) => {
+                  const active = selectedSample === item.title;
+
+                  return (
+                    <div
+                      key={item.title}
+                      className="border-b border-[#6D5333]/70 py-4"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setSelectedSample(item.title)}
+                        className="w-full text-left"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="min-w-0">
+                            <div className="flex items-baseline gap-2">
+                              <div
+                                className="font-cinzel text-[15px] md:text-[17px] font-black tracking-wide uppercase"
+                                style={{
+                                  color: active ? "#E6C07F" : "#C08C45",
+                                }}
+                              >
+                                {item.title}
+                              </div>
+
+                              <div
+                                className="text-[13px] md:text-[14px] font-black"
+                                style={{
+                                  color: active ? "#E6C07F" : "#B39871",
+                                }}
+                              >
+                                {fmt(item.price)}
+                              </div>
+                            </div>
+                            <p
+                              className="mt-1 text-[13px] md:text-[15px] leading-snug"
+                              style={{ color: "rgba(255,255,255,0.72)" }}
+                            >
+                              {item.description}
+                            </p>
+                          </div>
+                        </div>
+                      </button>
+
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {item.slug !== "armada-sample-pack" && (
+                          <Link
+                            to={`/roast/${item.slug}`}
+                            className="inline-flex h-[28px] items-center justify-center border px-3 text-[10px] font-black tracking-[0.16em] transition hover:bg-[#32220D]"
+                            style={{
+                              borderColor: "#6D5333",
+                              color: "#E6C07F",
+                              backgroundColor: "rgba(0,0,0,0.25)",
+                            }}
+                          >
+                            VIEW ROAST
+                          </Link>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedSample(item.title);
+                            addToChest(item);
+                          }}
+                          disabled={adding}
+                          className="inline-flex h-[28px] items-center justify-center border px-3 text-[10px] font-black tracking-[0.16em] transition disabled:opacity-60 hover:bg-[#32220D]"
+                          style={{
+                            borderColor: "#6D5333",
+                            color: "#E6C07F",
+                            backgroundColor: "#130E08",
+                          }}
+                        >
+                          ADD TO CHEST
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </main>
+  );
+}
 /* ================== SHARED PARTS ================== */
 function CareCard() {
   return (
@@ -5226,7 +5651,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     description:
       "A smooth, full-bodied medium roast made for everyday drinking. Balanced, never bitter, and rich enough to enjoy black or with cream and sugar.",
     bestFor: ["Daily drinkers", "Drip", "French press", "Cold brew"],
-    notes: ["Hazelnut", "Warm Spice", "Creamy Finish"],
+    notes: ["Hazelnut", "Warm Spice", "Cream Finish"],
     origins: ["El Salvador", "Indonesia"],
     roastLevel: 3,
 
@@ -5246,7 +5671,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
       "Espresso",
       "Black or with cream",
     ],
-    notes: ["Dark Chocolate", "Molasses", "Subtle Smoke"],
+    notes: ["Chocolate", "Molasses", "Smoke"],
     origins: ["Indonesia", "Colombia"],
     roastLevel: 4,
     lineClass: "w-full max-w-[125%] h-[0.5px] bg-amber-400 my-1.5",
@@ -5279,7 +5704,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     description:
       "Our most versatile blend in the fleet. Makes amazing espressos while also delivering a very smooth, easy drinking cup across any brew method.",
     bestFor: ["Espresso", "Drip", "Pour over"],
-    notes: ["Warm Vanilla", "Cocoa", "Toasted Almond"],
+    notes: ["Vanilla", "Cocoa", "Almond"],
     origins: ["Ethiopia", "Brazil"],
     roastLevel: 3,
     lineClass: "w-full h-[0.5px] bg-amber-400 my-1.5",
@@ -5292,7 +5717,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     description:
       "Coffee beans aged in freshly emptied bourbon barrels, slowly absorbing notes of oak, caramel, and warm spice. Roasted to reveal a rich, smooth cup with subtle bourbon character and deep complexity. Never artificially flavored.",
     bestFor: ["Bourbon lovers", "Premium drip", "Pour over", "Espresso"],
-    notes: ["Warm Vanilla", "Caramel", "Toasted Oak"],
+    notes: ["Vanilla", "Caramel", "Oak"],
     origins: ["Colombia"],
     roastLevel: 3,
     lineClass: "w-full h-[0.5px] bg-amber-400 my-1.5",
@@ -5305,7 +5730,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     description:
       "A Southern pecan roast crafted for winter comfort. Smooth and full-bodied with subtle notes of toasted pecan, brown sugar, and warm spice — lightly flavored and perfectly balanced.",
     bestFor: ["Cold weather mornings", "Drip", "French press"],
-    notes: ["Southern Pecan", "Brown Sugar", "Warm Spice"],
+    notes: ["Pecan", "Brown Sugar", "Warm Spice"],
     origins: ["Brazil"],
     roastLevel: 3,
     lineClass: "w-full h-[0.5px] bg-amber-400 my-1.5",
@@ -5759,7 +6184,7 @@ function RoastUnified({
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
       <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
-      <div className="bg-neutral-900 md:bg-neutral-950 mt-[-1px]">
+      <div className="bg-black md:bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
             <div className="max-w-[80ch] md:pt-6">
@@ -5775,7 +6200,7 @@ function RoastUnified({
           </div>
         </Container>
 
-        <div className="block md:hidden bg-neutral-950">
+        <div className="block md:hidden bg-black">
           <Container className="pt-2 pb-0">
             <div className="mt-0">
               <CareCard />
@@ -5784,8 +6209,7 @@ function RoastUnified({
         </div>
 
         <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
-
-        <div className="bg-neutral-900 md:bg-neutral-950">
+        <div className="bg-black md:bg-neutral-950">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
             <RoastLevelAnchors reviewData={reviewData} reviews={reviews} />
           </Container>
@@ -11372,6 +11796,10 @@ function AppShell() {
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="coffee" element={<Navigate to="/store" replace />} />
+          <Route
+            path="roast/armada-sample-pack"
+            element={<ArmadaSamplePage />}
+          />
           <Route path="roast/:slug" element={<RoastDetailPage />} />
           <Route path="store" element={<StorePage />} />
           <Route path="store/:slug" element={<StoreCategoryPage />} />

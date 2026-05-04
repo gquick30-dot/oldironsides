@@ -2591,10 +2591,6 @@ function HomePage() {
               MEET THE FLEET
             </h2>
 
-            <p className="mt-2 font-playfair italic text-ironsideWhite/85 text-[1.2rem] xl:text-[1.35rem]">
-              Six roasts. Roasted to order. No compromises.
-            </p>
-
             <a
               href="#fleet"
               className="mt-4 inline-flex items-center justify-center
@@ -2932,7 +2928,9 @@ function HomePage() {
           <div className="grid md:grid-cols-1 gap-6 md:gap-12 items-start">
             <div className="max-w-[560px] md:mx-auto text-center">
               <SectionTitle
-                title="Hail The Quarterdeck"
+                title={
+                  <span className="text-[#C08C45]">Hail The Quarterdeck</span>
+                }
                 subtitle="Questions • Comments • Press – We’ll get back to you fast."
               />
 
@@ -4791,10 +4789,9 @@ function RoastDetailPage() {
                     {card.title}
                   </h1>
 
-                  {/* Subtitle + stars + count */}
+                  {/* Subtitle + stars + short hook */}
                   <div className="mt-0 max-w-[72ch]">
-                    <div className="flex flex-col gap-1 text-neutral-400 md:flex-row md:items-baseline md:justify-between md:gap-3">
-                      {/* roast style text */}
+                    <div className="flex flex-wrap items-center gap-y-1">
                       <div
                         className="text-base md:text-[1.2rem]"
                         style={{ color: "#B39871" }}
@@ -4802,17 +4799,16 @@ function RoastDetailPage() {
                         {card.subTitle}
                       </div>
 
-                      {/* Stars + avg + count */}
                       <div
-                        className="flex items-center gap-2 shrink-0"
+                        className="flex items-center gap-2 ml-4 md:ml-20"
                         style={{ color: "#C08C45" }}
                       >
                         <StarRatingDisplay
                           avg={reviewData.avg ?? 0}
                           count={reviewData.count}
-                          sizeClass="h-4 w-4 md:h-5 md:w-5"
+                          sizeClass="h-4 w-4 md:h-4 md:w-4"
                           clipIdPrefix="titleStar"
-                          numberClassName="font-semibold tabular-nums text-sm md:text-base"
+                          numberClassName="font-semibold tabular-nums text-sm"
                           countClassName="text-[10px] md:text-xs tracking-wide whitespace-nowrap"
                           showNumber
                           showCount
@@ -4821,14 +4817,13 @@ function RoastDetailPage() {
                       </div>
                     </div>
 
-                    {CRAFT_IN_THE_CUP_DATA[card.slug]?.description && (
-                      <p
-                        className="mt-4 max-w-[62ch] text-base md:text-lg leading-relaxed"
-                        style={{ color: "rgba(255,255,255,0.75)" }}
-                      >
-                        {CRAFT_IN_THE_CUP_DATA[card.slug].description}
-                      </p>
-                    )}
+                    <p
+                      className="mt-3 max-w-[54ch] text-base md:text-lg leading-relaxed"
+                      style={{ color: "rgba(255,255,255,0.72)" }}
+                    >
+                      {CRAFT_IN_THE_CUP_DATA[card.slug]?.shortHook ??
+                        "Roasted to order for a smooth, fresh cup."}
+                    </p>
 
                     {/* DIVIDER */}
                     <div className="flex items-center w-full mt-3 md:mt-4">
@@ -4904,9 +4899,9 @@ function RoastDetailPage() {
                               key={note}
                               className="h-[38px] flex items-center justify-center border rounded-md text-[12px] md:text-[13px] font-semibold tracking-wide uppercase"
                               style={{
-                                borderColor: "#6D5333",
-                                color: "#B5976D",
-                                backgroundColor: "rgba(0,0,0,0.25)",
+                                borderColor: "rgba(109,83,51,0.55)",
+                                color: "rgba(181,151,109,0.72)",
+                                backgroundColor: "rgba(0,0,0,0.14)",
                               }}
                             >
                               {note}
@@ -5025,7 +5020,7 @@ function RoastDetailPage() {
                               </div>
 
                               <div className="mt-1 text-[11px] font-semibold text-[#B39871]">
-                                Whole Bean Only
+                                Whole Bean
                               </div>
                             </button>
 
@@ -5047,6 +5042,7 @@ function RoastDetailPage() {
                             </button>
 
                             {/* 5 LB BAG */}
+                            {/* 5 LB BAG */}
                             <button
                               type="button"
                               disabled
@@ -5059,6 +5055,10 @@ function RoastDetailPage() {
                             >
                               <div className="font-cinzel text-[15px] font-black tracking-wide">
                                 5 LB BAG
+                              </div>
+
+                              <div className="mt-1 text-[10px] md:text-[11px] tracking-wide">
+                                Coming Soon
                               </div>
                             </button>
                           </div>
@@ -5175,6 +5175,12 @@ function ArmadaSamplePage() {
 
   const sampleOptions = [
     {
+      title: "Armada Sample Pack",
+      slug: "armada-sample-pack",
+      price: 25,
+      description: "Try the full fleet. Get one roast free plus free shipping.",
+    },
+    {
       title: "Flagship",
       slug: "flagship",
       price: 5,
@@ -5215,12 +5221,6 @@ function ArmadaSamplePage() {
       price: 5,
       description:
         "A Southern pecan roast with toasted pecan, brown sugar, and warm spice.",
-    },
-    {
-      title: "Armada Sample Pack",
-      slug: "armada-sample-pack",
-      price: 25,
-      description: "Try the full fleet. Get one roast free plus free shipping.",
     },
   ];
 
@@ -5412,7 +5412,12 @@ function ArmadaSamplePage() {
                   return (
                     <div
                       key={item.title}
-                      className="border-b border-[#6D5333]/70 py-4"
+                      className={
+                        "border-b border-[#6D5333]/70 py-4 " +
+                        (item.slug === "armada-sample-pack"
+                          ? "bg-[#130E08]/60 px-3 py-4 rounded border border-[#6D5333] mt-2 mb-2"
+                          : "")
+                      }
                     >
                       <button
                         type="button"
@@ -5421,28 +5426,17 @@ function ArmadaSamplePage() {
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0">
-                            <div className="flex items-baseline gap-2">
-                              <div
-                                className="font-cinzel text-[15px] md:text-[17px] font-black tracking-wide uppercase"
-                                style={{
-                                  color: active ? "#E6C07F" : "#C08C45",
-                                }}
-                              >
-                                {item.title}
-                              </div>
-
-                              <div
-                                className="text-[13px] md:text-[14px] font-black"
-                                style={{
-                                  color: active ? "#E6C07F" : "#B39871",
-                                }}
-                              >
-                                {fmt(item.price)}
-                              </div>
+                            <div
+                              className="font-cinzel text-[15px] md:text-[17px] font-black tracking-wide uppercase"
+                              style={{
+                                color: active ? "#E6C07F" : "#C08C45",
+                              }}
+                            >
+                              {item.title}
                             </div>
                             <p
                               className="mt-1 text-[13px] md:text-[15px] leading-snug"
-                              style={{ color: "rgba(255,255,255,0.72)" }}
+                              style={{ color: "rgba(255,255,255,0.60)" }}
                             >
                               {item.description}
                             </p>
@@ -5474,12 +5468,12 @@ function ArmadaSamplePage() {
                           disabled={adding}
                           className="inline-flex h-[28px] items-center justify-center border px-3 text-[10px] font-black tracking-[0.16em] transition disabled:opacity-60 hover:bg-[#32220D]"
                           style={{
-                            borderColor: "#6D5333",
-                            color: "#E6C07F",
-                            backgroundColor: "#130E08",
+                            borderColor: "#C08C45",
+                            color: "#F0E6D2",
+                            backgroundColor: "#32220D",
                           }}
                         >
-                          ADD TO CHEST
+                          ADD TO CHEST · {fmt(item.price)}
                         </button>
                       </div>
                     </div>
@@ -5636,7 +5630,8 @@ const DESKTOP_BUYBOX_SHIFT: Record<string, string> = {
 const CRAFT_IN_THE_CUP_DATA: Record<
   string,
   {
-    description?: string; // <-- ADD THIS LINE
+    description?: string;
+    shortHook?: string;
     bestFor: string[];
     notes: string[];
     origins: string[];
@@ -5648,6 +5643,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
   }
 > = {
   flagship: {
+    shortHook: "Smooth, balanced, and built for everyday drinking.",
     description:
       "A smooth, full-bodied medium roast made for everyday drinking. Balanced, never bitter, and rich enough to enjoy black or with cream and sugar.",
     bestFor: ["Daily drinkers", "Drip", "French press", "Cold brew"],
@@ -5663,6 +5659,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
       "flex items-end gap-6 scale-[0.75] md:scale-[0.70] origin-left",
   },
   "baptism-by-fire": {
+    shortHook: "Bold, dark, and smooth without the burnt taste.",
     description:
       "The darkest roast in the fleet. Bold, commanding, and full-bodied, delivering deep chocolate richness with a smooth finish that never turns bitter. Strength and flavor, without the burnt taste.",
     bestFor: [
@@ -5674,13 +5671,14 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     notes: ["Chocolate", "Molasses", "Smoke"],
     origins: ["Indonesia", "Colombia"],
     roastLevel: 4,
-    lineClass: "w-full max-w-[125%] h-[0.5px] bg-amber-400 my-1.5",
+    lineClass: "w-full max-w-[125%] h-px bg-[#6D5333]/70 my-3",
     originRowClass:
       "flex items-center gap-3 py-0 translate-y-0 md:-translate-y-9",
     originScaleClass: "flex items-end gap-3 ml-3 scale-[0.72] origin-left",
   },
 
   "java-action": {
+    shortHook: "Smooth, full-bodied, and finished with easy sweetness.",
     description:
       "A smooth, balanced medium roast with a creamy sweet finish and just enough depth to keep things interesting. Rich, satisfying, and easy to drink black or with a touch of cream.",
     bestFor: ["Daily drinkers", "Drip", "Pour over", "French press"],
@@ -5688,7 +5686,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     origins: ["Guatemala", "Ethiopia", "Colombia"],
     roastLevel: 3,
 
-    lineClass: "w-full h-[0.5px] bg-amber-400 my-1.5",
+    lineClass: "w-full h-px bg-[#6D5333]/70 my-3",
 
     originRowClass:
       "flex items-center gap-4 py-0 min-w-0 overflow-hidden md:-translate-y-6",
@@ -5701,66 +5699,78 @@ const CRAFT_IN_THE_CUP_DATA: Record<
   },
 
   "black-salvo": {
+    shortHook: "Rich, smooth, versatile enough for espresso or drip.",
     description:
       "Our most versatile blend in the fleet. Makes amazing espressos while also delivering a very smooth, easy drinking cup across any brew method.",
     bestFor: ["Espresso", "Drip", "Pour over"],
     notes: ["Vanilla", "Cocoa", "Almond"],
     origins: ["Ethiopia", "Brazil"],
     roastLevel: 3,
-    lineClass: "w-full h-[0.5px] bg-amber-400 my-1.5",
+    lineClass: "w-full h-px bg-[#6D5333]/70 my-3",
     originRowClass:
       "flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6",
     originScaleClass: "flex items-end gap-3 scale-[0.72] origin-left",
   },
 
   "oak-and-copper": {
+    shortHook: "Bourbon barrel aged with oak, caramel, and warm spice.",
     description:
       "Coffee beans aged in freshly emptied bourbon barrels, slowly absorbing notes of oak, caramel, and warm spice. Roasted to reveal a rich, smooth cup with subtle bourbon character and deep complexity. Never artificially flavored.",
     bestFor: ["Bourbon lovers", "Premium drip", "Pour over", "Espresso"],
     notes: ["Vanilla", "Caramel", "Oak"],
     origins: ["Colombia"],
     roastLevel: 3,
-    lineClass: "w-full h-[0.5px] bg-amber-400 my-1.5",
+    lineClass: "w-full h-px bg-[#6D5333]/70 my-3",
     originRowClass:
       "flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6",
     originScaleClass: "flex items-end gap-3 scale-[0.72] origin-left",
   },
 
   "brass-monkey": {
+    shortHook: "Toasted pecan, brown sugar, and cold-weather comfort.",
     description:
       "A Southern pecan roast crafted for winter comfort. Smooth and full-bodied with subtle notes of toasted pecan, brown sugar, and warm spice — lightly flavored and perfectly balanced.",
     bestFor: ["Cold weather mornings", "Drip", "French press"],
     notes: ["Pecan", "Brown Sugar", "Warm Spice"],
     origins: ["Brazil"],
     roastLevel: 3,
-    lineClass: "w-full h-[0.5px] bg-amber-400 my-1.5",
+    lineClass: "w-full h-px bg-[#6D5333]/70 my-3",
     originRowClass:
       "flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6",
     originScaleClass: "flex items-end gap-3 scale-[0.72] origin-left",
   },
 };
-
 function CraftInTheCupBlock({ slug }: { slug: string }) {
   const data = CRAFT_IN_THE_CUP_DATA[slug];
   if (!data) return null;
 
-  const lineClass = data.lineClass ?? "w-full h-[0.5px] bg-amber-400 my-1.5";
+  const lineClass = data.lineClass ?? "w-full h-px bg-[#6D5333]/70 my-3";
+
   const originRowClass =
     data.originRowClass ??
     "flex items-center gap-3 py-0 min-w-0 overflow-hidden md:-translate-y-6";
+
   const originScaleClass =
     data.originScaleClass ?? "flex items-end gap-3 scale-[0.72] origin-left";
 
   return (
-    <div className="space-y-2 text-neutral-300 text-base md:text-lg leading-relaxed max-w-none pr-6">
-      <h2 className="text-xl md:text-2xl font-bold text-amber-300 leading-tight">
+    <div className="space-y-3 text-base md:text-lg leading-relaxed max-w-none pr-6">
+      <h2
+        className="text-xl md:text-2xl font-bold leading-tight"
+        style={{ color: "#C08C45" }}
+      >
         THE CRAFT IN THE CUP
       </h2>
+
       {data.description && (
-        <p className="mt-2 text-neutral-300 text-base md:text-lg leading-relaxed">
+        <p
+          className="mt-2 text-base md:text-lg leading-relaxed"
+          style={{ color: "rgba(255,255,255,0.72)" }}
+        >
           {data.description}
         </p>
       )}
+
       <div className={lineClass} />
 
       <div>
@@ -5771,10 +5781,13 @@ function CraftInTheCupBlock({ slug }: { slug: string }) {
           Best For
         </h3>
 
-        <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed">
+        <div
+          className="mt-0.5 text-lg leading-relaxed"
+          style={{ color: "rgba(255,255,255,0.72)" }}
+        >
           {data.bestFor.map((item, i) => (
             <span key={item}>
-              {i > 0 && <span className="mx-1 text-amber-300">|</span>}
+              {i > 0 && <span style={{ color: "#6D5333" }}> | </span>}
               {item}
             </span>
           ))}
@@ -5782,77 +5795,11 @@ function CraftInTheCupBlock({ slug }: { slug: string }) {
       </div>
 
       <div className={lineClass} />
-
-      <div className="md:flex md:items-center md:justify-between md:gap-6">
-        <div>
-          <h3
-            className="text-base md:text-lg font-semibold"
-            style={{ color: "#C08C45" }}
-          >
-            Signature Notes
-          </h3>
-
-          <div className="mt-0.5 text-neutral-300 text-lg leading-relaxed whitespace-nowrap">
-            {data.notes.map((item, i) => (
-              <span key={item}>
-                {i > 0 && <span className="mx-1 text-amber-300">|</span>}
-                {item}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 mt-2 md:mt-0 shrink-0">
-          <span className="text-base md:text-lg font-semibold tracking-wider text-amber-300 uppercase whitespace-nowrap">
-            Roast Level
-          </span>
-
-          <div className="flex items-center gap-3">
-            {[1, 2, 3, 4, 5].map((n) => (
-              <svg
-                key={n}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{
-                  color: n <= data.roastLevel ? "#C08C45" : "#3a2a14",
-                }}
-                className="h-6 w-6 md:h-7 md:w-7"
-              >
-                <rect
-                  x="11"
-                  y="0"
-                  width="2"
-                  height="24"
-                  fill="currentColor"
-                  className="text-neutral-950"
-                />
-                <circle
-                  cx="12"
-                  cy="4"
-                  r="1.6"
-                  fill="currentColor"
-                  className="text-neutral-950"
-                />
-                <circle cx="12" cy="4" r="2" />
-                <path d="M12 6v11" />
-                <path d="M8 10h8" />
-                <path d="M5 17c2 3 5 4 7 4s5-1 7-4" />
-                <path d="M7 17l-2 2" />
-                <path d="M17 17l2 2" />
-              </svg>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className={lineClass} />
-
       <div className={originRowClass}>
-        <h3 className="text-base md:text-lg font-semibold text-amber-300/90 shrink-0">
+        <h3
+          className="text-base md:text-lg font-semibold shrink-0"
+          style={{ color: "#C08C45" }}
+        >
           Bean Origins
         </h3>
 
@@ -6187,7 +6134,11 @@ function RoastUnified({
       <div className="bg-black md:bg-neutral-950 mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
-            <div className="max-w-[80ch] md:pt-6">
+            <div className="max-w-[80ch] md:pt-6 space-y-8">
+              <CraftInTheCupBlock slug={slug} />
+
+              <div className="h-px w-full bg-[#6D5333]/70" />
+
               <RoastStoryBlock
                 title={data.title}
                 paragraphs={data.paragraphs}
@@ -7093,7 +7044,7 @@ function ContactPage() {
         <div className="flex items-start justify-between mt-0 md:mt-4">
           <SectionTitle
             title={
-              <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
+              <span className="text-3xl md:text-5xl font-extrabold text-[#C08C45]">
                 Hail The Quarterdeck!
               </span>
             }
@@ -7106,15 +7057,15 @@ function ContactPage() {
 
         <div className="mt-4 md:mt-8 grid gap-6 text-sm md:grid-cols-2 items-start">
           {/* LEFT: Contact + Follow */}
-          <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6 max-w-md">
-            <h4 className="font-semibold text-amber-300">Contact</h4>
+          <div className="rounded-2xl border border-[#6D5333] bg-[#130E08]/80 p-6 max-w-md">
+            <h4 className="font-semibold text-[#C08C45]">Contact</h4>
 
             <div className="mt-3 space-y-3">
               <a
                 href="mailto:HQ@oldironsidescoffee.org"
-                className="flex items-center gap-3 text-neutral-300 hover:text-amber-300"
+                className="flex items-center gap-3 text-neutral-300 hover:text-[#E6C07F]"
               >
-                <Mail className="h-5 w-5 text-amber-300" />
+                <Mail className="h-5 w-5 text-[#C08C45]" />
                 <span>HQ@oldironsidescoffee.org</span>
               </a>
 
@@ -7125,15 +7076,15 @@ function ContactPage() {
               </div>
             </div>
 
-            <div className="mt-6 border-t border-neutral-800 pt-5">
-              <h4 className="font-semibold text-amber-300">Follow Us</h4>
+            <div className="mt-6 border-t border-[#6D5333]/60 pt-5">
+              <h4 className="font-semibold text-[#C08C45]">Follow Us</h4>
 
               <div className="mt-3 flex flex-wrap gap-4 text-neutral-300">
                 <a
                   href="https://instagram.com/oldironsidescoffee"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-amber-300"
+                  className="inline-flex items-center gap-2 hover:text-[#E6C07F]"
                 >
                   <Instagram className="h-5 w-5" />
                   Instagram
@@ -7143,7 +7094,7 @@ function ContactPage() {
                   href="https://facebook.com/oldironsidescoffee"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-amber-300"
+                  className="inline-flex items-center gap-2 hover:text-[#E6C07F]"
                 >
                   <span className="h-5 w-5 grid place-content-center">f</span>
                   Facebook
@@ -7152,7 +7103,7 @@ function ContactPage() {
             </div>
           </div>
 
-          {/* RIGHT: Ring That Bell (use the exact same working component as homepage) */}
+          {/* RIGHT: Ring That Bell */}
           <div className="max-w-xl">
             <RingThatBellBox mode="card" />
           </div>
@@ -7164,11 +7115,12 @@ function ContactPage() {
 
 function nextRoastLabel() {
   const now = new Date();
-  const day = now.getDay(); // 0=Sun, 1=Mon, ...
+  const day = now.getDay();
   const nextMonday = new Date(now);
+
   nextMonday.setHours(0, 0, 0, 0);
-  // always the NEXT Monday (not today if it's Monday)
   nextMonday.setDate(now.getDate() + ((1 - day + 7) % 7 || 7));
+
   return nextMonday.toLocaleDateString("en-US", {
     weekday: "long",
     month: "short",
@@ -7189,8 +7141,9 @@ function SDVOSBPage() {
         </div>
 
         <div className="mt-6 grid md:grid-cols-2 gap-6">
-          <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
-            <h3 className="text-amber-300 font-semibold">Core Identifiers</h3>
+          <div className="rounded-2xl border border-[#6D5333] bg-[#130E08]/80 p-6">
+            <h3 className="text-[#C08C45] font-semibold">Core Identifiers</h3>
+
             <ul className="mt-3 text-sm text-neutral-300 space-y-2">
               <li>
                 <span className="text-neutral-400">CAGE Code:</span>{" "}
@@ -7212,8 +7165,10 @@ function SDVOSBPage() {
               </li>
             </ul>
           </div>
-          <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6">
-            <h3 className="text-amber-300 font-semibold">Capabilities</h3>
+
+          <div className="rounded-2xl border border-[#6D5333] bg-[#130E08]/80 p-6">
+            <h3 className="text-[#C08C45] font-semibold">Capabilities</h3>
+
             <ul className="mt-3 text-sm text-neutral-300 list-disc list-inside space-y-1">
               <li>Small-batch roasting and packaging (retail & bulk)</li>
               <li>
@@ -7222,8 +7177,10 @@ function SDVOSBPage() {
               <li>CONUS shipping, rush fulfillment, and recurring orders</li>
             </ul>
           </div>
-          <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-6 md:col-span-2">
-            <h3 className="text-amber-300 font-semibold">Past Performance</h3>
+
+          <div className="rounded-2xl border border-[#6D5333] bg-[#130E08]/80 p-6 md:col-span-2">
+            <h3 className="text-[#C08C45] font-semibold">Past Performance</h3>
+
             <p className="mt-2 text-sm text-neutral-300">
               Add awards, POs, references here.
             </p>
@@ -7233,7 +7190,6 @@ function SDVOSBPage() {
     </main>
   );
 }
-
 function LegalPage() {
   const { slug } = useParams();
   const titles: any = {
@@ -7247,12 +7203,11 @@ function LegalPage() {
   const [left, setLeft] = useState("");
 
   useEffect(() => {
-    const STORE_TZ = "America/New_York"; // Sunday 5:00 PM ET cutoff
+    const STORE_TZ = "America/New_York";
 
     const compute = () => {
       const now = DateTime.now().setZone(STORE_TZ);
 
-      // Cutoff: Sunday 5:00 PM ET (this Sunday if not passed, else next Sunday)
       const cutoffThisSunday = now.set({
         weekday: 7,
         hour: 17,
@@ -7260,22 +7215,23 @@ function LegalPage() {
         second: 0,
         millisecond: 0,
       });
+
       const cutoff =
         now <= cutoffThisSunday
           ? cutoffThisSunday
           : cutoffThisSunday.plus({ weeks: 1 });
 
-      // Roast: Monday immediately after the cutoff
       const nextRoast = cutoff.plus({ days: 1 }).startOf("day");
       setDateLabel(nextRoast.toFormat("EEEE, LLL d"));
 
-      // Countdown to cutoff → "Xd Yh Zm"
       const diff = cutoff
         .diff(now, ["days", "hours", "minutes"])
         .shiftTo("days", "hours", "minutes");
+
       const dd = Math.max(0, Math.floor(diff.days));
       const hh = Math.max(0, Math.floor(diff.hours));
       const mm = Math.max(0, Math.floor(diff.minutes));
+
       setLeft(
         dd > 0 ? `${dd}d ${hh}h ${mm}m` : hh > 0 ? `${hh}h ${mm}m` : `${mm}m`
       );
@@ -7286,17 +7242,16 @@ function LegalPage() {
     return () => clearInterval(id);
   }, []);
 
-  // Typography + layout (consistent across sections)
   const sectionWrap = "mt-6 text-neutral-100";
   const proseWrap = "max-w-[72ch] leading-relaxed";
   const stack = "space-y-8";
-  const h3 = "text-amber-300 font-semibold";
+  const h3 = "text-[#C08C45] font-semibold";
   const p = "mt-1 text-neutral-300";
   const pTight = "text-neutral-300";
   const ul = "mt-1 list-disc list-outside pl-5 space-y-1 text-neutral-300";
   const ulT2 = "mt-2 list-disc list-outside pl-5 space-y-1 text-neutral-300";
   const ol = "mt-1 list-decimal list-outside pl-5 space-y-1 text-neutral-300";
-  const link = "text-amber-300 hover:underline";
+  const link = "text-[#E6C07F] hover:text-[#C08C45] hover:underline";
 
   return (
     <main className="md:py-16 max-md:py-6 max-md:-mt-12">
@@ -7320,15 +7275,14 @@ function LegalPage() {
           </div>
         </div>
 
-        {/* Live roast schedule notice only on Roast & Shipping */}
         {slug === "shipping" && (
-          <div className="mt-6 mb-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
+          <div className="mt-6 mb-6 rounded-2xl border border-[#6D5333] bg-[#130E08]/80 p-6">
             <div className="text-sm md:text-base text-neutral-200">
               <p>We roast on Monday and Tuesday and ship on Wednesday.</p>
 
               <p className="mt-2">
                 Your next eligible roast date is{" "}
-                <span className="font-semibold text-amber-300">
+                <span className="font-semibold text-[#E6C07F]">
                   {dateLabel}
                 </span>
                 .
@@ -7346,7 +7300,7 @@ function LegalPage() {
               </p>
 
               <div className="mt-4">
-                <p className="font-semibold text-amber-300">Free Shipping</p>
+                <p className="font-semibold text-[#C08C45]">Free Shipping</p>
                 <ul className="list-disc pl-5 mt-1 space-y-1">
                   <li>Mix and match any roasts.</li>
                   <li>
@@ -7363,13 +7317,14 @@ function LegalPage() {
                     shipping.
                   </li>
                 </ul>
+
                 <p className="mt-2">
                   Orders of 1 or 2 bags, and all non-qualifying destinations,
                   ship at the carrier rates shown at checkout.
                 </p>
               </div>
 
-              <p className="mt-4 text-amber-300">
+              <p className="mt-4 text-[#E6C07F]">
                 Missed the cutoff time? Leave a note at checkout or reply to
                 your confirmation email. We will do our best to accommodate.
               </p>
@@ -7377,7 +7332,6 @@ function LegalPage() {
           </div>
         )}
 
-        {/* Returns & Freshness Policy */}
         {slug === "returns" && (
           <section className={sectionWrap}>
             <div className={proseWrap}>
@@ -7474,7 +7428,6 @@ function LegalPage() {
           </section>
         )}
 
-        {/* Terms of Service */}
         {slug === "terms" && (
           <section className="mt-3 text-neutral-100">
             <div className={proseWrap}>
@@ -7527,9 +7480,7 @@ function LegalPage() {
                     </li>
                     <li>
                       We may refuse service, cancel orders, or terminate
-                      subscriptions for any reason (e.g., suspected fraud,
-                      abuse, resale, policy violations, or risk to our
-                      business).
+                      subscriptions for any reason.
                     </li>
                     <li>
                       We may limit or cancel quantities per person, household,
@@ -7580,16 +7531,13 @@ function LegalPage() {
                     </li>
                     <li>
                       Cancel any time before the renewal cutoff shown in your
-                      account or emails. Cancellations apply to future renewals
-                      and do not affect orders already processed.
+                      account or emails.
                     </li>
                     <li>
                       We may change subscription pricing or terms with notice.
-                      Continued use after the effective date means acceptance.
                     </li>
                     <li>
-                      We may pause or cancel a subscription for any reason,
-                      including failed payments or product unavailability.
+                      We may pause or cancel a subscription for any reason.
                     </li>
                   </ul>
                 </div>
@@ -7600,10 +7548,9 @@ function LegalPage() {
                   </h3>
                   <ul className={ul}>
                     <li>
-                      Certain products are designated as limited release or
-                      specialty items. These products are excluded from
-                      subscription discounts, first-order promotions, and
-                      site-wide offers unless expressly stated otherwise.
+                      Certain products are excluded from subscription discounts,
+                      first-order promotions, and site-wide offers unless
+                      expressly stated otherwise.
                     </li>
                     <li>
                       <strong>Oak &amp; Copper</strong> is a specialty,
@@ -7617,7 +7564,7 @@ function LegalPage() {
                       discount or any automatic promotional discount.
                     </li>
                     <li>
-                      The only approved discount for Oak &amp; Copper:
+                      The only approved discount for Oak &amp; Copper:{" "}
                       <strong>
                         $1 per bag discount for verified GOVX members
                       </strong>
@@ -7658,29 +7605,23 @@ function LegalPage() {
                   </p>
                   <ul className={ulT2}>
                     <li>
-                      No returns on roasted coffee that was correctly fulfilled;
-                      we do not restock roasted bags.
+                      No returns on roasted coffee that was correctly fulfilled.
                     </li>
                     <li>
-                      If damaged, defective, or if we made a mistake, contact
-                      us—we’ll replace or refund.
+                      If damaged, defective, or if we made a mistake, contact us
+                      and we’ll replace or refund.
                     </li>
                     <li>
                       Not happy? Email us. We can recommend a better fit, or
                       find a solution.
                     </li>
+                    <li>Report issues within 7 days of delivery.</li>
                     <li>
-                      Report issues within 7 days of delivery. Include your
-                      order number, a brief note, and photos if the package/bag
-                      is damaged.
+                      Covers: damaged in transit, wrong item, defective product.
                     </li>
                     <li>
-                      Covers: damaged in transit, wrong item, defective product
-                      (seal, off roast, quality).
-                    </li>
-                    <li>
-                      Doesn’t cover: correctly fulfilled roasted coffee; pure
-                      taste preferences (still contact us—we’ll help).
+                      Doesn’t cover: correctly fulfilled roasted coffee or pure
+                      taste preferences.
                     </li>
                   </ul>
                 </div>
@@ -7692,8 +7633,7 @@ function LegalPage() {
                   <ul className={ul}>
                     <li>
                       Promotions, coupons, and discounts are subject to their
-                      own rules and may be modified, limited, or canceled at any
-                      time.
+                      own rules.
                     </li>
                     <li>
                       Discounts do not apply to limited-release or specialty
@@ -7702,20 +7642,15 @@ function LegalPage() {
                     <li>
                       <strong>Oak &amp; Copper</strong> is excluded from the 15%
                       Subscribe &amp; Save discount and the 20% first-order
-                      discount. The only approved discount for Oak &amp; Copper
-                      is a <strong>$1 per bag discount</strong> for verified{" "}
-                      <strong>GOVX members</strong>, when applicable.
+                      discount.
                     </li>
                     <li>
                       Gift cards are not reloadable, refundable, or redeemable
                       for cash unless required by law.
                     </li>
                     <li>
-                      Free shipping promotions apply only to qualifying orders
-                      shipped within the{" "}
-                      <strong>continental United States</strong>. International
-                      orders and non-continental U.S. destinations (including
-                      Alaska and Hawaii) are excluded unless expressly stated.
+                      Free shipping applies only to qualifying orders shipped
+                      within the continental United States.
                     </li>
                   </ul>
                 </div>
@@ -7737,8 +7672,6 @@ function LegalPage() {
                   <p className={p}>
                     This offer ends automatically once 200 qualifying
                     subscribers have been fulfilled or supplies are exhausted.
-                    We reserve the right to modify, suspend, or discontinue this
-                    offer at any time without notice.
                   </p>
                 </div>
 
@@ -7747,8 +7680,7 @@ function LegalPage() {
                   <ul className={ul}>
                     <li>
                       You grant us a worldwide, royalty-free, perpetual license
-                      to use, reproduce, modify, publish, translate, and display
-                      your content.
+                      to use your content.
                     </li>
                     <li>
                       You represent your content is accurate, lawful, and
@@ -7771,10 +7703,7 @@ function LegalPage() {
                   <h3 className={h3}>12. Intellectual Property</h3>
                   <p className={p}>
                     The site, products, logos, graphics, text, and other
-                    materials are owned by us or our licensors. We grant a
-                    limited, nonexclusive, nontransferable license to access and
-                    use the site for personal, noncommercial purposes—no other
-                    rights are granted.
+                    materials are owned by us or our licensors.
                   </p>
                 </div>
 
@@ -7782,9 +7711,6 @@ function LegalPage() {
                   <h3 className={h3}>13. Health and Safety</h3>
                   <p className={p}>
                     Coffee contains caffeine. We do not provide medical advice.
-                    You are responsible for your own dietary and medical
-                    needs—consult a qualified professional with questions about
-                    caffeine or allergens.
                   </p>
                 </div>
 
@@ -7792,8 +7718,7 @@ function LegalPage() {
                   <h3 className={h3}>14. Third-Party Services and Links</h3>
                   <p className={p}>
                     We are not responsible for third-party websites, apps, or
-                    services that may be linked or integrated. Your use is at
-                    your own risk and subject to those terms and policies.
+                    services that may be linked or integrated.
                   </p>
                 </div>
 
@@ -7804,10 +7729,7 @@ function LegalPage() {
                   <p className={p}>
                     By providing a phone number or email, you consent to receive
                     transactional and marketing messages, subject to our Privacy
-                    Policy. Message/data rates may apply. Opt out of marketing
-                    emails via the unsubscribe link and SMS by replying STOP. We
-                    may still send transactional messages about orders or your
-                    account.
+                    Policy.
                   </p>
                 </div>
 
@@ -7819,11 +7741,8 @@ function LegalPage() {
                       and “as available.”
                     </li>
                     <li>
-                      To the fullest extent allowed by law, we disclaim all
-                      warranties, express or implied, including merchantability,
-                      fitness for a particular purpose, title, and
-                      non-infringement. We do not warrant uninterrupted or
-                      error-free operation.
+                      We disclaim all warranties to the fullest extent allowed
+                      by law.
                     </li>
                   </ul>
                 </div>
@@ -7832,11 +7751,8 @@ function LegalPage() {
                   <h3 className={h3}>17. Limitation of Liability</h3>
                   <p className={p}>
                     To the fullest extent allowed by law, we and our suppliers
-                    are not liable for any indirect, incidental, special,
-                    consequential, or punitive damages, or any loss of profits,
-                    revenue, data, or use. Our total liability will not exceed
-                    the amount you paid for the product or service at issue
-                    during the six months before the claim arose.
+                    are not liable for indirect, incidental, special,
+                    consequential, or punitive damages.
                   </p>
                 </div>
 
@@ -7845,11 +7761,7 @@ function LegalPage() {
                   <p className={p}>
                     You agree to defend, indemnify, and hold harmless the
                     Company and our officers, directors, employees, agents, and
-                    affiliates from and against claims, liabilities, damages,
-                    losses, and expenses (including reasonable attorneys’ fees)
-                    arising out of or related to your use of the site or
-                    products, your violation of these Terms, or your violation
-                    of any law or third-party right.
+                    affiliates from claims related to your use of the site.
                   </p>
                 </div>
 
@@ -7858,39 +7770,23 @@ function LegalPage() {
                     19. Dispute Resolution, Arbitration, and Class Action Waiver
                   </h3>
                   <p className={p}>
-                    You and the Company agree to resolve any dispute arising out
-                    of or relating to these Terms or your use of our site or
-                    products through binding arbitration administered by the
-                    American Arbitration Association under its Consumer
-                    Arbitration Rules. The Federal Arbitration Act governs this
-                    agreement to arbitrate. Arbitration will take place in Salt
-                    Lake City, Utah, unless we agree otherwise, and may be
-                    conducted by telephone or video when appropriate. You and we
-                    each waive the right to a jury trial and to participate in a
-                    class action or class-wide arbitration; claims must be
-                    brought individually. Either party may bring an individual
-                    claim in small-claims court if eligible. You may opt out by
-                    sending written notice to{" "}
+                    You and the Company agree to resolve disputes through
+                    binding arbitration administered by the American Arbitration
+                    Association. You may opt out by sending written notice to{" "}
                     <a
                       href="mailto:Support@oldironsidescoffee.org"
                       className={link}
                     >
                       Support@oldironsidescoffee.org
                     </a>{" "}
-                    within 30 days of your first use of our services. If you opt
-                    out, the exclusive venue for any non-arbitrated action will
-                    be the state and federal courts in Suffolk County,
-                    Massachusetts, and you consent to personal jurisdiction
-                    there.
+                    within 30 days of your first use of our services.
                   </p>
                 </div>
 
                 <div>
                   <h3 className={h3}>20. Governing Law</h3>
                   <p className={p}>
-                    These Terms are governed by the laws of the State of Utah,
-                    without regard to its conflict-of-laws rules. The Federal
-                    Arbitration Act governs the arbitration provision.
+                    These Terms are governed by the laws of the State of Utah.
                   </p>
                 </div>
 
@@ -7898,9 +7794,7 @@ function LegalPage() {
                   <h3 className={h3}>21. Termination</h3>
                   <p className={p}>
                     We may suspend or terminate your access at any time and for
-                    any reason. You may stop using our services at any time.
-                    Sections that by their nature should survive termination
-                    will survive.
+                    any reason.
                   </p>
                 </div>
 
@@ -7908,28 +7802,23 @@ function LegalPage() {
                   <h3 className={h3}>22. Force Majeure</h3>
                   <p className={p}>
                     We are not liable for delays or failures caused by events
-                    outside our reasonable control, including natural disasters,
-                    labor disputes, acts of government, supply or transportation
-                    interruptions, or power or internet outages.
+                    outside our reasonable control.
                   </p>
                 </div>
 
                 <div>
                   <h3 className={h3}>23. Changes to the Services or Terms</h3>
                   <p className={p}>
-                    We may update these Terms at any time. Changes apply when
-                    posted unless a later effective date is stated. Your
-                    continued use after changes means you accept the updated
-                    Terms.
+                    We may update these Terms at any time. Your continued use
+                    after changes means you accept the updated Terms.
                   </p>
                 </div>
 
                 <div>
                   <h3 className={h3}>24. Assignment</h3>
                   <p className={p}>
-                    You may not assign or transfer your rights under these Terms
-                    without our prior written consent. We may assign these Terms
-                    at any time.
+                    You may not assign or transfer your rights without our prior
+                    written consent.
                   </p>
                 </div>
 
@@ -7937,18 +7826,16 @@ function LegalPage() {
                   <h3 className={h3}>25. Severability and Waiver</h3>
                   <p className={p}>
                     If any provision is found unenforceable, the remaining
-                    provisions remain in full force. Our failure to enforce any
-                    right is not a waiver.
+                    provisions remain in full force.
                   </p>
                 </div>
 
                 <div>
                   <h3 className={h3}>26. Entire Agreement</h3>
                   <p className={p}>
-                    These Terms, together with the Privacy Policy and any order
-                    or subscription details, are the entire agreement between
-                    you and us and supersede all prior or contemporaneous
-                    communications.
+                    These Terms, together with the Privacy Policy and order or
+                    subscription details, are the entire agreement between you
+                    and us.
                   </p>
                 </div>
 
@@ -7973,11 +7860,9 @@ function LegalPage() {
           </section>
         )}
 
-        {/* Privacy Policy */}
         {slug === "privacy" && (
           <section className="mt-3 text-neutral-100">
             <div className="max-w-[68ch] leading-relaxed space-y-8">
-              {/* Intro */}
               <div className="space-y-2">
                 <h3 className={h3}>Effective date</h3>
                 <div className={pTight}>October 11, 2025</div>
@@ -7988,8 +7873,7 @@ function LegalPage() {
                 dba Old Ironsides Coffee (“Company,” “we,” “us,” or “our”)
                 collects, uses, shares, and protects personal information when
                 you visit our websites, make a purchase, create an account,
-                subscribe, or otherwise interact with us. If you do not agree
-                with this Policy, do not use our services.
+                subscribe, or otherwise interact with us.
               </p>
 
               <p className={pTight}>
@@ -7997,7 +7881,6 @@ function LegalPage() {
                 purposes of applicable privacy laws.
               </p>
 
-              {/* Contact */}
               <div className="space-y-2">
                 <h3 className={h3}>
                   Contact for privacy questions and requests
@@ -8015,12 +7898,10 @@ function LegalPage() {
                 </p>
               </div>
 
-              {/* 1 */}
               <div className="space-y-2">
                 <h3 className={h3}>1. Information we collect</h3>
                 <p className={pTight}>
-                  We collect the categories of information below. The exact data
-                  depends on how you interact with us.
+                  We collect information depending on how you interact with us.
                 </p>
                 <ul className="list-disc pl-5 space-y-2 text-neutral-300">
                   <li>
@@ -8046,9 +7927,8 @@ function LegalPage() {
                   </li>
                   <li>
                     <span className="font-semibold">Payment information:</span>{" "}
-                    we receive limited payment details from our payment
-                    processors such as payment method type and the last four
-                    digits of a card. We do not store full card numbers.
+                    limited payment details from payment processors. We do not
+                    store full card numbers.
                   </li>
                   <li>
                     <span className="font-semibold">User content:</span> product
@@ -8066,22 +7946,16 @@ function LegalPage() {
                       Sensitive information:
                     </span>{" "}
                     we do not intentionally collect sensitive personal
-                    information as defined by applicable law. We do not collect
-                    biometric identifiers such as fingerprints, facial scans, or
-                    voiceprints. If you provide any such information to us, we
-                    will handle it as required by law and will delete or
-                    restrict it when appropriate.
+                    information.
                   </li>
                 </ul>
                 <p className={pTight}>
-                  We obtain personal information from you directly, from your
-                  devices through cookies and similar tools, from our service
-                  providers such as payment processors and shipping carriers,
-                  and from marketing and analytics partners.
+                  We obtain personal information from you directly, your
+                  devices, service providers, and marketing and analytics
+                  partners.
                 </p>
               </div>
 
-              {/* 2 */}
               <div className="space-y-2">
                 <h3 className={h3}>2. Why we use your information</h3>
                 <p className={pTight}>
@@ -8092,105 +7966,84 @@ function LegalPage() {
                   <li>
                     <span className="font-semibold">Provide the services:</span>{" "}
                     process and fulfill orders, manage subscriptions, deliver
-                    products, provide customer support, operate your account (
-                    <em>contract necessity</em>).
+                    products, provide support.
                   </li>
                   <li>
                     <span className="font-semibold">
                       Payments and fraud prevention:
                     </span>{" "}
-                    process payments, verify identity, prevent abuse and
-                    unauthorized activity (<em>contract necessity</em>,{" "}
-                    <em>legitimate interests</em>).
+                    process payments, verify identity, prevent abuse.
                   </li>
                   <li>
                     <span className="font-semibold">
                       Customer communications:
                     </span>{" "}
-                    send transactional emails and SMS about orders,
-                    subscriptions, and account notices (
-                    <em>contract necessity</em>).
+                    send transactional emails and SMS.
                   </li>
                   <li>
                     <span className="font-semibold">Marketing:</span> send
-                    promotional emails and SMS, personalize content, and measure
-                    campaign performance where permitted (<em>consent</em> or{" "}
-                    <em>legitimate interests</em>).
+                    promotional emails and SMS where permitted.
                   </li>
                   <li>
                     <span className="font-semibold">
                       Analytics and improvement:
                     </span>{" "}
-                    understand site performance, fix bugs, and improve our
-                    products and services (<em>legitimate interests</em>).
+                    understand site performance and improve services.
                   </li>
                   <li>
                     <span className="font-semibold">
                       Security and compliance:
                     </span>{" "}
-                    enforce terms, comply with legal obligations, respond to
-                    lawful requests (<em>legal obligation</em>,{" "}
-                    <em>legitimate interests</em>).
+                    enforce terms and comply with legal obligations.
                   </li>
                   <li>
                     <span className="font-semibold">Financial incentives:</span>{" "}
-                    operate opt-in programs like subscribe-and-save discounts
-                    and email signup offers (<em>consent</em>).
+                    operate opt-in programs like subscribe-and-save discounts.
                   </li>
                 </ul>
               </div>
 
-              {/* 3 */}
               <div className="space-y-2">
                 <h3 className={h3}>3. Cookies and similar technologies</h3>
                 <p className={pTight}>
                   We use cookies, pixels, tags, and similar technologies to
-                  enable site functionality, maintain your session, remember
-                  preferences, perform analytics, and support marketing.
+                  enable site functionality, analytics, and marketing.
                 </p>
                 <h4 className={h3}>Your choices</h4>
                 <ul className="list-disc pl-5 space-y-2 text-neutral-300">
                   <li>Control cookies in your browser settings.</li>
                   <li>
-                    Opt out of certain analytics or advertising cookies through
-                    the cookie banner or device settings where available.
+                    Opt out through the cookie banner or device settings where
+                    available.
                   </li>
                   <li>
-                    Where required by law and technically feasible, we will
-                    treat a browser-level opt-out signal such as Global Privacy
-                    Control as a valid request to opt out of sale or sharing.
+                    Where required, we will treat Global Privacy Control as a
+                    valid request.
                   </li>
                 </ul>
               </div>
 
-              {/* 4 */}
               <div className="space-y-2">
                 <h3 className={h3}>4. How we share information</h3>
                 <p className={pTight}>
                   We do not sell personal information for money. We may share
-                  limited information with advertising and analytics partners
-                  that could be considered a “share” for targeted advertising
-                  under some state laws.
+                  limited information with advertising and analytics partners.
                 </p>
                 <ul className="list-disc pl-5 space-y-2 text-neutral-300">
                   <li>
                     <span className="font-semibold">
                       Service providers and processors:
                     </span>{" "}
-                    ecommerce platforms, payment processors, fraud prevention
-                    tools, email and SMS platforms, analytics providers,
-                    shipping and logistics partners, customer support tools.
+                    ecommerce platforms, payment processors, email and SMS
+                    platforms, analytics providers, shipping partners.
                   </li>
                   <li>
                     <span className="font-semibold">Business partners:</span>{" "}
-                    only where you have explicitly opted in to a joint promotion
-                    or collaboration, and only for the purpose disclosed at the
-                    time of collection.
+                    only where you have explicitly opted in.
                   </li>
                   <li>
                     <span className="font-semibold">Legal and safety:</span> to
-                    comply with law, respond to lawful requests, or protect
-                    rights, users, or the public.
+                    comply with law or protect rights.
                   </li>
                   <li>
                     <span className="font-semibold">Business transfers:</span>{" "}
@@ -8201,20 +8054,17 @@ function LegalPage() {
                     <span className="font-semibold">
                       Aggregated or de-identified data:
                     </span>{" "}
-                    information that cannot reasonably be linked to you. We
-                    maintain de-identified data and do not attempt to
-                    re-identify it.
+                    information that cannot reasonably be linked to you.
                   </li>
                 </ul>
               </div>
 
-              {/* 5 */}
               <div className="space-y-2">
                 <h3 className={h3}>5. Your choices about marketing</h3>
                 <ul className="list-disc pl-5 space-y-2 text-neutral-300">
                   <li>
                     <span className="font-semibold">Email:</span> use the
-                    unsubscribe link in any marketing email or email{" "}
+                    unsubscribe link or email{" "}
                     <a
                       href="mailto:Support@oldironsidescoffee.org"
                       className={link}
@@ -8225,27 +8075,21 @@ function LegalPage() {
                   </li>
                   <li>
                     <span className="font-semibold">SMS:</span> reply STOP to
-                    opt out of marketing texts. Transactional emails or texts
-                    about your orders or account will still be sent.
+                    opt out of marketing texts.
                   </li>
                 </ul>
               </div>
 
-              {/* 6 */}
               <div className="space-y-2">
                 <h3 className={h3}>6. Your privacy rights</h3>
                 <p className={pTight}>
                   Your rights depend on your location. We will honor requests as
                   required by law.
                 </p>
-                <p className={pTight}>
-                  U.S. state privacy laws (including CA, CO, CT, UT, VA) may
-                  provide rights to:
-                </p>
                 <ul className="list-disc pl-5 space-y-2 text-neutral-300">
                   <li>
                     know and access categories and specific pieces of personal
-                    information we collected about you,
+                    information,
                   </li>
                   <li>correct inaccurate information,</li>
                   <li>delete information,</li>
@@ -8253,11 +8097,6 @@ function LegalPage() {
                   <li>limit use and disclosure of sensitive information,</li>
                   <li>non-discrimination for exercising these rights.</li>
                 </ul>
-
-                <p className={pTight}>
-                  Utah residents may exercise their rights under the Utah
-                  Consumer Privacy Act by contacting us as described below.
-                </p>
 
                 <p className={pTight}>
                   <span className="font-semibold">
@@ -8270,39 +8109,17 @@ function LegalPage() {
                   >
                     Support@oldironsidescoffee.org
                   </a>{" "}
-                  with your name, the email used for your purchases or account,
-                  your request type, and your state of residence. We will verify
-                  your identity by matching to existing records and may request
-                  additional information such as an order number. You may use an
-                  authorized agent as permitted by law if you provide a signed
-                  permission or a valid power of attorney.
-                </p>
-                <p className={pTight}>
-                  <span className="font-semibold">Appeals:</span> if we deny a
-                  request, you may appeal by replying to our decision email
-                  within 30 days. If you still have concerns, you may contact
-                  your state attorney general.
-                </p>
-                <p className={pTight}>
-                  <span className="font-semibold">Global Privacy Control:</span>{" "}
-                  where required by law and technically feasible, we will treat
-                  an opt-out signal such as GPC as a valid request for the
-                  associated browser.
+                  with your name, email, request type, and state of residence.
                 </p>
               </div>
 
-              {/* 7 */}
               <div className="space-y-2">
                 <h3 className={h3}>7. California disclosures</h3>
                 <ul className="list-disc pl-5 space-y-2 text-neutral-300">
                   <li>
-                    <span className="font-semibold">
-                      Categories collected in the last 12 months:
-                    </span>{" "}
-                    identifiers, commercial information, internet or network
-                    activity, geolocation derived from IP, user content,
-                    inferences. Payment card details are processed by our
-                    payment processor.
+                    <span className="font-semibold">Categories collected:</span>{" "}
+                    identifiers, commercial information, internet activity,
+                    approximate geolocation, user content, inferences.
                   </li>
                   <li>
                     <span className="font-semibold">Sources:</span> directly
@@ -8314,25 +8131,20 @@ function LegalPage() {
                     in Section 2.
                   </li>
                   <li>
-                    <span className="font-semibold">
-                      Disclosures for business purposes:
-                    </span>{" "}
-                    service providers and processors, shipping carriers,
-                    analytics and security vendors, customer support tools.
+                    <span className="font-semibold">Disclosures:</span> service
+                    providers, shipping carriers, analytics vendors, support
+                    tools.
                   </li>
                   <li>
                     <span className="font-semibold">Sale or sharing:</span> we
-                    do not sell personal information for money. We may “share”
-                    limited identifiers and internet activity with advertising
-                    partners for cross-context behavioral advertising. You can
-                    opt out as described in Section 6.
+                    do not sell personal information for money.
                   </li>
                   <li>
                     <span className="font-semibold">
                       Sensitive personal information:
                     </span>{" "}
-                    we do not use or disclose sensitive personal information for
-                    purposes that require a right to limit under California law.
+                    we do not use or disclose it for purposes requiring a right
+                    to limit.
                   </li>
                   <li>
                     <span className="font-semibold">Non-discrimination:</span>{" "}
@@ -8340,39 +8152,19 @@ function LegalPage() {
                     rights.
                   </li>
                 </ul>
-                <p className={pTight}>
-                  <span className="font-semibold">
-                    Financial incentive notice:
-                  </span>{" "}
-                  if you join our email list or subscribe to receive a discount
-                  such as 20% off, we collect your email and marketing
-                  preferences in exchange for the incentive. You can withdraw at
-                  any time by unsubscribing or canceling the subscription. We
-                  estimate the value of the incentive based on the cost of
-                  running the program and expected revenue from increased
-                  engagement.
-                </p>
               </div>
 
-              {/* 8 */}
               <div className="space-y-2">
                 <h3 className={h3}>8. Children’s privacy</h3>
                 <p className={pTight}>
-                  Our services are not intended for children under 13, and we do
-                  not knowingly collect personal information from children under
-                  13. If you believe a child provided information, contact us
-                  and we will delete it.
+                  Our services are not intended for children under 13.
                 </p>
               </div>
 
-              {/* 9 */}
               <div className="space-y-2">
                 <h3 className={h3}>9. Data retention</h3>
                 <p className={pTight}>
-                  We keep personal information only as long as necessary for the
-                  purposes described in this Policy, for legitimate business
-                  needs, and as required by law. Typical retention periods
-                  include:
+                  We keep personal information only as long as necessary.
                 </p>
                 <ul className="list-disc pl-5 space-y-2 text-neutral-300">
                   <li>orders and tax records: up to 7 years,</li>
@@ -8380,82 +8172,53 @@ function LegalPage() {
                     customer support records: up to 3 years after resolution,
                   </li>
                   <li>
-                    marketing contact data: until you unsubscribe or your
-                    account becomes inactive,
+                    marketing contact data: until you unsubscribe or become
+                    inactive,
                   </li>
                   <li>
-                    analytics data: per vendor defaults or a reasonable period
-                    we configure.
+                    analytics data: per vendor defaults or a reasonable period.
                   </li>
                 </ul>
               </div>
 
-              {/* 10 */}
               <div className="space-y-2">
                 <h3 className={h3}>10. Security</h3>
                 <p className={pTight}>
-                  We use administrative, technical, and physical safeguards
-                  designed to protect personal information, including encryption
-                  in transit, access controls, and vendor due diligence. No
-                  method of transmission or storage is completely secure. You
-                  use the services at your own risk.
+                  We use safeguards designed to protect personal information. No
+                  method of transmission or storage is completely secure.
                 </p>
               </div>
 
-              {/* 11 */}
               <div className="space-y-2">
                 <h3 className={h3}>11. International users</h3>
                 <p className={pTight}>
-                  We are based in the United States, with operations and legal
-                  domicile in the State of Utah. If you access the services from
-                  outside the United States, your information may be transferred
-                  to, stored in, or processed in the United States or other
-                  countries that may not provide the same level of data
-                  protection as your home jurisdiction. We will protect your
-                  information as described in this Policy and as required by
-                  applicable law.
-                </p>
-                <p className={pTight}>
-                  For EEA and UK users, our legal bases appear in Section 2. You
-                  may contact your data protection authority if you believe your
-                  rights have been infringed.
+                  We are based in the United States. Your information may be
+                  transferred to, stored in, or processed in the United States.
                 </p>
               </div>
 
-              {/* 12 */}
               <div className="space-y-2">
                 <h3 className={h3}>12. Third party sites and services</h3>
                 <p className={pTight}>
-                  Our site may link to or integrate with third party websites,
-                  apps, or services. Their privacy practices are governed by
-                  their own policies. We are not responsible for third party
-                  privacy practices.
+                  Third-party privacy practices are governed by their own
+                  policies.
                 </p>
               </div>
 
-              {/* 13 */}
               <div className="space-y-2">
                 <h3 className={h3}>13. Do Not Track</h3>
                 <p className={pTight}>
-                  Some browsers transmit Do Not Track signals. Our services do
-                  not respond to Do Not Track. We will treat a legally required
-                  browser-level opt-out signal such as Global Privacy Control as
-                  described in Section 6.
+                  Our services do not respond to Do Not Track signals.
                 </p>
               </div>
 
-              {/* 14 */}
               <div className="space-y-2">
                 <h3 className={h3}>14. Changes to this Policy</h3>
                 <p className={pTight}>
-                  We may update this Policy from time to time. If we make
-                  material changes, we will post the updated Policy and change
-                  the effective date. Your continued use of the services after
-                  an update means you accept the changes.
+                  We may update this Policy from time to time.
                 </p>
               </div>
 
-              {/* 15 */}
               <div className="space-y-2">
                 <h3 className={h3}>15. How to contact us</h3>
                 <p className={pTight}>
@@ -11578,22 +11341,19 @@ function Layout() {
       <Outlet />
 
       {/* footer */}
-      <footer className="border-t border-neutral-800 bg-neutral-950">
+      <footer className="border-t border-[#6D5333]/60 bg-neutral-950">
         <Container className="py-8 text-sm">
           <div className="grid lg:grid-cols-4 gap-8">
-            {/* Brand + Vet-owned + Flag (centered and nudged up) */}
+            {/* Brand + Vet-owned + Flag */}
             <div className="relative -top-4 lg:-top-5 flex flex-col items-center text-center">
-              {/* Title */}
-              <div className="mt-3 md:mt-4 text-base tracking-[0.5em] text-amber-300">
+              <div className="mt-3 md:mt-4 text-base tracking-[0.5em] text-[#C08C45]">
                 OLD IRONSIDES COFFEE
               </div>
 
-              {/* Vet line */}
               <div className="mt-0 md:mt-0 text-base text-neutral-300 leading-tight">
                 Veteran-owned and operated.
               </div>
 
-              {/* Flag */}
               <img
                 src="/stars-stripes.png"
                 alt="American flag"
@@ -11607,7 +11367,7 @@ function Layout() {
               <ul className="space-y-1">
                 <li>
                   <Link
-                    className="text-neutral-300 hover:text-amber-300"
+                    className="text-neutral-300 hover:text-[#E6C07F]"
                     to="/legal/shipping"
                   >
                     Roast &amp; Shipping
@@ -11615,7 +11375,7 @@ function Layout() {
                 </li>
                 <li>
                   <Link
-                    className="text-neutral-300 hover:text-amber-300"
+                    className="text-neutral-300 hover:text-[#E6C07F]"
                     to="/legal/returns"
                   >
                     Returns
@@ -11623,7 +11383,7 @@ function Layout() {
                 </li>
                 <li>
                   <Link
-                    className="text-neutral-300 hover:text-amber-300"
+                    className="text-neutral-300 hover:text-[#E6C07F]"
                     to="/legal/terms"
                   >
                     Terms of Service
@@ -11631,7 +11391,7 @@ function Layout() {
                 </li>
                 <li>
                   <Link
-                    className="text-neutral-300 hover:text-amber-300"
+                    className="text-neutral-300 hover:text-[#E6C07F]"
                     to="/legal/privacy"
                   >
                     Privacy Policy
@@ -11641,7 +11401,7 @@ function Layout() {
                   <button
                     type="button"
                     onClick={() => window.showCookieBanner?.()}
-                    className="text-neutral-300 hover:text-amber-300"
+                    className="text-neutral-300 hover:text-[#E6C07F]"
                   >
                     Cookie settings
                   </button>
@@ -11650,7 +11410,7 @@ function Layout() {
                   <button
                     type="button"
                     onClick={() => window.showDoNotSell?.()}
-                    className="text-neutral-300 hover:text-amber-300"
+                    className="text-neutral-300 hover:text-[#E6C07F]"
                     aria-label="Do Not Sell or Share My Personal Information"
                   >
                     Do Not Sell or Share
@@ -11658,6 +11418,7 @@ function Layout() {
                 </li>
               </ul>
             </div>
+
             {/* Contact */}
             <div className="hidden lg:block">
               <div className="text-neutral-400 font-semibold mb-2">Contact</div>
@@ -11665,7 +11426,7 @@ function Layout() {
                 <li>
                   <a
                     href="mailto:HQ@oldironsidescoffee.org"
-                    className="hover:text-amber-300"
+                    className="hover:text-[#E6C07F]"
                   >
                     HQ@oldironsidescoffee.org
                   </a>
@@ -11673,16 +11434,17 @@ function Layout() {
                 <li>6 Liberty Square #2564, Boston, MA 02109</li>
               </ul>
             </div>
+
             {/* Follow */}
             <div className="hidden lg:block">
-              <div className="text-amber-300 font-semibold mb-2">Follow Us</div>
+              <div className="text-[#C08C45] font-semibold mb-2">Follow Us</div>
 
-              <div className="flex gap-6 text-amber-300">
+              <div className="flex gap-6 text-[#C08C45]">
                 <a
                   href="https://instagram.com/oldironsidescoffee"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-amber-200 transition"
+                  className="inline-flex items-center gap-2 hover:text-[#E6C07F] transition"
                 >
                   <Instagram className="h-5 w-5" />
                   Instagram
@@ -11692,7 +11454,7 @@ function Layout() {
                   href="https://facebook.com/oldironsidescoffee"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-amber-200 transition"
+                  className="inline-flex items-center gap-2 hover:text-[#E6C07F] transition"
                 >
                   <Facebook className="h-5 w-5" />
                   Facebook

@@ -114,7 +114,7 @@ function ShopButton({ slug, title }: { slug: string; title: string }) {
   return (
     <Link
       to={`/roast/${slug}`}
-      className="group inline-flex items-center gap-2 rounded-xl px-5 py-3 font-semibold ring-1 ring-amber-400 text-amber-300 bg-transparent hover:bg-amber-400 hover:text-neutral-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+      className="group inline-flex items-center gap-2 rounded-xl px-5 py-3 font-semibold ring-1 ring-[#C08C45] text-[#C08C45] bg-transparent hover:bg-[#C08C45] hover:text-neutral-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C08C45]"
       aria-label={`Shop ${title}`}
       title={`Shop ${title}`}
     >
@@ -175,7 +175,7 @@ function FlashToast() {
       }`}
     >
       <div
-        className="rounded-lg bg-amber-400/95 px-4 py-2 text-neutral-900 font-semibold shadow-xl text-center whitespace-pre-line"
+        className="rounded-lg bg-[#C08C45]/95 px-4 py-2 text-neutral-900 font-semibold shadow-xl text-center whitespace-pre-line"
         role="status"
         aria-live="polite"
       >
@@ -332,7 +332,7 @@ const BackButton = ({
 }) => {
   const navigate = useNavigate();
   const base =
-    "inline-flex items-center gap-2 rounded-2xl border-2 border-amber-400 bg-amber-500/20 font-bold text-amber-300 hover:bg-amber-400 hover:text-neutral-900";
+    "inline-flex items-center gap-2 rounded-2xl border-2 border-[#C08C45] bg-amber-500/20 font-bold text-[#C08C45] hover:bg-[#C08C45] hover:text-neutral-900";
   const sz = size === "sm" ? "px-3 py-2 text-sm" : "px-6 py-4 text-lg";
   const iconCls = size === "sm" ? "h-5 w-5" : "h-7 w-7";
   return (
@@ -365,7 +365,7 @@ const SectionTitle = ({ title, subtitle }: any) => {
   const isString = typeof title === "string";
   const TitleTag: any = isString ? "h2" : "div";
   const titleClasses =
-    "mt-0 text-2xl md:text-4xl font-extrabold leading-tight tracking-tight text-amber-300";
+    "mt-0 text-2xl md:text-4xl font-extrabold leading-tight tracking-tight text-[#C08C45]";
   return (
     <div className="max-w-3xl">
       <TitleTag className={titleClasses}>{title}</TitleTag>
@@ -411,7 +411,7 @@ const roastCards = [
     battleDate: "Commissioned October 21, 1797",
     storyTitle: (
       <>
-        <div className="text-2xl font-bold text-amber-300">Flagship</div>
+        <div className="text-2xl font-bold text-[#C08C45]">Flagship</div>
         <div className="text-white text-base">
           USS Constitution – Old Ironsides
         </div>
@@ -439,7 +439,7 @@ const roastCards = [
     battleDate: "August 19, 1812",
     storyTitle: (
       <>
-        <div className="text-2xl font-bold text-amber-300">Baptism by Fire</div>
+        <div className="text-2xl font-bold text-[#C08C45]">Baptism by Fire</div>
         <div className="text-white text-base">
           USS Constitution vs HMS Guerriere
         </div>
@@ -467,7 +467,7 @@ const roastCards = [
     battleDate: "December 29, 1812",
     storyTitle: (
       <>
-        <div className="text-2xl font-bold text-amber-300">The Java Action</div>
+        <div className="text-2xl font-bold text-[#C08C45]">The Java Action</div>
         <div className="text-white text-base">USS Constitution vs HMS Java</div>
       </>
     ),
@@ -505,7 +505,7 @@ const roastCards = [
     battleDate: "",
     storyTitle: (
       <>
-        <div className="text-2xl font-bold text-amber-300">Oak & Copper</div>
+        <div className="text-2xl font-bold text-[#C08C45]">Oak & Copper</div>
         <div className="text-white text-base">Bones of Oak, Skin of Copper</div>
       </>
     ),
@@ -617,7 +617,7 @@ function RoastMegaCard({
 
       <div className="p-3">
         <div
-          className="text-lg font-extrabold text-amber-300"
+          className="text-lg font-extrabold text-[#C08C45]"
           style={{
             fontFamily: "'Cinzel', serif",
             fontWeight: 800,
@@ -631,7 +631,7 @@ function RoastMegaCard({
         </div>
 
         {stats && (
-          <div className="mt-1 flex items-center gap-1 text-[0.7rem] text-amber-300">
+          <div className="mt-1 flex items-center gap-1 text-[0.7rem] text-[#C08C45]">
             <span>★ {stats.avg.toFixed(1)}</span>
             <span className="text-neutral-400">
               ({stats.count} review{stats.count === 1 ? "" : "s"})
@@ -1160,7 +1160,7 @@ function BellRinger({
         data-ring={ringing ? "1" : "0"}
         className={[
           "bell-btn inline-flex items-center justify-center rounded-full p-1 select-none",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C08C45]",
           "hover:[animation:bellSway_450ms_ease-in-out]",
           ringing ? "[animation:bellRing_750ms_ease-in-out]" : "",
         ].join(" ")}
@@ -1277,10 +1277,10 @@ function RingThatBellBox({ mode = "section" }: { mode?: "section" | "card" }) {
   };
 
   const Card = (
-    <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
+    <div className="rounded-2xl ring-1 ring-[#C08C45]/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
       <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 mb-4">
-        <BellRinger iconClassName="h-9 w-9 sm:h-11 sm:w-11 text-amber-300" />
-        <h3 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-amber-300">
+        <BellRinger iconClassName="h-9 w-9 sm:h-11 sm:w-11 text-[#C08C45]" />
+        <h3 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#C08C45]">
           RING THAT BELL
         </h3>
       </div>
@@ -1301,11 +1301,11 @@ function RingThatBellBox({ mode = "section" }: { mode?: "section" | "card" }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
-          className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+          className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#C08C45]"
         />
         <button
           type="submit"
-          className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
+          className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#C08C45] text-neutral-900 font-semibold hover:bg-[#C08C45]"
         >
           GET 20% OFF
         </button>
@@ -1313,7 +1313,7 @@ function RingThatBellBox({ mode = "section" }: { mode?: "section" | "card" }) {
 
       <div className="mt-6 text-xs sm:text-sm text-neutral-400">
         Already a member?{" "}
-        <Link to="/account/login" className="text-amber-300 hover:underline">
+        <Link to="/account/login" className="text-[#C08C45] hover:underline">
           Sign in
         </Link>
       </div>
@@ -1386,7 +1386,7 @@ function MegaSubscribeBox({
     <div className="w-full lg:w-[36rem]">
       {/* MOBILE VERSION ONLY (tighter v2) */}
       <div className="md:hidden">
-        <div className="mx-auto max-w-[16.5rem] overflow-hidden rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60">
+        <div className="mx-auto max-w-[16.5rem] overflow-hidden rounded-2xl ring-1 ring-[#C08C45]/60 bg-neutral-900/60">
           {imageSrc ? (
             <img
               src={imageSrc}
@@ -1398,10 +1398,10 @@ function MegaSubscribeBox({
           <div className="p-2 text-center">
             {/* Icon inline with heading */}
             <div className="flex items-center justify-center gap-1 mb-1">
-              <BellRinger iconClassName="h-3.5 w-3.5 text-amber-300" />
+              <BellRinger iconClassName="h-3.5 w-3.5 text-[#C08C45]" />
 
               <h3
-                className="font-extrabold text-amber-300"
+                className="font-extrabold text-[#C08C45]"
                 style={{ fontSize: 13, lineHeight: 1.05, letterSpacing: 0.2 }}
               >
                 {heading}
@@ -1430,9 +1430,9 @@ function MegaSubscribeBox({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="flex-1 min-w-0 rounded-md bg-neutral-900/70 border border-neutral-700 px-2 py-[5px] text-[11px] focus:outline-none focus:ring-2 focus:ring-amber-400"
+                className="flex-1 min-w-0 rounded-md bg-neutral-900/70 border border-neutral-700 px-2 py-[5px] text-[11px] focus:outline-none focus:ring-2 focus:ring-[#C08C45]"
               />
-              <button className="w-full px-3 py-[6px] rounded-md bg-amber-400 text-neutral-900 text-[11px] font-semibold hover:bg-amber-300">
+              <button className="w-full px-3 py-[6px] rounded-md bg-[#C08C45] text-neutral-900 text-[11px] font-semibold hover:bg-[#C08C45]">
                 {btn}
               </button>
             </form>
@@ -1444,7 +1444,7 @@ function MegaSubscribeBox({
               Already a member?{" "}
               <Link
                 to="/account/login"
-                className="text-amber-300 hover:underline"
+                className="text-[#C08C45] hover:underline"
               >
                 Sign in
               </Link>
@@ -1462,10 +1462,10 @@ function MegaSubscribeBox({
 
       {/* DESKTOP/TABLET VERSION — unchanged */}
       <div className="hidden md:block">
-        <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
+        <div className="rounded-2xl ring-1 ring-[#C08C45]/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
           <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 mb-4">
-            <Bell className="h-6 w-6 sm:h-7 sm:w-7 text-amber-300" />
-            <h3 className="text-xl sm:text-2xl font-extrabold text-amber-300">
+            <Bell className="h-6 w-6 sm:h-7 sm:w-7 text-[#C08C45]" />
+            <h3 className="text-xl sm:text-2xl font-extrabold text-[#C08C45]">
               {heading}
             </h3>
           </div>
@@ -1489,9 +1489,9 @@ function MegaSubscribeBox({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+              className="flex-1 min-w-0 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#C08C45]"
             />
-            <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+            <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#C08C45] text-neutral-900 font-semibold hover:bg-[#C08C45]">
               {btn}
             </button>
           </form>
@@ -1500,7 +1500,7 @@ function MegaSubscribeBox({
             Already a member?{" "}
             <Link
               to="/account/login"
-              className="text-amber-300 hover:underline"
+              className="text-[#C08C45] hover:underline"
             >
               Sign in
             </Link>
@@ -1520,31 +1520,31 @@ function MegaSubscribeBox({
 
 function GovXLoginBox() {
   return (
-    <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-5 text-center">
+    <div className="rounded-2xl ring-1 ring-[#C08C45]/60 bg-neutral-900/60 p-5 text-center">
       <div className="flex flex-col items-center justify-center gap-2 mb-2">
-        <Bell className="h-5 w-5 text-amber-300" />
-        <h4 className="text-base sm:text-lg font-extrabold text-amber-300">
+        <Bell className="h-5 w-5 text-[#C08C45]" />
+        <h4 className="text-base sm:text-lg font-extrabold text-[#C08C45]">
           GovX Login
         </h4>
       </div>
 
       <p className="text-neutral-300 text-sm sm:text-[15px] leading-relaxed">
-        Enjoy <span className="font-semibold text-amber-300">15% off</span> both
+        Enjoy <span className="font-semibold text-[#C08C45]">15% off</span> both
         coffee and merch — plus{" "}
-        <span className="font-semibold text-amber-300">$1 extra per bag</span>{" "}
+        <span className="font-semibold text-[#C08C45]">$1 extra per bag</span>{" "}
         off for veterans and first responders.
       </p>
 
       <a
         href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
-        className="mt-3 w-full inline-block px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300 underline-offset-2 hover:underline"
+        className="mt-3 w-full inline-block px-4 py-2 rounded-lg bg-[#C08C45] text-neutral-900 text-sm font-semibold hover:bg-[#C08C45] underline-offset-2 hover:underline"
       >
         Get Govx discount code
       </a>
 
       <div className="mt-2 text-[11px] text-neutral-400">
         Need help?{" "}
-        <Link to="/contact" className="text-amber-300 hover:underline">
+        <Link to="/contact" className="text-[#C08C45] hover:underline">
           Contact the crew
         </Link>
       </div>
@@ -1580,9 +1580,9 @@ function NotifyForm({ onSubmit }: any) {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email"
-        className="w-full sm:flex-1 min-w-0 rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400"
+        className="w-full sm:flex-1 min-w-0 rounded-lg bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#C08C45]"
       />
-      <button className="w-full sm:w-auto px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-xs font-semibold hover:bg-amber-300">
+      <button className="w-full sm:w-auto px-3 py-2 rounded-lg bg-[#C08C45] text-neutral-900 text-xs font-semibold hover:bg-[#C08C45]">
         Notify
       </button>
     </form>
@@ -2037,8 +2037,9 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                 : "";
 
               return (
-                <div
+                <Link
                   key={card.id}
+                  to={`/roast/${card.slug}`}
                   className="
                   group relative overflow-hidden rounded-[10px]
                   scale-[0.94] xl:scale-100 origin-top
@@ -2135,27 +2136,11 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                       </span>
                     </div>
 
-                    <Link
-                      to={`/roast/${card.slug}`}
-                      className="
-                      mt-3 w-[230px]
-                      rounded-[5px] border border-[#6D5333]
-                      bg-black px-6 py-3
-                      text-center text-[14px] font-black tracking-[0.08em]
-                      text-[#E6C07F]
-                      shadow-[inset_0_0_18px_rgba(192,140,69,0.18)]
-                      transition-all duration-200
-                      hover:bg-[#C08C45]
-                      hover:text-black
-                      hover:border-[#C08C45]
-                      hover:shadow-[0_4px_14px_rgba(192,140,69,0.25),inset_0_0_18px_rgba(192,140,69,0.12)]
-                      hover:-translate-y-[1px]
-                    "
-                    >
-                      VIEW ROAST
-                    </Link>
+                    <div className="mt-4 text-[12px] font-semibold tracking-[0.12em] text-[#8A6E4A] uppercase">
+                      Click roast to view details
+                    </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
@@ -2299,8 +2284,8 @@ function SDVOSBHighlight() {
       className="py-10 sm:py-12 border-t border-neutral-800"
     >
       <Container>
-        <div className="max-w-xl mx-auto rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
-          <h3 className="text-xl sm:text-2xl font-extrabold text-amber-300">
+        <div className="max-w-xl mx-auto rounded-2xl ring-1 ring-[#C08C45]/60 bg-neutral-900/60 p-6 sm:p-8 text-center">
+          <h3 className="text-xl sm:text-2xl font-extrabold text-[#C08C45]">
             SDVOSB
           </h3>
           <p className="text-neutral-300 mt-2 text-sm sm:text-base">
@@ -2308,7 +2293,7 @@ function SDVOSBHighlight() {
           </p>
           <Link
             to="/sdvosb"
-            className="inline-block mt-4 px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold text-sm sm:text-base hover:bg-amber-300"
+            className="inline-block mt-4 px-4 py-2 rounded-lg bg-[#C08C45] text-neutral-900 font-semibold text-sm sm:text-base hover:bg-[#C08C45]"
           >
             View Details
           </Link>
@@ -2430,7 +2415,7 @@ function HomePage() {
                 className="font-bebas font-extrabold leading-none tracking-wide text-left translate-y-[10%]
     text-[2.3rem] sm:text-[2.9rem] md:text-[4.4rem] xl:text-[5.5rem]"
               >
-                <span className="block text-ironsideWhite">
+                <span className="block text-[#E6DCC8]">
                   FRESH ROASTED COFFEE.
                 </span>
                 <span className="block text-[#C08C45] md:text-[#D3A052] mt-4">
@@ -2444,11 +2429,11 @@ function HomePage() {
                 <span className="px-2 md:px-3 text-[#E6C07F] text-base md:text-lg leading-none">
                   ★
                 </span>
-                <div className="h-px flex-1 bg-[#C08C45]/70" />
+                <div className="h-px flex-1 bg-[#C08C45]/40" />
               </div>
 
               {/* SUBTEXT */}
-              <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-ironsideWhite/80">
+              <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-[#E6DCC8]/75">
                 Roasted to order. Finished for consistency, not volume.
               </div>
 
@@ -3014,7 +2999,7 @@ function ShopCoffeeCard({ className = "" }: { className?: string }) {
       />
 
       <div className="absolute inset-x-0 bottom-0 p-3 bg-neutral-950/40 backdrop-blur-sm">
-        <div className="text-center text-base sm:text-lg md:text-xl text-amber-300 font-bold group-hover:underline">
+        <div className="text-center text-base sm:text-lg md:text-xl text-[#C08C45] font-bold group-hover:underline">
           SHOP COFFEE
         </div>
       </div>
@@ -3031,7 +3016,7 @@ function FleetPage() {
 }
 
 const cardFrame =
-  "w-full max-w-[24rem] md:max-w-[26rem] aspect-[3/4] overflow-hidden rounded-2xl ring-1 ring-amber-400/60 shadow-2xl shadow-amber-500/20 bg-neutral-900/40";
+  "w-full max-w-[24rem] md:max-w-[26rem] aspect-[3/4] overflow-hidden rounded-2xl ring-1 ring-[#C08C45]/60 shadow-2xl shadow-amber-500/20 bg-neutral-900/40";
 function FleetStoryPage() {
   const { slug } = useParams();
   const card = roastCards.find((c) => c.slug === slug);
@@ -3170,7 +3155,7 @@ function FleetStoryPage() {
         <div className="hidden md:flex justify-end">
           <Link
             to={storiesHome} // Use the constant STORIES_HOME here
-            className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm ring-1 ring-amber-400/70 text-amber-300 hover:bg-amber-400 hover:text-neutral-900 transition"
+            className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm ring-1 ring-[#C08C45]/70 text-[#C08C45] hover:bg-[#C08C45] hover:text-neutral-900 transition"
             onClick={() => {
               try {
                 sessionStorage.setItem("storiesReturnTo", storiesHome);
@@ -3188,7 +3173,7 @@ function FleetStoryPage() {
             <img
               src={heroImg}
               alt={card.title}
-              className="block w-full h-full object-cover max-md:rounded-2xl max-md:ring-1 max-md:ring-amber-400/60"
+              className="block w-full h-full object-cover max-md:rounded-2xl max-md:ring-1 max-md:ring-[#C08C45]/60"
               loading="eager"
               decoding="async"
             />
@@ -3198,7 +3183,7 @@ function FleetStoryPage() {
             {" "}
             {/* Adjusted spacing between image and text */}
             <h1
-              className="m-0 text-3xl md:text-4xl font-extrabold tracking-tight text-amber-300"
+              className="m-0 text-3xl md:text-4xl font-extrabold tracking-tight text-[#C08C45]"
               style={{ fontFamily: "'Cinzel', serif", fontWeight: 800 }}
             >
               {displayTitle}
@@ -3216,12 +3201,12 @@ function FleetStoryPage() {
               )
             )}
             {card.battleDate && (
-              <div className="text-amber-300 font-semibold text-sm md:text-base">
+              <div className="text-[#C08C45] font-semibold text-sm md:text-base">
                 {card.battleDate}
               </div>
             )}
             {/* Amber border line */}
-            <div className="mt-2 h-px w-full bg-amber-400/30" />
+            <div className="mt-2 h-px w-full bg-[#C08C45]/30" />
             {/* Main Story Block */}
             {isFlagship && displayTitle === "FLAGSHIP" && (
               <div className="mt-6">
@@ -3406,7 +3391,7 @@ function FleetStoryPage() {
         <div
           role="separator"
           aria-hidden="true"
-          className="my-0 md:my-12 lg:my-16 h-px w-full bg-amber-400/30"
+          className="my-0 md:my-12 lg:my-16 h-px w-full bg-[#C08C45]/30"
         />
 
         <div className="mt-16 md:mt-0 lg:mt-0 max-md:grid max-md:grid-cols-2 max-md:gap-2 md:flex md:items-start md:gap-6">
@@ -3425,7 +3410,7 @@ function FleetStoryPage() {
                 decoding="async"
               />
             </div>
-            <figcaption className="mt-2 text-xs md:text-sm text-amber-300 text-center">
+            <figcaption className="mt-2 text-xs md:text-sm text-[#C08C45] text-center">
               {caps.left}
             </figcaption>
           </figure>
@@ -3433,7 +3418,7 @@ function FleetStoryPage() {
           {/* Text Block (desktop center, mobile below spanning both) */}
           <div className="md:flex-grow md:px-6 max-md:col-span-2 max-md:order-3 max-md:mt-6 text-left px-2">
             <h2
-              className="text-xl md:text-2xl font-bold text-amber-300 tracking-tight max-md:text-center md:text-center"
+              className="text-xl md:text-2xl font-bold text-[#C08C45] tracking-tight max-md:text-center md:text-center"
               style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
             >
               {duelStory.title}
@@ -3473,7 +3458,7 @@ function FleetStoryPage() {
                 decoding="async"
               />
             </div>
-            <figcaption className="mt-2 text-xs md:text-sm text-amber-300 text-center">
+            <figcaption className="mt-2 text-xs md:text-sm text-[#C08C45] text-center">
               {caps.right}
             </figcaption>
           </figure>
@@ -3629,7 +3614,7 @@ function BuyBoxSection({
                 inputClassName="w-12 text-center bg-black/70 py-1.5 text-sm text-[#E6C07F] outline-none border-x border-[#6D5333]"
               />
 
-              <div className="flex flex-col items-center">
+              <div className="flex items-center justify-between w-full px-[4px] md:px-[5px] gap-4">
                 <button
                   type="button"
                   onClick={addToChest}
@@ -3644,6 +3629,11 @@ function BuyBoxSection({
                 >
                   {adding ? "Adding..." : "Add to Chest"}
                 </button>
+
+                <div className="text-[13px] md:text-[14px] font-extrabold tracking-wide text-right text-[#E6C07F] leading-tight">
+                  Free shipping on{" "}
+                  <span className="text-[#C08C45]">3+ bags</span>
+                </div>
               </div>
             </div>
           </div>
@@ -4072,7 +4062,7 @@ function StarRatingDisplay({
 
               <path
                 d={STAR_PATH}
-                className="text-amber-400"
+                className="text-[#C08C45]"
                 fill="currentColor"
                 clipPath={`url(#${clipId})`}
               />
@@ -4111,7 +4101,7 @@ function StarRatingDisplay({
           const top = el.getBoundingClientRect().top + window.scrollY - offset;
           window.scrollTo({ top, behavior: "smooth" });
         }}
-        className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+        className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C08C45]"
         aria-label="Jump to customer reviews"
         title="Jump to customer reviews"
       >
@@ -4138,7 +4128,7 @@ function ReviewStars({
           fill={i < rating ? "currentColor" : "none"}
           className={
             `${sizeClass} ` +
-            (i < rating ? "text-amber-400" : "text-neutral-700")
+            (i < rating ? "text-[#C08C45]" : "text-neutral-700")
           }
           stroke="currentColor"
         >
@@ -4181,14 +4171,14 @@ function ReviewCard({
       }}
       aria-expanded={expanded}
       className={
-        "relative overflow-visible text-left rounded-lg border border-amber-400/30 bg-black/50 shadow-sm cursor-pointer transition hover:border-amber-400/60 " +
+        "relative overflow-visible text-left rounded-lg border border-[#C08C45]/30 bg-black/50 shadow-sm cursor-pointer transition hover:border-[#C08C45]/60 " +
         (expanded ? "z-[70]" : "") +
         (isMobile ? " p-3" : " p-4")
       }
     >
       {/* Header */}
       <div className="flex items-start justify-between">
-        <div className="font-semibold text-amber-300 text-sm leading-tight">
+        <div className="font-semibold text-[#C08C45] text-sm leading-tight">
           {r.name}
         </div>
         <div className="text-[10px] md:text-xs text-neutral-400">
@@ -4222,7 +4212,7 @@ function ReviewCard({
 
       {/* Verified */}
       {r.verified && (
-        <div className="mt-3 text-[10px] md:text-[11px] uppercase tracking-wide text-amber-300/90">
+        <div className="mt-3 text-[10px] md:text-[11px] uppercase tracking-wide text-[#C08C45]/90">
           Verified Buyer
         </div>
       )}
@@ -4230,11 +4220,11 @@ function ReviewCard({
       {/* Expanded */}
       {expanded && (
         <div
-          className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-amber-400/70 bg-neutral-900 shadow-2xl shadow-amber-500/20 p-4"
+          className="absolute left-0 right-0 -top-2 z-50 rounded-xl border border-[#C08C45]/70 bg-neutral-900 shadow-2xl shadow-amber-500/20 p-4"
           onClick={() => setExpanded(false)}
         >
           <div className="flex items-start justify-between">
-            <div className="font-semibold text-amber-300">{r.name}</div>
+            <div className="font-semibold text-[#C08C45]">{r.name}</div>
             <div className="text-xs text-neutral-400">{formattedDate}</div>
           </div>
 
@@ -4253,7 +4243,7 @@ function ReviewCard({
           )}
 
           {r.verified && (
-            <div className="mt-3 text-[11px] uppercase tracking-wide text-amber-300/90">
+            <div className="mt-3 text-[11px] uppercase tracking-wide text-[#C08C45]/90">
               Verified Buyer
             </div>
           )}
@@ -4746,7 +4736,7 @@ function RoastDetailPage() {
             <div className="flex flex-col items-center md:items-start w-full md:w-auto relative mt-0 md:mt-0">
               <div className="relative z-10 flex flex-col items-center md:items-start w-full md:w-auto">
                 {card.isNew && (
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 md:top-10 md:left-8 md:translate-x-0 z-20 px-3 py-1 text-[11px] md:text-xs font-bold bg-amber-400 text-black rounded shadow-md">
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 md:top-10 md:left-8 md:translate-x-0 z-20 px-3 py-1 text-[11px] md:text-xs font-bold bg-[#C08C45] text-black rounded shadow-md">
                     JUST RELEASED
                   </div>
                 )}
@@ -4794,7 +4784,7 @@ function RoastDetailPage() {
                     <div className="flex flex-wrap items-center gap-y-1">
                       <div
                         className="text-base md:text-[1.2rem]"
-                        style={{ color: "#B39871" }}
+                        style={{ color: "rgba(255,255,255,0.55)" }}
                       >
                         {card.subTitle}
                       </div>
@@ -4819,7 +4809,7 @@ function RoastDetailPage() {
 
                     <p
                       className="mt-3 max-w-[54ch] text-base md:text-lg leading-relaxed"
-                      style={{ color: "rgba(255,255,255,0.72)" }}
+                      style={{ color: "rgba(255,255,255,0.60)" }}
                     >
                       {CRAFT_IN_THE_CUP_DATA[card.slug]?.shortHook ??
                         "Roasted to order for a smooth, fresh cup."}
@@ -4827,24 +4817,24 @@ function RoastDetailPage() {
 
                     {/* DIVIDER */}
                     <div className="flex items-center w-full mt-3 md:mt-4">
-                      <div className="h-px flex-1 bg-[#C08C45]/70" />
-                      <span className="px-2 md:px-3 text-[#E6C07F] text-base md:text-lg leading-none">
+                      <div className="h-px flex-1 bg-[#C08C45]/40" />
+                      <span className="px-2 md:px-3 text-[#E6C07F]/70 text-base md:text-lg leading-none">
                         ★
                       </span>
-                      <div className="h-px flex-1 bg-[#C08C45]/70" />
+                      <div className="h-px flex-1 bg-[#C08C45]/40" />
                     </div>
                     {/* ROAST PROFILE */}
                     <div className="mt-4 md:mt-5 w-full max-w-[520px]">
                       <div
                         className="text-[11px] tracking-[0.2em] mb-2 font-semibold uppercase"
-                        style={{ color: "#B39871" }}
+                        style={{ color: "#8A6E4A" }}
                       >
                         ROAST PROFILE
                       </div>
 
                       <div
                         className="flex justify-between text-[11px] mb-1 font-semibold"
-                        style={{ color: "rgba(255,255,255,0.7)" }}
+                        style={{ color: "#8A6E4A" }}
                       >
                         <span>LIGHT</span>
                         <span>MEDIUM</span>
@@ -4887,7 +4877,7 @@ function RoastDetailPage() {
                     <div className="mt-7 md:mt-8 w-full max-w-[620px]">
                       <div
                         className="text-[11px] tracking-[0.2em] mb-3 font-semibold"
-                        style={{ color: "#B39871" }}
+                        style={{ color: "#8A6E4A" }}
                       >
                         TASTING NOTES
                       </div>
@@ -4899,9 +4889,9 @@ function RoastDetailPage() {
                               key={note}
                               className="h-[38px] flex items-center justify-center border rounded-md text-[12px] md:text-[13px] font-semibold tracking-wide uppercase"
                               style={{
-                                borderColor: "rgba(109,83,51,0.55)",
-                                color: "rgba(181,151,109,0.72)",
-                                backgroundColor: "rgba(0,0,0,0.14)",
+                                borderColor: "rgba(109,83,51,0.6)",
+                                color: "rgba(216,208,189,0.60)",
+                                backgroundColor: "rgba(0,0,0,0.35)",
                               }}
                             >
                               {note}
@@ -5097,7 +5087,7 @@ function RoastDetailPage() {
 
                   {mobileToast && (
                     <div className="fixed left-0 right-0 top-1/2 transform -translate-y-1/2 z-[9999] px-4 md:hidden">
-                      <div className="w-full rounded-lg border border-amber-400/70 bg-amber-400/90 text-black shadow-lg shadow-amber-400/20 px-6 py-4 flex items-center justify-center gap-4">
+                      <div className="w-full rounded-lg border border-[#C08C45]/70 bg-[#C08C45]/90 text-black shadow-lg shadow-[#C08C45]/20 px-6 py-4 flex items-center justify-center gap-4">
                         <div className="flex-1 text-center">
                           <div className="text-xl font-bold text-black">
                             Added to Chest
@@ -5469,7 +5459,7 @@ function ArmadaSamplePage() {
                           className="inline-flex h-[28px] items-center justify-center border px-3 text-[10px] font-black tracking-[0.16em] transition disabled:opacity-60 hover:bg-[#32220D]"
                           style={{
                             borderColor: "#C08C45",
-                            color: "#F0E6D2",
+                            color: "#E6C07F",
                             backgroundColor: "#32220D",
                           }}
                         >
@@ -5487,17 +5477,16 @@ function ArmadaSamplePage() {
     </main>
   );
 }
-/* ================== SHARED PARTS ================== */
 function CareCard() {
   return (
     <>
       {/* MOBILE VERSION */}
-      <aside className="block md:hidden w-full rounded-xl border border-amber-400/60 bg-black/70 px-4 py-4 shadow-md shadow-amber-400/10">
-        <h3 className="m-0 text-center text-[1rem] font-bold text-amber-300 tracking-wide leading-tight">
+      <aside className="block md:hidden w-full rounded-xl border border-[#6D5333] bg-black/70 px-4 py-4 shadow-md shadow-[#6D5333]/20">
+        <h3 className="m-0 text-center text-[1rem] font-bold text-[#E6C07F] tracking-wide leading-tight">
           COFFEE STORAGE &amp; FRESHNESS
         </h3>
 
-        <p className="mt-2 text-[0.9rem] text-amber-300 text-center leading-snug">
+        <p className="mt-2 text-[0.9rem] text-[#E6C07F] text-center leading-snug">
           Buying 3+ bags to save on shipping? Here is how to keep extras fresh.
         </p>
 
@@ -5508,31 +5497,31 @@ function CareCard() {
             <span className="italic">before opening</span>.
           </li>
           <li>
-            <span className="font-semibold text-amber-300">Whole bean:</span>{" "}
+            <span className="font-semibold text-[#E6C07F]">Whole bean:</span>{" "}
             Store airtight at room temperature. Best flavor within{" "}
             <span className="font-semibold">2-4 weeks</span>.
           </li>
           <li>
-            <span className="font-semibold text-amber-300">Ground:</span> Store
+            <span className="font-semibold text-[#E6C07F]">Ground:</span> Store
             airtight at room temperature. Best within{" "}
             <span className="font-semibold">7-10 days</span>.
           </li>
           <li>Do not refreeze after opening.</li>
         </ol>
 
-        <div className="mt-3 text-[0.9rem] text-amber-300 text-center leading-snug">
+        <div className="mt-3 text-[0.9rem] text-[#E6C07F] text-center leading-snug">
           Follow these steps and your coffee stays fresh for weeks, even months
           when frozen.
         </div>
       </aside>
 
       {/* DESKTOP VERSION */}
-      <aside className="hidden md:block w-full 2xl:w-[110%] rounded-xl border border-amber-400/60 bg-black/70 px-5 py-5 md:px-6 md:py-8 shadow-md shadow-amber-400/10">
-        <h3 className="m-0 text-center text-[1.15rem] md:text-[1.294rem] font-bold text-amber-300 tracking-wide">
+      <aside className="hidden md:block w-full 2xl:w-[110%] rounded-xl border border-[#6D5333] bg-black/70 px-5 py-5 md:px-6 md:py-8 shadow-md shadow-[#6D5333]/20">
+        <h3 className="m-0 text-center text-[1.15rem] md:text-[1.294rem] font-bold text-[#E6C07F] tracking-wide">
           COFFEE STORAGE &amp; FRESHNESS
         </h3>
 
-        <p className="mt-2 text-[1.006rem] text-amber-300 text-center">
+        <p className="mt-2 text-[1.006rem] text-[#E6C07F] text-center">
           Buying 3+ bags to save on shipping? Here is how to keep extras fresh.
         </p>
 
@@ -5543,19 +5532,19 @@ function CareCard() {
             <span className="italic">before opening</span>.
           </li>
           <li>
-            <span className="font-semibold text-amber-300">Whole bean:</span>{" "}
+            <span className="font-semibold text-[#E6C07F]">Whole bean:</span>{" "}
             Store airtight at room temperature. Best flavor within{" "}
             <span className="font-semibold">2-4 weeks</span>.
           </li>
           <li>
-            <span className="font-semibold text-amber-300">Ground:</span> Store
+            <span className="font-semibold text-[#E6C07F]">Ground:</span> Store
             airtight at room temperature. Best within{" "}
             <span className="font-semibold">7-10 days</span>.
           </li>
           <li>Do not refreeze after opening.</li>
         </ol>
 
-        <div className="mt-3 text-m md:text-m text-amber-300 text-center">
+        <div className="mt-3 text-m md:text-m text-[#E6C07F] text-center">
           Follow these steps and your coffee stays fresh for weeks, even months
           when frozen.
         </div>
@@ -5566,12 +5555,12 @@ function CareCard() {
 
 function OriginImg({ name }: { name: string }) {
   const FILE_ALIAS: Record<string, string> = {
-    Colombia: "columbia filled2",
-    "El Salvador": "el salvador filled2",
-    Ethiopia: "ethiopia filled2",
-    Guatemala: "guatemala filled2",
-    Indonesia: "indonesia filled2",
-    Brazil: "Brazil amber filled2",
+    Colombia: "columbia filled",
+    "El Salvador": "el salvador filled",
+    Ethiopia: "ethiopia filled",
+    Guatemala: "guatemala filled",
+    Indonesia: "indonesia",
+    Brazil: "brazil",
   };
 
   const SCALE_BY_COUNTRY: Record<string, string> = {
@@ -5597,7 +5586,7 @@ function OriginImg({ name }: { name: string }) {
             name === "Indonesia" ? "-translate-y-2" : ""
           }`}
         />
-        <div className="mt-2 text-amber-400/90 tracking-wider text-[0.7rem] font-semibold uppercase leading-none">
+        <div className="mt-2 text-[#C08C45]/90 tracking-wider text-[0.7rem] font-semibold uppercase leading-none">
           {name}
         </div>
       </div>
@@ -5611,7 +5600,7 @@ function OriginImg({ name }: { name: string }) {
             name === "Indonesia" ? "-translate-y-6" : ""
           }`}
         />
-        <div className="-mt-1 text-amber-400/90 tracking-wider text-[0.72rem] font-semibold uppercase leading-none">
+        <div className="-mt-1 text-[#C08C45]/90 tracking-wider text-[0.72rem] font-semibold uppercase leading-none">
           {name}
         </div>
       </div>
@@ -5643,7 +5632,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
   }
 > = {
   flagship: {
-    shortHook: "Smooth, balanced, and built for everyday drinking.",
+    shortHook: "SMOOTH, BALANCED, EVERYDAY DRINKER.",
     description:
       "A smooth, full-bodied medium roast made for everyday drinking. Balanced, never bitter, and rich enough to enjoy black or with cream and sugar.",
     bestFor: ["Daily drinkers", "Drip", "French press", "Cold brew"],
@@ -5659,7 +5648,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
       "flex items-end gap-6 scale-[0.75] md:scale-[0.70] origin-left",
   },
   "baptism-by-fire": {
-    shortHook: "Bold, dark, and smooth without the burnt taste.",
+    shortHook: "BOLD AND DARK WITH A SMOOTH FINISH",
     description:
       "The darkest roast in the fleet. Bold, commanding, and full-bodied, delivering deep chocolate richness with a smooth finish that never turns bitter. Strength and flavor, without the burnt taste.",
     bestFor: [
@@ -5678,7 +5667,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
   },
 
   "java-action": {
-    shortHook: "Smooth, full-bodied, and finished with easy sweetness.",
+    shortHook: "SMOOTH, FULL-BODIED, EASY TO DRINK",
     description:
       "A smooth, balanced medium roast with a creamy sweet finish and just enough depth to keep things interesting. Rich, satisfying, and easy to drink black or with a touch of cream.",
     bestFor: ["Daily drinkers", "Drip", "Pour over", "French press"],
@@ -5699,7 +5688,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
   },
 
   "black-salvo": {
-    shortHook: "Rich, smooth, versatile enough for espresso or drip.",
+    shortHook: "RICH, SMOOTH, AND VERSATILE",
     description:
       "Our most versatile blend in the fleet. Makes amazing espressos while also delivering a very smooth, easy drinking cup across any brew method.",
     bestFor: ["Espresso", "Drip", "Pour over"],
@@ -5765,7 +5754,7 @@ function CraftInTheCupBlock({ slug }: { slug: string }) {
       {data.description && (
         <p
           className="mt-2 text-base md:text-lg leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.72)" }}
+          style={{ color: "rgba(255,255,255,0.60)" }}
         >
           {data.description}
         </p>
@@ -5783,7 +5772,7 @@ function CraftInTheCupBlock({ slug }: { slug: string }) {
 
         <div
           className="mt-0.5 text-lg leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.72)" }}
+          style={{ color: "rgba(255,255,255,0.60)" }}
         >
           {data.bestFor.map((item, i) => (
             <span key={item}>
@@ -5836,7 +5825,7 @@ function Pager({
           (small ? "text-xs " : "text-sm ") +
           (page === 1
             ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-            : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+            : "border-[#C08C45]/60 text-[#C08C45] hover:bg-[#C08C45] hover:text-neutral-900")
         }
       >
         ‹ Prev
@@ -5853,8 +5842,8 @@ function Pager({
               "h-8 min-w-[2rem] px-2 rounded-md border " +
               (small ? "text-xs " : "text-sm ") +
               (active
-                ? "border-amber-400 bg-amber-400 text-neutral-900 font-semibold"
-                : "border-amber-400/40 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+                ? "border-[#C08C45] bg-[#C08C45] text-neutral-900 font-semibold"
+                : "border-[#C08C45]/40 text-[#C08C45] hover:bg-[#C08C45] hover:text-neutral-900")
             }
           >
             {n}
@@ -5870,7 +5859,7 @@ function Pager({
           (small ? "text-xs " : "text-sm ") +
           (page === pageCount
             ? "border-neutral-800 text-neutral-600 cursor-not-allowed"
-            : "border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-neutral-900")
+            : "border-[#C08C45]/60 text-[#C08C45] hover:bg-[#C08C45] hover:text-neutral-900")
         }
       >
         Next ›
@@ -5904,7 +5893,7 @@ function RoastLevelAnchors({
           {/* Desktop header */}
           <div className="mb-4 flex flex-col items-center text-center">
             {/* Title */}
-            <h2 className="text-xl md:text-2xl font-bold tracking-wide text-amber-300">
+            <h2 className="text-xl md:text-2xl font-bold tracking-wide text-[#C08C45]">
               CUSTOMER REVIEWS
             </h2>
 
@@ -5924,7 +5913,7 @@ function RoastLevelAnchors({
           </div>
 
           {/* Histogram box */}
-          <div className="mt-4 mx-auto max-w-[780px] w-full rounded-xl border border-amber-400/40 bg-black/40 p-4 md:p-6">
+          <div className="mt-4 mx-auto max-w-[780px] w-full rounded-xl border border-[#C08C45]/40 bg-black/40 p-4 md:p-6">
             {[5, 4, 3, 2, 1].map((s) => (
               <div key={s} className="flex items-center gap-3 py-1">
                 <div className="w-8 text-right text-sm text-neutral-300">
@@ -5932,7 +5921,7 @@ function RoastLevelAnchors({
                 </div>
                 <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
                   <div
-                    className="h-full bg-amber-400"
+                    className="h-full bg-[#C08C45]"
                     style={{ width: `${pct(b[s] || 0)}%` }}
                   />
                 </div>
@@ -5961,7 +5950,7 @@ function RoastLevelAnchors({
         <div className="block md:hidden">
           {/* Header: title only */}
           <div className="mb-4 flex flex-col items-center text-center">
-            <h2 className="text-lg font-bold tracking-wide text-amber-300">
+            <h2 className="text-lg font-bold tracking-wide text-[#C08C45]">
               CUSTOMER REVIEWS
             </h2>
           </div>
@@ -5981,7 +5970,7 @@ function RoastLevelAnchors({
             />
           </div>
           {/* Histogram: tighter padding to pull text closer to border */}
-          <div className="mt-2 mx-auto w-full rounded-xl border border-amber-400/40 bg-black/40 p-3">
+          <div className="mt-2 mx-auto w-full rounded-xl border border-[#C08C45]/40 bg-black/40 p-3">
             {[5, 4, 3, 2, 1].map((s) => (
               <div key={s} className="flex items-center gap-3 py-1">
                 <div className="w-8 text-right text-xs text-neutral-300">
@@ -5989,7 +5978,7 @@ function RoastLevelAnchors({
                 </div>
                 <div className="flex-1 h-2 rounded-full bg-neutral-800 overflow-hidden">
                   <div
-                    className="h-full bg-amber-400"
+                    className="h-full bg-[#C08C45]"
                     style={{ width: `${pct(b[s] || 0)}%` }}
                   />
                 </div>
@@ -6028,19 +6017,19 @@ function RoastStoryBlock({
 }) {
   return (
     <div className="space-y-3 text-neutral-300 text-base md:text-lg leading-relaxed">
-      <p className="text-amber-300 text-base md:text-lg">{title}</p>
+      <p className="text-[#C08C45] text-base md:text-lg">{title}</p>
 
       {paragraphs.map((p, i) => (
         <p key={i}>{p}</p>
       ))}
 
       {/* Desktop tagline */}
-      <p className="hidden md:block text-left text-xl font-semibold text-amber-300 break-words pt-2">
+      <p className="hidden md:block text-left text-xl font-semibold text-[#C08C45] break-words pt-2">
         Old Ironsides Coffee - Ignite the Spirit, Savor the Victory!
       </p>
 
       {/* Mobile tagline */}
-      <p className="md:hidden text-center text-xl font-normal text-amber-300 break-words pt-2">
+      <p className="md:hidden text-center text-xl font-normal text-[#C08C45] break-words pt-2">
         Old Ironsides Coffee
         <br />
         <span className="block text-sm">
@@ -6130,8 +6119,8 @@ function RoastUnified({
 
   return (
     <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen">
-      <div className="border-t-2 border-amber-400/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
-      <div className="bg-black md:bg-neutral-950 mt-[-1px]">
+      <div className="border-t-2 border-[#C08C45]/70 relative translate-y-3 md:translate-y-6 w-[110%] -ml-[5%]" />
+      <div className="bg-black mt-[-1px]">
         <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(460px,520px)] lg:gap-10 items-start">
             <div className="max-w-[80ch] md:pt-6 space-y-8">
@@ -6159,8 +6148,8 @@ function RoastUnified({
           </Container>
         </div>
 
-        <div className="border-t-2 border-amber-400/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
-        <div className="bg-black md:bg-neutral-950">
+        <div className="border-t-2 border-[#C08C45]/70 relative mt-6 md:mt-8 w-[110%] -ml-[5%]" />
+        <div className="bg-black">
           <Container className="pt-6 md:pt-8 pb-6 md:pb-10">
             <RoastLevelAnchors reviewData={reviewData} reviews={reviews} />
           </Container>
@@ -6223,7 +6212,7 @@ function StorePage() {
                     role="presentation"
                     aria-disabled="true"
                     tabIndex={-1}
-                    className="group overflow-hidden rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/40 shadow-lg shadow-amber-400/10 transition cursor-default select-none"
+                    className="group overflow-hidden rounded-2xl ring-1 ring-[#C08C45]/60 bg-neutral-900/40 shadow-lg shadow-[#C08C45]/10 transition cursor-default select-none"
                   >
                     <div className="aspect-[3/4] w-full overflow-hidden bg-neutral-900">
                       <img
@@ -6246,7 +6235,7 @@ function StorePage() {
                     </div>
                     <div className="p-3 text-center">
                       <div
-                        className="text-base font-extrabold text-amber-300 tracking-wide"
+                        className="text-base font-extrabold text-[#C08C45] tracking-wide"
                         style={{ fontFamily: "'Cinzel', serif" }}
                       >
                         {t.label}
@@ -6276,7 +6265,7 @@ function StorePage() {
                   />
                 </div>
                 <div className="p-6">
-                  <div className="flex items-center gap-3 text-amber-300 font-semibold">
+                  <div className="flex items-center gap-3 text-[#C08C45] font-semibold">
                     {t.icon}
                     <span>{t.label}</span>
                   </div>
@@ -6318,7 +6307,7 @@ function StoreCategoryPage() {
         <BackButton to="/store" size="sm" />
         <SectionTitle
           title={
-            <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
+            <span className="text-3xl md:text-5xl font-extrabold text-[#C08C45]">
               {title} — Coming Soon
             </span>
           }
@@ -6335,7 +6324,7 @@ function StoreCategoryPage() {
           ))}
         </div>
         <div className="mt-8 max-w-xl">
-          <div className="rounded-2xl ring-1 ring-amber-400/50 bg-neutral-900/60 p-5">
+          <div className="rounded-2xl ring-1 ring-[#C08C45]/50 bg-neutral-900/60 p-5">
             <div className="text-sm text-neutral-200">
               Get an alert when {title.toLowerCase()} drops.
             </div>
@@ -6425,7 +6414,7 @@ function OriginsPage() {
             <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
               {/* Photo LEFT */}
               <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/50">
                   <img
                     src="/roast-machine.jpg"
                     alt="Roaster"
@@ -6436,7 +6425,7 @@ function OriginsPage() {
 
               {/* Text RIGHT (fonts bumped ~15%) */}
               <div className="space-y-3">
-                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
                   ROASTING PROCESS
                 </h3>
                 <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
@@ -6456,12 +6445,12 @@ function OriginsPage() {
                   to="/store"
                   className="mt-8 mx-auto md:mx-0 flex md:inline-flex items-center justify-center gap-2
 
-             rounded-xl ring-1 ring-amber-400/60
-             text-amber-400 font-semibold
+             rounded-xl ring-1 ring-[#C08C45]/60
+             text-[#C08C45] font-semibold
              text-[1.25rem] md:text-[1.55rem]
              w-[88%] max-w-[22rem] md:w-auto md:max-w-none
              px-[1.65rem] py-[0.7rem] md:px-[1.75rem] md:py-[0.75rem]
-             hover:bg-amber-400 hover:text-neutral-900
+             hover:bg-[#C08C45] hover:text-neutral-900
              transition-all leading-snug text-center"
                 >
                   <span className="leading-none text-[2em] md:text-[1em] flex items-center">
@@ -6494,7 +6483,7 @@ function OriginsPage() {
             <div className="grid w-full grid-cols-1 md:grid-cols-[1fr,auto] gap-4 md:gap-6 items-center">
               {/* Text LEFT */}
               <div className="space-y-3">
-                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
                   The Lands Where Our Beans Are Grown
                 </h3>
                 <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
@@ -6510,7 +6499,7 @@ function OriginsPage() {
 
               {/* Photo RIGHT */}
               <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/50">
                   <img
                     src="/bean-stock3.jpeg"
                     alt="Beans lands"
@@ -6544,7 +6533,7 @@ function OriginsPage() {
           >
             <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-3 md:gap-4">
               {/* MOBILE-ONLY TITLE (above pics) */}
-              <h3 className="md:hidden font-cinzel text-2xl font-extrabold text-amber-300 tracking-wide uppercase order-1">
+              <h3 className="md:hidden font-cinzel text-2xl font-extrabold text-[#C08C45] tracking-wide uppercase order-1">
                 The Hands That Grow Our Beans
               </h3>
 
@@ -6552,7 +6541,7 @@ function OriginsPage() {
               <div className="justify-self-center md:justify-self-start self-center order-2 md:order-1">
                 <div className="relative w-[22rem] sm:w-[28rem] md:w-[36rem] h-[30rem] sm:h-[40rem] md:h-[48rem]">
                   {/* Top card (far LEFT) */}
-                  <div className="absolute left-0 top-0 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                  <div className="absolute left-0 top-0 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
                     <img
                       src="/workergirl1.jpeg"
                       alt="Harvest and selection"
@@ -6560,7 +6549,7 @@ function OriginsPage() {
                     />
                   </div>
                   {/* Middle card (offset to RIGHT) */}
-                  <div className="absolute left-[58%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-2xl">
+                  <div className="absolute left-[58%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-2xl">
                     <img
                       src="/hands-beans.jpeg"
                       alt="Hands with beans"
@@ -6568,7 +6557,7 @@ function OriginsPage() {
                     />
                   </div>
                   {/* Bottom card (far LEFT) */}
-                  <div className="absolute left-0 bottom-0 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                  <div className="absolute left-0 bottom-0 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
                     <img
                       src="/woman2.jpeg"
                       alt="Care at every step"
@@ -6581,7 +6570,7 @@ function OriginsPage() {
               {/* TEXT — desktop right; on mobile shows only the story (title hidden) */}
               <div className="space-y-3 md:justify-self-start order-3 md:order-2">
                 {/* Desktop title */}
-                <h3 className="hidden md:block font-cinzel text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="hidden md:block font-cinzel text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
                   The Hands That Grow Our Beans
                 </h3>
 
@@ -6612,7 +6601,7 @@ function OriginsPage() {
           <SectionTitle
             title={
               <span
-                className="text-3xl md:text-5xl font-bold text-amber-300 tracking-tight whitespace-normal md:whitespace-nowrap leading-tight"
+                className="text-3xl md:text-5xl font-bold text-[#C08C45] tracking-tight whitespace-normal md:whitespace-nowrap leading-tight"
                 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
               >
                 The History Behind The Fleet
@@ -6693,19 +6682,19 @@ function OriginsPage() {
                       </div>
 
                       <div className="p-4 flex flex-col text-left">
-                        <div className="flex items-center gap-2 text-amber-300 mb-1">
+                        <div className="flex items-center gap-2 text-[#C08C45] mb-1">
                           <Compass className="h-4 w-4" />
                           <div className="text-sm font-semibold">
                             {card.storyTitle}
                           </div>
                         </div>
-                        <div className="text-[13px] text-amber-300 font-semibold">
+                        <div className="text-[13px] text-[#C08C45] font-semibold">
                           {card.battleDate}
                         </div>
                         <p className="mt-1 text-[13px] text-neutral-300 line-clamp-3">
                           {card.story}
                         </p>
-                        <span className="mt-3 inline-block text-[13px] text-amber-300">
+                        <span className="mt-3 inline-block text-[13px] text-[#C08C45]">
                           Learn more
                         </span>
                       </div>
@@ -6719,7 +6708,7 @@ function OriginsPage() {
                 <button
                   type="button"
                   onClick={histPrev}
-                  className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
+                  className="pointer-events-auto h-9 w-9 rounded-full bg-[#C08C45] text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
                   aria-label="Previous story"
                 >
                   ‹
@@ -6729,7 +6718,7 @@ function OriginsPage() {
                 <button
                   type="button"
                   onClick={histNext}
-                  className="pointer-events-auto h-9 w-9 rounded-full bg-amber-400 text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
+                  className="pointer-events-auto h-9 w-9 rounded-full bg-[#C08C45] text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
                   aria-label="Next story"
                 >
                   ›
@@ -6772,17 +6761,17 @@ function OriginsPage() {
                     />
 
                     <div className="p-5 flex flex-col flex-1">
-                      <div className="flex items-center gap-3 text-amber-300 mb-1">
+                      <div className="flex items-center gap-3 text-[#C08C45] mb-1">
                         <Compass className="h-4 w-4" />
                         <div>{card.storyTitle}</div>
                       </div>
-                      <div className="text-sm md:text-base text-amber-300 font-semibold">
+                      <div className="text-sm md:text-base text-[#C08C45] font-semibold">
                         {card.battleDate}
                       </div>
                       <p className="mt-1 text-sm text-neutral-300 flex-1">
                         {card.story}
                       </p>
-                      <span className="mt-4 inline-block text-sm text-amber-300">
+                      <span className="mt-4 inline-block text-sm text-[#C08C45]">
                         Learn more
                       </span>
                     </div>
@@ -6815,7 +6804,7 @@ function OriginsPage() {
             <div className="grid w-full grid-cols-1 md:grid-cols-[1fr,auto] items-center gap-3 md:gap-8">
               {/* CENTER TEXT (now left column on desktop) */}
               <div className="text-center md:text-left self-center">
-                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
                   From The Sand To The Sea
                 </h3>
                 <p className="mt-1 md:mt-3 text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
@@ -6832,7 +6821,7 @@ function OriginsPage() {
               <div className="md:hidden justify-self-center">
                 <div className="relative w-[20rem] sm:w-[22rem] h-[26rem]">
                   {/* Top card (left) */}
-                  <div className="absolute left-0 top-0 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                  <div className="absolute left-0 top-0 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
                     <img
                       src="/humvee-turret.jpg"
                       alt=""
@@ -6840,7 +6829,7 @@ function OriginsPage() {
                     />
                   </div>
                   {/* Middle card (offset right) */}
-                  <div className="absolute left-[56%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-2xl">
+                  <div className="absolute left-[56%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-2xl">
                     <img
                       src="/iraq-self1.jpeg"
                       alt=""
@@ -6848,7 +6837,7 @@ function OriginsPage() {
                     />
                   </div>
                   {/* Bottom card (left) */}
-                  <div className="absolute left-0 bottom-0 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                  <div className="absolute left-0 bottom-0 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
                     <img
                       src="/iraq-kids.jpeg"
                       alt=""
@@ -6861,21 +6850,21 @@ function OriginsPage() {
               {/* DESKTOP ORIGINAL STACK */}
               <div className="hidden md:block justify-self-center md:justify-self-end">
                 <div className="relative w-[36rem] h-[48rem]">
-                  <div className="absolute left-1/2 top-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                  <div className="absolute left-1/2 top-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
                     <img
                       src="/humvee-turret.jpg"
                       alt=""
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="absolute left-1/2 top-1/2 -translate-y-1/2 w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-2xl">
+                  <div className="absolute left-1/2 top-1/2 -translate-y-1/2 w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-2xl">
                     <img
                       src="/iraq-self1.JPG"
                       alt=""
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="absolute left-1/2 bottom-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/60 shadow-xl">
+                  <div className="absolute left-1/2 bottom-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
                     <img
                       src="/iraq-kids.JPG"
                       alt=""
@@ -6932,7 +6921,7 @@ function OriginsPage() {
 
               {/* text: center on mobile, left on md+ */}
               <div className="space-y-3 text-center md:text-left">
-                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
                   Giving Back To Those Who Served
                 </h3>
                 <br />
@@ -6949,7 +6938,7 @@ function OriginsPage() {
                   work we do every day.
                 </p>
                 <br />
-                <p className="text-amber-300 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
+                <p className="text-[#C08C45] text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
                   Active duty, veterans, and first responders including fire,
                   law enforcement, and EMTs receive $1 off every bag of fresh
                   roasted coffee, every day. The discount stacks with
@@ -6958,10 +6947,10 @@ function OriginsPage() {
                 <br />
                 <a
                   href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
-                  className="mt-3 inline-block rounded-xl ring-1 ring-amber-400/60 
-       text-amber-400 font-semibold text-[1rem]
+                  className="mt-3 inline-block rounded-xl ring-1 ring-[#C08C45]/60 
+       text-[#C08C45] font-semibold text-[1rem]
        px-[1.1rem] py-[0.45rem]
-       hover:bg-amber-400 hover:text-neutral-900 transition-all"
+       hover:bg-[#C08C45] hover:text-neutral-900 transition-all"
                 >
                   Get GovX discount code
                 </a>
@@ -6989,7 +6978,7 @@ function OriginsPage() {
             <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
               {/* Photo LEFT */}
               <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-[10/13] rounded-xl overflow-hidden ring-1 ring-amber-400 bg-neutral-900/50">
+                <div className="w-64 md:w-[32rem] mx-auto aspect-[10/13] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/50">
                   <img
                     src="/ironship.jpg"
                     alt="Old Ironsides legacy"
@@ -7000,7 +6989,7 @@ function OriginsPage() {
 
               {/* Text RIGHT */}
               <div className="space-y-3">
-                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-amber-300 tracking-wide uppercase">
+                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
                   About Old Ironsides Coffee
                 </h3>
                 <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
@@ -7025,7 +7014,7 @@ function OriginsPage() {
                   who values American heritage brands, Old Ironsides Coffee
                   exists to serve you.
                   <br /> <br />
-                  <span className="text-amber-300 font-semibold tracking-wide">
+                  <span className="text-[#C08C45] font-semibold tracking-wide">
                     OLD IRONSIDES COFFEE - IGNITE THE SPIRIT, SAVOR THE VICTORY!
                   </span>
                 </p>
@@ -8549,11 +8538,11 @@ function CartPage() {
                   All of our coffees are roasted fresh every Monday and ship
                   Tuesday/Wednesday. <br />
                   Your next eligible roast date is{" "}
-                  <span className="font-semibold text-amber-300">
+                  <span className="font-semibold text-[#C08C45]">
                     {dateLabel}
                     <br />
                     Time left to make the next roast:{" "}
-                    <span className="text-amber-300">{left}</span>
+                    <span className="text-[#C08C45]">{left}</span>
                   </span>
                   . <br />
                   Orders placed before 5 p.m. EST on Sunday make that week’s
@@ -8582,7 +8571,7 @@ function CartPage() {
 
                     {/* Title + variant + price (flex-1 pushes controls to the right) */}
                     <div className="flex-1">
-                      <div className="font-semibold text-amber-300">
+                      <div className="font-semibold text-[#C08C45]">
                         {item.title}
                       </div>
 
@@ -8598,14 +8587,14 @@ function CartPage() {
 
                       {/* Purchase type copy */}
                       {item?.purchaseMode === "sub" ? (
-                        <div className="mt-1 text-m text-amber-400">
+                        <div className="mt-1 text-m text-[#C08C45]">
                           Fresh Roasted, Ships every {item?.subEvery ?? 30}{" "}
                           days. 15% off applied.
                         </div>
                       ) : (
                         <div className="mt-1 text-m text-neutral-400">
                           Priced as if the Crown won the war.{" "}
-                          <span className="text-amber-300">
+                          <span className="text-[#C08C45]">
                             Join the fleet and save 15% off this item.
                           </span>
                         </div>
@@ -8661,7 +8650,7 @@ function CartPage() {
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-neutral-300">
                             Add{" "}
-                            <span className="text-amber-300 font-semibold">
+                            <span className="text-[#C08C45] font-semibold">
                               {Math.max(
                                 0,
                                 freeShippingThreshold - coffeeBagCount
@@ -8675,13 +8664,13 @@ function CartPage() {
                             </span>{" "}
                             for free shipping.
                           </span>
-                          <span className="text-amber-300 font-semibold">
+                          <span className="text-[#C08C45] font-semibold">
                             {coffeeBagCount}/{freeShippingThreshold}
                           </span>
                         </div>
                         <div className="mt-2 h-2 rounded-full bg-neutral-800">
                           <div
-                            className="h-2 rounded-full bg-amber-400 transition-all"
+                            className="h-2 rounded-full bg-[#C08C45] transition-all"
                             style={{
                               width: `${Math.round(
                                 Math.min(
@@ -8718,7 +8707,7 @@ function CartPage() {
                   <div className="mt-2 flex items-center justify-between text-sm">
                     <span className="text-neutral-400">Shipping</span>
                     {shipping === 0 ? (
-                      <span className="font-semibold text-amber-300">
+                      <span className="font-semibold text-[#C08C45]">
                         {shippingLabel}
                       </span>
                     ) : (
@@ -8731,13 +8720,13 @@ function CartPage() {
 
                   {/* Total */}
                   <div className="mt-3 border-t border-neutral-800 pt-3 flex items-center justify-between text-lg">
-                    <span className="text-amber-400">Total</span>
+                    <span className="text-[#C08C45]">Total</span>
                     <span className="font-semibold">{fmt(total)}</span>
                   </div>
 
                   <button
                     onClick={onCheckoutClick}
-                    className="mt-4 w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
+                    className="mt-4 w-full px-4 py-2 rounded-lg bg-[#C08C45] text-neutral-900 font-semibold hover:bg-[#C08C45]"
                     aria-label="Proceed to checkout"
                   >
                     Checkout
@@ -8745,10 +8734,10 @@ function CartPage() {
                 </div>
 
                 {/* Ring That Bell subscribe box */}
-                <div className="rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 p-8 text-center">
+                <div className="rounded-2xl ring-1 ring-[#C08C45]/60 bg-neutral-900/60 p-8 text-center">
                   <div className="flex items-center justify-center gap-3 mb-3">
-                    <Bell className="h-7 w-7 text-amber-300" />
-                    <h3 className="text-2xl font-extrabold text-amber-300">
+                    <Bell className="h-7 w-7 text-[#C08C45]" />
+                    <h3 className="text-2xl font-extrabold text-[#C08C45]">
                       RING THAT BELL
                     </h3>
                   </div>
@@ -8772,9 +8761,9 @@ function CartPage() {
                       value={sbEmail}
                       onChange={(e) => setSbEmail(e.target.value)}
                       placeholder="Enter your email"
-                      className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                      className="flex-1 rounded-xl bg-neutral-900/70 border border-neutral-700 px-4 py-3 text-sm text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#C08C45]"
                     />
-                    <button className="px-6 py-3 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300">
+                    <button className="px-6 py-3 rounded-xl bg-[#C08C45] text-neutral-900 font-semibold hover:bg-[#C08C45]">
                       GET 20% OFF
                     </button>
                   </form>
@@ -8783,7 +8772,7 @@ function CartPage() {
                     Already a member?{" "}
                     <Link
                       to="/account/login"
-                      className="text-amber-300 hover:underline"
+                      className="text-[#C08C45] hover:underline"
                     >
                       Sign in
                     </Link>
@@ -8802,7 +8791,7 @@ function CartPage() {
           <div className="mt-6 rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 p-10 text-center">
             <p className="text-neutral-400 text-xl">
               No items yet. Sail back to the{" "}
-              <Link to="/store" className="text-amber-300 hover:underline">
+              <Link to="/store" className="text-[#C08C45] hover:underline">
                 Harbor
               </Link>
               .
@@ -9163,8 +9152,8 @@ function SubscribeManagePage({
       className={
         "px-3 py-2 rounded-lg text-sm " +
         (tab === id
-          ? "bg-amber-400 text-neutral-900 font-semibold"
-          : "border border-neutral-700 hover:border-amber-400/40 text-neutral-300")
+          ? "bg-[#C08C45] text-neutral-900 font-semibold"
+          : "border border-neutral-700 hover:border-[#C08C45]/40 text-neutral-300")
       }
     >
       {children}
@@ -9180,7 +9169,7 @@ function SubscribeManagePage({
           <div className="flex items-start justify-between">
             <SectionTitle
               title={
-                <span className="text-3xl md:text-5xl font-extrabold text-amber-300">
+                <span className="text-3xl md:text-5xl font-extrabold text-[#C08C45]">
                   Account
                 </span>
               }
@@ -9197,7 +9186,7 @@ function SubscribeManagePage({
               onSubmit={handleLogin}
               className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
             >
-              <div className="text-lg font-semibold text-amber-300 mb-3">
+              <div className="text-lg font-semibold text-[#C08C45] mb-3">
                 Log in
               </div>
               <div className="space-y-3">
@@ -9218,7 +9207,7 @@ function SubscribeManagePage({
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute inset-y-0 right-2 flex items-center text-neutral-400 hover:text-amber-300"
+                    className="absolute inset-y-0 right-2 flex items-center text-neutral-400 hover:text-[#C08C45]"
                     aria-label={
                       showPassword ? "Hide password" : "Show password"
                     }
@@ -9270,7 +9259,7 @@ function SubscribeManagePage({
                 {error && <div className="text-sm text-red-300">{error}</div>}
                 <button
                   disabled={loading}
-                  className="w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
+                  className="w-full px-4 py-2 rounded-lg bg-[#C08C45] text-neutral-900 font-semibold hover:bg-[#C08C45]"
                 >
                   {loading ? "Signing in..." : "Log in"}
                 </button>
@@ -9279,7 +9268,7 @@ function SubscribeManagePage({
                 Trouble signing in? Email{" "}
                 <a
                   href="mailto:support@oldironsidescoffee.org"
-                  className="text-amber-300"
+                  className="text-[#C08C45]"
                 >
                   support@oldironsidescoffee.org
                 </a>
@@ -9291,7 +9280,7 @@ function SubscribeManagePage({
               onSubmit={handleRegister}
               className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6"
             >
-              <div className="text-lg font-semibold text-amber-300 mb-3">
+              <div className="text-lg font-semibold text-[#C08C45] mb-3">
                 JOIN THE FLEET & SAVE
               </div>
 
@@ -9310,7 +9299,7 @@ function SubscribeManagePage({
 
                 <button
                   disabled={loading}
-                  className="w-full px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300 disabled:opacity-60"
+                  className="w-full px-4 py-2 rounded-lg bg-[#C08C45] text-neutral-900 font-semibold hover:bg-[#C08C45] disabled:opacity-60"
                 >
                   {loading ? "Creating..." : "Create account"}
                 </button>
@@ -9336,7 +9325,7 @@ function SubscribeManagePage({
           <div className="flex items-start justify-between">
             <span className="text-neutral-300">
               Welcome,{" "}
-              <span className="text-amber-300 font-semibold">
+              <span className="text-[#C08C45] font-semibold">
                 {getDisplayName(user) || user?.email}
               </span>
               . Manage your subscriptions, orders and shipping details here.
@@ -9355,7 +9344,7 @@ function SubscribeManagePage({
             <div className="ml-auto">
               <button
                 onClick={handleLogout}
-                className="px-3 py-2 rounded-lg border border-neutral-700 hover:border-amber-400/40 text-neutral-300 text-sm"
+                className="px-3 py-2 rounded-lg border border-neutral-700 hover:border-[#C08C45]/40 text-neutral-300 text-sm"
               >
                 Log out
               </button>
@@ -9368,7 +9357,7 @@ function SubscribeManagePage({
               {/* Next delivery / subscriptions summary */}
               <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
                 <div>
-                  <div className="text-amber-300 font-semibold">
+                  <div className="text-[#C08C45] font-semibold">
                     Subscriptions and upcoming deliveries:
                   </div>
 
@@ -9383,7 +9372,7 @@ function SubscribeManagePage({
                           key={s.id}
                           className="border-t border-neutral-800 pt-2 first:border-t-0 first:pt-0"
                         >
-                          <div className="text-amber-300 font-semibold">
+                          <div className="text-[#C08C45] font-semibold">
                             {s.product}
                           </div>
 
@@ -9409,7 +9398,7 @@ function SubscribeManagePage({
 
                 <button
                   onClick={() => setTab("subscriptions")}
-                  className="mt-4 text-amber-300 text-sm text-left"
+                  className="mt-4 text-[#C08C45] text-sm text-left"
                 >
                   Manage subscriptions →
                 </button>
@@ -9418,7 +9407,7 @@ function SubscribeManagePage({
               {/* Recent orders */}
               <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 flex flex-col justify-between">
                 <div>
-                  <div className="text-amber-300 font-semibold">
+                  <div className="text-[#C08C45] font-semibold">
                     Recent orders
                   </div>
 
@@ -9442,7 +9431,7 @@ function SubscribeManagePage({
                             key={o.id}
                             className="border-t border-neutral-800 pt-2 first:border-t-0 first:pt-0"
                           >
-                            <div className="text-amber-300 font-semibold">
+                            <div className="text-[#C08C45] font-semibold">
                               {o.id}
                             </div>
 
@@ -9463,7 +9452,7 @@ function SubscribeManagePage({
 
                 <button
                   onClick={() => setTab("orders")}
-                  className="mt-4 text-amber-300 text-sm text-left"
+                  className="mt-4 text-[#C08C45] text-sm text-left"
                 >
                   View all orders →
                 </button>
@@ -9471,7 +9460,7 @@ function SubscribeManagePage({
 
               {/* Default shipping */}
               <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-                <div className="text-amber-300 font-semibold">
+                <div className="text-[#C08C45] font-semibold">
                   Default shipping address
                 </div>
 
@@ -9516,7 +9505,7 @@ function SubscribeManagePage({
 
                 <button
                   onClick={() => setTab("profile")}
-                  className="mt-3 px-3 py-2 rounded-lg border border-neutral-700 text-sm text-amber-300 hover:border-amber-400/60 hover:bg-amber-400/10"
+                  className="mt-3 px-3 py-2 rounded-lg border border-neutral-700 text-sm text-[#C08C45] hover:border-[#C08C45]/60 hover:bg-[#C08C45]/10"
                 >
                   Manage addresses →
                 </button>
@@ -9536,10 +9525,10 @@ function SubscribeManagePage({
               {subs.map((s) => (
                 <div
                   key={s.id}
-                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 border-l-4 border-amber-400/60"
+                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 border-l-4 border-[#C08C45]/60"
                 >
                   <div className="flex flex-wrap items-center gap-3">
-                    <div className="font-semibold text-amber-300">
+                    <div className="font-semibold text-[#C08C45]">
                       {s.product}
                     </div>
                     <div className="text-sm text-neutral-400">
@@ -9552,7 +9541,7 @@ function SubscribeManagePage({
                       • {s.frequency}
                     </div>
 
-                    <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-amber-400/60 text-amber-300 uppercase tracking-wide">
+                    <div className="text-xs ml-auto rounded px-2 py-1 ring-1 ring-[#C08C45]/60 text-[#C08C45] uppercase tracking-wide">
                       {s.status}
                     </div>
                   </div>
@@ -9569,7 +9558,7 @@ function SubscribeManagePage({
                           "noopener,noreferrer"
                         )
                       }
-                      className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+                      className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-[#C08C45] text-neutral-900 text-sm font-semibold hover:bg-[#C08C45]"
                     >
                       Manage subscription
                     </button>
@@ -9588,10 +9577,10 @@ function SubscribeManagePage({
               {orders.map((o) => (
                 <div
                   key={o.id}
-                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 border-l-4 border-amber-400/60"
+                  className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6 border-l-4 border-[#C08C45]/60"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="font-semibold text-amber-300">{o.id}</div>
+                    <div className="font-semibold text-[#C08C45]">{o.id}</div>
 
                     <div className="flex items-center gap-2 text-sm text-neutral-400">
                       <span>{o.date}</span>
@@ -9621,7 +9610,7 @@ function SubscribeManagePage({
                         Email{" "}
                         <a
                           href="mailto:support@oldironsidescoffee.org"
-                          className="text-amber-300"
+                          className="text-[#C08C45]"
                         >
                           support@oldironsidescoffee.org
                         </a>{" "}
@@ -9639,7 +9628,7 @@ function SubscribeManagePage({
             <div className="mt-6 grid md:grid-cols-2 gap-6">
               {/* Contact + address */}
               <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-                <div className="text-amber-300 font-semibold mb-3">
+                <div className="text-[#C08C45] font-semibold mb-3">
                   Contact and shipping
                 </div>
                 <div className="text-sm text-neutral-300 space-y-4">
@@ -9803,8 +9792,8 @@ function SubscribeManagePage({
                         className={[
                           "w-full text-left rounded-lg border p-3 transition relative",
                           isDefault
-                            ? "border-amber-400 bg-amber-400/10"
-                            : "border-neutral-700 hover:border-amber-400/60",
+                            ? "border-[#C08C45] bg-[#C08C45]/10"
+                            : "border-neutral-700 hover:border-[#C08C45]/60",
                         ].join(" ")}
                       >
                         {/* Address display (no click-to-set-default) */}
@@ -9812,7 +9801,7 @@ function SubscribeManagePage({
                           <div className="font-semibold text-neutral-200">
                             {a.firstName} {a.lastName}
                             {isDefault && (
-                              <span className="ml-2 text-xs text-amber-300">
+                              <span className="ml-2 text-xs text-[#C08C45]">
                                 (Default)
                               </span>
                             )}
@@ -9883,7 +9872,7 @@ function SubscribeManagePage({
                                   setLoading(false);
                                 }
                               }}
-                              className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-amber-400/60 disabled:opacity-60"
+                              className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-[#C08C45]/60 disabled:opacity-60"
                             >
                               Set default
                             </button>
@@ -9927,7 +9916,7 @@ function SubscribeManagePage({
                                 })
                               );
                             }}
-                            className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
+                            className="px-2 py-1 text-xs rounded border border-neutral-600 text-neutral-200 hover:border-[#C08C45]/60"
                           >
                             Edit
                           </button>
@@ -9949,7 +9938,7 @@ function SubscribeManagePage({
                   })}
 
                   <div className="flex items-center justify-between">
-                    <div className="text-amber-300 font-semibold">
+                    <div className="text-[#C08C45] font-semibold">
                       {editingId
                         ? "Edit shipping address"
                         : "Add shipping address"}
@@ -9970,7 +9959,7 @@ function SubscribeManagePage({
                           )?.reset?.();
                           setError("");
                         }}
-                        className="px-3 py-1 text-xs rounded border border-amber-400 text-amber-300 hover:bg-amber-400/10 font-semibold"
+                        className="px-3 py-1 text-xs rounded border border-[#C08C45] text-[#C08C45] hover:bg-[#C08C45]/10 font-semibold"
                       >
                         Cancel
                       </button>
@@ -10045,7 +10034,7 @@ function SubscribeManagePage({
                         International? Contact us:{" "}
                         <a
                           href="mailto:support@oldironsidescoffee.org"
-                          className="text-amber-300 font-medium"
+                          className="text-[#C08C45] font-medium"
                         >
                           support@oldironsidescoffee.org
                         </a>
@@ -10076,7 +10065,7 @@ function SubscribeManagePage({
                             setConfirmDelete(false);
                             setDeleteId(null);
                           }}
-                          className="px-3 py-2 rounded-lg border border-neutral-600 text-neutral-200 hover:border-amber-400/60"
+                          className="px-3 py-2 rounded-lg border border-neutral-600 text-neutral-200 hover:border-[#C08C45]/60"
                         >
                           Cancel
                         </button>
@@ -10206,7 +10195,7 @@ function SubscribeManagePage({
 
                   <button
                     disabled={loading}
-                    className="px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300 disabled:opacity-60"
+                    className="px-3 py-2 rounded-lg bg-[#C08C45] text-neutral-900 text-sm font-semibold hover:bg-[#C08C45] disabled:opacity-60"
                   >
                     {loading ? "Saving..." : "Save address"}
                   </button>
@@ -10215,7 +10204,7 @@ function SubscribeManagePage({
 
               {/* Security */}
               <div className="rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/50 p-6">
-                <div className="text-amber-300 font-semibold mb-3">
+                <div className="text-[#C08C45] font-semibold mb-3">
                   Security and password
                 </div>
                 <div className="text-sm text-neutral-300 space-y-3">
@@ -10227,7 +10216,7 @@ function SubscribeManagePage({
                     For now, email{" "}
                     <a
                       href="mailto:support@oldironsidescoffee.com"
-                      className="text-amber-300"
+                      className="text-[#C08C45]"
                     >
                       support@oldironsidescoffee.org
                     </a>{" "}
@@ -10236,7 +10225,7 @@ function SubscribeManagePage({
                 </div>
                 <button
                   // REAL: link to password reset flow
-                  className="mt-4 px-3 py-2 rounded-lg bg-amber-400 text-neutral-900 text-sm font-semibold hover:bg-amber-300"
+                  className="mt-4 px-3 py-2 rounded-lg bg-[#C08C45] text-neutral-900 text-sm font-semibold hover:bg-[#C08C45]"
                 >
                   Request password reset
                 </button>
@@ -10256,7 +10245,7 @@ function NotFoundPage() {
         <div className="flex items-start justify-between">
           <SectionTitle
             title={
-              <span className="text-3xl font-extrabold text-amber-300">
+              <span className="text-3xl font-extrabold text-[#C08C45]">
                 Page not found
               </span>
             }
@@ -10269,7 +10258,7 @@ function NotFoundPage() {
           {/* keep the rest of your existing card content, but remove the duplicate h1/subtitle inside */}
           <Link
             to="/"
-            className="mt-4 inline-block px-5 py-2 rounded-xl bg-amber-400 text-neutral-900 font-semibold hover:bg-amber-300"
+            className="mt-4 inline-block px-5 py-2 rounded-xl bg-[#C08C45] text-neutral-900 font-semibold hover:bg-[#C08C45]"
           >
             Return to Port
           </Link>
@@ -10516,7 +10505,7 @@ function PromoSubscribeModal() {
       {/* Modal shell */}
       <div className="relative z-10 w-[92vw] max-w-[380px] md:w-[98vw] md:max-w-6xl">
         <div
-          className="relative rounded-2xl md:rounded-2xl ring-1 ring-amber-400/60 bg-neutral-900/60 
+          className="relative rounded-2xl md:rounded-2xl ring-1 ring-[#C08C45]/60 bg-neutral-900/60 
   overflow-y-auto md:overflow-visible max-h-[96vh] md:min-h-0 md:max-h-none"
         >
           {/* TOP-RIGHT CLOSE (X) */}
@@ -10524,8 +10513,8 @@ function PromoSubscribeModal() {
             type="button"
             onClick={safeClose}
             className="absolute right-3 top-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-md
-            bg-neutral-900/70 ring-1 ring-amber-300 text-amber-300 hover:text-amber-200
-            hover:ring-amber-400 transition"
+            bg-neutral-900/70 ring-1 ring-[#C08C45] text-[#C08C45] hover:text-[#C08C45]
+            hover:ring-[#C08C45] transition"
             aria-label="Close"
           >
             <span
@@ -10558,7 +10547,7 @@ function PromoSubscribeModal() {
 
             {/* DESKTOP HERO */}
             <div className="hidden md:flex items-center justify-start pl-6 pr-0 py-6">
-              <div className="rounded-2xl ring-1 ring-amber-400 bg-neutral-900/60 overflow-hidden shadow-2xl shadow-black/40">
+              <div className="rounded-2xl ring-1 ring-[#C08C45] bg-neutral-900/60 overflow-hidden shadow-2xl shadow-black/40">
                 <div className="w-[19rem] lg:w-[21rem] aspect-[4/5]">
                   <img
                     src="/captain-deck1.jpg"
@@ -10575,9 +10564,9 @@ function PromoSubscribeModal() {
                 {/* Title + copy + form */}
                 <div>
                   <div className="flex flex-col items-center justify-center gap-2 md:gap-3 mb-2 md:mb-4">
-                    <BellRinger iconClassName="h-10 w-10 md:h-14 md:w-14 text-amber-300" />
+                    <BellRinger iconClassName="h-10 w-10 md:h-14 md:w-14 text-[#C08C45]" />
 
-                    <h3 className="font-extrabold text-amber-300 text-[31px] leading-tight md:text-[3.25rem]">
+                    <h3 className="font-extrabold text-[#C08C45] text-[31px] leading-tight md:text-[3.25rem]">
                       RING THAT BELL
                     </h3>
                   </div>
@@ -10594,7 +10583,7 @@ function PromoSubscribeModal() {
                       {phase === "success" ? (
                         <>
                           {/* Full-width amber banner fixed to the top */}
-                          <div className="fixed inset-x-0 top-0 z-[2147483647] bg-amber-400 text-neutral-900 text-center font-semibold px-4 py-3 shadow-lg">
+                          <div className="fixed inset-x-0 top-0 z-[2147483647] bg-[#C08C45] text-neutral-900 text-center font-semibold px-4 py-3 shadow-lg">
                             Welcome aboard! Your discount applied at checkout
                           </div>
 
@@ -10618,12 +10607,12 @@ function PromoSubscribeModal() {
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
                               placeholder="Enter your email"
-                              className="rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[16px] text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-400 md:px-5 md:py-3 md:text-[1.25rem] md:flex-none md:w-[50%]"
+                              className="rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[16px] text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#C08C45] md:px-5 md:py-3 md:text-[1.25rem] md:flex-none md:w-[50%]"
                               style={{ color: "#ffffff" }}
                             />
                             <button
                               type="submit"
-                              className="px-4 py-2 md:px-10 md:py-3.5 rounded-xl ring-1 ring-amber-400/70 bg-amber-400 text-neutral-900 text-[18px] md:text-lg font-semibold hover:bg-amber-300 transition-all"
+                              className="px-4 py-2 md:px-10 md:py-3.5 rounded-xl ring-1 ring-[#C08C45]/70 bg-[#C08C45] text-neutral-900 text-[18px] md:text-lg font-semibold hover:bg-[#C08C45] transition-all"
                             >
                               GET 20% OFF
                             </button>
@@ -10633,7 +10622,7 @@ function PromoSubscribeModal() {
                             Already a member?{" "}
                             <Link
                               to="/account/login"
-                              className="text-amber-300 hover:underline"
+                              className="text-[#C08C45] hover:underline"
                               onClick={() => {
                                 localStorage.setItem(KEY_SUB, "1");
                                 setCookieDays(COOKIE_SUB, "1", 365);
@@ -10668,12 +10657,12 @@ function PromoSubscribeModal() {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="Enter your email"
-                          className="rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[16px] text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-400 md:px-5 md:py-3 md:text-[1.25rem] md:flex-none md:w-[50%]"
+                          className="rounded-xl bg-neutral-900/70 border border-neutral-700 px-3 py-2 text-[16px] text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#C08C45] md:px-5 md:py-3 md:text-[1.25rem] md:flex-none md:w-[50%]"
                           style={{ color: "#ffffff" }}
                         />
                         <button
                           type="submit"
-                          className="px-4 py-2 md:px-10 md:py-3.5 rounded-xl ring-1 ring-amber-400/70 bg-amber-400 text-neutral-900 text-[18px] md:text-lg font-semibold hover:bg-amber-300 transition-all"
+                          className="px-4 py-2 md:px-10 md:py-3.5 rounded-xl ring-1 ring-[#C08C45]/70 bg-[#C08C45] text-neutral-900 text-[18px] md:text-lg font-semibold hover:bg-[#C08C45] transition-all"
                         >
                           GET 20% OFF
                         </button>
@@ -10683,7 +10672,7 @@ function PromoSubscribeModal() {
                         Already a member?{" "}
                         <Link
                           to="/account/login"
-                          className="text-amber-300 hover:underline"
+                          className="text-[#C08C45] hover:underline"
                           onClick={() => {
                             localStorage.setItem(KEY_SUB, "1");
                             setCookieDays(COOKIE_SUB, "1", 365);
@@ -10707,8 +10696,8 @@ function PromoSubscribeModal() {
                   <button
                     type="button"
                     onClick={safeClose}
-                    className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl ring-1 ring-amber-400/60 
-                    text-amber-400 font-semibold text-lg hover:bg-amber-400 hover:text-neutral-900 transition-all"
+                    className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl ring-1 ring-[#C08C45]/60 
+                    text-[#C08C45] font-semibold text-lg hover:bg-[#C08C45] hover:text-neutral-900 transition-all"
                     aria-label="Close banner"
                   >
                     Nah. Tax me like it&apos;s 1773. Give my 20% to the
@@ -10728,9 +10717,9 @@ function PromoSubscribeModal() {
             <button
               type="button"
               onClick={safeClose}
-              className="inline-flex items-center justify-center px-4 md:px-5 py-2 rounded-xl ring-1 ring-amber-400/60 
-              text-amber-400 font-semibold text-m md:text-lg
-              hover:bg-amber-400 hover:text-neutral-900 transition-all"
+              className="inline-flex items-center justify-center px-4 md:px-5 py-2 rounded-xl ring-1 ring-[#C08C45]/60 
+              text-[#C08C45] font-semibold text-m md:text-lg
+              hover:bg-[#C08C45] hover:text-neutral-900 transition-all"
               aria-label="Close banner"
             >
               Nah. Tax me like it&apos;s 1773. Give my 20% to the Redcoats.
@@ -10765,7 +10754,7 @@ function RoastAnchorsInline({ level = 3 }: { level?: 1 | 2 | 3 | 4 | 5 }) {
               className={
                 "h-6 w-6 align-middle select-none " +
                 (n <= level
-                  ? "text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
+                  ? "text-[#C08C45] drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
                   : "text-neutral-600")
               }
               aria-hidden
@@ -11131,8 +11120,8 @@ function Layout() {
                       aria-label="Go to Home Port"
                       className={
                         shrunk
-                          ? "text-[1.8rem] font-bold tracking-[0.16em] text-neutral-300 whitespace-nowrap hover:text-amber-300 transition"
-                          : "text-[2.25rem] font-bold tracking-[0.16em] text-neutral-300 whitespace-nowrap hover:text-amber-300 transition"
+                          ? "text-[1.8rem] font-bold tracking-[0.16em] text-neutral-300 whitespace-nowrap hover:text-[#C08C45] transition"
+                          : "text-[2.25rem] font-bold tracking-[0.16em] text-neutral-300 whitespace-nowrap hover:text-[#C08C45] transition"
                       }
                       style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
                     >
@@ -11201,14 +11190,14 @@ function Layout() {
                 >
                   OLD IRONSIDES COFFEE
                 </div>
-                <div className="text-[12px] text-amber-300 leading-tight">
+                <div className="text-[12px] text-[#C08C45] leading-tight">
                   Veteran-owned
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                className="text-amber-300 text-2xl font-bold px-2"
+                className="text-[#C08C45] text-2xl font-bold px-2"
                 aria-label="Close menu"
               >
                 ✕
@@ -11249,7 +11238,7 @@ function Layout() {
               <Link
                 to="/account"
                 onClick={() => setMobileOpen(false)}
-                className="block px-4 py-4 text-amber-300 flex items-center gap-2"
+                className="block px-4 py-4 text-[#C08C45] flex items-center gap-2"
               >
                 <span className="text-2xl leading-none">⚓</span>
                 <span>Sign In</span>
@@ -11303,7 +11292,7 @@ function Layout() {
           className="fixed right-0 md:left-0 md:right-auto top-1/2 z-40"
           style={{ transform: "translateY(-50%)" }}
         >
-          <div className="flex flex-col items-center bg-amber-400 text-black rounded-l-md md:rounded-r-md md:rounded-l-none shadow-lg overflow-hidden promo-tab-pulse">
+          <div className="flex flex-col items-center bg-[#C08C45] text-black rounded-l-md md:rounded-r-md md:rounded-l-none shadow-lg overflow-hidden promo-tab-pulse">
             {/* close button */}
             <button
               onClick={() => {
@@ -11311,7 +11300,7 @@ function Layout() {
                 localStorage.setItem("promoTabHiddenUntil", String(until));
                 setHidePromoTab(true);
               }}
-              className="w-full flex items-center justify-center text-black text-xl font-extrabold py-2 bg-amber-300 hover:bg-amber-200 border-b border-black/20"
+              className="w-full flex items-center justify-center text-black text-xl font-extrabold py-2 bg-[#C08C45] hover:bg-[#C08C45] border-b border-black/20"
             >
               ✖
             </button>
@@ -11326,7 +11315,7 @@ function Layout() {
                   })
                 )
               }
-              className="px-3 py-10 font-bold tracking-wider hover:bg-amber-300 transition"
+              className="px-3 py-10 font-bold tracking-wider hover:bg-[#C08C45] transition"
               style={{
                 writingMode: "vertical-rl",
                 textOrientation: "mixed",
@@ -11812,7 +11801,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
           <div className="flex items-center justify-between px-4 py-2">
             <button
               onClick={onClose}
-              className="text-amber-300 text-2xl font-bold px-1"
+              className="text-[#C08C45] text-2xl font-bold px-1"
               aria-label="Close cart"
             >
               ✕
@@ -11827,7 +11816,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
             <span className="w-6" />
           </div>
 
-          <div className="px-4 py-2 bg-amber-400 text-neutral-900">
+          <div className="px-4 py-2 bg-[#C08C45] text-neutral-900">
             {freeShippingQualified ? (
               <div className="text-center">
                 <div className="text-[13px] font-extrabold leading-tight">
@@ -11914,7 +11903,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                         [it.id]: !prev[it.id],
                                       }))
                                     }
-                                    className="ml-2 text-[10px] text-amber-300 underline underline-offset-2"
+                                    className="ml-2 text-[10px] text-[#C08C45] underline underline-offset-2"
                                   >
                                     Manage
                                   </button>
@@ -11937,8 +11926,8 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                             (freq[it.id] ??
                                               it?.subEvery ??
                                               30) === d
-                                              ? "bg-amber-400 text-neutral-900 ring-amber-400"
-                                              : "bg-neutral-900/60 text-amber-300 ring-amber-400/60",
+                                              ? "bg-[#C08C45] text-neutral-900 ring-[#C08C45]"
+                                              : "bg-neutral-900/60 text-[#C08C45] ring-[#C08C45]/60",
                                           ].join(" ")}
                                         >
                                           {d} days
@@ -11972,7 +11961,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                             [it.id]: false,
                                           }));
                                         }}
-                                        className="flex-1 rounded-md bg-amber-400 text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-amber-300 transition"
+                                        className="flex-1 rounded-md bg-[#C08C45] text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] transition"
                                       >
                                         Update
                                       </button>
@@ -12014,7 +12003,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                             [it.id]: false,
                                           }));
                                         }}
-                                        className="px-3 rounded-md ring-1 ring-amber-400/60 text-amber-300 text-[12px]"
+                                        className="px-3 rounded-md ring-1 ring-[#C08C45]/60 text-[#C08C45] text-[12px]"
                                       >
                                         One-time
                                       </button>
@@ -12027,7 +12016,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
 
                           <button
                             onClick={() => remove(it.id)}
-                            className="text-neutral-400 hover:text-amber-300 text-[11px] flex-shrink-0"
+                            className="text-neutral-400 hover:text-[#C08C45] text-[11px] flex-shrink-0"
                             aria-label="Remove"
                           >
                             Remove
@@ -12035,7 +12024,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                         </div>
 
                         <div className="mt-1.5 flex items-center justify-between">
-                          <div className="text-amber-300 font-bold text-[13px]">
+                          <div className="text-[#C08C45] font-bold text-[13px]">
                             {isSub
                               ? `$${subPrice.toFixed(2)}`
                               : `$${price.toFixed(2)}`}
@@ -12072,7 +12061,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                     [it.id]: true,
                                   }))
                                 }
-                                className="w-full rounded-md ring-1 ring-amber-400/60 bg-neutral-900/60 text-amber-300 font-semibold py-1.5 text-[12px] hover:bg-amber-400 hover:text-neutral-900 transition"
+                                className="w-full rounded-md ring-1 ring-[#C08C45]/60 bg-neutral-900/60 text-[#C08C45] font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] hover:text-neutral-900 transition"
                               >
                                 Join The Fleet &amp; Save 15%
                               </button>
@@ -12091,8 +12080,8 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                       className={[
                                         "py-1.5 rounded-md text-[12px] font-semibold ring-1",
                                         selFreq === d
-                                          ? "bg-amber-400 text-neutral-900 ring-amber-400"
-                                          : "bg-neutral-900/60 text-amber-300 ring-amber-400/60",
+                                          ? "bg-[#C08C45] text-neutral-900 ring-[#C08C45]"
+                                          : "bg-neutral-900/60 text-[#C08C45] ring-[#C08C45]/60",
                                       ].join(" ")}
                                     >
                                       {d} days
@@ -12122,7 +12111,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                         return next;
                                       });
                                     }}
-                                    className="flex-1 rounded-md bg-amber-400 text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-amber-300 transition"
+                                    className="flex-1 rounded-md bg-[#C08C45] text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] transition"
                                   >
                                     Start Subscription
                                   </button>
@@ -12135,7 +12124,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                                         return next;
                                       })
                                     }
-                                    className="px-3 rounded-md ring-1 ring-amber-400/60 text-amber-300 text-[12px]"
+                                    className="px-3 rounded-md ring-1 ring-[#C08C45]/60 text-[#C08C45] text-[12px]"
                                   >
                                     Cancel
                                   </button>
@@ -12170,8 +12159,8 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                 "flex-1 font-extrabold py-2.5 text-center text-[15px]",
                 "rounded-md",
                 checkingOut
-                  ? "bg-amber-300/70 text-neutral-800 cursor-not-allowed"
-                  : "bg-amber-400 text-neutral-900",
+                  ? "bg-[#C08C45]/70 text-neutral-800 cursor-not-allowed"
+                  : "bg-[#C08C45] text-neutral-900",
               ].join(" ")}
               aria-busy={checkingOut}
             >
@@ -12204,18 +12193,18 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
         {/* SUBSCRIBE GATE */}
         {showSubGate && (
           <div className="absolute inset-x-0 bottom-0 z-[1000003] p-3">
-            <div className="rounded-xl ring-1 ring-amber-400 bg-neutral-900 text-amber-300 px-3 py-3 text-sm text-center shadow-2xl">
+            <div className="rounded-xl ring-1 ring-[#C08C45] bg-neutral-900 text-[#C08C45] px-3 py-3 text-sm text-center shadow-2xl">
               Join or sign in to manage your Fleet subscription before checkout.
               <div className="mt-2 flex gap-2 justify-center">
                 <a
                   href="/account/login"
-                  className="px-3 py-1.5 rounded-md bg-amber-400 text-neutral-900 font-bold"
+                  className="px-3 py-1.5 rounded-md bg-[#C08C45] text-neutral-900 font-bold"
                 >
                   Sign in / Join
                 </a>
                 <button
                   onClick={() => setShowSubGate(false)}
-                  className="px-3 py-1.5 rounded-md ring-1 ring-amber-400/60 text-amber-300"
+                  className="px-3 py-1.5 rounded-md ring-1 ring-[#C08C45]/60 text-[#C08C45]"
                 >
                   Close
                 </button>
@@ -12242,7 +12231,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                 </div>
                 <button
                   onClick={() => setShowRoastInfo(false)}
-                  className="text-amber-300 text-lg font-bold px-1"
+                  className="text-[#C08C45] text-lg font-bold px-1"
                   aria-label="Close"
                 >
                   ✕
@@ -12252,18 +12241,18 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                 <p>
                   We roast to order. All orders are roasted on Monday/Tuesday.
                   Please be sure to place your order before{" "}
-                  <span className="text-amber-300 font-semibold">
+                  <span className="text-[#C08C45] font-semibold">
                     Sunday 5:00 PM ET
                   </span>{" "}
                   to get on the roast schedule. All orders made after the cut
                   off time will be roasted the following week.
                 </p>
                 <p>
-                  <span className="text-amber-300 font-semibold">
+                  <span className="text-[#C08C45] font-semibold">
                     Roast Day:
                   </span>{" "}
                   Monday <br />
-                  <span className="text-amber-300 font-semibold">
+                  <span className="text-[#C08C45] font-semibold">
                     Ship:
                   </span>{" "}
                   Wednesday.
@@ -12277,9 +12266,9 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                   If you missed the order cut off time, please contact us and we
                   will see what we can do to still get your order roasted.
                 </p>
-                <p className="text-amber-300">
+                <p className="text-[#C08C45]">
                   Questions?{" "}
-                  <a href="/contact" className="underline text-amber-300">
+                  <a href="/contact" className="underline text-[#C08C45]">
                     Contact the crew
                   </a>
                   .
@@ -12534,7 +12523,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
           <div className="flex items-center justify-between px-4 py-2">
             <button
               onClick={onClose}
-              className="text-amber-300 text-2xl font-bold px-1"
+              className="text-[#C08C45] text-2xl font-bold px-1"
               aria-label="Close cart"
             >
               ✕
@@ -12549,7 +12538,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
             <span className="w-6" />
           </div>
 
-          <div className="px-4 py-2 bg-amber-400 text-neutral-900">
+          <div className="px-4 py-2 bg-[#C08C45] text-neutral-900">
             {freeShippingQualified ? (
               <div className="text-center">
                 <div className="text-[13px] font-extrabold leading-tight">
@@ -12638,7 +12627,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                         [it.id]: !prev[it.id],
                                       }))
                                     }
-                                    className="ml-2 text-[10px] text-amber-300 underline underline-offset-2"
+                                    className="ml-2 text-[10px] text-[#C08C45] underline underline-offset-2"
                                   >
                                     Manage
                                   </button>
@@ -12661,8 +12650,8 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                             (freq[it.id] ??
                                               it?.subEvery ??
                                               30) === d
-                                              ? "bg-amber-400 text-neutral-900 ring-amber-400"
-                                              : "bg-neutral-900/60 text-amber-300 ring-amber-400/60",
+                                              ? "bg-[#C08C45] text-neutral-900 ring-[#C08C45]"
+                                              : "bg-neutral-900/60 text-[#C08C45] ring-[#C08C45]/60",
                                           ].join(" ")}
                                         >
                                           {d} days
@@ -12697,7 +12686,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                             [it.id]: false,
                                           }));
                                         }}
-                                        className="flex-1 rounded-md bg-amber-400 text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-amber-300 transition"
+                                        className="flex-1 rounded-md bg-[#C08C45] text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] transition"
                                       >
                                         Update
                                       </button>
@@ -12745,7 +12734,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                             [it.id]: false,
                                           }));
                                         }}
-                                        className="px-3 rounded-md ring-1 ring-amber-400/60 text-amber-300 text-[12px]"
+                                        className="px-3 rounded-md ring-1 ring-[#C08C45]/60 text-[#C08C45] text-[12px]"
                                       >
                                         One-time
                                       </button>
@@ -12758,7 +12747,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
 
                           <button
                             onClick={() => remove(it.id)}
-                            className="text-neutral-400 hover:text-amber-300 text-[11px] flex-shrink-0"
+                            className="text-neutral-400 hover:text-[#C08C45] text-[11px] flex-shrink-0"
                             aria-label="Remove"
                           >
                             Remove
@@ -12767,7 +12756,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
 
                         {/* price + qty */}
                         <div className="mt-1.5 flex items-center justify-between">
-                          <div className="text-amber-300 font-bold text-[13px]">
+                          <div className="text-[#C08C45] font-bold text-[13px]">
                             {isSub
                               ? `$${subPrice.toFixed(2)}`
                               : `$${price.toFixed(2)}`}
@@ -12805,7 +12794,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                     [it.id]: true,
                                   }))
                                 }
-                                className="w-full rounded-md ring-1 ring-amber-400/60 bg-neutral-900/60 text-amber-300 font-semibold py-1.5 text-[12px] hover:bg-amber-400 hover:text-neutral-900 transition"
+                                className="w-full rounded-md ring-1 ring-[#C08C45]/60 bg-neutral-900/60 text-[#C08C45] font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] hover:text-neutral-900 transition"
                               >
                                 Join The Fleet &amp; Save 15%
                               </button>
@@ -12824,8 +12813,8 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                       className={[
                                         "py-1.5 rounded-md text-[12px] font-semibold ring-1",
                                         selFreq === d
-                                          ? "bg-amber-400 text-neutral-900 ring-amber-400"
-                                          : "bg-neutral-900/60 text-amber-300 ring-amber-400/60",
+                                          ? "bg-[#C08C45] text-neutral-900 ring-[#C08C45]"
+                                          : "bg-neutral-900/60 text-[#C08C45] ring-[#C08C45]/60",
                                       ].join(" ")}
                                     >
                                       {d} days
@@ -12856,7 +12845,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                         return next;
                                       });
                                     }}
-                                    className="flex-1 rounded-md bg-amber-400 text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-amber-300 transition"
+                                    className="flex-1 rounded-md bg-[#C08C45] text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] transition"
                                   >
                                     Start Subscription
                                   </button>
@@ -12869,7 +12858,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                                         return next;
                                       })
                                     }
-                                    className="px-3 rounded-md ring-1 ring-amber-400/60 text-amber-300 text-[12px]"
+                                    className="px-3 rounded-md ring-1 ring-[#C08C45]/60 text-[#C08C45] text-[12px]"
                                   >
                                     Cancel
                                   </button>
@@ -12902,8 +12891,8 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
             className={[
               "block w-full rounded-xl font-extrabold py-2.5 text-center text-[15px]",
               checkingOut
-                ? "bg-amber-300/70 text-neutral-800 cursor-not-allowed"
-                : "bg-amber-400 text-neutral-900",
+                ? "bg-[#C08C45]/70 text-neutral-800 cursor-not-allowed"
+                : "bg-[#C08C45] text-neutral-900",
             ].join(" ")}
             aria-busy={checkingOut}
           >
@@ -12923,18 +12912,18 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
         {/* SUBSCRIBE GATE BANNER (blocks checkout when not signed in) */}
         {showSubGate && (
           <div className="absolute inset-x-0 bottom-0 z-[1000003] p-3">
-            <div className="rounded-xl ring-1 ring-amber-400 bg-neutral-900 text-amber-300 px-3 py-3 text-sm text-center shadow-2xl">
+            <div className="rounded-xl ring-1 ring-[#C08C45] bg-neutral-900 text-[#C08C45] px-3 py-3 text-sm text-center shadow-2xl">
               Join or sign in to manage your Fleet subscription before checkout.
               <div className="mt-2 flex gap-2 justify-center">
                 <a
                   href="/account/login"
-                  className="px-3 py-1.5 rounded-md bg-amber-400 text-neutral-900 font-bold"
+                  className="px-3 py-1.5 rounded-md bg-[#C08C45] text-neutral-900 font-bold"
                 >
                   Sign in / Join
                 </a>
                 <button
                   onClick={() => setShowSubGate(false)}
-                  className="px-3 py-1.5 rounded-md ring-1 ring-amber-400/60 text-amber-300"
+                  className="px-3 py-1.5 rounded-md ring-1 ring-[#C08C45]/60 text-[#C08C45]"
                 >
                   Close
                 </button>
@@ -12961,7 +12950,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                 </div>
                 <button
                   onClick={() => setShowRoastInfo(false)}
-                  className="text-amber-300 text-lg font-bold px-1"
+                  className="text-[#C08C45] text-lg font-bold px-1"
                   aria-label="Close"
                 >
                   ✕
@@ -12971,18 +12960,18 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                 <p>
                   We roast to order. All orders are roasted on Monday/Tuesday.
                   Please be sure to place your order before{" "}
-                  <span className="text-amber-300 font-semibold">
+                  <span className="text-[#C08C45] font-semibold">
                     Sunday 5:00 PM ET
                   </span>{" "}
                   to get on the roast schedule. All orders made after the cut
                   off time will be roasted the following week.
                 </p>
                 <p>
-                  <span className="text-amber-300 font-semibold">
+                  <span className="text-[#C08C45] font-semibold">
                     Roast Day:
                   </span>{" "}
                   Monday <br />
-                  <span className="text-amber-300 font-semibold">
+                  <span className="text-[#C08C45] font-semibold">
                     Ship:
                   </span>{" "}
                   Wednesday.
@@ -12996,9 +12985,9 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                   If you missed the order cut off time, please contact us and we
                   will see what we can do to still get your order roasted.
                 </p>
-                <p className="text-amber-300">
+                <p className="text-[#C08C45]">
                   Questions?{" "}
-                  <a href="/contact" className="underline text-amber-300">
+                  <a href="/contact" className="underline text-[#C08C45]">
                     Contact the crew
                   </a>
                   .

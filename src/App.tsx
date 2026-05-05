@@ -2434,7 +2434,7 @@ function HomePage() {
 
               {/* SUBTEXT */}
               <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-[#E6DCC8]/75">
-                Roasted to order. Finished for consistency, not volume.
+                Roasted to order. Small batch. Ethically sourced.
               </div>
 
               <div className="w-full max-w-none mt-8 md:mt-12 xl:mt-14">
@@ -2553,7 +2553,7 @@ function HomePage() {
                   )}
 
                   <div className="flex items-center justify-center gap-2 text-neutral-300 text-[0.95rem] sm:text-[1.1rem] text-center">
-                    <span>SMALL BATCH. VETERAN OWNED</span>
+                    <span>VETERAN OWNED. VETERAN ROASTED</span>
                     <img
                       src="/stars-stripes.png"
                       alt="American flag"
@@ -11330,7 +11330,7 @@ function Layout() {
       <Outlet />
 
       {/* footer */}
-      <footer className="border-t border-[#6D5333]/60 bg-neutral-950">
+      <footer className="border-t border-[#6D5333]/60 bg-black">
         <Container className="py-8 text-sm">
           <div className="grid lg:grid-cols-4 gap-8">
             {/* Brand + Vet-owned + Flag */}

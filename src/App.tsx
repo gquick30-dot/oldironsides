@@ -2373,7 +2373,7 @@ function HomePage() {
           <div className="absolute inset-0 bg-black/10 md:bg-black/20" />
         </div>
 
-        <Container className="relative desktopHeroPad min-h-[100svh] flex items-start pt-[120px] md:items-center md:pt-0 pb-8 sm:pb-10 px-10 xl:px-6">
+        <Container className="relative desktopHeroPad min-h-[100svh] flex items-start pt-[120px] md:items-center md:pt-0 pb-0 sm:pb-4 md:pb-10 px-10 xl:px-6">
           <style>{`
 @media (min-width: 768px) {
   #top .desktopHeroPad {
@@ -2598,7 +2598,7 @@ function HomePage() {
       </section>
 
       {/* MOBILE FLEET IMAGE */}
-      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-black pt-4 pb-6 overflow-hidden">
+      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-black pt-2 pb-3 overflow-hidden">
         <img
           src="/bags-roast.jpg"
           alt="Old Ironsides Fleet"
@@ -2607,7 +2607,7 @@ function HomePage() {
       </div>
 
       {/* FLEET SECTION */}
-      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-black py-16 md:py-24">
+      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-black py-4 md:py-24">
         {/* BACKGROUND IMAGE */}
         <img
           src="/dark-theme.png"
@@ -2624,60 +2624,238 @@ function HomePage() {
           <LaunchedFromHarbor noBg />
         </div>
       </section>
-      {/* ===== SAMPLE PACK SECTION ===== */}
-      <section className="relative overflow-hidden bg-black py-14 md:py-20 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40">
+
+      {/* ===== TASTING EVENTS SECTION ===== */}
+      <section className="relative overflow-hidden bg-black py-12 md:py-16 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_35%,rgba(192,140,69,0.14),transparent_28%),radial-gradient(circle_at_82%_58%,rgba(109,83,51,0.14),transparent_34%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-[#050302] to-black pointer-events-none" />
+
         <Container>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-            {/* MOBILE TITLE */}
-            <div className="md:hidden text-center order-1">
-              <h2 className="font-playfair text-2xl font-bold italic text-[#C08C45] tracking-wide uppercase">
-                UNDECIDED WHAT ROAST TO TRY?
-              </h2>
+          <div className="relative z-10 max-w-[1480px] mx-auto px-6 md:px-10">
+            <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-10 lg:gap-16 xl:gap-24 items-center">
+              {/* LEFT VIDEO FEATURE - DESKTOP ONLY */}
+              <div className="hidden lg:block order-2 lg:order-1">
+                <div className="relative max-w-[520px] mx-auto lg:mx-0">
+                  <div className="absolute -inset-5 bg-[#C08C45]/10 blur-3xl pointer-events-none" />
+
+                  <div className="relative aspect-[9/14] md:aspect-[4/5] overflow-hidden rounded-2xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/80">
+                    <video
+                      src="/web-movie.mp4"
+                      className="absolute inset-0 w-full h-full object-cover bg-black"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      controls
+                    />
+
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent p-5 pointer-events-none">
+                      <p className="font-oswald text-2xl md:text-3xl font-black uppercase tracking-[0.08em] text-ironsideWhite/90">
+                        Easter Tasting
+                      </p>
+                      <p className="mt-1 text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#C08C45]">
+                        Fresh Cups • Real People • Great Feedback
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT STORY */}
+              <div className="order-1 lg:order-2 text-center lg:text-left">
+                <div className="inline-flex items-center gap-3 border border-[#6D5333]/60 bg-[#130E08]/70 px-4 py-2">
+                  <span className="h-2 w-2 rounded-full bg-[#C08C45]" />
+                  <p className="text-[0.68rem] font-bold uppercase tracking-[0.26em] text-[#B5976D]">
+                    Easter Weekend Tasting Event
+                  </p>
+                </div>
+
+                <h2 className="mt-6 font-oswald text-5xl md:text-7xl xl:text-8xl font-black uppercase leading-[0.86] tracking-tight text-ironsideWhite/90">
+                  Great Coffee.
+                  <br />
+                  <span className="text-[#C08C45]">Great People.</span>
+                </h2>
+
+                <p className="mt-6 max-w-[680px] mx-auto lg:mx-0 font-playfair italic text-[#B5976D] text-lg md:text-2xl leading-relaxed">
+                  Friends, fans, and new faces gathered around fresh-roasted
+                  coffee.
+                </p>
+
+                {/* MOBILE VIDEO ONLY */}
+                <div className="mt-7 lg:hidden relative max-w-[520px] mx-auto">
+                  <div className="absolute -inset-5 bg-[#C08C45]/10 blur-3xl pointer-events-none" />
+
+                  <div className="relative aspect-[9/14] overflow-hidden rounded-2xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/80">
+                    <video
+                      src="/web-movie.mp4"
+                      className="absolute inset-0 w-full h-full object-cover bg-black"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      controls
+                    />
+
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent p-5 pointer-events-none">
+                      <p className="font-oswald text-2xl font-black uppercase tracking-[0.08em] text-ironsideWhite/90">
+                        Easter Weekend
+                      </p>
+                      <p className="mt-1 text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#C08C45]">
+                        Fresh Cups • Real People • Great Feedback
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="mt-5 max-w-[700px] mx-auto lg:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
+                  The turnout was incredible. People tasted the lineup, talked
+                  coffee, shared stories, brought good energy, and made the
+                  whole thing feel like exactly what Old Ironsides Coffee was
+                  created for.
+                </p>
+
+                <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                  <Link
+                    to="/roast/armada-sample-pack"
+                    className="inline-flex h-[52px] items-center justify-center px-8 rounded-none bg-[#C08C45] text-black font-oswald font-black uppercase text-[0.92rem] tracking-[0.18em] border border-[#C08C45] transition-all duration-200 hover:-translate-y-[1px] hover:bg-[#E6C07F] hover:border-[#E6C07F]"
+                  >
+                    Try A Sample
+                  </Link>
+
+                  <p className="text-center sm:text-left text-[0.78rem] uppercase tracking-[0.18em] text-[#B5976D] font-bold">
+                    Start small. Find your roast.
+                  </p>
+                </div>
+              </div>
             </div>
+          </div>
+        </Container>
+      </section>
+      {/* ===== SAMPLE PACK SECTION ===== */}
+      <section className="relative overflow-hidden bg-[#050302] py-16 md:py-24 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40">
+        <div className="absolute inset-0 opacity-[0.08] bg-[repeating-linear-gradient(135deg,rgba(192,140,69,0.45)_0px,rgba(192,140,69,0.45)_1px,transparent_1px,transparent_12px)] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/40 pointer-events-none" />
 
+        <Container>
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-10 md:gap-16 items-center">
             {/* TEXT */}
-            <div className="order-3 md:order-1 text-center md:text-left">
-              {/* DESKTOP TITLE */}
-              <h2 className="hidden md:block font-playfair text-4xl font-bold italic text-[#C08C45] tracking-wide uppercase">
-                UNDECIDED WHAT ROAST TO TRY?
-              </h2>
-
-              <p className="mt-4 font-playfair text-ironsideWhite/85 text-[1.1rem] md:text-[1.45rem] leading-relaxed">
-                Try a sample pack for only $5 each, or experience the full fleet
-                with the{" "}
-                <span className="font-semibold text-[#E6C07F]">
-                  Armada Discovery Box
-                </span>
-                , which gives you one free roast plus free shipping if you
-                choose the Discovery Box.
+            <div className="order-1 md:order-1 text-center md:text-left">
+              <p className="mb-4 text-[0.7rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
+                Armada Discovery
               </p>
 
-              <Link
-                to="/roast/armada-sample-pack"
-                className="mt-6 inline-flex h-[54px] items-center justify-center
-          px-8 rounded-none bg-black text-[#E6C07F] font-extrabold
-          text-[1rem] md:text-[1.15rem] tracking-[0.14em]
-          border border-[#C08C45]
-          shadow-[inset_0_0_12px_rgba(255,255,255,0.08),0_0_18px_rgba(192,140,69,0.18)]
-          transition-all duration-200
-          hover:-translate-y-[1px]
-          hover:bg-[#C08C45]
-          hover:text-black
-          hover:border-[#C08C45]
-          hover:shadow-[0_0_22px_rgba(192,140,69,0.22)]"
-              >
-                SHOP SAMPLES
-              </Link>
+              <h2 className="max-w-[520px] mx-auto md:mx-0 font-oswald text-5xl md:text-6xl xl:text-7xl font-black uppercase leading-[0.88] tracking-tight text-[#E6DCC8]">
+                Sample The
+                <br />
+                Fleet Before
+                <br />
+                <span className="text-[#C08C45]">You Set Sail</span>
+              </h2>
+
+              <p className="mt-6 max-w-[560px] mx-auto md:mx-0 font-playfair italic text-[#B5976D] text-base md:text-xl leading-relaxed">
+                Find your roast before committing to a full bag.
+              </p>
+
+              {/* MOBILE IMAGE */}
+              <div className="mt-7 md:hidden flex justify-center">
+                <div className="relative w-full max-w-[620px]">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[#6D5333]/50 bg-black shadow-2xl shadow-black/70">
+                    <img
+                      src="/sample-pack.jpg"
+                      alt="Old Ironsides Coffee sample packs"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
+                  </div>
+
+                  <Link
+                    to="/roast/armada-sample-pack"
+                    className="mx-auto -mt-7 relative z-10 block w-fit border border-[#6D5333]/60 bg-[#C08C45] px-8 py-4 text-center shadow-xl shadow-black/50 transition-all duration-200 hover:-translate-y-[1px] hover:bg-[#E6C07F] hover:border-[#E6C07F]"
+                  >
+                    <p className="font-oswald text-lg font-black uppercase tracking-[0.22em] text-black">
+                      Armada Discovery Box
+                    </p>
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-black/75">
+                      Full Fleet • One Roast Free • Free Shipping
+                    </p>
+                  </Link>
+                </div>
+              </div>
+
+              <p className="mt-4 max-w-[590px] mx-auto md:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
+                Choose individual samples for $5 each, or launch with the{" "}
+                <span className="font-semibold text-[#E6C07F]">
+                  Armada Discovery Box
+                </span>{" "}
+                and get the full fleet with one roast free plus free shipping.
+              </p>
+
+              <div className="mt-6 flex flex-wrap justify-center md:justify-start gap-2">
+                {roastCards.map((card) => (
+                  <Link
+                    key={card.id}
+                    to={`/roast/${card.slug}`}
+                    className="
+                border border-[#6D5333]/70
+                bg-[#130E08]/80
+                px-3 py-2
+                text-[0.72rem] font-semibold uppercase tracking-[0.16em]
+                text-[#B5976D]
+                transition-all duration-200
+                hover:border-[#C08C45]
+                hover:text-[#E6C07F]
+                hover:bg-[#32220D]
+              "
+                  >
+                    {card.title}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+                <Link
+                  to="/roast/armada-sample-pack"
+                  className="inline-flex h-[56px] items-center justify-center px-9 bg-[#C08C45] text-black font-extrabold text-[0.95rem] md:text-[1.05rem] tracking-[0.18em] uppercase border border-[#C08C45] transition-all duration-200 hover:-translate-y-[1px] hover:bg-[#E6C07F] hover:border-[#E6C07F]"
+                >
+                  Discover The Armada
+                </Link>
+
+                <div className="text-center sm:text-left">
+                  <p className="text-[#E6C07F] text-[0.75rem] font-bold uppercase tracking-[0.18em]">
+                    Discovery Box Ships Free
+                  </p>
+                  <p className="mt-1 text-neutral-500 text-xs">
+                    Roasted fresh after order
+                  </p>
+                </div>
+              </div>
             </div>
 
-            {/* IMAGE */}
-            <div className="order-2 md:order-2 flex justify-center md:justify-end">
-              <div className="relative w-full max-w-[520px] aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#6D5333]/50 shadow-xl shadow-black/60 bg-black">
-                <img
-                  src="/sample-pack.jpg"
-                  alt="Old Ironsides Coffee sample packs"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
+            {/* DESKTOP IMAGE */}
+            <div className="hidden md:flex order-2 justify-center md:justify-end">
+              <div className="relative w-full max-w-[620px]">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[#6D5333]/50 bg-black shadow-2xl shadow-black/70">
+                  <img
+                    src="/sample-pack.jpg"
+                    alt="Old Ironsides Coffee sample packs"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
+                </div>
+
+                <Link
+                  to="/roast/armada-sample-pack"
+                  className="mx-auto -mt-7 relative z-10 block w-fit border border-[#6D5333]/60 bg-[#C08C45] px-8 py-4 text-center shadow-xl shadow-black/50 transition-all duration-200 hover:-translate-y-[1px] hover:bg-[#E6C07F] hover:border-[#E6C07F]"
+                >
+                  <p className="font-oswald text-lg font-black uppercase tracking-[0.22em] text-black">
+                    Armada Discovery Box
+                  </p>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-black/75">
+                    Full Fleet • One Roast Free • Free Shipping
+                  </p>
+                </Link>
               </div>
             </div>
           </div>
@@ -2686,147 +2864,361 @@ function HomePage() {
       {/* ===== ROASTING PROCESS ===== */}
       <section
         id="roasting-process"
-        className="relative overflow-hidden bg-black pt-8 pb-24 md:pt-12 md:pb-36"
+        className="relative overflow-hidden bg-[#050302] py-14 md:py-24 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40"
       >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_28%,rgba(192,140,69,0.14),transparent_30%),radial-gradient(circle_at_82%_70%,rgba(109,83,51,0.14),transparent_34%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none" />
+
         <Container>
-          {/* MOBILE */}
-          <div className="lg:hidden text-left space-y-5 px-2">
-            <h3 className="font-playfair text-2xl font-bold italic text-[#C08C45] tracking-wide uppercase">
-              Our Roasting Process
-            </h3>
-
-            <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#6D5333]/50 shadow-xl shadow-black/60 bg-black">
-              <img
-                src="/roaster.jpg"
-                alt="Coffee roasting process"
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            <p className="text-[#C08C45] text-[1.05rem] leading-relaxed tracking-[0.02em]">
-              Coffee is at its best in the first days after roasting, when the
-              oils are alive, the aroma is full, and the flavor is at its peak.
-            </p>
-
-            <p className="text-neutral-300 text-[1.05rem] leading-relaxed tracking-[0.02em]">
-              We roast to order every Monday and Thursday. We time the degassing
-              process with shipping so you receive your coffee at peak
-              freshness, hitting your cup at its prime exactly the way it was
-              meant to be experienced.
-            </p>
-          </div>
-
-          {/* DESKTOP */}
-          <div className="hidden lg:grid grid-cols-[auto,1fr] gap-10 xl:gap-14 items-center">
-            <div className="justify-self-start">
-              <div className="relative w-[30rem] aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#6D5333]/50 shadow-xl shadow-black/60 bg-black">
-                <img
-                  src="/roaster.jpg"
-                  alt="Coffee roasting process"
-                  className="w-full h-full object-cover"
-                />
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-9 lg:gap-16 xl:gap-20 items-center">
+            {/* TEXT */}
+            <div className="order-1 text-center lg:text-left">
+              <div className="mb-5 flex justify-center lg:justify-start">
+                <div className="border-l-2 border-[#C08C45] bg-black/45 px-4 py-2">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-[#9C9791]">
+                    From The Roaster
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div className="space-y-5 text-left max-w-[760px]">
-              <h3 className="font-playfair text-4xl font-bold italic text-[#C08C45] tracking-wide uppercase">
-                Our Roasting Process
+              <h3 className="font-playfair text-4xl md:text-6xl xl:text-7xl font-bold italic leading-[0.98] tracking-wide text-[#E6DCC8]">
+                Roasted to order.
+                <br />
+                <span className="text-[#C08C45]">Timed to land fresh.</span>
               </h3>
 
-              <p className="text-neutral-100/90 text-[1.45rem] leading-relaxed tracking-[0.02em]">
-                Coffee is at its best in the first days after roasting, when the
-                oils are alive, the aroma is full, and the flavor is at its
-                peak.
+              <p className="mt-5 max-w-[620px] mx-auto lg:mx-0 font-oswald uppercase tracking-[0.12em] text-[#B5976D] text-sm md:text-base leading-relaxed">
+                Fresh coffee has a window. We roast around that window, not a
+                warehouse calendar.
               </p>
 
-              <p className="text-[#C08C45] text-[1.45rem] leading-relaxed tracking-[0.02em]">
-                We roast to order every Monday and Thursday. We time the
-                degassing process with shipping so you receive your coffee at
-                peak freshness, hitting your cup at its prime exactly the way it
-                was meant to be experienced.
+              {/* MOBILE IMAGE */}
+              <div className="mt-8 lg:hidden">
+                <div className="relative overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
+                  <img
+                    src="/roaster.jpg"
+                    alt="Coffee roasting process"
+                    className="w-full h-[285px] object-cover object-center"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
+
+                  <div className="absolute left-4 bottom-4 right-4 grid grid-cols-2 gap-3">
+                    <div className="border border-[#6D5333]/70 bg-black/75 px-4 py-3 backdrop-blur-sm">
+                      <p className="font-oswald text-3xl font-black text-ironsideWhite leading-none">
+                        MON
+                      </p>
+                      <p className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#B5976D]">
+                        Roast Day
+                      </p>
+                    </div>
+
+                    <div className="border border-[#6D5333]/70 bg-black/75 px-4 py-3 backdrop-blur-sm">
+                      <p className="font-oswald text-3xl font-black text-ironsideWhite leading-none">
+                        THU
+                      </p>
+                      <p className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#B5976D]">
+                        Roast Day
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mx-auto -mt-5 relative z-10 w-fit border border-[#6D5333]/60 bg-[#130E08] px-6 py-2 shadow-xl shadow-black/50">
+                  <p className="font-oswald text-base font-black uppercase tracking-[0.2em] text-[#C08C45]">
+                    Roasted Fresh
+                  </p>
+                </div>
+              </div>
+
+              {/* PROCESS */}
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+                <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-5">
+                  <p className="text-[#C08C45] text-sm font-bold uppercase tracking-[0.18em]">
+                    01 Order
+                  </p>
+                  <p className="mt-3 text-neutral-300 text-sm md:text-base leading-relaxed">
+                    You place the order. Secures your beans.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-5">
+                  <p className="text-[#C08C45] text-sm font-bold uppercase tracking-[0.18em]">
+                    02 Roast
+                  </p>
+                  <p className="mt-3 text-neutral-300 text-sm md:text-base leading-relaxed">
+                    We roast every Monday and Thursday.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-5">
+                  <p className="text-[#C08C45] text-sm font-bold uppercase tracking-[0.18em]">
+                    03 Ship
+                  </p>
+                  <p className="mt-3 text-neutral-300 text-sm md:text-base leading-relaxed">
+                    Degassing and shipping are timed so it lands at your
+                    doorstep at peak freshiness.
+                  </p>
+                </div>
+              </div>
+
+              <p className="mt-6 max-w-[660px] mx-auto lg:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
+                We do not roast big batches and let them sit. Orders are roasted
+                fresh, given time to settle, then shipped so the flavor opens up
+                when it reaches your cup.
               </p>
+            </div>
+
+            {/* DESKTOP IMAGE */}
+            <div className="hidden lg:block order-2">
+              <div className="relative w-full max-w-[640px] mx-auto lg:mx-0">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
+                  <img
+                    src="/roaster.jpg"
+                    alt="Coffee roasting process"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/68 via-transparent to-black/10" />
+
+                  <div className="absolute left-6 bottom-6 grid grid-cols-2 gap-3">
+                    <div className="border border-[#6D5333]/70 bg-black/75 px-5 py-4 backdrop-blur-sm">
+                      <p className="font-oswald text-4xl font-black text-ironsideWhite leading-none">
+                        MONDAY
+                      </p>
+                      <p className="mt-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#B5976D]">
+                        Roast Day
+                      </p>
+                    </div>
+
+                    <div className="border border-[#6D5333]/70 bg-black/75 px-5 py-4 backdrop-blur-sm">
+                      <p className="font-oswald text-4xl font-black text-ironsideWhite leading-none">
+                        THURSDAY
+                      </p>
+                      <p className="mt-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#B5976D]">
+                        Roast Day
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mx-auto lg:mx-0 -mt-6 relative z-10 w-fit border border-[#6D5333]/60 bg-[#130E08] px-7 py-2 shadow-xl shadow-black/50">
+                  <p className="font-oswald text-lg font-black uppercase tracking-[0.2em] text-[#C08C45]">
+                    Roasted To Order
+                  </p>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#B5976D]">
+                    Timed For Peak Freshness
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </Container>
       </section>
 
-      {/* ===== THE LANDS WHERE OUR BEANS ARE GROWN ===== */}
+      {/* ===== SOURCED WITH RESPECT ===== */}
       <section
-        id="origins-lands"
-        className="relative overflow-hidden bg-black scroll-mt-28 md:scroll-mt-36 py-16 md:py-0"
+        id="origins-sourcing"
+        className="relative overflow-hidden bg-[#050302] scroll-mt-28 md:scroll-mt-36 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40"
       >
         {/* MOBILE */}
-        <div className="md:hidden">
-          <h3 className="px-4 pb-5 font-playfair text-2xl font-bold italic text-[#C08C45] tracking-wide uppercase text-left">
-            The Lands Where Our Beans Are Grown
-          </h3>
+        <div className="md:hidden py-14">
+          <div className="px-4">
+            <p className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-[#B5976D]">
+              Where It Begins
+            </p>
 
-          <div className="relative w-screen max-w-none left-1/2 -translate-x-1/2">
-            <img
-              src="/farm1-web.jpeg"
-              alt="Origins & Voyages backdrop"
-              className="w-full h-auto block"
-            />
+            <h3 className="font-oswald text-5xl font-black uppercase leading-[0.9] tracking-tight text-ironsideWhite/90">
+              The Story Behind
+              <br />
+              <p className="font-oswald text-5xl font-black uppercase leading-[0.9] tracking-tight text-[#B5976D]">
+                The Harvest.
+              </p>
+            </h3>
 
-            {/* OVERLAY */}
-            <div className="absolute inset-0 bg-black/45" />
+            <p className="mt-4 font-playfair italic text-[#B5976D] text-xl leading-relaxed">
+              Before the roast, before the bag, before the cup, there's an
+              origin story.
+            </p>
+
+            <p className="mt-5 text-neutral-300 text-[1.02rem] leading-relaxed">
+              We source coffee from regions known for quality, character, and
+              craft. Many farms are organic, while others follow the same
+              careful farming practices without formal certification. Every bean
+              is ethically sourced with respect for the people behind the
+              harvest.
+            </p>
           </div>
 
-          <div className="px-4 pt-6 text-left space-y-4">
-            <p className="text-[#C08C45] text-[1.1rem] leading-relaxed tracking-[0.01em]">
-              From the volcanic slopes of Guatemala to the highlands of Ethiopia
-              and the misty mountains of Colombia, our beans are born in lands
-              where rich soil and thin air create extraordinary flavor.
-            </p>
+          <div className="relative mt-8 px-4">
+            <div className="relative overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
+              <img
+                src="/hands-beans.jpeg"
+                alt="Hands holding coffee beans"
+                className="w-full h-[390px] object-cover object-center block"
+              />
 
-            <p className="text-neutral-300 text-[1.1rem] leading-relaxed tracking-[0.01em]">
-              These distant regions each lend their own character, shaped by
-              altitude, climate, and tradition. It is here that our journey
-              begins, where the spirit of the land becomes the soul of every cup
-              of Old Ironsides Coffee.
-            </p>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/10" />
+
+              <div className="absolute left-4 bottom-4 right-4 border border-[#6D5333]/70 bg-black/75 p-4 backdrop-blur-sm">
+                <p className="font-oswald text-3xl font-black uppercase leading-none text-ironsideWhite/90">
+                  The Crew
+                </p>
+                <p className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#B5976D]">
+                  Behind Every Roast
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="px-4 mt-7">
+            <div className="rounded-xl border border-[#6D5333]/50 bg-[#0A0603]/90 p-5">
+              <p className="text-[#C08C45] text-sm font-bold uppercase tracking-[0.18em]">
+                Our Standard
+              </p>
+              <p className="mt-3 text-neutral-300 text-[0.98rem] leading-relaxed">
+                No gimmicks. No factory-store nonsense. Just small-batch coffee
+                chosen with care, roasted fresh, and built around people who
+                give a damn.
+              </p>
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-2">
+              {[
+                "Ethiopia",
+                "Colombia",
+                "Indonesia",
+                "El Salvador",
+                "Brazil",
+                "Guatemala",
+              ].map((origin) => (
+                <div
+                  key={origin}
+                  className="border border-[#6D5333]/60 bg-black/50 px-3 py-2 text-center text-[0.7rem] font-bold uppercase tracking-[0.12em] text-[#C08C45]"
+                >
+                  {origin}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* DESKTOP */}
-        <div className="hidden md:block relative">
+        <div className="hidden md:block relative min-h-[820px]">
           <img
             src="/farm1-web.jpeg"
-            alt="Origins & Voyages backdrop"
+            alt="Coffee growing region"
             className="absolute inset-0 w-full h-full object-cover object-[50%_68%] opacity-80 z-0 pointer-events-none"
           />
 
           <div className="absolute inset-0 bg-black/55 z-0 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/82 to-black/35 z-0 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_42%,rgba(192,140,69,0.16),transparent_32%)] z-0 pointer-events-none" />
 
           <Container>
-            <div className="relative z-10 flex items-center min-h-[820px] py-24 xl:py-32">
-              <div className="grid w-full grid-cols-[1fr,auto] gap-10 xl:gap-14 items-center">
-                <div className="space-y-5 text-left">
-                  <h3 className="font-playfair text-4xl font-bold italic text-[#C08C45] tracking-wide uppercase">
-                    The Lands Where Our Beans Are Grown
-                  </h3>
+            <div className="relative z-10 min-h-[820px] py-24 xl:py-32 flex items-center">
+              <div className="w-full grid grid-cols-[0.9fr_1.1fr] gap-14 xl:gap-20 items-center">
+                {/* LEFT IMAGE CARD */}
+                <div className="relative">
+                  <div className="relative max-w-[620px] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
+                    <img
+                      src="/hands-beans.jpeg"
+                      alt="Hands holding coffee beans"
+                      className="w-full h-[560px] object-cover object-center"
+                    />
 
-                  <p className="text-neutral-300 text-2xl leading-relaxed tracking-[0.01em]">
-                    From the volcanic slopes of Guatemala to the highlands of
-                    Ethiopia and the misty mountains of Colombia, our beans are
-                    born in lands where rich soil and thin air create
-                    extraordinary flavor.
-                    <br />
-                    <br />
-                    These distant regions each lend their own character, shaped
-                    by altitude, climate, and tradition. It is here that our
-                    journey begins, where the spirit of the land becomes the
-                    soul of every cup of Old Ironsides Coffee.
-                  </p>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/78 via-black/10 to-black/10" />
+
+                    <div className="absolute left-5 bottom-5 right-5 border border-[#6D5333]/70 bg-black/75 p-5 backdrop-blur-sm">
+                      <p className="font-oswald text-4xl font-black uppercase leading-none text-ironsideWhite/90">
+                        The Crew
+                      </p>
+                      <p className="mt-2 text-[0.7rem] font-bold uppercase tracking-[0.24em] text-[#B5976D]">
+                        Behind Every Roast
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="justify-self-center self-center">
-                  <div className="w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-[#6D5333]/50 bg-black">
-                    <img
-                      src="/bean-stock3.jpeg"
-                      alt="Beans lands"
-                      className="w-full h-full object-cover"
-                    />
+                {/* RIGHT TEXT */}
+                <div className="text-left max-w-[760px]">
+                  <p className="mb-4 text-[0.72rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
+                    Sourced With Respect
+                  </p>
+
+                  <h3 className="font-oswald text-6xl xl:text-7xl font-black uppercase leading-[0.88] tracking-tight text-ironsideWhite/90">
+                    The Story Behind
+                    <br />
+                    <span className="text-[#C08C45]">The Harvest.</span>
+                  </h3>
+
+                  <p className="mt-6 max-w-[680px] font-playfair italic text-2xl text-[#B5976D] leading-relaxed">
+                    Before the roast, before the bag, before the cup, there is
+                    the land and the people who work it.
+                  </p>
+
+                  <p className="mt-6 max-w-[700px] text-neutral-300 text-lg xl:text-xl leading-relaxed">
+                    We source coffee from regions known for quality, character,
+                    and craft. Many farms are organic, while others follow the
+                    same careful farming practices without formal certification.
+                    Every bean is ethically sourced with respect for the growers
+                    behind the harvest.
+                  </p>
+
+                  <div className="mt-8 grid grid-cols-3 gap-4 max-w-[720px]">
+                    <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-5 backdrop-blur-sm">
+                      <p className="text-[#C08C45] text-sm font-bold uppercase tracking-[0.16em]">
+                        Small Batch
+                      </p>
+                      <p className="mt-3 text-neutral-300 text-sm leading-relaxed">
+                        Coffee chosen for flavor and character, not warehouse
+                        volume.
+                      </p>
+                    </div>
+
+                    <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-5 backdrop-blur-sm">
+                      <p className="text-[#C08C45] text-sm font-bold uppercase tracking-[0.16em]">
+                        Fair Sourcing
+                      </p>
+                      <p className="mt-3 text-neutral-300 text-sm leading-relaxed">
+                        Responsible sourcing built around quality, care, and
+                        respect.
+                      </p>
+                    </div>
+
+                    <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-5 backdrop-blur-sm">
+                      <p className="text-[#C08C45] text-sm font-bold uppercase tracking-[0.16em]">
+                        Real Origins
+                      </p>
+                      <p className="mt-3 text-neutral-300 text-sm leading-relaxed">
+                        Altitude, climate, soil, and tradition shape every
+                        roast.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 border-l-2 border-[#C08C45] bg-[#130E08]/70 px-6 py-5 shadow-xl shadow-black/40 max-w-[720px]">
+                    <p className="text-[#E6C07F] text-[0.78rem] font-bold uppercase tracking-[0.2em]">
+                      Current Origins
+                    </p>
+
+                    <div className="mt-4 grid grid-cols-3 gap-2">
+                      {[
+                        "Ethiopia",
+                        "Colombia",
+                        "Indonesia",
+                        "El Salvador",
+                        "Brazil",
+                        "Guatemala",
+                      ].map((origin) => (
+                        <div
+                          key={origin}
+                          className="border border-[#6D5333]/60 bg-black/45 px-3 py-2 text-center text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#C08C45]"
+                        >
+                          {origin}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2834,135 +3226,670 @@ function HomePage() {
           </Container>
         </div>
       </section>
-
-      {/* ===== THE HANDS THAT GROW OUR BEANS ===== */}
+      {/* ===== FROM THE SAND TO THE SEA ===== */}
       <section
-        id="origins-hands"
-        className="relative overflow-hidden bg-black scroll-mt-28 md:scroll-mt-36 py-16 md:py-24"
+        id="origins-service"
+        className="relative overflow-hidden bg-[#050302] scroll-mt-28 md:scroll-mt-36 py-16 md:py-24 border-b border-[#6D5333]/40"
       >
+        <img
+          src="/iraq-moon.JPG"
+          alt="Service backdrop"
+          className="absolute inset-0 hidden md:block w-full h-full object-cover object-center opacity-45 z-0 pointer-events-none"
+        />
+
+        <div className="absolute inset-0 bg-black/65 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/58 to-black/15 z-0 pointer-events-none" />
+
         <Container>
-          {/* MOBILE */}
-          <div className="md:hidden text-left">
-            <h3 className="pb-5 font-playfair text-2xl font-bold italic text-[#C08C45] tracking-wide uppercase">
-              The Hands That Grow Our Beans
-            </h3>
-
-            <img
-              src="/hands-beans.jpeg"
-              alt="The hands that grow our beans"
-              className="w-screen max-w-none relative left-1/2 -translate-x-1/2 h-auto block"
-            />
-
-            <div className="pt-6 space-y-4">
-              <p className="text-[#C08C45] text-[1.1rem] leading-relaxed tracking-[0.01em]">
-                Behind every harvest are the families who make it possible.
-                Generations of farmers rise before dawn, nurturing each tree by
-                hand and protecting the land that sustains them. Their
-                knowledge, patience, and respect for nature give our coffee its
-                strength and character.
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-10 lg:gap-16 xl:gap-20 items-center">
+            {/* TEXT */}
+            <div className="order-1 lg:order-1 text-center lg:text-left">
+              <p className="mb-4 text-[0.7rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
+                Founder Story
               </p>
 
-              <p className="text-neutral-300 text-[1.1rem] leading-relaxed tracking-[0.01em]">
-                These small family farms are the heart of what we do. Every bean
-                is ethically sourced, every grower treated with fairness and
-                dignity. Their craftsmanship and pride live on in every roast,
-                carrying forward the spirit of Old Ironsides Coffee.
-              </p>
-            </div>
-          </div>
+              <h3 className="font-oswald text-5xl md:text-6xl xl:text-7xl font-black uppercase leading-[0.88] tracking-tight text-ironsideWhite/85">
+                From The
+                <br />
+                Sand To
+                <br />
+                <span className="text-[#C08C45]">The Sea</span>
+              </h3>
 
-          {/* DESKTOP */}
-          <div className="hidden md:grid grid-cols-[auto,1fr] gap-10 xl:gap-14 items-center">
-            <div className="justify-self-center self-center">
-              <div className="w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-[#6D5333]/50 bg-black">
-                <img
-                  src="/hands-beans.jpeg"
-                  alt="Hands with beans"
-                  className="w-full h-full object-cover"
-                />
+              <p className="mt-6 max-w-[650px] mx-auto lg:mx-0 font-playfair italic text-[#B5976D] text-lg md:text-xl leading-relaxed">
+                Old Ironsides was born from a different kind of service.
+              </p>
+
+              {/* MOBILE PHOTO COLLAGE */}
+              <div className="mt-8 lg:hidden">
+                <div className="relative mx-auto w-full max-w-[620px]">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="col-span-2 overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
+                      <img
+                        src="/humvee-turret.jpg"
+                        alt="Service photo"
+                        className="w-full h-[230px] object-cover object-center"
+                      />
+                    </div>
+
+                    <div className="overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-xl shadow-black/60">
+                      <img
+                        src="/iraq-kids.JPG"
+                        alt="Service with local children"
+                        className="w-full h-[175px] object-cover object-center"
+                      />
+                    </div>
+
+                    <div className="overflow-hidden rounded-xl border border-[#C08C45]/70 bg-black shadow-xl shadow-black/70">
+                      <img
+                        src="/iraq-self1.JPG"
+                        alt="Service portrait"
+                        className="w-full h-[175px] object-cover object-center"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mx-auto -mt-6 relative z-10 w-fit border border-[#6D5333]/70 bg-black/85 px-6 py-4 backdrop-blur-sm shadow-xl shadow-black/60">
+                    <p className="font-oswald text-3xl font-black uppercase leading-none text-ironsideWhite/90">
+                      Service
+                    </p>
+                    <p className="mt-2 text-[0.7rem] font-bold uppercase tracking-[0.22em] text-[#B5976D]">
+                      Built The Standard
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-5 max-w-[720px] mx-auto lg:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
+                My boots were in the sand, not on the deck. But the spirit of
+                the USS Constitution always hit home: grit, discipline, loyalty,
+                and the refusal to quit when the pressure is on.
+              </p>
+
+              <p className="mt-4 max-w-[720px] mx-auto lg:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
+                Old Ironsides Coffee was built from that same code. Not as a
+                gimmick. Not as decoration. As a standard for how this company
+                shows up, how the coffee is made, and how the people behind it
+                are represented.
+              </p>
+
+              <div className="mt-8 border-l-2 border-[#C08C45] bg-[#130E08]/65 px-6 py-5 text-left shadow-xl shadow-black/40">
+                <p className="text-[#E6C07F] text-[0.78rem] font-bold uppercase tracking-[0.2em]">
+                  The Standard
+                </p>
+                <p className="mt-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                  Serve with purpose. Build with discipline. Deliver something
+                  worth standing behind.
+                </p>
               </div>
             </div>
 
-            <div className="space-y-5 text-left">
-              <h3 className="font-playfair text-4xl font-bold italic text-[#C08C45] tracking-wide uppercase">
-                The Hands That Grow Our Beans
+            {/* DESKTOP PHOTO COLLAGE */}
+            <div className="hidden lg:block order-2">
+              <div className="relative mx-auto lg:mx-0 w-full max-w-[620px] h-[640px]">
+                <div className="absolute left-0 top-0 w-[72%] aspect-[4/3] rounded-xl overflow-hidden border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
+                  <img
+                    src="/humvee-turret.jpg"
+                    alt="Service photo"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                <div className="absolute right-0 top-[34%] w-[58%] aspect-[4/3] rounded-xl overflow-hidden border border-[#C08C45]/70 bg-black shadow-2xl shadow-black/80">
+                  <img
+                    src="/iraq-self1.JPG"
+                    alt="Service portrait"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                <div className="absolute left-0 bottom-0 w-[58%] aspect-[4/3] rounded-xl overflow-hidden border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
+                  <img
+                    src="/iraq-kids.JPG"
+                    alt="Service with local children"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                <div className="absolute right-10 bottom-8 border border-[#6D5333]/70 bg-black/80 px-6 py-4 backdrop-blur-sm shadow-xl shadow-black/60">
+                  <p className="font-oswald text-3xl font-black uppercase leading-none text-ironsideWhite/90">
+                    Service
+                  </p>
+                  <p className="mt-2 text-[0.7rem] font-bold uppercase tracking-[0.22em] text-[#B5976D]">
+                    Built The Standard
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+      {/* ===== ABOUT OLD IRONSIDES COFFEE ===== */}
+      <section
+        id="origins-about"
+        className="relative overflow-hidden bg-black scroll-mt-28 md:scroll-mt-36 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40"
+      >
+        <img
+          src="/oldironsides-1.jpg"
+          alt="USS Constitution inspired Old Ironsides Coffee"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-[0.88] opacity-58 z-0 pointer-events-none"
+        />
+
+        <div className="absolute inset-0 bg-black/65 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/58 to-black/15 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/90 z-0 pointer-events-none" />
+
+        <Container>
+          <div className="relative z-10 min-h-[620px] md:min-h-[720px] py-16 md:py-24 flex items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 xl:gap-20 items-center w-full">
+              {/* LEFT TEXT */}
+              <div className="text-center lg:text-left max-w-[760px] mx-auto lg:mx-0">
+                <p className="mb-4 text-[0.68rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
+                  Brand Legacy
+                </p>
+
+                <h3 className="font-oswald text-5xl md:text-7xl xl:text-8xl font-black uppercase leading-[0.86] tracking-tight text-ironsideWhite/90">
+                  In Honor Of
+                  <br />
+                  <span className="text-[#C08C45]">Old Ironsides.</span>
+                </h3>
+
+                <p className="mt-5 max-w-[760px] mx-auto lg:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
+                  Old Ironsides Coffee Company is a veteran-owned small-batch
+                  coffee brand inspired by the USS Constitution, the oldest
+                  commissioned warship afloat in the United States Navy. Built
+                  in Boston and launched in 1797, the ship became a lasting
+                  symbol of American resilience, craftsmanship, and grit.
+                  <br />
+                  <br />
+                  During the War of 1812, sailors watched cannonballs strike the
+                  ship’s thick live-oak hull and appear to bounce away, earning
+                  her the nickname “Old Ironsides.” That reputation for strength
+                  and endurance became part of American history.
+                  <br />
+                  <br />
+                  We built this company around that same spirit. Fresh-roasted
+                  coffee made with pride, discipline, and respect for the craft.
+                  Small batches. Carefully sourced beans. Roasted to order and
+                  shipped at peak freshness.
+                  <br />
+                  <br />
+                  Old Ironsides Coffee exists for people who appreciate
+                  heritage, quality, and products built with purpose.
+                </p>
+
+                <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                  <a
+                    href="#origins-history"
+                    className="inline-flex items-center justify-center rounded-md border border-[#C08C45] bg-[#C08C45] px-6 py-3 font-oswald text-sm font-black uppercase tracking-[0.18em] text-black transition hover:bg-[#E6C07F]"
+                  >
+                    Explore The History
+                  </a>
+
+                  <Link
+                    to="/stories/flagship"
+                    onClick={() => {
+                      try {
+                        sessionStorage.setItem("storiesReturnTo", STORIES_HOME);
+                      } catch {}
+                    }}
+                    className="inline-flex items-center justify-center rounded-md border border-[#6D5333] bg-black/65 px-6 py-3 font-oswald text-sm font-black uppercase tracking-[0.18em] text-[#C08C45] transition hover:border-[#C08C45] hover:text-[#E6C07F]"
+                  >
+                    Start With The Ship
+                  </Link>
+                </div>
+              </div>
+
+              {/* RIGHT LEGACY CARD */}
+              <div className="max-w-[520px] mx-auto lg:mx-0 lg:justify-self-end w-full">
+                <div className="border border-[#6D5333]/60 bg-black/70 backdrop-blur-sm p-6 md:p-7 shadow-2xl shadow-black/60">
+                  <p className="text-[#E6C07F] text-[0.74rem] font-bold uppercase tracking-[0.22em]">
+                    The Standard
+                  </p>
+
+                  <p className="mt-4 text-neutral-300 text-base md:text-lg leading-relaxed">
+                    The USS Constitution was built to endure. That is the
+                    standard behind the name: durability, discipline, and pride
+                    in the work.
+                  </p>
+
+                  <div className="mt-6 grid grid-cols-3 gap-3">
+                    <div className="border border-[#6D5333]/60 bg-[#130E08]/80 px-3 py-4 text-center">
+                      <p className="font-oswald text-3xl font-black text-ironsideWhite/90 leading-none">
+                        1797
+                      </p>
+                      <p className="mt-2 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#B5976D]">
+                        Commissioned
+                      </p>
+                    </div>
+
+                    <div className="border border-[#6D5333]/60 bg-[#130E08]/80 px-3 py-4 text-center">
+                      <p className="font-oswald text-3xl font-black text-ironsideWhite/90 leading-none">
+                        1812
+                      </p>
+                      <p className="mt-2 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#B5976D]">
+                        Her Name
+                      </p>
+                    </div>
+
+                    <div className="border border-[#6D5333]/60 bg-[#130E08]/80 px-3 py-4 text-center">
+                      <p className="font-oswald text-3xl font-black text-ironsideWhite/90 leading-none">
+                        2025
+                      </p>
+                      <p className="mt-2 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#B5976D]">
+                        Our Roast
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 grid grid-cols-2 gap-3">
+                    {[
+                      { label: "Flagship", slug: "flagship" },
+                      { label: "Baptism By Fire", slug: "baptism-by-fire" },
+                      { label: "Java Action", slug: "java-action" },
+                      { label: "Oak & Copper", slug: "oak-and-copper" },
+                    ].map((item) => (
+                      <Link
+                        key={item.slug}
+                        to={`/stories/${item.slug}`}
+                        onClick={() => {
+                          try {
+                            sessionStorage.setItem(
+                              "storiesReturnTo",
+                              STORIES_HOME
+                            );
+                          } catch {}
+                        }}
+                        className="border border-[#6D5333]/60 bg-black/60 px-3 py-3 text-center text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[#C08C45] transition hover:border-[#C08C45] hover:text-[#E6C07F]"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+      {/* ===== GIVING BACK ===== */}
+      <section
+        id="origins-giving-back"
+        className="relative overflow-hidden bg-[#050302] scroll-mt-28 md:scroll-mt-36 py-14 md:py-20 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40"
+      >
+        <img
+          src="/flag-close.jpg"
+          alt=""
+          role="presentation"
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-18 z-0 pointer-events-none"
+        />
+
+        <div className="absolute inset-0 bg-black/76 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/45 z-0 pointer-events-none" />
+
+        <Container>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-9 lg:gap-16 xl:gap-20 items-center">
+            {/* DESKTOP IMAGE */}
+            <div className="hidden lg:block order-1">
+              <div className="relative w-full max-w-[560px] mx-auto lg:mx-0">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
+                  <img
+                    src="/soliders-sunset.jpg"
+                    alt="Soldiers at sunset"
+                    className="absolute inset-0 w-full h-full object-cover object-center saturate-75"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20" />
+
+                  <div className="absolute left-4 bottom-4 right-4 border border-[#6D5333]/70 bg-black/75 p-4 backdrop-blur-sm">
+                    <p className="font-oswald text-2xl md:text-3xl font-black uppercase leading-none text-ironsideWhite/90">
+                      Still Standing
+                    </p>
+                    <p className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#B5976D]">
+                      A Standing Discount For Those Who Serve
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* TEXT */}
+            <div className="order-1 lg:order-2 text-center lg:text-left">
+              <p className="mb-4 text-[0.68rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
+                Standing With The Sacrifice.
+              </p>
+
+              <h3 className="font-oswald text-5xl md:text-6xl xl:text-7xl font-black uppercase leading-[0.88] tracking-tight text-ironsideWhite/90">
+                Built By
+                <br />
+                A Veteran.
+                <br />
+                <span className="text-[#C08C45]">For Those Who Serve.</span>
               </h3>
 
-              <p className="text-neutral-300 text-2xl leading-relaxed tracking-[0.01em]">
-                Behind every harvest are the families who make it possible.
-                Generations of farmers rise before dawn, nurturing each tree by
-                hand and protecting the land that sustains them. Their
-                knowledge, patience, and respect for nature give our coffee its
-                strength and character.
-                <br />
-                <br />
-                These small family farms are the heart of what we do. Every bean
-                is ethically sourced, every grower treated with fairness and
-                dignity. Their craftsmanship and pride live on in every roast,
-                carrying forward the spirit of Old Ironsides Coffee.
+              <p className="mt-5 max-w-[650px] mx-auto lg:mx-0 font-playfair italic text-[#B5976D] text-lg md:text-xl leading-relaxed">
+                This is not a campaign. It is a standing policy.
               </p>
+
+              {/* MOBILE IMAGE */}
+              <div className="mt-8 lg:hidden">
+                <div className="relative w-full max-w-[560px] mx-auto">
+                  <div className="relative aspect-[16/11] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
+                    <img
+                      src="/soliders-sunset.jpg"
+                      alt="Soldiers at sunset"
+                      className="absolute inset-0 w-full h-full object-cover object-center saturate-75"
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20" />
+
+                    <div className="absolute left-4 bottom-4 right-4 border border-[#6D5333]/70 bg-black/75 p-4 backdrop-blur-sm">
+                      <p className="font-oswald text-2xl font-black uppercase leading-none text-ironsideWhite/90">
+                        Still Standing
+                      </p>
+                      <p className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#B5976D]">
+                        A Standing Discount For Those Who Serve
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-5 max-w-[700px] mx-auto lg:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
+                Old Ironsides Coffee was built by a veteran, so supporting
+                active duty, veterans, and first responders is part of the
+                company from the start.
+              </p>
+
+              <div className="mt-7 max-w-[700px] mx-auto lg:mx-0 border border-[#6D5333]/60 bg-black/55 p-5 md:p-6 shadow-xl shadow-black/40">
+                <p className="text-[#E6C07F] text-[0.78rem] font-bold uppercase tracking-[0.2em]">
+                  GovX Discount
+                </p>
+
+                <p className="mt-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                  Active duty, veterans, and first responders receive $1 off
+                  every bag, every day. The discount stacks with subscriptions.
+                </p>
+
+                <div className="mt-5 flex flex-col sm:flex-row gap-3 sm:items-center">
+                  <a
+                    href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
+                    className="inline-flex h-[48px] items-center justify-center px-6 bg-[#C08C45] text-black font-extrabold text-[0.85rem] tracking-[0.16em] uppercase border border-[#C08C45] transition-all duration-200 hover:-translate-y-[1px] hover:bg-[#E6C07F] hover:border-[#E6C07F]"
+                  >
+                    Get GovX Discount Code
+                  </a>
+
+                  <p className="text-[0.78rem] leading-relaxed text-[#B5976D]">
+                    Verified through GovX. Applied at checkout.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 grid grid-cols-3 gap-2 max-w-[700px] mx-auto lg:mx-0">
+                {["Active Duty", "Veterans", "First Responders"].map(
+                  (label) => (
+                    <div
+                      key={label}
+                      className="border border-[#6D5333]/50 bg-[#130E08]/55 px-3 py-3 text-center text-[0.68rem] md:text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#C08C45]"
+                    >
+                      {label}
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+      {/* ===== QUIET RITUAL SECTION ===== */}
+      <section
+        id="quiet-ritual"
+        className="relative overflow-hidden bg-[#050302] py-16 md:py-24 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_42%,rgba(192,140,69,0.12),transparent_30%),radial-gradient(circle_at_78%_66%,rgba(109,83,51,0.12),transparent_34%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none" />
+
+        <Container>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 xl:gap-20 items-center">
+            {/* LEFT VISUAL COLLAGE */}
+            <div className="order-2 lg:order-1">
+              <div className="relative max-w-[680px] mx-auto lg:mx-0 min-h-[420px] md:min-h-[520px]">
+                {/* MAIN IMAGE */}
+                <div className="absolute left-0 top-6 w-[78%] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
+                  <img
+                    src="/quiet-cup.jpg"
+                    alt="Fresh coffee in a quiet morning setting"
+                    className="w-full h-[360px] md:h-[460px] object-cover object-center opacity-90"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/10" />
+                </div>
+
+                {/* SMALL TOP IMAGE */}
+                <div className="absolute right-0 top-0 w-[42%] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-xl shadow-black/60">
+                  <img
+                    src="/quiet-beans.jpg"
+                    alt="Fresh roasted coffee beans"
+                    className="w-full h-[165px] md:h-[210px] object-cover object-center opacity-85"
+                  />
+                  <div className="absolute inset-0 bg-black/15" />
+                </div>
+
+                {/* SMALL BOTTOM IMAGE */}
+                <div className="absolute right-5 bottom-0 w-[48%] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-xl shadow-black/60">
+                  <img
+                    src="/quiet-table.jpg"
+                    alt="Coffee on a dark wooden table"
+                    className="w-full h-[190px] md:h-[240px] object-cover object-center opacity-90"
+                  />
+                  <div className="absolute inset-0 bg-black/20" />
+                </div>
+
+                {/* LABEL */}
+                <div className="absolute left-5 bottom-8 border border-[#6D5333]/70 bg-black/75 px-5 py-4 backdrop-blur-sm shadow-xl shadow-black/60">
+                  <p className="font-oswald text-2xl md:text-3xl font-black uppercase leading-none text-ironsideWhite/90">
+                    Small Batch
+                  </p>
+                  <p className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#B5976D]">
+                    Roasted For The Daily Ritual
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT TEXT */}
+            <div className="order-1 lg:order-2 text-center lg:text-left">
+              <p className="mb-4 text-[0.68rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
+                Before First Light
+              </p>
+
+              <h3 className="font-playfair text-4xl md:text-6xl xl:text-7xl font-bold italic leading-[0.98] tracking-wide text-[#C08C45]">
+                Some mornings deserve better coffee.
+              </h3>
+
+              <p className="mt-6 max-w-[620px] mx-auto lg:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
+                No loud pitch. No factory-store routine. Just fresh-roasted
+                coffee, made in small batches, built for the quiet moments
+                before the day starts swinging.
+              </p>
+
+              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                <a
+                  href="#fleet"
+                  className="inline-flex h-[48px] items-center justify-center rounded-md border border-[#C08C45] bg-[#C08C45] px-6 font-oswald text-sm font-black uppercase tracking-[0.18em] text-black transition hover:bg-[#E6C07F] hover:border-[#E6C07F]"
+                >
+                  Shop The Fleet
+                </a>
+
+                <a
+                  href="#roasting-process"
+                  className="inline-flex h-[48px] items-center justify-center rounded-md border border-[#6D5333] bg-black/55 px-6 font-oswald text-sm font-black uppercase tracking-[0.18em] text-[#C08C45] transition hover:border-[#C08C45] hover:text-[#E6C07F]"
+                >
+                  How We Roast
+                </a>
+              </div>
             </div>
           </div>
         </Container>
       </section>
       <section
         id="contact"
-        className="py-16 md:py-24 border-b border-[#6D5333]/40 bg-black"
+        className="relative overflow-hidden bg-[#050302] py-16 md:py-24 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40"
       >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_45%,rgba(192,140,69,0.13),transparent_32%),radial-gradient(circle_at_82%_70%,rgba(109,83,51,0.14),transparent_34%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-[#050302] to-black pointer-events-none" />
+
         <Container>
-          <div className="grid md:grid-cols-1 gap-6 md:gap-12 items-start">
-            <div className="max-w-[560px] md:mx-auto text-center">
-              <SectionTitle
-                title={
-                  <span className="text-[#C08C45]">Hail The Quarterdeck</span>
-                }
-                subtitle="Questions • Comments • Press – We’ll get back to you fast."
-              />
+          <div className="relative z-10 max-w-[1280px] mx-auto">
+            {/* MAIN CONTACT ROW */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1.08fr_0.92fr] gap-12 lg:gap-20 items-center">
+              {/* LEFT */}
+              <div className="text-center lg:text-left max-w-[740px] mx-auto lg:mx-0">
+                <p className="mb-4 text-[0.68rem] font-semibold uppercase tracking-[0.38em] text-[#B5976D]">
+                  The Quarterdeck
+                </p>
 
-              <div className="mt-8 flex flex-col gap-5 text-sm">
-                {/* CONTACT BOX */}
-                <div className="rounded-xl ring-1 ring-[#6D5333]/50 bg-black px-5 py-3 text-center">
-                  <div className="flex items-center justify-center gap-2 text-[#B39871]">
-                    <Mail className="h-4 w-4 text-[#C08C45]" />
-                    HQ@oldironsidescoffee.org
+                <h2 className="font-oswald text-5xl md:text-6xl xl:text-7xl font-black uppercase leading-[0.88] tracking-tight text-ironsideWhite/90">
+                  HAIL THE
+                  <br />
+                  <span className="text-[#C08C45]">QUARTERDECK!</span>
+                </h2>
+
+                <p className="mt-6 max-w-[650px] mx-auto lg:mx-0 font-playfair italic text-[#B5976D] text-lg md:text-2xl leading-relaxed">
+                  Questions, wholesale, partnerships, press, or just a good
+                  coffee conversation.
+                </p>
+
+                <p className="mt-6 max-w-[690px] mx-auto lg:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
+                  Old Ironsides Coffee is still run close to the deck. No
+                  outsourced support maze. No corporate black hole. When you
+                  reach out, you are talking directly to the company behind the
+                  roast.
+                </p>
+
+                <div className="mt-9 h-px w-36 bg-gradient-to-r from-[#C08C45] to-transparent mx-auto lg:mx-0 opacity-80" />
+
+                <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-[680px] mx-auto lg:mx-0">
+                  <div className="border border-[#6D5333]/50 bg-black/45 px-5 py-4">
+                    <p className="text-[#C08C45] text-[0.72rem] font-bold uppercase tracking-[0.22em]">
+                      Rooted in pride.
+                    </p>
+                    <p className="mt-2 text-neutral-300 text-sm leading-relaxed">
+                      Inspired by the USS Constitution and America’s naval
+                      heritage.
+                    </p>
                   </div>
 
-                  <div className="mt-1 text-[#9C9791] text-xs">
-                    6 Liberty Square #2564, Boston, MA 02109
+                  <div className="border border-[#6D5333]/50 bg-black/45 px-5 py-4">
+                    <p className="text-[#C08C45] text-[0.72rem] font-bold uppercase tracking-[0.22em]">
+                      Nationwide Shipping
+                    </p>
+                    <p className="mt-2 text-neutral-300 text-sm leading-relaxed">
+                      Fresh-roasted coffee shipped across the United States.
+                    </p>
                   </div>
                 </div>
+              </div>
 
-                {/* SOCIAL */}
-                <div className="rounded-xl ring-1 ring-[#6D5333]/50 bg-black px-5 py-3 text-center">
-                  <div className="text-[#C08C45] text-sm font-semibold">
-                    Follow Us
+              {/* RIGHT CONTACT CARD */}
+              <div className="relative">
+                <div className="absolute -inset-6 bg-[#C08C45]/8 blur-3xl pointer-events-none" />
+
+                <div className="relative overflow-hidden rounded-2xl border border-[#6D5333]/60 bg-black/70 backdrop-blur-md shadow-2xl shadow-black/70">
+                  <div className="border-b border-[#6D5333]/50 bg-[#130E08]/85 px-6 py-5">
+                    <p className="font-oswald text-3xl font-black uppercase tracking-[0.14em] text-[#C08C45]">
+                      Old Ironsides HQ
+                    </p>
+
+                    <p className="mt-2 text-[0.72rem] font-bold uppercase tracking-[0.24em] text-[#B5976D]">
+                      Direct Contact
+                    </p>
                   </div>
 
-                  <div className="mt-2 flex justify-center gap-6 text-[#C08C45] text-sm">
+                  <div className="p-6 md:p-7 space-y-5">
                     <a
-                      href="https://instagram.com/oldironsidescoffee"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:text-[#E6C07F] transition"
+                      href="mailto:HQ@oldironsidescoffee.org"
+                      className="group block rounded-xl border border-[#6D5333]/50 bg-[#050302]/85 px-5 py-5 transition hover:border-[#C08C45] hover:bg-[#130E08]/80"
                     >
-                      <Instagram className="h-4 w-4" />
-                      Instagram
+                      <div className="flex items-center gap-3 text-[#C08C45]">
+                        <Mail className="h-5 w-5" />
+                        <p className="font-oswald text-xl font-black uppercase tracking-[0.12em]">
+                          Send Dispatch
+                        </p>
+                      </div>
+
+                      <p className="mt-3 text-neutral-300 text-base break-all">
+                        HQ@oldironsidescoffee.org
+                      </p>
+
+                      <p className="mt-2 text-[#9C9791] text-sm">
+                        Questions, support, press, wholesale, and partnerships.
+                      </p>
                     </a>
 
-                    <a
-                      href="https://facebook.com/oldironsidescoffee"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:text-[#E6C07F] transition"
-                    >
-                      <Facebook className="h-4 w-4" />
-                      Facebook
-                    </a>
+                    <div className="rounded-xl border border-[#6D5333]/50 bg-[#050302]/85 px-5 py-5">
+                      <p className="font-oswald text-xl font-black uppercase tracking-[0.12em] text-[#C08C45]">
+                        Port Of Call
+                      </p>
+
+                      <p className="mt-3 text-neutral-300 text-base leading-relaxed">
+                        6 Liberty Square #2564
+                        <br />
+                        Boston, MA 02109
+                      </p>
+
+                      <p className="mt-2 text-[#9C9791] text-sm">
+                        Boston roots. Veteran-owned. Small-batch roasted.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <a
+                        href="https://instagram.com/oldironsidescoffee"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex h-[50px] items-center justify-center gap-2 rounded-lg border border-[#6D5333] bg-black/60 px-5 font-oswald text-sm font-black uppercase tracking-[0.16em] text-[#C08C45] transition hover:border-[#C08C45] hover:text-[#E6C07F]"
+                      >
+                        <Instagram className="h-4 w-4" />
+                        Instagram
+                      </a>
+
+                      <a
+                        href="https://facebook.com/oldironsidescoffee"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex h-[50px] items-center justify-center gap-2 rounded-lg border border-[#6D5333] bg-black/60 px-5 font-oswald text-sm font-black uppercase tracking-[0.16em] text-[#C08C45] transition hover:border-[#C08C45] hover:text-[#E6C07F]"
+                      >
+                        <Facebook className="h-4 w-4" />
+                        Facebook
+                      </a>
+                    </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                {/* SDVOSB */}
-                <div className="hidden md:block">
+            {/* GOVERNMENT CONTRACTS ROW */}
+            <div className="mt-14 border-t border-[#6D5333]/40 pt-10">
+              <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-6 lg:gap-10 items-center">
+                <div className="text-center lg:text-left">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
+                    Government Contracts
+                  </p>
+
+                  <h3 className="mt-3 font-oswald text-4xl md:text-5xl font-black uppercase leading-[0.9] tracking-tight text-ironsideWhite/90">
+                    SDVOSB
+                    <br />
+                    <span className="text-[#C08C45]">Procurement</span>
+                  </h3>
+
+                  <p className="mt-5 max-w-[540px] mx-auto lg:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
+                    Information for agency purchasing, procurement officers, and
+                    government contract opportunities.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[#6D5333]/60 bg-black/60 backdrop-blur-sm p-5 md:p-7 shadow-xl shadow-black/50">
                   <SDVOSBHighlight />
                 </div>
               </div>
@@ -11328,32 +12255,80 @@ function Layout() {
       )}
       {/* page body */}
       <Outlet />
-
       {/* footer */}
-      <footer className="border-t border-[#6D5333]/60 bg-black">
-        <Container className="py-8 text-sm">
-          <div className="grid lg:grid-cols-4 gap-8">
-            {/* Brand + Vet-owned + Flag */}
-            <div className="relative -top-4 lg:-top-5 flex flex-col items-center text-center">
-              <div className="mt-3 md:mt-4 text-base tracking-[0.5em] text-[#C08C45]">
-                OLD IRONSIDES COFFEE
+      <footer className="relative overflow-hidden border-t border-[#6D5333]/60 bg-[#050302]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(192,140,69,0.12),transparent_30%),radial-gradient(circle_at_82%_70%,rgba(109,83,51,0.14),transparent_34%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-[#050302] to-black pointer-events-none" />
+
+        <Container className="relative z-10 py-12 md:py-14 text-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr_0.85fr_1fr] gap-10 lg:gap-12">
+            {/* BRAND */}
+            <div className="text-center lg:text-left">
+              <div className="text-lg md:text-xl font-oswald font-black uppercase tracking-[0.28em] text-[#C08C45]">
+                Old Ironsides Coffee
               </div>
 
-              <div className="mt-0 md:mt-0 text-base text-neutral-300 leading-tight">
-                Veteran-owned and operated.
-              </div>
+              <p className="mt-4 max-w-[360px] mx-auto lg:mx-0 text-neutral-300 leading-relaxed">
+                Veteran-owned. Small-batch roasted. Inspired by the USS
+                Constitution and built around fresh coffee with purpose.
+              </p>
 
               <img
                 src="/stars-stripes.png"
                 alt="American flag"
-                className="mt-3 md:mt-5 w-44 h-auto rounded-sm shadow-md"
+                className="mt-5 w-40 h-auto rounded-sm shadow-md mx-auto lg:mx-0 opacity-90"
               />
             </div>
 
-            {/* Support */}
+            {/* SHOP / BRAND */}
             <div>
-              <div className="text-neutral-400 font-semibold mb-2">Support</div>
-              <ul className="space-y-1">
+              <div className="font-oswald text-[#C08C45] uppercase tracking-[0.18em] mb-3">
+                The Fleet
+              </div>
+
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    className="text-neutral-300 hover:text-[#E6C07F]"
+                    to="/shop"
+                  >
+                    Shop Coffee
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    className="text-neutral-300 hover:text-[#E6C07F]"
+                    href="#origins-history"
+                  >
+                    Fleet History
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="text-neutral-300 hover:text-[#E6C07F]"
+                    href="#roasting-process"
+                  >
+                    Roast Process
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="text-neutral-300 hover:text-[#E6C07F]"
+                    href="#contact"
+                  >
+                    Contact
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* SUPPORT */}
+            <div>
+              <div className="font-oswald text-[#C08C45] uppercase tracking-[0.18em] mb-3">
+                Support
+              </div>
+
+              <ul className="space-y-2">
                 <li>
                   <Link
                     className="text-neutral-300 hover:text-[#E6C07F]"
@@ -11399,7 +12374,7 @@ function Layout() {
                   <button
                     type="button"
                     onClick={() => window.showDoNotSell?.()}
-                    className="text-neutral-300 hover:text-[#E6C07F]"
+                    className="text-neutral-300 hover:text-[#E6C07F] text-left"
                     aria-label="Do Not Sell or Share My Personal Information"
                   >
                     Do Not Sell or Share
@@ -11408,27 +12383,29 @@ function Layout() {
               </ul>
             </div>
 
-            {/* Contact */}
-            <div className="hidden lg:block">
-              <div className="text-neutral-400 font-semibold mb-2">Contact</div>
-              <ul className="space-y-1 text-neutral-300">
+            {/* CONTACT / SOCIAL */}
+            <div>
+              <div className="font-oswald text-[#C08C45] uppercase tracking-[0.18em] mb-3">
+                Dispatch
+              </div>
+
+              <ul className="space-y-2 text-neutral-300">
                 <li>
                   <a
                     href="mailto:HQ@oldironsidescoffee.org"
-                    className="hover:text-[#E6C07F]"
+                    className="hover:text-[#E6C07F] break-all"
                   >
                     HQ@oldironsidescoffee.org
                   </a>
                 </li>
-                <li>6 Liberty Square #2564, Boston, MA 02109</li>
+                <li className="text-neutral-400">
+                  6 Liberty Square #2564
+                  <br />
+                  Boston, MA 02109
+                </li>
               </ul>
-            </div>
 
-            {/* Follow */}
-            <div className="hidden lg:block">
-              <div className="text-[#C08C45] font-semibold mb-2">Follow Us</div>
-
-              <div className="flex gap-6 text-[#C08C45]">
+              <div className="mt-5 flex gap-5 text-[#C08C45]">
                 <a
                   href="https://instagram.com/oldironsidescoffee"
                   target="_blank"
@@ -11452,9 +12429,15 @@ function Layout() {
             </div>
           </div>
 
-          <div className="mt-8 text-xs text-neutral-500">
-            © {new Date().getFullYear()} Old Ironsides Coffee. All rights
-            reserved.
+          <div className="mt-10 pt-6 border-t border-[#6D5333]/40 flex flex-col md:flex-row gap-3 md:items-center md:justify-between text-xs text-neutral-500">
+            <p>
+              © {new Date().getFullYear()} Old Ironsides Coffee. All rights
+              reserved.
+            </p>
+
+            <p className="text-[#B5976D]">
+              Boston rooted. Veteran-owned. Small-batch roasted.
+            </p>
           </div>
         </Container>
       </footer>

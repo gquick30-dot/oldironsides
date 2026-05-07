@@ -6270,7 +6270,11 @@ function RoastDetailPage() {
                             {/* 12 OZ BAG - ACTIVE */}
                             <button
                               type="button"
-                              onClick={() => setSize("12oz")}
+                              onClick={() => {
+                                setSize("12oz");
+                                setPurchaseMode("one");
+                                setShowBeanError(false);
+                              }}
                               className="h-[88px] md:h-[72px] border rounded-md px-4 text-center transition"
                               style={{
                                 borderColor: "#6D5333",

@@ -700,13 +700,9 @@ function CartProvider({ children }: any) {
         const qty = Number(i.qty || 0);
         if (!qty) return s;
 
-        // Sample packs are always one-time full price, even if dirty cart data says otherwise
-        if (isSamplePackItem(i)) {
-          const p = Number(i?.basePrice ?? i?.price ?? 0);
-          return s + p * qty;
-        }
-
         // If it's marked as a subscription:
+        // - use explicit subPrice if present
+        // - otherwise use price (already discounted for subs added from product page)
         if (i?.isSubscription) {
           const explicitSub = Number(i?.subPrice ?? 0);
           const p = explicitSub > 0 ? explicitSub : Number(i?.price ?? 0);
@@ -865,17 +861,12 @@ function CartProvider({ children }: any) {
     [persist, cart]
   );
   const isSamplePackItem = (it: any) => {
-    const id = String(it?.id ?? "").toLowerCase();
-    const sku = String(it?.sku ?? "").toLowerCase();
     const slug = String(it?.slug ?? "").toLowerCase();
     const title = String(it?.title ?? "").toLowerCase();
-    const purchaseMode = String(it?.purchaseMode ?? "").toLowerCase();
 
     return (
-      purchaseMode === "sample" ||
-      id.includes("sample") ||
-      sku.includes("sample") ||
       slug.includes("sample") ||
+      title.includes("sample pack") ||
       title.includes("sample")
     );
   };
@@ -883,6 +874,9 @@ function CartProvider({ children }: any) {
   // simple sub price helper:
 
   const getSubPrice = useCallback((it: any) => {
+    const explicit = Number(it?.subPrice ?? 0);
+    if (explicit > 0) return explicit;
+
     // Sample packs and Oak & Copper never receive subscription discounts
     const slug = String(it?.slug ?? "");
 
@@ -890,9 +884,6 @@ function CartProvider({ children }: any) {
       const bp = Number(it?.basePrice ?? it?.price ?? 0);
       return Math.max(0, +bp.toFixed(2));
     }
-
-    const explicit = Number(it?.subPrice ?? 0);
-    if (explicit > 0) return explicit;
 
     const p = Number(it?.price ?? 0);
     if (it?.isSubscription) {
@@ -8949,17 +8940,12 @@ function CartPage() {
   }, [clear, cart.length]);
 
   const isSamplePackItem = (it: any) => {
-    const id = String(it?.id ?? "").toLowerCase();
-    const sku = String(it?.sku ?? "").toLowerCase();
     const slug = String(it?.slug ?? "").toLowerCase();
     const title = String(it?.title ?? "").toLowerCase();
-    const purchaseMode = String(it?.purchaseMode ?? "").toLowerCase();
 
     return (
-      purchaseMode === "sample" ||
-      id.includes("sample") ||
-      sku.includes("sample") ||
       slug.includes("sample") ||
+      title.includes("sample pack") ||
       title.includes("sample")
     );
   };
@@ -12650,18 +12636,14 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
   }, []);
 
   const hasSubscription = cart.some((i: any) => !!i.isSubscription);
+
   const isSamplePackItem = (it: any) => {
-    const id = String(it?.id ?? "").toLowerCase();
-    const sku = String(it?.sku ?? "").toLowerCase();
     const slug = String(it?.slug ?? "").toLowerCase();
     const title = String(it?.title ?? "").toLowerCase();
-    const purchaseMode = String(it?.purchaseMode ?? "").toLowerCase();
 
     return (
-      purchaseMode === "sample" ||
-      id.includes("sample") ||
-      sku.includes("sample") ||
       slug.includes("sample") ||
+      title.includes("sample pack") ||
       title.includes("sample")
     );
   };
@@ -12920,8 +12902,7 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
           ) : (
             <ul className="divide-y divide-neutral-800">
               {cart.map((it: any) => {
-                const isSamplePack = isSamplePackItem(it);
-                const isSub = !!it?.isSubscription && !isSamplePack;
+                const isSub = !!it?.isSubscription;
                 const price = Number(it.price ?? 0);
                 const selFreq = getFreq(it.id, Number(it?.subEvery ?? 30));
                 const subPrice = getSubPrice({ ...it, subEvery: selFreq });
@@ -13380,17 +13361,12 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
   const hasSubscription = cart.some((i: any) => !!i.isSubscription);
 
   const isSamplePackItem = (it: any) => {
-    const id = String(it?.id ?? "").toLowerCase();
-    const sku = String(it?.sku ?? "").toLowerCase();
     const slug = String(it?.slug ?? "").toLowerCase();
     const title = String(it?.title ?? "").toLowerCase();
-    const purchaseMode = String(it?.purchaseMode ?? "").toLowerCase();
 
     return (
-      purchaseMode === "sample" ||
-      id.includes("sample") ||
-      sku.includes("sample") ||
       slug.includes("sample") ||
+      title.includes("sample pack") ||
       title.includes("sample")
     );
   };
@@ -13665,8 +13641,7 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
           ) : (
             <ul className="divide-y divide-neutral-800">
               {cart.map((it: any) => {
-                const isSamplePack = isSamplePackItem(it);
-                const isSub = !!it?.isSubscription && !isSamplePack;
+                const isSub = !!it?.isSubscription;
                 const price = Number(it.price ?? 0);
                 const selFreq = getFreq(it.id, Number(it?.subEvery ?? 30));
                 const subPrice = getSubPrice({ ...it, subEvery: selFreq });

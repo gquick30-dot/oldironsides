@@ -13099,7 +13099,16 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
 
                         {!isSub &&
                           it?.slug !== "oak-and-copper" &&
-                          !isSamplePackItem(it) && (
+                          it?.purchaseMode !== "sample" &&
+                          !String(it?.id ?? "")
+                            .toLowerCase()
+                            .includes("sample") &&
+                          !String(it?.slug ?? "")
+                            .toLowerCase()
+                            .includes("sample") &&
+                          !String(it?.title ?? "")
+                            .toLowerCase()
+                            .includes("sample") && (
                             <div className="mt-2">
                               {!showSubChooser[it.id] ? (
                                 <button
@@ -13849,7 +13858,16 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                         {/* JOIN THE FLEET — 14/30/60 selector */}
                         {!isSub &&
                           it?.slug !== "oak-and-copper" &&
-                          !isSamplePackItem(it) && (
+                          it?.purchaseMode !== "sample" &&
+                          !String(it?.id ?? "")
+                            .toLowerCase()
+                            .includes("sample") &&
+                          !String(it?.slug ?? "")
+                            .toLowerCase()
+                            .includes("sample") &&
+                          !String(it?.title ?? "")
+                            .toLowerCase()
+                            .includes("sample") && (
                             <div className="mt-2">
                               {!showSubChooser[it.id] ? (
                                 <button

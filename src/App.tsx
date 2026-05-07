@@ -2639,11 +2639,9 @@ function HomePage() {
               </p>
 
               <h2 className="max-w-[560px] mx-auto md:mx-0 font-cinzel text-4xl md:text-5xl xl:text-6xl font-black uppercase leading-[0.95] tracking-[0.06em] text-[#E6DCC8]">
-                Sample The
+                Sample Our Coffee.
                 <br />
-                Fleet Before
-                <br />
-                <span className="text-[#B5976D]">You Set Sail</span>
+                <span className="text-[#B5976D]">Discover Your Roast.</span>
               </h2>
 
               <p className="mt-6 max-w-[560px] mx-auto md:mx-0 font-playfair italic text-[#B5976D] text-base md:text-xl leading-relaxed">
@@ -2789,7 +2787,7 @@ function HomePage() {
                 <h2 className="mt-4 font-cinzel text-3xl md:text-5xl xl:text-6xl font-black uppercase leading-[0.95] tracking-[0.04em] text-[#E6DCC8]">
                   Fresh Coffee.
                   <br />
-                  <span className="text-[#C08C45]">Always On Deck.</span>
+                  <span className="text-[#C08C45]">On Your Schedule.</span>
                 </h2>
 
                 <p className="mt-5 max-w-[640px] text-neutral-300 text-base md:text-lg leading-relaxed">

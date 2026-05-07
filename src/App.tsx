@@ -2684,7 +2684,7 @@ function HomePage() {
                 and get the full fleet with one roast free plus free shipping.
               </p>
 
-              <div className="mt-6 flex flex-wrap justify-center md:justify-start gap-2">
+              <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-[520px] mx-auto md:mx-0">
                 {roastCards.map((card) => (
                   <Link
                     key={card.id}
@@ -2754,15 +2754,138 @@ function HomePage() {
           </div>
         </Container>
       </section>
+      {/* ===== FLEET SUBSCRIPTIONS ===== */}
+      <section className="relative overflow-hidden bg-[#050302] py-12 md:py-16 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40">
+        {/* warm separation glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_48%,rgba(192,140,69,0.16),transparent_28%),radial-gradient(circle_at_42%_62%,rgba(120,66,18,0.16),transparent_24%),radial-gradient(circle_at_72%_42%,rgba(192,140,69,0.10),transparent_30%)] pointer-events-none" />
+
+        {/* soft dark bronze wash */}
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(12,7,3,0.96)_0%,rgba(30,15,4,0.78)_38%,rgba(20,10,2,0.84)_62%,rgba(5,3,2,0.98)_100%)] pointer-events-none" />
+
+        {/* subtle texture */}
+        <div className="absolute inset-0 opacity-[0.035] bg-[radial-gradient(#C08C45_0.6px,transparent_0.6px)] [background-size:18px_18px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_32%,rgba(192,140,69,0.12),transparent_30%),radial-gradient(circle_at_82%_68%,rgba(109,83,51,0.14),transparent_36%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-[#050302]/90 to-black pointer-events-none" />
+        {/* BIG warm cinematic glow */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute left-[18%] top-[18%] h-[520px] w-[520px] rounded-full bg-[#8A4B10]/22 blur-[120px]" />
+
+          <div className="absolute left-[32%] top-[42%] h-[380px] w-[380px] rounded-full bg-[#C08C45]/18 blur-[110px]" />
+
+          <div className="absolute right-[14%] top-[28%] h-[420px] w-[420px] rounded-full bg-[#5A2F08]/20 blur-[120px]" />
+
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_38%_48%,rgba(192,140,69,0.14),transparent_34%)]" />
+        </div>
+        <Container>
+          <div className="relative z-10 max-w-[1280px] mx-auto px-4 md:px-8">
+            <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-14 xl:gap-20 items-center">
+              {/* LEFT */}
+              <div className="relative">
+                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.34em] text-[#B5976D]">
+                  Join The Fleet
+                </p>
+
+                <h2 className="mt-4 font-cinzel text-3xl md:text-5xl xl:text-6xl font-black uppercase leading-[0.95] tracking-[0.04em] text-[#E6DCC8]">
+                  Fresh Coffee.
+                  <br />
+                  <span className="text-[#C08C45]">Always On Deck.</span>
+                </h2>
+
+                <p className="mt-5 max-w-[640px] text-neutral-300 text-base md:text-lg leading-relaxed">
+                  Set your schedule once and stay stocked with fresh-roasted
+                  coffee without thinking about it again.
+                </p>
+
+                <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-[760px]">
+                  {[
+                    {
+                      title: "15% Off",
+                      text: "Core roasts when subscribed",
+                    },
+                    {
+                      title: "Flexible",
+                      text: "Pause, skip, or cancel anytime",
+                    },
+                    {
+                      title: "Fresh",
+                      text: "Roasted around order flow",
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.title}
+                      className="border border-[#6D5333]/50 bg-[#100905]/75 px-4 py-4"
+                    >
+                      <p className="font-oswald text-xl font-black uppercase text-[#E6C07F]">
+                        {item.title}
+                      </p>
+
+                      <p className="mt-2 text-sm leading-relaxed text-neutral-400">
+                        {item.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* RIGHT */}
+              <div className="relative border-l-2 border-[#C08C45] pl-5 md:pl-8">
+                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-[#B5976D]">
+                  Fleet Benefits
+                </p>
+
+                <div className="mt-5 space-y-4">
+                  {[
+                    "Choose deliveries every 14, 30, or 60 days",
+                    "Subscription pricing applies automatically",
+                    "Oak & Copper available by subscription",
+                    "Manage everything from your account portal",
+                  ].map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <div className="mt-[7px] h-[6px] w-[6px] rounded-full bg-[#C08C45] shrink-0" />
+
+                      <p className="text-neutral-300 text-[0.96rem] leading-relaxed">
+                        {item}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-col sm:flex-row gap-3">
+                  <Link
+                    to="/subscriptions"
+                    className="inline-flex h-[52px] items-center justify-center px-7 bg-[#C08C45] text-black font-oswald text-sm font-black uppercase tracking-[0.18em] border border-[#C08C45] transition-all duration-200 hover:bg-[#E6C07F] hover:border-[#E6C07F]"
+                  >
+                    Join The Fleet
+                  </Link>
+
+                  <Link
+                    to="/account"
+                    className="inline-flex h-[52px] items-center justify-center px-7 border border-[#6D5333] bg-[#130E08] font-oswald text-sm font-black uppercase tracking-[0.16em] text-[#C08C45] transition-all duration-200 hover:border-[#C08C45] hover:bg-[#32220D] hover:text-[#E6C07F]"
+                  >
+                    Manage Subscription
+                  </Link>
+                </div>
+
+                <p className="mt-4 text-[0.72rem] uppercase tracking-[0.18em] text-[#9C9791]">
+                  No contracts. No nonsense.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
       {/* ===== TASTING EVENTS SECTION ===== */}
-      <section className="relative overflow-hidden bg-black py-12 md:py-16 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40">
+      <section
+        id="tasting-events"
+        className="relative overflow-hidden bg-black py-12 md:py-16 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40"
+      >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_35%,rgba(192,140,69,0.12),transparent_28%),radial-gradient(circle_at_82%_58%,rgba(109,83,51,0.14),transparent_34%)] pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-b from-black via-[#050302] to-black pointer-events-none" />
 
         <Container>
           <div className="relative z-10 max-w-[1420px] mx-auto px-6 md:px-10">
             {/* DESKTOP */}
-            <div className="hidden lg:grid grid-cols-[1.02fr_0.98fr] gap-16 xl:gap-24 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.02fr_0.98fr] gap-10 lg:gap-16 xl:gap-24 items-center">
               {/* VIDEO FEATURE - LEFT */}
               <div className="relative flex justify-start">
                 <div className="absolute -inset-5 bg-[#C08C45]/10 blur-3xl pointer-events-none" />
@@ -2827,7 +2950,7 @@ function HomePage() {
                       Try A Sample
                     </Link>
 
-                    <p className="text-[0.76rem] uppercase tracking-[0.18em] text-[#B5976D] font-bold whitespace-nowrap">
+                    <p className="text-[0.7rem] md:text-[0.76rem] uppercase tracking-[0.14em] md:tracking-[0.18em] text-[#B5976D] font-bold leading-relaxed">
                       Start small. Find your roast.
                     </p>
                   </div>
@@ -3444,12 +3567,12 @@ function HomePage() {
                 </p>
 
                 <div className="mt-7 flex justify-center lg:justify-start">
-                  <a
-                    href="#origins-history"
+                  <Link
+                    to="/fleet-history"
                     className="inline-flex items-center justify-center border border-[#C08C45] bg-[#C08C45] px-7 py-3 font-oswald text-[0.82rem] font-black uppercase tracking-[0.22em] text-black transition hover:bg-[#E6C07F]"
                   >
                     Explore The History
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -3655,88 +3778,102 @@ function HomePage() {
       {/* ===== QUIET RITUAL SECTION ===== */}
       <section
         id="quiet-ritual"
-        className="relative overflow-hidden bg-[#050302] py-16 md:py-24 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40"
+        className="relative overflow-hidden bg-[#070402] py-14 md:py-20 border-t border-[#6D5333]/35 border-b border-[#6D5333]/35"
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_42%,rgba(192,140,69,0.12),transparent_30%),radial-gradient(circle_at_78%_66%,rgba(109,83,51,0.12),transparent_34%)] pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_28%,rgba(192,140,69,0.18),transparent_32%),radial-gradient(circle_at_78%_58%,rgba(181,151,109,0.12),transparent_34%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(0,0,0,0.92)_0%,rgba(7,4,2,0.82)_42%,rgba(35,20,9,0.48)_100%)] pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#C08C45]/60 to-transparent" />
 
         <Container>
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 xl:gap-20 items-center">
-            {/* LEFT VISUAL COLLAGE */}
-            <div className="order-2 lg:order-1">
-              <div className="relative max-w-[680px] mx-auto lg:mx-0 min-h-[420px] md:min-h-[520px]">
-                {/* MAIN IMAGE */}
-                <div className="absolute left-0 top-6 w-[78%] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
-                  <img
-                    src="/quiet-cup.jpg"
-                    alt="Fresh coffee in a quiet morning setting"
-                    className="w-full h-[360px] md:h-[460px] object-cover object-center opacity-90"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/10" />
-                </div>
-
-                {/* SMALL TOP IMAGE */}
-                <div className="absolute right-0 top-0 w-[42%] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-xl shadow-black/60">
-                  <img
-                    src="/quiet-beans.jpg"
-                    alt="Fresh roasted coffee beans"
-                    className="w-full h-[165px] md:h-[210px] object-cover object-center opacity-85"
-                  />
-                  <div className="absolute inset-0 bg-black/15" />
-                </div>
-
-                {/* SMALL BOTTOM IMAGE */}
-                <div className="absolute right-5 bottom-0 w-[48%] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-xl shadow-black/60">
-                  <img
-                    src="/quiet-table.jpg"
-                    alt="Coffee on a dark wooden table"
-                    className="w-full h-[190px] md:h-[240px] object-cover object-center opacity-90"
-                  />
-                  <div className="absolute inset-0 bg-black/20" />
-                </div>
-
-                {/* LABEL */}
-                <div className="absolute left-5 bottom-8 border border-[#6D5333]/70 bg-black/75 px-5 py-4 backdrop-blur-sm shadow-xl shadow-black/60">
-                  <p className="font-oswald text-2xl md:text-3xl font-black uppercase leading-none text-ironsideWhite/90">
-                    Small Batch
+          <div className="relative z-10 max-w-[1320px] mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-[0.88fr_1.12fr] gap-10 xl:gap-16 items-center">
+              {/* LEFT TEXT */}
+              <div className="order-1">
+                <div className="relative max-w-[590px] mx-auto lg:mx-0 rounded-2xl border border-[#6D5333]/45 bg-[#0B0704]/65 px-6 md:px-8 py-8 md:py-10 shadow-2xl shadow-black/55 backdrop-blur-sm">
+                  <p className="font-oswald text-[0.66rem] font-semibold uppercase tracking-[0.34em] text-[#D7D0C4]">
+                    Morning Ritual
                   </p>
-                  <p className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#B5976D]">
-                    Roasted For The Daily Ritual
+
+                  <h3 className="mt-5 font-cinzel text-3xl md:text-4xl xl:text-[3.65rem] font-semibold leading-[1.12] tracking-[0.01em] text-[#A47B49]">
+                    Better coffee
+                    <br />
+                    for quieter
+                    <br />
+                    mornings.
+                  </h3>
+
+                  <div className="mt-5 h-px w-64 md:w-56 bg-gradient-to-r from-[#C08C45]/80 via-[#6D5333]/55 to-transparent" />
+
+                  <p className="mt-6 max-w-[500px] font-ebgaramond text-lg md:text-xl leading-relaxed text-[#D6C5A8]">
+                    Fresh-roasted in small batches for the slow start, the first
+                    cup, and the few quiet minutes before the day takes over.
                   </p>
+
+                  <div className="mt-7 flex flex-col sm:flex-row gap-3">
+                    <a
+                      href="#fleet"
+                      className="inline-flex h-[46px] items-center justify-center rounded-md border border-[#C08C45] bg-[#C08C45] px-6 font-oswald text-sm font-bold uppercase tracking-[0.16em] text-black transition hover:bg-[#E6C07F] hover:border-[#E6C07F]"
+                    >
+                      Shop The Fleet
+                    </a>
+
+                    <a
+                      href="#roasting-process"
+                      className="inline-flex h-[46px] items-center justify-center rounded-md border border-[#6D5333] bg-black/25 px-6 font-oswald text-sm font-bold uppercase tracking-[0.16em] text-[#C08C45] transition hover:border-[#C08C45] hover:text-[#E6C07F]"
+                    >
+                      How We Roast
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* RIGHT TEXT */}
-            <div className="order-1 lg:order-2 text-center lg:text-left">
-              <p className="mb-4 text-[0.68rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
-                Before First Light
-              </p>
+              {/* RIGHT COLLAGE */}
+              <div className="order-2">
+                <div className="relative mx-auto lg:ml-auto w-full max-w-[710px]">
+                  <div className="absolute -inset-5 rounded-[2rem] bg-[#C08C45]/10 blur-2xl" />
 
-              <h3 className="font-playfair text-4xl md:text-6xl xl:text-7xl font-bold italic leading-[0.98] tracking-wide text-[#C08C45]">
-                Some mornings deserve better coffee.
-              </h3>
+                  <div className="relative grid grid-cols-1 sm:grid-cols-[1fr_0.78fr] gap-4 md:gap-5 items-center">
+                    {/* MAIN IMAGE */}
+                    <div className="relative overflow-hidden rounded-[1.4rem] border border-[#8A683F]/55 bg-[#100905] shadow-2xl shadow-black/70">
+                      <img
+                        src="/pour-1.jpg"
+                        alt="Fresh coffee in a quiet morning setting"
+                        className="w-full h-[390px] md:h-[460px] object-cover object-center opacity-95"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
-              <p className="mt-6 max-w-[620px] mx-auto lg:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
-                No loud pitch. No factory-store routine. Just fresh-roasted
-                coffee, made in small batches, built for the quiet moments
-                before the day starts swinging.
-              </p>
+                      <div className="absolute left-5 bottom-5 right-5 rounded-xl border border-[#6D5333]/70 bg-[#090603]/78 px-5 py-4 backdrop-blur-sm shadow-xl shadow-black/60">
+                        <p className="font-playfair text-3xl md:text-4xl font-black leading-none text-[#F3E9D6]">
+                          Small batch.
+                        </p>
+                        <p className="mt-2 font-oswald text-[0.68rem] font-bold uppercase tracking-[0.24em] text-[#B5976D]">
+                          Roasted for the daily ritual
+                        </p>
+                      </div>
+                    </div>
 
-              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                <a
-                  href="#fleet"
-                  className="inline-flex h-[48px] items-center justify-center rounded-md border border-[#C08C45] bg-[#C08C45] px-6 font-oswald text-sm font-black uppercase tracking-[0.18em] text-black transition hover:bg-[#E6C07F] hover:border-[#E6C07F]"
-                >
-                  Shop The Fleet
-                </a>
+                    {/* SIDE IMAGES */}
+                    <div className="grid grid-cols-2 sm:grid-cols-1 gap-4 md:gap-5">
+                      <div className="relative overflow-hidden rounded-[1.2rem] border border-[#6D5333]/55 bg-black shadow-xl shadow-black/60 sm:-translate-x-3">
+                        <img
+                          src="/bean-pour.jpg"
+                          alt="Fresh roasted coffee beans"
+                          className="w-full h-[165px] md:h-[205px] object-cover object-center opacity-95"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
+                      </div>
 
-                <a
-                  href="#roasting-process"
-                  className="inline-flex h-[48px] items-center justify-center rounded-md border border-[#6D5333] bg-black/55 px-6 font-oswald text-sm font-black uppercase tracking-[0.18em] text-[#C08C45] transition hover:border-[#C08C45] hover:text-[#E6C07F]"
-                >
-                  How We Roast
-                </a>
+                      <div className="relative overflow-hidden rounded-[1.2rem] border border-[#6D5333]/55 bg-black shadow-xl shadow-black/60 sm:translate-x-5">
+                        <img
+                          src="/coffee-fire-1.jpeg"
+                          alt="Coffee on a dark wooden table"
+                          className="w-full h-[165px] md:h-[225px] object-cover object-center opacity-95"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -3755,7 +3892,7 @@ function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-[1.08fr_0.92fr] gap-12 lg:gap-20 items-center">
               {/* LEFT */}
               <div className="text-center lg:text-left max-w-[740px] mx-auto lg:mx-0">
-                <p className="mb-4 text-[0.68rem] font-semibold uppercase tracking-[0.38em] text-[#B5976D]">
+                <p className="mb-4 text-[0.68rem] font-medium uppercase tracking-[0.38em] text-[#B5976D]">
                   The Quarterdeck
                 </p>
 
@@ -4091,11 +4228,11 @@ function FleetStoryPage() {
       <Container className="relative z-10 max-md:pt-0">
         <div className="hidden md:flex justify-end">
           <Link
-            to={storiesHome} // Use the constant STORIES_HOME here
+            to="/fleet-history" // Use the constant STORIES_HOME here
             className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm ring-1 ring-[#C08C45]/70 text-[#C08C45] hover:bg-[#C08C45] hover:text-neutral-900 transition"
             onClick={() => {
               try {
-                sessionStorage.setItem("storiesReturnTo", storiesHome);
+                sessionStorage.setItem("storiesReturnTo", "/fleet-history");
               } catch {}
             }}
           >
@@ -4404,7 +4541,176 @@ function FleetStoryPage() {
     </main>
   );
 }
+function FleetHistoryPage() {
+  const histScrollRef = React.useRef<HTMLDivElement | null>(null);
+  const histCardRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
+  const [histIdx, setHistIdx] = React.useState(0);
 
+  const histSlugs = [
+    "flagship",
+    "baptism-by-fire",
+    "java-action",
+    "oak-and-copper",
+  ];
+
+  const fleetCards = histSlugs
+    .map((slug) => roastCards.find((c) => c.slug === slug))
+    .filter(Boolean);
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const histScrollTo = React.useCallback(
+    (idx: number) => {
+      const len = histSlugs.length;
+      const clamped = ((idx % len) + len) % len;
+      const el = histCardRefs.current[clamped];
+
+      if (el && histScrollRef.current) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+      }
+
+      setHistIdx(clamped);
+    },
+    [histSlugs.length]
+  );
+
+  const histPrev = React.useCallback(
+    () => histScrollTo(histIdx - 1),
+    [histIdx, histScrollTo]
+  );
+
+  const histNext = React.useCallback(
+    () => histScrollTo(histIdx + 1),
+    [histIdx, histScrollTo]
+  );
+
+  const onHistScroll = React.useCallback(() => {
+    const c = histScrollRef.current;
+    if (!c) return;
+
+    const sl = c.scrollLeft;
+    let best = 0;
+    let bestDist = Infinity;
+
+    histCardRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const dist = Math.abs(el.offsetLeft - sl);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
+    });
+
+    setHistIdx(best);
+  }, []);
+
+  return (
+    <main className="relative overflow-hidden bg-black pt-8 pb-16 md:pt-14 md:pb-24">
+      <img
+        src="/maps-books.png"
+        alt=""
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-25"
+      />
+
+      <div className="absolute inset-0 z-0 bg-black/75 pointer-events-none" />
+
+      <Container>
+        <div className="relative z-10 mx-auto max-w-5xl text-center">
+          <p className="font-oswald text-[0.75rem] font-black uppercase tracking-[0.28em] text-[#C08C45]">
+            Old Ironsides History
+          </p>
+
+          <h1 className="mt-3 font-cinzel text-3xl md:text-5xl font-black uppercase tracking-[0.12em] text-[#E6C07F]">
+            The History Behind The Fleet
+          </h1>
+
+          <p className="mx-auto mt-4 max-w-2xl text-sm md:text-base leading-relaxed text-neutral-300">
+            The ships, battles, captains, and stories behind each roast.
+          </p>
+        </div>
+
+        <div className="relative z-10 mt-10">
+          <div
+            ref={histScrollRef}
+            onScroll={onHistScroll}
+            className="flex gap-5 overflow-x-auto scroll-smooth pb-6 snap-x snap-mandatory md:grid md:grid-cols-4 md:overflow-visible md:pb-0"
+          >
+            {fleetCards.map((card: any, i) => (
+              <Link
+                key={card.slug}
+                ref={(el) => {
+                  histCardRefs.current[i] = el;
+                }}
+                to={`/fleet-story/${card.slug}`}
+                className="group relative min-w-[78%] sm:min-w-[48%] md:min-w-0 snap-center overflow-hidden rounded-2xl border border-[#6D5333]/70 bg-[#080503] shadow-xl shadow-black/50 transition hover:-translate-y-1 hover:border-[#C08C45]"
+              >
+                <div className="relative aspect-[3/4] overflow-hidden">
+                  <img
+                    src={card.heroImg}
+                    alt={card.title}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent" />
+
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <p className="font-oswald text-[0.68rem] font-black uppercase tracking-[0.22em] text-[#C08C45]">
+                      Fleet Story
+                    </p>
+
+                    <h2 className="mt-2 font-cinzel text-xl font-black uppercase tracking-[0.08em] text-[#E6C07F]">
+                      {card.slug === "java-action"
+                        ? "The Java Action"
+                        : card.title}
+                    </h2>
+
+                    {card.battleDate && (
+                      <p className="mt-1 text-sm font-semibold text-[#C08C45]">
+                        {card.battleDate}
+                      </p>
+                    )}
+
+                    <p className="mt-3 text-sm leading-relaxed text-neutral-300">
+                      Read the story behind the roast.
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-5 flex items-center justify-center gap-4 md:hidden">
+            <button
+              type="button"
+              onClick={histPrev}
+              className="rounded-full border border-[#6D5333] px-4 py-2 text-[#C08C45]"
+            >
+              ←
+            </button>
+
+            <div className="text-xs uppercase tracking-[0.2em] text-neutral-400">
+              {histIdx + 1} / {histSlugs.length}
+            </div>
+
+            <button
+              type="button"
+              onClick={histNext}
+              className="rounded-full border border-[#6D5333] px-4 py-2 text-[#C08C45]"
+            >
+              →
+            </button>
+          </div>
+        </div>
+      </Container>
+    </main>
+  );
+}
 /* ================== ROAST DETAIL PAGE (CLEAN) ================== */
 function BuyBoxSection({
   mobile = false,
@@ -5662,13 +5968,13 @@ function RoastDetailPage() {
   };
 
   return (
-    <main className="relative overflow-hidden min-h-[calc(100vh-140px)] -mt-6 pt-0 pb-6 md:mt-0 md:pt-4 xl:pt-8 md:pb-10 xl:pb-16 bg-black md:bg-transparent px-3 sm:px-4 lg:px-6 xl:px-12 2xl:px-16">
-      <Container className="relative z-10 mt-0 md:mt-0 max-w-[1080px] xl:max-w-[1400px] mx-auto">
+    <main className="relative overflow-x-hidden min-h-[calc(100vh-140px)] -mt-6 pt-0 pb-6 md:mt-0 md:pt-4 xl:pt-8 md:pb-10 xl:pb-16 bg-black md:bg-transparent px-0 sm:px-4 lg:px-6 xl:px-12 2xl:px-16">
+      <Container className="relative z-10 mt-0 md:mt-0 max-w-[1080px] xl:max-w-[1400px] mx-auto w-full max-w-full px-0 sm:px-4">
         {/* ===== HERO ===== */}
         <div className="relative">
           {/* emblem moved to live behind the bag (image wrapper) */}
 
-          <div className="relative z-10 mt-0 md:-mt-2 xl:-mt-4 grid xl:grid-cols-[460px,1fr] 2xl:grid-cols-[620px,1fr] gap-5 xl:gap-8 2xl:gap-12 items-start">
+          <div className="relative z-10 mt-0 md:-mt-2 lg:-mt-4 grid w-full overflow-x-hidden lg:grid-cols-[440px,1fr] xl:grid-cols-[520px,1fr] 2xl:grid-cols-[620px,1fr] gap-5 lg:gap-4 xl:gap-2 2xl:gap-12 items-start">
             {/* HERO IMAGE */}
             <div className="flex flex-col items-center md:items-start w-full md:w-auto relative mt-0 md:mt-0">
               <div className="relative z-10 flex flex-col items-center md:items-start w-full md:w-auto">
@@ -5678,7 +5984,7 @@ function RoastDetailPage() {
                   </div>
                 )}
 
-                <div className="relative -mt-6 md:-mt-8 xl:-mt-12 2xl:-mt-16 w-full">
+                <div className="relative -mt-6 md:-mt-8 xl:-mt-12 2xl:-mt-16 w-full flex justify-center md:justify-start overflow-hidden">
                   <div className="pointer-events-none absolute inset-0 z-20 shadow-[inset_0_0_40px_20px_rgba(0,0,0,0.75)]" />
 
                   <img
@@ -5691,7 +5997,7 @@ function RoastDetailPage() {
                     alt={card.title}
                     loading="eager"
                     decoding="async"
-                    className="relative z-10 block w-full max-w-[400px] md:max-w-[430px] xl:max-w-[520px] 2xl:max-w-[820px] h-auto object-contain mx-auto xl:mx-0"
+                    className="relative z-10 block w-full max-w-[400px] md:max-w-[430px] xl:max-w-[440px] 2xl:max-w-[820px] h-auto object-contain mx-auto"
                   />
                 </div>
               </div>
@@ -5700,7 +6006,7 @@ function RoastDetailPage() {
             {/* ...rest of your text column stays exactly the same */}
 
             {/* 2/3/4/5/6 live together in this column so desktop still sees one text column */}
-            <div className="order-2 md:order-none self-start flex flex-col space-y-3 -mt-4 md:mt-0">
+            <div className="order-2 md:order-none self-start flex flex-col space-y-3 -mt-4 md:mt-0 w-full min-w-0 overflow-hidden">
               {/* ===== TITLE / SUBTITLE / STARS (Mobile #1, Desktop #1) ===== */}
               <div className="order-1 md:order-1 -mt-4 md:mt-0 mb-0 flex items-start justify-between gap-3">
                 <div className="w-full">
@@ -7281,696 +7587,6 @@ function StoreCategoryPage() {
   );
 }
 
-function OriginsPage() {
-  // Mobile History carousel (Origins > The History Behind The Fleet)
-  const histScrollRef = React.useRef<HTMLDivElement | null>(null);
-  const histCardRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
-  const [histIdx, setHistIdx] = React.useState(0);
-  const histSlugs = [
-    "flagship",
-    "baptism-by-fire",
-    "java-action",
-    "oak-and-copper",
-  ];
-
-  const histScrollTo = React.useCallback(
-    (idx: number) => {
-      const len = histSlugs.length;
-      const clamped = ((idx % len) + len) % len;
-      const el = histCardRefs.current[clamped];
-      if (el && histScrollRef.current) {
-        el.scrollIntoView({
-          behavior: "smooth",
-          inline: "center",
-          block: "nearest",
-        });
-      }
-      setHistIdx(clamped);
-    },
-    [histSlugs.length]
-  );
-
-  const histPrev = React.useCallback(
-    () => histScrollTo(histIdx - 1),
-    [histIdx, histScrollTo]
-  );
-  const histNext = React.useCallback(
-    () => histScrollTo(histIdx + 1),
-    [histIdx, histScrollTo]
-  );
-
-  const onHistScroll = React.useCallback(() => {
-    const c = histScrollRef.current;
-    if (!c) return;
-    const sl = c.scrollLeft;
-    let best = 0;
-    let bestDist = Infinity;
-    histCardRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const dist = Math.abs(el.offsetLeft - sl);
-      if (dist < bestDist) {
-        bestDist = dist;
-        best = i;
-      }
-    });
-    setHistIdx(best);
-  }, []);
-
-  // Shared frame for all sections
-  const SECTION_FRAME = "relative overflow-hidden border-t border-neutral-800";
-  const SECTION_INNER = "relative z-10 min-h-0 md:min-h-[700px] py-4 md:py-16";
-
-  return (
-    <main className="pt-0 -mt-16 md:mt-0">
-      {/* ===== ROASTING PROCESS (buy box + fonts ~15% larger) ===== */}
-      <section
-        id="origins-roasting"
-        className={`${SECTION_FRAME} -translate-y-3 md:translate-y-0 scroll-mt-28 md:scroll-mt-36`}
-      >
-        <img
-          src="/roasted-dark.jpeg"
-          alt="Roasting process backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center transform scale-[0.9] md:scale-100 opacity-50 z-0 pointer-events-none"
-        />
-        <div className="absolute inset-0 bg-neutral-900/40 z-0 pointer-events-none" />
-
-        <Container>
-          <div className={`${SECTION_INNER} flex items-center`}>
-            <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              {/* Photo LEFT */}
-              <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/50">
-                  <img
-                    src="/roast-machine.jpg"
-                    alt="Roaster"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-
-              {/* Text RIGHT (fonts bumped ~15%) */}
-              <div className="space-y-3">
-                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
-                  ROASTING PROCESS
-                </h3>
-                <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
-                  Coffee is at its best in the first days after roasting when
-                  the oils are alive, the aroma is full, and the flavor is at
-                  its peak. That is why we roast to order every Monday and ship
-                  Tuesday/Wednesday. <br /> <br />
-                  No months-old roasted beans sitting on supermarket shelves or
-                  in an Amazon warehouse. Our coffee is battle fresh, hitting
-                  your cup at its prime exactly the way it was meant to be
-                  experienced.
-                  <br /> <br />
-                </p>
-
-                {/* Buy box ~15% larger: font + padding increased */}
-                <Link
-                  to="/store"
-                  className="mt-8 mx-auto md:mx-0 flex md:inline-flex items-center justify-center gap-2
-
-             rounded-xl ring-1 ring-[#C08C45]/60
-             text-[#C08C45] font-semibold
-             text-[1.25rem] md:text-[1.55rem]
-             w-[88%] max-w-[22rem] md:w-auto md:max-w-none
-             px-[1.65rem] py-[0.7rem] md:px-[1.75rem] md:py-[0.75rem]
-             hover:bg-[#C08C45] hover:text-neutral-900
-             transition-all leading-snug text-center"
-                >
-                  <span className="leading-none text-[2em] md:text-[1em] flex items-center">
-                    ⚓
-                  </span>
-                  <span className="md:whitespace-nowrap">
-                    SHOP OUR FRESHLY ROASTED COFFEE
-                  </span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* ===== THE LANDS WHERE OUR BEANS ARE GROWN (photo RIGHT, text LEFT) ===== */}
-      <section
-        id="origins-lands"
-        className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
-      >
-        <img
-          src="/farm1-web.jpeg"
-          alt="Origins & Voyages backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-[50%_68%] opacity-80 z-0 pointer-events-none origin-center [transform:scaleY(1.08)] md:[transform:none]"
-        />
-        <div className="absolute inset-0 bg-neutral-950/40 z-0 pointer-events-none" />
-
-        <Container>
-          <div className="relative z-10 flex items-center min-h-0 md:min-h-[820px] py-4 md:py-16">
-            <div className="grid w-full grid-cols-1 md:grid-cols-[1fr,auto] gap-4 md:gap-6 items-center">
-              {/* Text LEFT */}
-              <div className="space-y-3">
-                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
-                  The Lands Where Our Beans Are Grown
-                </h3>
-                <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
-                  From the volcanic slopes of Guatemala to the highlands of
-                  Ethiopia and the misty mountains of Colombia, our beans are
-                  born in lands where rich soil and thin air forge extraordinary
-                  flavor. <br /> <br /> These distant regions each lend their
-                  own character, shaped by altitude, climate, and tradition. It
-                  is here that our journey begins, where the spirit of the land
-                  becomes the soul of every cup of Old Ironsides Coffee.
-                </p>
-              </div>
-
-              {/* Photo RIGHT */}
-              <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-square rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/50">
-                  <img
-                    src="/bean-stock3.jpeg"
-                    alt="Beans lands"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* ===== THE HANDS THAT GROW OUR BEANS (3-stack offset: top/bottom far LEFT, middle shifted RIGHT; text snug) ===== */}
-      <section
-        id="origins-hands"
-        className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
-      >
-        {/* Mobile: no backdrop. Desktop: keep backdrop */}
-        <img
-          src="/hands-bowl-1.jpeg"
-          alt="Growers backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-70 z-0 pointer-events-none hidden md:block"
-        />
-        <div className="absolute inset-0 bg-neutral-900/40 z-0 pointer-events-none hidden md:block" />
-        {/* Mobile-only flat bg */}
-        <div className="absolute inset-0 z-0 md:hidden bg-neutral-900" />
-
-        <Container>
-          <div
-            className={`${SECTION_INNER} flex items-center min-h-[720px] md:min-h-[820px]`}
-          >
-            <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] items-center gap-3 md:gap-4">
-              {/* MOBILE-ONLY TITLE (above pics) */}
-              <h3 className="md:hidden font-cinzel text-2xl font-extrabold text-[#C08C45] tracking-wide uppercase order-1">
-                The Hands That Grow Our Beans
-              </h3>
-
-              {/* 3-STACK PICS — mobile order 2, desktop left */}
-              <div className="justify-self-center md:justify-self-start self-center order-2 md:order-1">
-                <div className="relative w-[22rem] sm:w-[28rem] md:w-[36rem] h-[30rem] sm:h-[40rem] md:h-[48rem]">
-                  {/* Top card (far LEFT) */}
-                  <div className="absolute left-0 top-0 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
-                    <img
-                      src="/workergirl1.jpeg"
-                      alt="Harvest and selection"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  {/* Middle card (offset to RIGHT) */}
-                  <div className="absolute left-[58%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-2xl">
-                    <img
-                      src="/hands-beans.jpeg"
-                      alt="Hands with beans"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  {/* Bottom card (far LEFT) */}
-                  <div className="absolute left-0 bottom-0 w-64 md:w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
-                    <img
-                      src="/woman2.jpeg"
-                      alt="Care at every step"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* TEXT — desktop right; on mobile shows only the story (title hidden) */}
-              <div className="space-y-3 md:justify-self-start order-3 md:order-2">
-                {/* Desktop title */}
-                <h3 className="hidden md:block font-cinzel text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
-                  The Hands That Grow Our Beans
-                </h3>
-
-                {/* Story paragraph */}
-                <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug md:leading-relaxed tracking-[0.01em]">
-                  Behind every harvest are the families who make it possible.
-                  Generations of farmers rise before dawn, nurturing each tree
-                  by hand and protecting the land that sustains them. Their
-                  knowledge, patience, and respect for nature give our coffee
-                  its strength and character. <br />
-                  <br />
-                  These small family farms are the heart of what we do. Every
-                  bean is ethically sourced, every grower treated with fairness
-                  and dignity. Their craftsmanship and pride live on in every
-                  roast, carrying forward the spirit of Old Ironsides Coffee.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-      {/* ===== THE HISTORY BEHIND THE FLEET ===== */}
-      <section
-        id="origins-history"
-        className="relative border-t border-neutral-800 py-12 md:py-16 scroll-mt-28 md:scroll-mt-36"
-      >
-        <Container>
-          <SectionTitle
-            title={
-              <span
-                className="text-3xl md:text-5xl font-bold text-[#C08C45] tracking-tight whitespace-normal md:whitespace-nowrap leading-tight"
-                style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}
-              >
-                The History Behind The Fleet
-              </span>
-            }
-            subtitle=""
-          />
-          {/* Mobile-only subtitle (smaller, tighter, centered) */}
-          <p className="md:hidden mt-2 text-[13px] leading-snug text-neutral-300 text-center px-3">
-            Explore the history of the USS Constitution and her victories that
-            inspired our roasts.
-          </p>
-          {/* Desktop/tablet subtitle preserved, just below title */}
-          <p className="hidden md:block mt-3 text-base leading-relaxed text-neutral-300">
-            Explore the history of the USS Constitution and her victories that
-            inspired our roasts.
-          </p>
-
-          <div className="mt-6 md:mt-10">
-            {/* MOBILE: swipeable carousel with arrows */}
-            <div className="relative md:hidden">
-              <div
-                ref={histScrollRef}
-                onScroll={onHistScroll}
-                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pl-3 pr-3 no-scrollbar scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none]"
-                style={{ WebkitOverflowScrolling: "touch" }}
-              >
-                {histSlugs.map((slug, idx) => {
-                  const card = roastCards.find((c) => c.slug === slug);
-                  if (!card) return null;
-
-                  return (
-                    <Link
-                      key={`story-m-${card.slug}`}
-                      ref={(el) => {
-                        histCardRefs.current[idx] = el;
-                      }}
-                      to={`/stories/${card.slug}`}
-                      onClick={() => {
-                        try {
-                          sessionStorage.setItem(
-                            "storiesReturnTo",
-                            STORIES_HOME
-                          );
-                        } catch {}
-                      }}
-                      className="
-                        mt-2 snap-center shrink-0
-                        w-[88vw] max-w-[88vw]
-                        rounded-2xl ring-1 ring-neutral-800
-                        bg-neutral-900/40 shadow-lg shadow-black/30
-                        hover:bg-neutral-900 transition flex flex-col
-                      "
-                      aria-label={`${card.storyTitle} details`}
-                    >
-                      <div className="relative h-[22rem] rounded-t-2xl overflow-hidden bg-black">
-                        <img
-                          src={
-                            card.heroImg?.startsWith("/") ||
-                            card.heroImg?.startsWith("http")
-                              ? card.heroImg
-                              : card.heroImg
-                              ? `/${card.heroImg}`
-                              : "/placeholder.png"
-                          }
-                          alt={String(card.title)}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                          decoding="async"
-                          onError={(e) => {
-                            const el = e.currentTarget as HTMLImageElement;
-                            if (!el.src.includes("/placeholder.png"))
-                              el.src = "/placeholder.png";
-                          }}
-                        />
-
-                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
-                      </div>
-
-                      <div className="p-4 flex flex-col text-left">
-                        <div className="flex items-center gap-2 text-[#C08C45] mb-1">
-                          <Compass className="h-4 w-4" />
-                          <div className="text-sm font-semibold">
-                            {card.storyTitle}
-                          </div>
-                        </div>
-                        <div className="text-[13px] text-[#C08C45] font-semibold">
-                          {card.battleDate}
-                        </div>
-                        <p className="mt-1 text-[13px] text-neutral-300 line-clamp-3">
-                          {card.story}
-                        </p>
-                        <span className="mt-3 inline-block text-[13px] text-[#C08C45]">
-                          Learn more
-                        </span>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-
-              {/* arrows */}
-              <div className="absolute inset-y-1/2 -translate-y-1/2 left-1 flex items-center pl-1 pointer-events-none">
-                <button
-                  type="button"
-                  onClick={histPrev}
-                  className="pointer-events-auto h-9 w-9 rounded-full bg-[#C08C45] text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
-                  aria-label="Previous story"
-                >
-                  ‹
-                </button>
-              </div>
-              <div className="absolute inset-y-1/2 -translate-y-1/2 right-1 flex items-center pr-1 pointer-events-none">
-                <button
-                  type="button"
-                  onClick={histNext}
-                  className="pointer-events-auto h-9 w-9 rounded-full bg-[#C08C45] text-neutral-900 font-bold text-xl flex items-center justify-center shadow-md shadow-black/40 active:scale-95"
-                  aria-label="Next story"
-                >
-                  ›
-                </button>
-              </div>
-            </div>
-
-            {/* DESKTOP/TABLET: original grid unchanged */}
-            <div className="hidden md:grid md:grid-cols-4 gap-6">
-              {[
-                "flagship",
-                "baptism-by-fire",
-                "java-action",
-                "oak-and-copper",
-              ].map((slug) => {
-                const card = roastCards.find((c) => c.slug === slug);
-                if (!card) return null;
-                return (
-                  <Link
-                    key={`story-${card.slug}`}
-                    to={`/stories/${card.slug}`}
-                    onClick={() => {
-                      try {
-                        sessionStorage.setItem("storiesReturnTo", STORIES_HOME);
-                      } catch {}
-                    }}
-                    className="group relative overflow-hidden rounded-2xl ring-1 ring-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 transition shadow-lg flex flex-col"
-                  >
-                    <img
-                      src={
-                        card.heroImg?.startsWith("/") ||
-                        card.heroImg?.startsWith("http")
-                          ? card.heroImg
-                          : card.heroImg
-                          ? `/${card.heroImg}`
-                          : "/placeholder.png"
-                      }
-                      alt={String(card.title)}
-                      className="h-72 sm:h-80 md:h-96 w-full object-cover"
-                    />
-
-                    <div className="p-5 flex flex-col flex-1">
-                      <div className="flex items-center gap-3 text-[#C08C45] mb-1">
-                        <Compass className="h-4 w-4" />
-                        <div>{card.storyTitle}</div>
-                      </div>
-                      <div className="text-sm md:text-base text-[#C08C45] font-semibold">
-                        {card.battleDate}
-                      </div>
-                      <p className="mt-1 text-sm text-neutral-300 flex-1">
-                        {card.story}
-                      </p>
-                      <span className="mt-4 inline-block text-sm text-[#C08C45]">
-                        Learn more
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* ===== FROM THE SAND TO THE SEA (unchanged) ===== */}
-      <section
-        id="origins-service"
-        className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
-      >
-        {/* Mobile: no backdrop. Desktop: keep backdrop */}
-        <img
-          src="/iraq-moon.JPG"
-          alt="Service backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-70 z-0 pointer-events-none hidden md:block"
-        />
-        <div className="absolute inset-0 bg-neutral-900/40 z-0 pointer-events-none hidden md:block" />
-        {/* Mobile-only flat bg */}
-        <div className="absolute inset-0 z-0 md:hidden bg-neutral-900" />
-
-        <Container>
-          <div className="relative z-10 flex items-center min-h-0 md:min-h-[960px] py-3 md:py-16">
-            {/* Collapsed to two columns: text + right stack */}
-            <div className="grid w-full grid-cols-1 md:grid-cols-[1fr,auto] items-center gap-3 md:gap-8">
-              {/* CENTER TEXT (now left column on desktop) */}
-              <div className="text-center md:text-left self-center">
-                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
-                  From The Sand To The Sea
-                </h3>
-                <p className="mt-1 md:mt-3 text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
-                  Although my boots were in the sand, not on the deck, the
-                  spirit of Old Ironsides has always inspired me. She is a
-                  reminder that grit, sacrifice, and courage win the day. Those
-                  same values carried me through my service and are now at the
-                  heart of Old Ironsides Coffee.
-                </p>
-              </div>
-
-              {/* RIGHT STACK: mobile mimics “Hands” collage; desktop keeps original */}
-              {/* MOBILE COLLAGE (like Hands) */}
-              <div className="md:hidden justify-self-center">
-                <div className="relative w-[20rem] sm:w-[22rem] h-[26rem]">
-                  {/* Top card (left) */}
-                  <div className="absolute left-0 top-0 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
-                    <img
-                      src="/humvee-turret.jpg"
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  {/* Middle card (offset right) */}
-                  <div className="absolute left-[56%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-2xl">
-                    <img
-                      src="/iraq-self1.jpeg"
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  {/* Bottom card (left) */}
-                  <div className="absolute left-0 bottom-0 w-48 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
-                    <img
-                      src="/iraq-kids.jpeg"
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* DESKTOP ORIGINAL STACK */}
-              <div className="hidden md:block justify-self-center md:justify-self-end">
-                <div className="relative w-[36rem] h-[48rem]">
-                  <div className="absolute left-1/2 top-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
-                    <img
-                      src="/humvee-turret.jpg"
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="absolute left-1/2 top-1/2 -translate-y-1/2 w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-2xl">
-                    <img
-                      src="/iraq-self1.JPG"
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="absolute left-1/2 bottom-0 -translate-x-full w-72 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/60 shadow-xl">
-                    <img
-                      src="/iraq-kids.JPG"
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* ===== GIVING BACK (switch: text LEFT, hero pic RIGHT) ===== */}
-      <section
-        id="origins-giving-back"
-        className="relative overflow-hidden border-t border-neutral-800 scroll-mt-28 md:scroll-mt-36"
-      >
-        {/* Background image, cooled and desaturated */}
-        <img
-          src="/flag-close.jpg"
-          alt=""
-          role="presentation"
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-contain md:object-cover object-center z-0 pointer-events-none brightness-70 saturate-70 hue-rotate-[-10deg] bg-black"
-        />
-
-        <div className="pointer-events-none absolute inset-0 z-0">
-          {/* global darken */}
-          <div className="absolute inset-0 bg-black/45" />
-          {/* left shield over copy only */}
-          <div className="absolute inset-y-0 left-0 w-full md:w-[62%] lg:w-[55%] bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
-          {/* mild texture blur */}
-          <div className="absolute inset-0 md:backdrop-blur-[2px]" />
-          {/* top/bottom vignette to kill remaining glare */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/35" />
-        </div>
-
-        <Container>
-          <div className="relative z-10 min-h-[600px] md:min-h-[700px] py-12 md:py-16 flex flex-col justify-center">
-            <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              <div className="justify-self-center md:justify-self-start self-center">
-                <div className="relative w-64 md:w-[30rem] mx-auto md:mx-0 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-xl shadow-black/60 bg-neutral-900/40">
-                  <img
-                    src="/soliders-sunset.jpg"
-                    alt="Giving back"
-                    className="w-full h-full object-cover hue-rotate-[-10deg] saturate-70"
-                  />
-                  {/* top and bottom vignettes reduce perceived warmth */}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10" />
-                </div>
-              </div>
-
-              {/* text: center on mobile, left on md+ */}
-              <div className="space-y-3 text-center md:text-left">
-                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
-                  Giving Back To Those Who Served
-                </h3>
-                <br />
-
-                <p className="text-neutral-100 text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Even as a young company where every dollar counts, giving back
-                  is a big part of who we are and what Old Ironsides Coffee
-                  stands for. As a veteran, I believe service is a promise kept
-                  when no one is watching. It is standards held high, teamwork
-                  under pressure, and loyalty to the people beside you. <br />
-                  <br />
-                  This brand exists to honor that code, to stand with those who
-                  protect our freedoms, and to keep their legacy present in the
-                  work we do every day.
-                </p>
-                <br />
-                <p className="text-[#C08C45] text-xl md:text-2xl leading-relaxed tracking-[0.02em]">
-                  Active duty, veterans, and first responders including fire,
-                  law enforcement, and EMTs receive $1 off every bag of fresh
-                  roasted coffee, every day. The discount stacks with
-                  subscriptions.
-                </p>
-                <br />
-                <a
-                  href="https://auth.govx.com/shopify/verify?shop=81ub0m-s7.myshopify.com&utm_source=shopify&utm_medium=govxid&utm_campaign=custom_link"
-                  className="mt-3 inline-block rounded-xl ring-1 ring-[#C08C45]/60 
-       text-[#C08C45] font-semibold text-[1rem]
-       px-[1.1rem] py-[0.45rem]
-       hover:bg-[#C08C45] hover:text-neutral-900 transition-all"
-                >
-                  Get GovX discount code
-                </a>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* ===== ABOUT OLD IRONSIDES COFFEE (unchanged) ===== */}
-      <section
-        id="origins-about"
-        className={`${SECTION_FRAME} scroll-mt-28 md:scroll-mt-36`}
-      >
-        {/* Backdrop image full-bleed */}
-        <img
-          src="/sunrise-deck.png"
-          alt="About backdrop"
-          className="absolute inset-0 w-full h-full object-cover object-center transform scale-[0.9] md:scale-100 opacity-40 z-0 pointer-events-none"
-        />
-        <div className="absolute inset-0 bg-neutral-900/40 z-0 pointer-events-none" />
-
-        <Container>
-          <div className="relative z-10 flex items-center min-h-0 md:min-h-[820px] py-4 md:py-16">
-            <div className="grid w-full grid-cols-1 md:grid-cols-[auto,1fr] gap-4 md:gap-6 items-center">
-              {/* Photo LEFT */}
-              <div className="justify-self-center self-center">
-                <div className="w-64 md:w-[32rem] mx-auto aspect-[10/13] rounded-xl overflow-hidden ring-1 ring-[#C08C45] bg-neutral-900/50">
-                  <img
-                    src="/ironship.jpg"
-                    alt="Old Ironsides legacy"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-
-              {/* Text RIGHT */}
-              <div className="space-y-3">
-                <h3 className="font-cinzel text-2xl md:text-4xl font-extrabold text-[#C08C45] tracking-wide uppercase">
-                  About Old Ironsides Coffee
-                </h3>
-                <p className="text-neutral-300 text-[15px] md:text-2xl leading-snug tracking-[0.01em]">
-                  Old Ironsides Coffee Company is a veteran-owned small-batch
-                  coffee brand inspired by the legacy of the USS Constitution,
-                  the oldest commissioned warship afloat in the United States
-                  Navy. The ship is based in Boston, Massachusetts and remains a
-                  living symbol of American resilience and strength. <br />{" "}
-                  <br />
-                  We roast premium coffee to order and ship nationwide across
-                  the United States. Every batch is ethically sourced and
-                  carefully roasted for bold flavor, freshness, and consistency.
-                  Our goal is to deliver coffee that reflects the discipline,
-                  craftsmanship, and pride that the name Old Ironsides
-                  represents. <br /> <br /> The name Old Ironsides is a direct
-                  tribute to the USS Constitution, which earned its nickname
-                  during the War of 1812 when cannonballs appeared to bounce
-                  from its hull. That spirit of durability and resolve defines
-                  our brand. We honor that legacy by building a company rooted
-                  in heritage, quality, and purpose. <br /> <br /> Whether you
-                  are a daily coffee drinker, a history enthusiast, or someone
-                  who values American heritage brands, Old Ironsides Coffee
-                  exists to serve you.
-                  <br /> <br />
-                  <span className="text-[#C08C45] font-semibold tracking-wide">
-                    OLD IRONSIDES COFFEE - IGNITE THE SPIRIT, SAVOR THE VICTORY!
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-    </main>
-  );
-}
 function ContactPage() {
   return (
     <main className="pt-0 pb-12 md:pt-24 md:pb-24">
@@ -9771,7 +9387,256 @@ function getDisplayName(user: any) {
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
     .join(" ");
 }
+function SubscriptionLandingPage() {
+  const subRoasts = roastCards.filter(
+    (r) => r.canBuy || r.slug === "oak-and-copper"
+  );
 
+  return (
+    <main className="relative overflow-hidden bg-black text-neutral-100">
+      {/* HERO */}
+      <section className="relative overflow-hidden border-b border-[#6D5333]/40 bg-[#050302]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(192,140,69,0.14),transparent_30%),radial-gradient(circle_at_82%_70%,rgba(109,83,51,0.14),transparent_34%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-[#050302]/90 to-black pointer-events-none" />
+
+        <Container>
+          <div className="relative z-10 py-10 md:py-14 max-w-[1040px] mx-auto">
+            <div className="mx-auto w-fit border border-[#6D5333]/70 bg-black/50 px-5 py-2">
+              <p className="font-oswald text-[0.72rem] md:text-sm font-bold uppercase tracking-[0.34em] text-[#C08C45]">
+                Fleet Command
+              </p>
+            </div>
+
+            <div className="mt-6 text-center">
+              <h1 className="font-cinzel text-3xl md:text-5xl xl:text-6xl font-black uppercase leading-[0.96] tracking-[0.04em] text-[#E6DCC8]">
+                Coffee Subscriptions
+                <br />
+                <span className="text-[#C08C45]">Made Simple</span>
+              </h1>
+
+              <p className="mt-4 max-w-[680px] mx-auto font-playfair italic text-lg md:text-xl leading-relaxed text-[#B5976D]">
+                Pick your roast. Choose 14, 30, or 60 days. Skip, pause, or
+                cancel anytime.
+              </p>
+
+              <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+                <a
+                  href="#choose-subscription"
+                  className="inline-flex h-[48px] items-center justify-center rounded-md bg-[#C08C45] px-7 font-oswald text-sm font-black uppercase tracking-[0.16em] text-black transition hover:bg-[#E6C07F]"
+                >
+                  Start A Subscription
+                </a>
+
+                <Link
+                  to="/account"
+                  className="inline-flex h-[48px] items-center justify-center rounded-md border border-[#6D5333] bg-black/40 px-7 font-oswald text-sm font-black uppercase tracking-[0.16em] text-[#E6C07F] transition hover:border-[#C08C45] hover:bg-[#32220D]"
+                >
+                  Manage Existing
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* SIMPLE STEPS */}
+      <section className="relative bg-black py-7 md:py-9 border-b border-[#6D5333]/40">
+        <Container>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-[1040px] mx-auto">
+            {[
+              ["01", "Pick Your Roast", "Choose the coffee you want."],
+              ["02", "Choose Schedule", "14, 30, or 60 day delivery."],
+              ["03", "Stay In Control", "Skip, pause, or cancel anytime."],
+            ].map(([num, title, text]) => (
+              <div
+                key={num}
+                className="rounded-xl border border-[#6D5333]/50 bg-[#080503] p-4 flex gap-4 items-center"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#C08C45] text-[#C08C45] font-oswald font-black text-sm">
+                  {num}
+                </div>
+
+                <div>
+                  <h2 className="font-oswald text-lg md:text-xl font-black uppercase tracking-[0.08em] text-[#E6DCC8]">
+                    {title}
+                  </h2>
+
+                  <p className="mt-1 text-neutral-400 text-sm leading-relaxed">
+                    {text}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ROAST GRID */}
+      <section
+        id="choose-subscription"
+        className="relative overflow-hidden bg-[#050302] py-9 md:py-14 border-b border-[#6D5333]/40"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(192,140,69,0.10),transparent_30%),radial-gradient(circle_at_75%_70%,rgba(109,83,51,0.12),transparent_34%)] pointer-events-none" />
+
+        <Container>
+          <div className="relative z-10 max-w-[1040px] mx-auto">
+            <div className="text-center max-w-[720px] mx-auto">
+              <p className="font-oswald text-[0.7rem] font-bold uppercase tracking-[0.32em] text-[#B5976D]">
+                Subscribe And Save
+              </p>
+
+              <h2 className="mt-3 font-cinzel text-2xl md:text-4xl font-black uppercase leading-tight text-[#C08C45]">
+                Choose Your Roast
+              </h2>
+
+              <p className="mt-3 text-neutral-300 text-base md:text-lg leading-relaxed">
+                Tap a roast. The product page opens with subscription selected.
+              </p>
+            </div>
+
+            <div className="mt-7 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              {subRoasts.map((r) => {
+                const isOak = r.slug === "oak-and-copper";
+                const price = isOak ? 27 : Number(r.price || 22);
+                const subPrice = isOak ? price : price * 0.85;
+
+                return (
+                  <Link
+                    key={r.slug}
+                    to={`/roast/${r.slug}?purchase=sub`}
+                    className="group rounded-xl border border-[#6D5333]/50 bg-black/70 shadow-xl shadow-black/40 transition hover:border-[#C08C45] overflow-hidden"
+                  >
+                    <div className="grid grid-cols-[105px_1fr] sm:grid-cols-1">
+                      <div className="bg-[#080503] flex items-center justify-center p-3">
+                        <img
+                          src={
+                            r.img?.startsWith("/") || r.img?.startsWith("http")
+                              ? r.img
+                              : `/${r.img}`
+                          }
+                          alt={r.title}
+                          className="h-[120px] sm:h-[170px] w-full object-contain transition duration-300 group-hover:scale-[1.03]"
+                        />
+                      </div>
+
+                      <div className="p-4">
+                        <h3 className="font-cinzel text-xl md:text-2xl font-black uppercase tracking-[0.03em] text-[#C08C45] leading-tight">
+                          {r.title}
+                        </h3>
+
+                        <p className="mt-1 text-[#B5976D] text-sm font-semibold">
+                          {r.subTitle}
+                        </p>
+
+                        <p className="mt-2 text-neutral-300 text-sm leading-relaxed line-clamp-2">
+                          {r.note ||
+                            "Fresh-roasted and built for the daily cup."}
+                        </p>
+
+                        <div className="mt-3 rounded-lg border border-[#6D5333]/50 bg-[#130E08] p-3">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-[#E6C07F] font-oswald text-sm font-black uppercase tracking-[0.08em]">
+                              {isOak ? "Subscribe" : "Save 15%"}
+                            </span>
+
+                            <span className="text-neutral-300 text-sm font-semibold">
+                              {fmt(subPrice)}
+                            </span>
+                          </div>
+
+                          <p className="mt-1 text-xs text-[#B5976D]">
+                            Every 14, 30, or 60 days
+                          </p>
+                        </div>
+
+                        <div className="mt-3 h-[44px] rounded-md bg-[#C08C45] text-black font-oswald font-black uppercase tracking-[0.14em] flex items-center justify-center text-sm transition group-hover:bg-[#E6C07F]">
+                          Subscribe
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* MANAGE + FAQ */}
+      <section className="relative bg-black py-9 md:py-12">
+        <Container>
+          <div className="max-w-[1040px] mx-auto grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-5">
+            {/* MANAGE */}
+            <div className="rounded-2xl border border-[#6D5333]/55 bg-[#080503] p-5 md:p-6 shadow-xl shadow-black/50">
+              <p className="font-oswald text-[0.7rem] font-bold uppercase tracking-[0.3em] text-[#B5976D]">
+                Already Subscribed?
+              </p>
+
+              <h2 className="mt-3 font-cinzel text-2xl md:text-3xl font-black uppercase leading-tight text-[#E6DCC8]">
+                Manage Your
+                <br />
+                <span className="text-[#C08C45]">Coffee Deliveries</span>
+              </h2>
+
+              <p className="mt-3 text-neutral-300 text-base leading-relaxed">
+                Sign in to view deliveries, orders, shipping, and account help.
+              </p>
+
+              <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Link
+                  to="/account"
+                  className="rounded-xl border border-[#6D5333] bg-[#130E08] p-4 text-center transition hover:border-[#C08C45]"
+                >
+                  <div className="font-oswald text-xl font-black uppercase text-[#C08C45]">
+                    Account
+                  </div>
+                  <p className="mt-1 text-neutral-400 text-sm">
+                    Orders and shipping.
+                  </p>
+                </Link>
+
+                <Link
+                  to="/account/login"
+                  className="rounded-xl border border-[#C08C45] bg-[#C08C45] p-4 text-center transition hover:bg-[#E6C07F]"
+                >
+                  <div className="font-oswald text-xl font-black uppercase text-black">
+                    Sign In
+                  </div>
+                  <p className="mt-1 text-black/75 text-sm font-semibold">
+                    Manage subscription.
+                  </p>
+                </Link>
+              </div>
+            </div>
+
+            {/* FAQ */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                ["Can I skip?", "Yes. Skip a shipment when needed."],
+                ["Can I cancel?", "Yes. Cancel anytime from your account."],
+                ["How often?", "Choose every 14, 30, or 60 days."],
+                ["Need help?", "Email HQ@oldironsidescoffee.org."],
+              ].map(([q, a]) => (
+                <div
+                  key={q}
+                  className="rounded-xl border border-[#6D5333]/45 bg-[#080503] p-4"
+                >
+                  <h3 className="font-oswald text-lg font-black uppercase tracking-[0.06em] text-[#E6C07F]">
+                    {q}
+                  </h3>
+
+                  <p className="mt-2 text-neutral-300 text-sm leading-relaxed">
+                    {a}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </section>
+    </main>
+  );
+}
 /* ===================== Account / Subscribe & Manage ===================== */
 function SubscribeManagePage({
   initialTab = "overview",
@@ -11244,6 +11109,49 @@ function HeaderNavLink({
   );
 }
 
+function HeaderDropdown({
+  label,
+  items,
+}: {
+  label: string;
+  items: { label: string; to: string }[];
+}) {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="px-1.5 py-1 rounded-md text-base md:text-lg transition-colors text-ironsideWhite/80 hover:text-ironsideWhite font-semibold inline-flex items-center gap-1"
+      >
+        {label}
+        <span className="text-[#C08C45] text-sm leading-none">▼</span>
+      </button>
+
+      {open && (
+        <div className="absolute left-0 top-full pt-3 z-[999999] min-w-[230px]">
+          <div className="rounded-md border border-[#6D5333]/70 bg-black/95 shadow-2xl shadow-black/70 overflow-hidden">
+            {items.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setOpen(false)}
+                className="block px-5 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-[#B5976D] hover:bg-[#130E08] hover:text-[#E6C07F] border-b border-[#6D5333]/30 last:border-b-0"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
 
@@ -11255,7 +11163,17 @@ function ScrollToTop() {
         const id = hash.slice(1);
         const el = document.getElementById(id);
         if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          const headerOffset = window.innerWidth < 1024 ? 140 : 180;
+
+          const elementPosition =
+            el.getBoundingClientRect().top + window.pageYOffset;
+
+          const offsetPosition = elementPosition - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
         } else {
           // fallback if anchor not found
           window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -12030,20 +11948,20 @@ function Layout() {
         {/* === DESKTOP HEADER STACK + NAV (unchanged look) === */}
         <div
           className={
-            "hidden lg:block relative z-20 transition-colors duration-300 " +
+            "hidden lg:block relative z-[999] transition-colors duration-300 " +
             (shrunk ? "bg-black" : "bg-transparent")
           }
         >
-          <Container className="flex flex-col items-start px-10 xl:px-6">
+          <Container className="flex flex-col items-start px-4 xl:px-6 max-w-full overflow-visible">
             <div
               className={
                 (shrunk ? "pt-3 pb-2" : "pt-8 pb-3") + " relative z-30"
               }
             >
               {/* centered brand block with emblem on the left */}
-              <div className="flex items-center justify-between w-full">
+              <div className="flex items-center justify-between w-full min-w-0 overflow-visible">
                 {/* LEFT: emblem + title */}
-                <div className="flex items-center gap-6 translate-x-6 2xl:translate-x-0 whitespace-nowrap shrink-0">
+                <div className="flex items-center gap-4 xl:gap-6 translate-x-0 2xl:translate-x-0 whitespace-nowrap shrink min-w-0">
                   <Link
                     to="/"
                     aria-label="Go to Home Port"
@@ -12085,10 +12003,28 @@ function Layout() {
 
                 {/* CENTER: nav */}
                 <nav className="hidden md:flex items-center gap-6 text-idleBtnText font-semibold ml-20 whitespace-nowrap shrink-0">
-                  <HeaderNavLink to="/store">SHOP COFFEE</HeaderNavLink>
-                  <HeaderNavLink to="/origins">
-                    ORIGINS AND VOYAGES
-                  </HeaderNavLink>
+                  <HeaderDropdown
+                    label="SHOP COFFEE"
+                    items={[
+                      { label: "All Coffee", to: "/store" },
+                      {
+                        label: "Sample Packs",
+                        to: "/roast/armada-sample-pack",
+                      },
+                      { label: "Subscriptions", to: "/subscriptions" },
+                    ]}
+                  />
+
+                  <HeaderDropdown
+                    label="ORIGINS AND VOYAGES"
+                    items={[
+                      { label: "Tasting Events", to: "/#tasting-events" },
+                      { label: "Roast Process", to: "/#roasting-process" },
+                      { label: "Harvest", to: "/#origins-sourcing" },
+                      { label: "Our Story", to: "/#origins-about" },
+                    ]}
+                  />
+
                   <HeaderNavLink to="/contact">CONTACT</HeaderNavLink>
                 </nav>
 
@@ -12098,16 +12034,14 @@ function Layout() {
                   onClick={() => setDesktopCartOpen(true)}
                   aria-label="Open Chest (Cart)"
                   title="Chest"
-                  className="hidden md:flex items-center ml-16 border-2 border-[#C08C45] rounded-md overflow-hidden"
+                  className="hidden md:flex items-stretch ml-6 xl:ml-10 border-2 border-[#C08C45] rounded-md overflow-hidden shrink-0"
                 >
-                  {/* LEFT: icon + label */}
                   <div className="flex items-center gap-2 px-4 py-2 text-[#C08C45] font-semibold tracking-wide">
                     <ChestIcon className="h-5 w-5" />
                     <span className="text-sm">CHEST</span>
                   </div>
 
-                  {/* RIGHT: count */}
-                  <div className="flex items-center justify-center w-[44px] py-2 border-l-2 border-[#C08C45] text-[#C08C45] font-semibold text-sm tabular-nums">
+                  <div className="flex items-center justify-center min-w-[44px] px-3 py-2 border-l-2 border-[#C08C45] text-[#C08C45] font-semibold text-sm tabular-nums">
                     {count ?? 0}
                   </div>
                 </button>
@@ -12151,35 +12085,97 @@ function Layout() {
 
             {/* body */}
             <div className="flex-1 overflow-y-auto text-neutral-100 text-lg font-semibold">
+              <div className="px-4 pt-4 pb-2 text-[#C08C45] text-xs uppercase tracking-[0.22em]">
+                Shop Coffee
+              </div>
+
               <Link
                 to="/store"
                 onClick={() => setMobileOpen(false)}
-                className="block px-4 py-4 border-b border-neutral-800"
+                className="block px-4 py-3 border-b border-neutral-800 text-neutral-200"
               >
-                COFFEE
+                All Coffee
               </Link>
 
               <Link
-                to="/store#merch"
+                to="/roast/armada-sample-pack"
                 onClick={() => setMobileOpen(false)}
-                className="block px-4 py-4 border-b border-neutral-800"
+                className="block px-4 py-3 border-b border-neutral-800 text-neutral-200"
               >
-                GEAR
+                Sample Packs
               </Link>
               <Link
-                to="/origins"
+                to="/subscriptions"
                 onClick={() => setMobileOpen(false)}
-                className="block px-4 py-4 border-b border-neutral-800"
+                className="block px-4 py-3 border-b border-neutral-800 text-neutral-200"
               >
-                ORIGINS &amp; VOYAGES
+                Subscriptions
               </Link>
+
+              <div className="px-4 pt-5 pb-2 text-[#C08C45] text-xs uppercase tracking-[0.22em]">
+                Origins &amp; Voyages
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+
+                  navigate("/#tasting-events");
+
+                  setTimeout(() => {
+                    const el = document.getElementById("tasting-events");
+                    if (!el) return;
+
+                    const headerOffset = window.innerWidth < 1024 ? 140 : 180;
+                    const y =
+                      el.getBoundingClientRect().top +
+                      window.pageYOffset -
+                      headerOffset;
+
+                    window.scrollTo({
+                      top: y,
+                      behavior: "smooth",
+                    });
+                  }, 80);
+                }}
+                className="block w-full text-left px-4 py-3 border-b border-neutral-800 text-neutral-200"
+              >
+                Tasting Events
+              </button>
+
+              <Link
+                to="/#origins-sourcing"
+                onClick={() => setMobileOpen(false)}
+                className="block px-4 py-3 border-b border-neutral-800 text-neutral-200"
+              >
+                Harvest
+              </Link>
+
+              <Link
+                to="/#roasting-process"
+                onClick={() => setMobileOpen(false)}
+                className="block px-4 py-3 border-b border-neutral-800 text-neutral-200"
+              >
+                Roast Process
+              </Link>
+
+              <Link
+                to="/#origins-about"
+                onClick={() => setMobileOpen(false)}
+                className="block px-4 py-3 border-b border-neutral-800 text-neutral-200"
+              >
+                Our Story
+              </Link>
+
               <Link
                 to="/contact"
                 onClick={() => setMobileOpen(false)}
                 className="block px-4 py-4 border-b border-neutral-800"
               >
-                CONTACT THE CREW
+                Contact
               </Link>
+
               <Link
                 to="/account"
                 onClick={() => setMobileOpen(false)}
@@ -12555,10 +12551,12 @@ function AppShell() {
           <Route path="roast/:slug" element={<RoastDetailPage />} />
           <Route path="store" element={<StorePage />} />
           <Route path="store/:slug" element={<StoreCategoryPage />} />
-
+          <Route path="subscriptions" element={<SubscriptionLandingPage />} />
           {/* History Story pages */}
+          <Route path="/fleet-history" element={<FleetHistoryPage />} />
+          <Route path="/fleet-story/:slug" element={<FleetStoryPage />} />
           <Route path="stories/:slug" element={<FleetStoryPage />} />
-          <Route path="origins" element={<OriginsPage />} />
+
           <Route path="contact" element={<ContactPage />} />
           <Route path="sdvosb" element={<SDVOSBPage />} />
           <Route path="legal/:slug" element={<LegalPage />} />

@@ -2419,7 +2419,7 @@ function HomePage() {
                 <span className="block text-[#E6DCC8]">
                   FRESH ROASTED COFFEE.
                 </span>
-                <span className="block text-[#C08C45] md:text-[#D3A052] mt-4">
+                <span className="block text-[#C69A58] md:text-[#D3A052] mt-4">
                   BUILT ON TRADITION.
                 </span>
               </h2>
@@ -2435,7 +2435,7 @@ function HomePage() {
 
               {/* SUBTEXT */}
               <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-[#E6DCC8]/75">
-                Roasted to order. Small batch. Ethically sourced.
+                Small-batch roasted to order and shipped at peak freshness.
               </div>
 
               <div className="w-full max-w-none mt-8 md:mt-12 xl:mt-14">

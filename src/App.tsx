@@ -5907,8 +5907,8 @@ function RoastDetailPage() {
       // 3) mirror to your local cart UI
       const itemToAdd = {
         ...card,
-        id: `${card.slug}-12oz-${beanType}`,
-        sku: `${card.slug}-12oz-${beanType}`,
+        id: `${card.slug}-${size}-${beanType}`,
+        sku: `${card.slug}-${size}-${beanType}`,
         title: `${card.title} (${variantLabel})`,
         // store both the regular one-time price and the active price
         basePrice,

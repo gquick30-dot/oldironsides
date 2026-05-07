@@ -860,16 +860,6 @@ function CartProvider({ children }: any) {
     },
     [persist, cart]
   );
-  const isSamplePackItem = (it: any) => {
-    const slug = String(it?.slug ?? "").toLowerCase();
-    const title = String(it?.title ?? "").toLowerCase();
-
-    return (
-      slug.includes("sample") ||
-      title.includes("sample pack") ||
-      title.includes("sample")
-    );
-  };
 
   // simple sub price helper:
 
@@ -880,7 +870,7 @@ function CartProvider({ children }: any) {
     // Sample packs and Oak & Copper never receive subscription discounts
     const slug = String(it?.slug ?? "");
 
-    if (isSamplePackItem(it) || slug === "oak-and-copper") {
+    if (slug === "oak-and-copper") {
       const bp = Number(it?.basePrice ?? it?.price ?? 0);
       return Math.max(0, +bp.toFixed(2));
     }
@@ -8939,17 +8929,6 @@ function CartPage() {
     };
   }, [clear, cart.length]);
 
-  const isSamplePackItem = (it: any) => {
-    const slug = String(it?.slug ?? "").toLowerCase();
-    const title = String(it?.title ?? "").toLowerCase();
-
-    return (
-      slug.includes("sample") ||
-      title.includes("sample pack") ||
-      title.includes("sample")
-    );
-  };
-
   // Free shipping helpers
   const missingForFree = Math.max(0, freeShippingThreshold - coffeeBagCount);
   const freeShipProgress = Math.min(1, coffeeBagCount / freeShippingThreshold);
@@ -9003,7 +8982,7 @@ function CartPage() {
         if (!merchId || qty <= 0) continue;
 
         const planId =
-          !isSamplePackItem(i) && i?.purchaseMode === "sub" && i?.sellingPlanId
+          i?.purchaseMode === "sub" && i.sellingPlanId
             ? String(i.sellingPlanId)
             : undefined;
 
@@ -9173,16 +9152,10 @@ function CartPage() {
                       <div className="mt-1 text-sm">{fmt(item.price)}</div>
 
                       {/* Purchase type copy */}
-                      {item?.purchaseMode === "sub" &&
-                      !isSamplePackItem(item) ? (
+                      {item?.purchaseMode === "sub" ? (
                         <div className="mt-1 text-m text-[#C08C45]">
                           Fresh Roasted, Ships every {item?.subEvery ?? 30}{" "}
                           days. 15% off applied.
-                        </div>
-                      ) : isSamplePackItem(item) ? (
-                        <div className="mt-1 text-m text-neutral-400">
-                          Sample packs are one-time purchases and do not qualify
-                          for subscription discounts.
                         </div>
                       ) : (
                         <div className="mt-1 text-m text-neutral-400">
@@ -12637,17 +12610,6 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
 
   const hasSubscription = cart.some((i: any) => !!i.isSubscription);
 
-  const isSamplePackItem = (it: any) => {
-    const slug = String(it?.slug ?? "").toLowerCase();
-    const title = String(it?.title ?? "").toLowerCase();
-
-    return (
-      slug.includes("sample") ||
-      title.includes("sample pack") ||
-      title.includes("sample")
-    );
-  };
-
   // drawer open/close
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => setOpen(true), []);
@@ -12706,12 +12668,9 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
       for (const i of cart ?? []) {
         const v = i?.merchandiseId;
         const q = Math.max(0, Math.min(99, Number(i?.qty ?? 0)));
-        const isSamplePack = isSamplePackItem(i);
 
         const sp =
-          !isSamplePack &&
-          typeof i?.sellingPlanId === "string" &&
-          i.sellingPlanId.length > 0
+          typeof i?.sellingPlanId === "string" && i.sellingPlanId.length > 0
             ? i.sellingPlanId
             : undefined;
 
@@ -13369,17 +13328,6 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
 
   const hasSubscription = cart.some((i: any) => !!i.isSubscription);
 
-  const isSamplePackItem = (it: any) => {
-    const slug = String(it?.slug ?? "").toLowerCase();
-    const title = String(it?.title ?? "").toLowerCase();
-
-    return (
-      slug.includes("sample") ||
-      title.includes("sample pack") ||
-      title.includes("sample")
-    );
-  };
-
   // drawer open/close + dwell
   const [open, setOpen] = React.useState(false);
   const [pinned, setPinned] = React.useState(false); // interaction cancels autoclose
@@ -13443,12 +13391,9 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
       for (const i of cart ?? []) {
         const v = i?.merchandiseId;
         const q = Math.max(0, Math.min(99, Number(i?.qty ?? 0)));
-        const isSamplePack = isSamplePackItem(i);
 
         const sp =
-          !isSamplePack &&
-          typeof i?.sellingPlanId === "string" &&
-          i.sellingPlanId.length > 0
+          typeof i?.sellingPlanId === "string" && i.sellingPlanId.length > 0
             ? i.sellingPlanId
             : undefined;
 

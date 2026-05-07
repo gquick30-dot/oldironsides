@@ -5885,15 +5885,14 @@ function RoastDetailPage() {
       const cart = await ensureCart();
 
       // 2) add to Shopify cart
+      // Force samples to be one-time only
+      const effectivePurchaseMode = size === "sample" ? "sample" : purchaseMode;
+
       // pick selling plan if subscribing
       const planId =
-        size === "sample"
-          ? undefined
-          : purchaseMode === "sub"
-          ? planMap[subEvery]
-          : undefined;
+        effectivePurchaseMode === "sub" ? planMap[subEvery] : undefined;
 
-      if (purchaseMode === "sub" && !planId) {
+      if (effectivePurchaseMode === "sub" && !planId) {
         window.dispatchEvent(
           new CustomEvent("flash", {
             detail: "Subscription plan not available yet. Try again.",
@@ -5910,8 +5909,8 @@ function RoastDetailPage() {
         ...(planId ? { sellingPlanId: planId } : {}),
         attributes: {
           beanType: variantLabel,
-          purchaseMode,
-          subEvery: purchaseMode === "sub" ? String(subEvery) : "",
+          purchaseMode: effectivePurchaseMode,
+          subEvery: effectivePurchaseMode === "sub" ? String(subEvery) : "",
         },
       });
 
@@ -5923,10 +5922,12 @@ function RoastDetailPage() {
         title: `${card.title} (${variantLabel})`,
         // store both the regular one-time price and the active price
         basePrice,
-        price: purchaseMode === "sub" ? discounted ?? basePrice : basePrice,
+        price:
+          effectivePurchaseMode === "sub" ? discounted ?? basePrice : basePrice,
         beanType,
-        purchaseMode,
-        subEvery: purchaseMode === "sub" ? subEvery : undefined,
+        purchaseMode: effectivePurchaseMode,
+        isSubscription: effectivePurchaseMode === "sub",
+        subEvery: effectivePurchaseMode === "sub" ? subEvery : undefined,
         merchandiseId: merchId,
         // active plan used right now
         sellingPlanId: planId,
@@ -8935,6 +8936,17 @@ function CartPage() {
     };
   }, [clear, cart.length]);
 
+  const isSamplePackItem = (it: any) => {
+    const slug = String(it?.slug ?? "").toLowerCase();
+    const title = String(it?.title ?? "").toLowerCase();
+
+    return (
+      slug.includes("sample") ||
+      title.includes("sample pack") ||
+      title.includes("sample")
+    );
+  };
+
   // Free shipping helpers
   const missingForFree = Math.max(0, freeShippingThreshold - coffeeBagCount);
   const freeShipProgress = Math.min(1, coffeeBagCount / freeShippingThreshold);
@@ -8988,7 +9000,7 @@ function CartPage() {
         if (!merchId || qty <= 0) continue;
 
         const planId =
-          i?.purchaseMode === "sub" && i?.sellingPlanId
+          !isSamplePackItem(i) && i?.purchaseMode === "sub" && i?.sellingPlanId
             ? String(i.sellingPlanId)
             : undefined;
 
@@ -9158,10 +9170,16 @@ function CartPage() {
                       <div className="mt-1 text-sm">{fmt(item.price)}</div>
 
                       {/* Purchase type copy */}
-                      {item?.purchaseMode === "sub" ? (
+                      {item?.purchaseMode === "sub" &&
+                      !isSamplePackItem(item) ? (
                         <div className="mt-1 text-m text-[#C08C45]">
                           Fresh Roasted, Ships every {item?.subEvery ?? 30}{" "}
                           days. 15% off applied.
+                        </div>
+                      ) : isSamplePackItem(item) ? (
+                        <div className="mt-1 text-m text-neutral-400">
+                          Sample packs are one-time purchases and do not qualify
+                          for subscription discounts.
                         </div>
                       ) : (
                         <div className="mt-1 text-m text-neutral-400">

@@ -860,6 +860,16 @@ function CartProvider({ children }: any) {
     },
     [persist, cart]
   );
+  const isSamplePackItem = (it: any) => {
+    const slug = String(it?.slug ?? "").toLowerCase();
+    const title = String(it?.title ?? "").toLowerCase();
+
+    return (
+      slug.includes("sample") ||
+      title.includes("sample pack") ||
+      title.includes("sample")
+    );
+  };
 
   // simple sub price helper:
 
@@ -867,9 +877,10 @@ function CartProvider({ children }: any) {
     const explicit = Number(it?.subPrice ?? 0);
     if (explicit > 0) return explicit;
 
-    // Oak & Copper: subscription exists, but no discount
+    // Sample packs and Oak & Copper never receive subscription discounts
     const slug = String(it?.slug ?? "");
-    if (slug === "oak-and-copper") {
+
+    if (isSamplePackItem(it) || slug === "oak-and-copper") {
       const bp = Number(it?.basePrice ?? it?.price ?? 0);
       return Math.max(0, +bp.toFixed(2));
     }

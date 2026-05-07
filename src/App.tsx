@@ -4780,18 +4780,20 @@ function BuyBoxSection({
             isOak={isOak}
           />
 
-          <PurchaseModeButton
-            mode="sub"
-            size={size}
-            active={purchaseMode === "sub"}
-            onClick={() => setPurchaseMode("sub")}
-            basePrice={basePrice}
-            discounted={discounted}
-            isOak={isOak}
-            subEvery={subEvery}
-            setSubEvery={setSubEvery}
-            showSubOptions={purchaseMode === "sub"}
-          />
+          {size !== "sample" && (
+            <PurchaseModeButton
+              mode="sub"
+              size={size}
+              active={purchaseMode === "sub"}
+              onClick={() => setPurchaseMode("sub")}
+              basePrice={basePrice}
+              discounted={discounted}
+              isOak={isOak}
+              subEvery={subEvery}
+              setSubEvery={setSubEvery}
+              showSubOptions={purchaseMode === "sub"}
+            />
+          )}
         </div>
 
         <div className="mt-4 flex items-center gap-3">
@@ -4899,7 +4901,12 @@ function BuyBoxSection({
           card.slug === "flagship" ? DESKTOP_BUYBOX_SHIFT[card.slug] || "" : ""
         }`}
       >
-        <div className="w-full max-w-[620px] grid grid-cols-2 gap-3">
+        <div
+          className={
+            "w-full max-w-[620px] grid gap-3 " +
+            (size === "sample" ? "grid-cols-1" : "grid-cols-2")
+          }
+        >
           <button
             type="button"
             onClick={() => setPurchaseMode("one")}
@@ -4914,25 +4921,21 @@ function BuyBoxSection({
             Single Purchase
           </button>
 
-          <button
-            type="button"
-            disabled={size === "sample"}
-            onClick={() => {
-              if (size === "sample") return;
-              setPurchaseMode("sub");
-            }}
-            className={
-              "h-[58px] rounded-md border text-sm md:text-base font-semibold transition text-center " +
-              (size === "sample"
-                ? "bg-[#130E08] text-[#6D6D6D] border-[#6D5333]/40 opacity-50 cursor-not-allowed"
-                : purchaseMode === "sub"
-                ? "bg-[#32220D] text-[#E6C07F] border-[#C08C45]"
-                : "bg-[#130E08] text-[#C08C45] border-[#6D5333] hover:border-[#C08C45] hover:text-[#E6C07F]")
-            }
-            aria-pressed={purchaseMode === "sub"}
-          >
-            {isOak ? "Join the Fleet" : "Join the Fleet & Save 15%"}
-          </button>
+          {size !== "sample" && (
+            <button
+              type="button"
+              onClick={() => setPurchaseMode("sub")}
+              className={
+                "h-[58px] rounded-md border text-sm md:text-base font-semibold transition text-center " +
+                (purchaseMode === "sub"
+                  ? "bg-[#32220D] text-[#E6C07F] border-[#C08C45]"
+                  : "bg-[#130E08] text-[#C08C45] border-[#6D5333] hover:border-[#C08C45] hover:text-[#E6C07F]")
+              }
+              aria-pressed={purchaseMode === "sub"}
+            >
+              {isOak ? "Join the Fleet" : "Join the Fleet & Save 15%"}
+            </button>
+          )}
         </div>
 
         {purchaseMode === "sub" && (

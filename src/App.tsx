@@ -12605,6 +12605,17 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
 
   const hasSubscription = cart.some((i: any) => !!i.isSubscription);
 
+  const isSamplePackItem = (it: any) => {
+    const slug = String(it?.slug ?? "").toLowerCase();
+    const title = String(it?.title ?? "").toLowerCase();
+
+    return (
+      slug.includes("sample") ||
+      title.includes("sample pack") ||
+      title.includes("sample")
+    );
+  };
+
   // drawer open/close
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => setOpen(true), []);
@@ -12663,8 +12674,12 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
       for (const i of cart ?? []) {
         const v = i?.merchandiseId;
         const q = Math.max(0, Math.min(99, Number(i?.qty ?? 0)));
+        const isSamplePack = isSamplePackItem(i);
+
         const sp =
-          typeof i?.sellingPlanId === "string" && i.sellingPlanId.length > 0
+          !isSamplePack &&
+          typeof i?.sellingPlanId === "string" &&
+          i.sellingPlanId.length > 0
             ? i.sellingPlanId
             : undefined;
 
@@ -13050,88 +13065,90 @@ function DesktopCartSheet({ onClose }: { onClose: () => void }) {
                           </div>
                         </div>
 
-                        {!isSub && it?.slug !== "oak-and-copper" && (
-                          <div className="mt-2">
-                            {!showSubChooser[it.id] ? (
-                              <button
-                                onClick={() =>
-                                  setShowSubChooser((prev) => ({
-                                    ...prev,
-                                    [it.id]: true,
-                                  }))
-                                }
-                                className="w-full rounded-md ring-1 ring-[#C08C45]/60 bg-neutral-900/60 text-[#C08C45] font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] hover:text-neutral-900 transition"
-                              >
-                                Join The Fleet &amp; Save 15%
-                              </button>
-                            ) : (
-                              <>
-                                <div className="mb-2 grid grid-cols-3 gap-2">
-                                  {[14, 30, 60].map((d) => (
+                        {!isSub &&
+                          it?.slug !== "oak-and-copper" &&
+                          !isSamplePackItem(it) && (
+                            <div className="mt-2">
+                              {!showSubChooser[it.id] ? (
+                                <button
+                                  onClick={() =>
+                                    setShowSubChooser((prev) => ({
+                                      ...prev,
+                                      [it.id]: true,
+                                    }))
+                                  }
+                                  className="w-full rounded-md ring-1 ring-[#C08C45]/60 bg-neutral-900/60 text-[#C08C45] font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] hover:text-neutral-900 transition"
+                                >
+                                  Join The Fleet &amp; Save 15%
+                                </button>
+                              ) : (
+                                <>
+                                  <div className="mb-2 grid grid-cols-3 gap-2">
+                                    {[14, 30, 60].map((d) => (
+                                      <button
+                                        key={`${it.id}-freq-${d}`}
+                                        onClick={() =>
+                                          setFreq((prev) => ({
+                                            ...prev,
+                                            [it.id]: d,
+                                          }))
+                                        }
+                                        className={[
+                                          "py-1.5 rounded-md text-[12px] font-semibold ring-1",
+                                          selFreq === d
+                                            ? "bg-[#C08C45] text-neutral-900 ring-[#C08C45]"
+                                            : "bg-neutral-900/60 text-[#C08C45] ring-[#C08C45]/60",
+                                        ].join(" ")}
+                                      >
+                                        {d} days
+                                      </button>
+                                    ))}
+                                  </div>
+                                  <div className="flex gap-2">
                                     <button
-                                      key={`${it.id}-freq-${d}`}
-                                      onClick={() =>
-                                        setFreq((prev) => ({
-                                          ...prev,
-                                          [it.id]: d,
-                                        }))
-                                      }
-                                      className={[
-                                        "py-1.5 rounded-md text-[12px] font-semibold ring-1",
-                                        selFreq === d
-                                          ? "bg-[#C08C45] text-neutral-900 ring-[#C08C45]"
-                                          : "bg-neutral-900/60 text-[#C08C45] ring-[#C08C45]/60",
-                                      ].join(" ")}
-                                    >
-                                      {d} days
-                                    </button>
-                                  ))}
-                                </div>
-                                <div className="flex gap-2">
-                                  <button
-                                    onClick={() => {
-                                      updateItem(it.id, {
-                                        isSubscription: true,
-                                        purchaseMode: "sub",
-                                        subEvery: selFreq,
-                                        subPrice: getSubPrice({
-                                          ...it,
+                                      onClick={() => {
+                                        updateItem(it.id, {
+                                          isSubscription: true,
+                                          purchaseMode: "sub",
                                           subEvery: selFreq,
-                                        }),
-                                        sellingPlanId:
-                                          it.sellingPlans &&
-                                          it.sellingPlans[selFreq]
-                                            ? it.sellingPlans[selFreq]
-                                            : it.sellingPlanId,
-                                      });
-                                      setShowSubChooser((prev) => {
-                                        const next = { ...prev };
-                                        delete next[it.id];
-                                        return next;
-                                      });
-                                    }}
-                                    className="flex-1 rounded-md bg-[#C08C45] text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] transition"
-                                  >
-                                    Start Subscription
-                                  </button>
+                                          subPrice: getSubPrice({
+                                            ...it,
+                                            subEvery: selFreq,
+                                          }),
+                                          sellingPlanId:
+                                            it.sellingPlans &&
+                                            it.sellingPlans[selFreq]
+                                              ? it.sellingPlans[selFreq]
+                                              : it.sellingPlanId,
+                                        });
+                                        setShowSubChooser((prev) => {
+                                          const next = { ...prev };
+                                          delete next[it.id];
+                                          return next;
+                                        });
+                                      }}
+                                      className="flex-1 rounded-md bg-[#C08C45] text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] transition"
+                                    >
+                                      Start Subscription
+                                    </button>
 
-                                  <button
-                                    onClick={() =>
-                                      setShowSubChooser((prev) => {
-                                        const next = { ...prev };
-                                        delete next[it.id];
-                                        return next;
-                                      })
-                                    }
-                                    className="px-3 rounded-md ring-1 ring-[#C08C45]/60 text-[#C08C45] text-[12px]"
-                                  >
-                                    Cancel
-                                  </button>
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        )}
+                                    <button
+                                      onClick={() =>
+                                        setShowSubChooser((prev) => {
+                                          const next = { ...prev };
+                                          delete next[it.id];
+                                          return next;
+                                        })
+                                      }
+                                      className="px-3 rounded-md ring-1 ring-[#C08C45]/60 text-[#C08C45] text-[12px]"
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </li>
@@ -13311,6 +13328,17 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
 
   const hasSubscription = cart.some((i: any) => !!i.isSubscription);
 
+  const isSamplePackItem = (it: any) => {
+    const slug = String(it?.slug ?? "").toLowerCase();
+    const title = String(it?.title ?? "").toLowerCase();
+
+    return (
+      slug.includes("sample") ||
+      title.includes("sample pack") ||
+      title.includes("sample")
+    );
+  };
+
   // drawer open/close + dwell
   const [open, setOpen] = React.useState(false);
   const [pinned, setPinned] = React.useState(false); // interaction cancels autoclose
@@ -13374,8 +13402,12 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
       for (const i of cart ?? []) {
         const v = i?.merchandiseId;
         const q = Math.max(0, Math.min(99, Number(i?.qty ?? 0)));
+        const isSamplePack = isSamplePackItem(i);
+
         const sp =
-          typeof i?.sellingPlanId === "string" && i.sellingPlanId.length > 0
+          !isSamplePack &&
+          typeof i?.sellingPlanId === "string" &&
+          i.sellingPlanId.length > 0
             ? i.sellingPlanId
             : undefined;
 
@@ -13783,89 +13815,91 @@ function MobileCartSheet({ onClose }: { onClose: () => void }) {
                         </div>
 
                         {/* JOIN THE FLEET — 14/30/60 selector */}
-                        {!isSub && it?.slug !== "oak-and-copper" && (
-                          <div className="mt-2">
-                            {!showSubChooser[it.id] ? (
-                              <button
-                                onClick={() =>
-                                  setShowSubChooser((prev) => ({
-                                    ...prev,
-                                    [it.id]: true,
-                                  }))
-                                }
-                                className="w-full rounded-md ring-1 ring-[#C08C45]/60 bg-neutral-900/60 text-[#C08C45] font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] hover:text-neutral-900 transition"
-                              >
-                                Join The Fleet &amp; Save 15%
-                              </button>
-                            ) : (
-                              <>
-                                <div className="mb-2 grid grid-cols-3 gap-2">
-                                  {[14, 30, 60].map((d) => (
+                        {!isSub &&
+                          it?.slug !== "oak-and-copper" &&
+                          !isSamplePackItem(it) && (
+                            <div className="mt-2">
+                              {!showSubChooser[it.id] ? (
+                                <button
+                                  onClick={() =>
+                                    setShowSubChooser((prev) => ({
+                                      ...prev,
+                                      [it.id]: true,
+                                    }))
+                                  }
+                                  className="w-full rounded-md ring-1 ring-[#C08C45]/60 bg-neutral-900/60 text-[#C08C45] font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] hover:text-neutral-900 transition"
+                                >
+                                  Join The Fleet &amp; Save 15%
+                                </button>
+                              ) : (
+                                <>
+                                  <div className="mb-2 grid grid-cols-3 gap-2">
+                                    {[14, 30, 60].map((d) => (
+                                      <button
+                                        key={`${it.id}-freq-${d}`}
+                                        onClick={() =>
+                                          setFreq((prev) => ({
+                                            ...prev,
+                                            [it.id]: d,
+                                          }))
+                                        }
+                                        className={[
+                                          "py-1.5 rounded-md text-[12px] font-semibold ring-1",
+                                          selFreq === d
+                                            ? "bg-[#C08C45] text-neutral-900 ring-[#C08C45]"
+                                            : "bg-neutral-900/60 text-[#C08C45] ring-[#C08C45]/60",
+                                        ].join(" ")}
+                                      >
+                                        {d} days
+                                      </button>
+                                    ))}
+                                  </div>
+                                  <div className="flex gap-2">
                                     <button
-                                      key={`${it.id}-freq-${d}`}
-                                      onClick={() =>
-                                        setFreq((prev) => ({
-                                          ...prev,
-                                          [it.id]: d,
-                                        }))
-                                      }
-                                      className={[
-                                        "py-1.5 rounded-md text-[12px] font-semibold ring-1",
-                                        selFreq === d
-                                          ? "bg-[#C08C45] text-neutral-900 ring-[#C08C45]"
-                                          : "bg-neutral-900/60 text-[#C08C45] ring-[#C08C45]/60",
-                                      ].join(" ")}
-                                    >
-                                      {d} days
-                                    </button>
-                                  ))}
-                                </div>
-                                <div className="flex gap-2">
-                                  <button
-                                    onClick={() => {
-                                      updateItem(it.id, {
-                                        isSubscription: true,
-                                        purchaseMode: "sub",
-                                        subEvery: selFreq,
-                                        subPrice: getSubPrice({
-                                          ...it,
+                                      onClick={() => {
+                                        updateItem(it.id, {
+                                          isSubscription: true,
+                                          purchaseMode: "sub",
                                           subEvery: selFreq,
-                                        }),
-                                        sellingPlanId:
-                                          it.sellingPlans &&
-                                          it.sellingPlans[selFreq]
-                                            ? it.sellingPlans[selFreq]
-                                            : it.sellingPlanId,
-                                      });
-                                      // collapse the chooser after starting
-                                      setShowSubChooser((prev) => {
-                                        const next = { ...prev };
-                                        delete next[it.id];
-                                        return next;
-                                      });
-                                    }}
-                                    className="flex-1 rounded-md bg-[#C08C45] text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] transition"
-                                  >
-                                    Start Subscription
-                                  </button>
+                                          subPrice: getSubPrice({
+                                            ...it,
+                                            subEvery: selFreq,
+                                          }),
+                                          sellingPlanId:
+                                            it.sellingPlans &&
+                                            it.sellingPlans[selFreq]
+                                              ? it.sellingPlans[selFreq]
+                                              : it.sellingPlanId,
+                                        });
+                                        // collapse the chooser after starting
+                                        setShowSubChooser((prev) => {
+                                          const next = { ...prev };
+                                          delete next[it.id];
+                                          return next;
+                                        });
+                                      }}
+                                      className="flex-1 rounded-md bg-[#C08C45] text-neutral-900 font-semibold py-1.5 text-[12px] hover:bg-[#C08C45] transition"
+                                    >
+                                      Start Subscription
+                                    </button>
 
-                                  <button
-                                    onClick={() =>
-                                      setShowSubChooser((prev) => {
-                                        const next = { ...prev };
-                                        delete next[it.id];
-                                        return next;
-                                      })
-                                    }
-                                    className="px-3 rounded-md ring-1 ring-[#C08C45]/60 text-[#C08C45] text-[12px]"
-                                  >
-                                    Cancel
-                                  </button>
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        )}
+                                    <button
+                                      onClick={() =>
+                                        setShowSubChooser((prev) => {
+                                          const next = { ...prev };
+                                          delete next[it.id];
+                                          return next;
+                                        })
+                                      }
+                                      className="px-3 rounded-md ring-1 ring-[#C08C45]/60 text-[#C08C45] text-[12px]"
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </li>

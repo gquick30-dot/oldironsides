@@ -8899,18 +8899,6 @@ function CartPage() {
         const { id } = await ensureCart();
         const sf = await getCart(id);
         const qty = Number(sf?.totalQuantity ?? 0);
-
-        let started = false;
-        try {
-          started = localStorage.getItem("oi_checkout_started") === "1";
-        } catch {}
-
-        if (!cancelled && started && qty === 0) {
-          // Do NOT clear local cart here. Shopify checkout can keep items while Storefront cart reads 0.
-          try {
-            localStorage.removeItem("oi_checkout_started");
-          } catch {}
-        }
       } catch {
         // ignore
       }
@@ -9064,10 +9052,6 @@ function CartPage() {
           currency: "USD",
         });
       }
-
-      try {
-        localStorage.setItem("oi_checkout_started", "1");
-      } catch {}
 
       window.location.assign(url);
     } catch (e) {

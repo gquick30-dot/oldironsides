@@ -2413,13 +2413,14 @@ function HomePage() {
               <div aria-hidden className="hidden md:block h-12 lg:h-16" />
 
               <h2
-                className="font-bebas font-extrabold leading-none tracking-wide text-left translate-y-[10%]
-    text-[2.3rem] sm:text-[2.9rem] md:text-[4.4rem] xl:text-[5.5rem]"
+                className="font-cinzel font-black leading-[0.95] tracking-[0.04em] text-left translate-y-[10%]
+  text-[1.25rem] sm:text-[1.6rem] md:text-[2.45rem] xl:text-[3rem]"
               >
                 <span className="block text-[#E6DCC8]">
                   FRESH ROASTED COFFEE.
                 </span>
-                <span className="block text-[#C69A58] md:text-[#D3A052] mt-4">
+
+                <span className="block text-[#C69A58] md:text-[#D3A052] mt-1 md:mt-2">
                   BUILT ON TRADITION.
                 </span>
               </h2>
@@ -2444,23 +2445,23 @@ function HomePage() {
                   <Link
                     to="/roast/armada-sample-pack"
                     className="relative inline-flex h-[58px] w-full md:w-fit items-center justify-center
-                    px-8 sm:px-9
-                    rounded-none overflow-hidden
-                    text-black font-extrabold
-                    text-xl sm:text-lg md:text-[1.6rem] tracking-wide
-                    border border-[#6D5333]
-                    shadow-[0_0_18px_rgba(192,140,69,0.18)]
-                    transition-all duration-200
-                    hover:-translate-y-[1px]
-                    hover:shadow-[0_0_24px_rgba(230,192,127,0.22)]"
+  px-8 sm:px-9
+  rounded-none overflow-hidden
+  bg-[#C08C45]
+  text-black font-extrabold
+  text-xl sm:text-lg md:text-[1.6rem] tracking-wide
+  border border-[#C08C45]
+  shadow-[0_0_18px_rgba(192,140,69,0.18)]
+  transition-all duration-200
+  hover:-translate-y-[1px]
+  hover:bg-[#E6C07F]
+  hover:border-[#E6C07F]
+  hover:shadow-[0_0_24px_rgba(230,192,127,0.22)]"
                   >
-                    {/* BACKGROUND */}
-                    <div className="absolute inset-0 bg-chestTexture bg-cover bg-center" />
+                    {/* subtle texture */}
+                    <div className="absolute inset-0 bg-chestTexture bg-cover bg-center opacity-[0.18]" />
 
-                    {/* MOBILE TONE DOWN OVERLAY */}
-                    <div className="absolute inset-0 bg-black/25 md:bg-transparent" />
-
-                    {/* TEXT */}
+                    {/* text */}
                     <span className="relative z-10">
                       TRY A SAMPLE PACK - $5
                     </span>
@@ -2568,45 +2569,110 @@ function HomePage() {
           </div>
         </Container>
       </header>
-      {/* FULL WIDTH FLEET IMAGE (DESKTOP/TABLET) */}
-      <section className="hidden md:block w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-black pt-12 pb-14">
-        <div className="relative max-w-[1400px] mx-auto px-6">
-          {/* TOP OVERLAY */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[40%] z-10 text-center">
-            <h2 className="font-cinzel text-[#E6C07F] text-[2.6rem] xl:text-[3.4rem] font-black tracking-[0.08em]">
-              MEET THE FLEET
-            </h2>
+      {/* ===== QUIET RITUAL SECTION ===== */}
+      <section
+        id="quiet-ritual"
+        className="relative overflow-hidden bg-[#070402] py-14 md:py-20 border-t border-[#6D5333]/35 border-b border-[#6D5333]/35"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_28%,rgba(192,140,69,0.18),transparent_32%),radial-gradient(circle_at_78%_58%,rgba(181,151,109,0.12),transparent_34%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(0,0,0,0.92)_0%,rgba(7,4,2,0.82)_42%,rgba(35,20,9,0.48)_100%)] pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#C08C45]/60 to-transparent" />
 
-            <a
-              href="#fleet"
-              className="mt-4 inline-flex items-center justify-center
-        border border-[#C08C45] bg-black/70 px-7 py-2.5
-        text-[#E6C07F] font-extrabold tracking-[0.12em] text-[0.8rem]
-        transition-all duration-200
-        hover:bg-[#C08C45] hover:text-black hover:-translate-y-[1px]
-        hover:shadow-[0_0_22px_rgba(192,140,69,0.22)]"
-            >
-              EXPLORE THE LINEUP ↓
-            </a>
+        <Container>
+          <div className="relative z-10 max-w-[1320px] mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-[0.88fr_1.12fr] gap-10 xl:gap-16 items-center">
+              {/* LEFT TEXT */}
+              <div className="order-1">
+                <div className="relative max-w-[590px] mx-auto lg:mx-0 rounded-2xl border border-[#6D5333]/45 bg-[#0B0704]/65 px-6 md:px-8 py-8 md:py-10 shadow-2xl shadow-black/55 backdrop-blur-sm">
+                  <p className="font-oswald text-[0.66rem] font-semibold uppercase tracking-[0.34em] text-[#D7D0C4]">
+                    Morning Ritual
+                  </p>
+
+                  <h3 className="mt-5 font-cinzel text-3xl md:text-4xl xl:text-[3.65rem] font-semibold leading-[1.12] tracking-[0.01em] text-[#A47B49]">
+                    Better coffee
+                    <br />
+                    for quieter
+                    <br />
+                    mornings.
+                  </h3>
+
+                  <div className="mt-5 h-px w-64 md:w-56 bg-gradient-to-r from-[#C08C45]/80 via-[#6D5333]/55 to-transparent" />
+
+                  <p className="mt-6 max-w-[500px] font-ebgaramond text-lg md:text-xl leading-relaxed text-[#D6C5A8]">
+                    Fresh-roasted in small batches for the slow start, the first
+                    cup, and the few quiet minutes before the day takes over.
+                  </p>
+
+                  <div className="mt-7 flex flex-col sm:flex-row gap-3">
+                    <a
+                      href="#fleet"
+                      className="inline-flex h-[46px] items-center justify-center rounded-md border border-[#C08C45] bg-[#C08C45] px-6 font-oswald text-sm font-bold uppercase tracking-[0.16em] text-black transition hover:bg-[#E6C07F] hover:border-[#E6C07F]"
+                    >
+                      Shop The Fleet
+                    </a>
+
+                    <a
+                      href="#roasting-process"
+                      className="inline-flex h-[46px] items-center justify-center rounded-md border border-[#6D5333] bg-black/25 px-6 font-oswald text-sm font-bold uppercase tracking-[0.16em] text-[#C08C45] transition hover:border-[#C08C45] hover:text-[#E6C07F]"
+                    >
+                      How We Roast
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT COLLAGE */}
+              <div className="order-2">
+                <div className="relative mx-auto lg:ml-auto w-full max-w-[710px]">
+                  <div className="absolute -inset-5 rounded-[2rem] bg-[#C08C45]/10 blur-2xl" />
+
+                  <div className="relative grid grid-cols-1 sm:grid-cols-[1fr_0.78fr] gap-4 md:gap-5 items-center">
+                    {/* MAIN IMAGE */}
+                    <div className="relative overflow-hidden rounded-[1.4rem] border border-[#8A683F]/55 bg-[#100905] shadow-2xl shadow-black/70">
+                      <img
+                        src="/pour-1.jpg"
+                        alt="Fresh coffee in a quiet morning setting"
+                        className="w-full h-[390px] md:h-[460px] object-cover object-center opacity-95"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                      <div className="absolute left-5 bottom-5 right-5 rounded-xl border border-[#6D5333]/70 bg-[#090603]/78 px-5 py-4 backdrop-blur-sm shadow-xl shadow-black/60">
+                        <p className="font-playfair text-3xl md:text-4xl font-black leading-none text-[#F3E9D6]">
+                          Small batch.
+                        </p>
+                        <p className="mt-2 font-oswald text-[0.68rem] font-bold uppercase tracking-[0.24em] text-[#B5976D]">
+                          Roasted for the daily ritual
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* SIDE IMAGES */}
+                    <div className="grid grid-cols-2 sm:grid-cols-1 gap-4 md:gap-5">
+                      <div className="relative overflow-hidden rounded-[1.2rem] border border-[#6D5333]/55 bg-black shadow-xl shadow-black/60 sm:-translate-x-3">
+                        <img
+                          src="/bean-pour.jpg"
+                          alt="Fresh roasted coffee beans"
+                          className="w-full h-[165px] md:h-[205px] object-cover object-center opacity-95"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
+                      </div>
+
+                      <div className="relative overflow-hidden rounded-[1.2rem] border border-[#6D5333]/55 bg-black shadow-xl shadow-black/60 sm:translate-x-5">
+                        <img
+                          src="/coffee-fire-1.jpeg"
+                          alt="Coffee on a dark wooden table"
+                          className="w-full h-[165px] md:h-[225px] object-cover object-center opacity-95"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <img
-            src="/bags-roast.jpg"
-            alt="Old Ironsides Fleet"
-            className="w-full h-auto object-contain rounded-2xl"
-          />
-        </div>
+        </Container>
       </section>
-
-      {/* MOBILE FLEET IMAGE */}
-      <div className="block md:hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-black pt-2 pb-3 overflow-hidden">
-        <img
-          src="/bags-roast.jpg"
-          alt="Old Ironsides Fleet"
-          className="w-full h-auto block"
-        />
-      </div>
-
       {/* FLEET SECTION */}
       <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-black py-4 md:py-24">
         {/* BACKGROUND IMAGE */}
@@ -2626,25 +2692,25 @@ function HomePage() {
         </div>
       </section>
       {/* ===== SAMPLE PACK SECTION ===== */}
-      <section className="relative overflow-hidden bg-[#050302] py-16 md:py-24 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40">
+      <section className="relative overflow-hidden bg-[#050302] py-12 md:py-16 xl:py-24 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40">
         <div className="absolute inset-0 opacity-[0.08] bg-[repeating-linear-gradient(135deg,rgba(192,140,69,0.45)_0px,rgba(192,140,69,0.45)_1px,transparent_1px,transparent_12px)] pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/40 pointer-events-none" />
 
         <Container>
-          <div className="relative z-10 grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-10 md:gap-16 items-center">
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-[0.92fr_0.88fr] xl:grid-cols-[0.95fr_0.95fr] 2xl:grid-cols-[0.9fr_1.1fr] gap-8 md:gap-2 xl:gap-8 2xl:gap-16 items-center justify-center">
             {/* TEXT */}
-            <div className="order-1 md:order-1 text-center md:text-left">
+            <div className="order-1 text-center md:text-left md:max-w-[500px] md:ml-auto xl:max-w-[560px] 2xl:max-w-none 2xl:ml-0">
               <p className="mb-4 text-[0.7rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
                 Armada Discovery
               </p>
 
-              <h2 className="max-w-[560px] mx-auto md:mx-0 font-cinzel text-4xl md:text-5xl xl:text-6xl font-black uppercase leading-[0.95] tracking-[0.06em] text-[#E6DCC8]">
+              <h2 className="max-w-[560px] mx-auto md:mx-0 font-cinzel text-[2rem] sm:text-[2.4rem] md:text-[2.5rem] lg:text-[2.9rem] xl:text-[3.6rem] 2xl:text-6xl font-black uppercase leading-[0.95] tracking-[0.045em] 2xl:tracking-[0.06em] text-[#E6DCC8]">
                 Sample Our Coffee.
                 <br />
                 <span className="text-[#B5976D]">Discover Your Roast.</span>
               </h2>
 
-              <p className="mt-6 max-w-[560px] mx-auto md:mx-0 font-playfair italic text-[#B5976D] text-base md:text-xl leading-relaxed">
+              <p className="mt-6 max-w-[560px] mx-auto md:mx-0 font-playfair italic text-[#B5976D] text-base md:text-lg xl:text-xl leading-relaxed">
                 Find your roast before committing to a full bag.
               </p>
 
@@ -2668,6 +2734,7 @@ function HomePage() {
                     <p className="font-oswald text-lg font-black uppercase tracking-[0.22em] text-black">
                       Armada Discovery Box
                     </p>
+
                     <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-black/75">
                       Full Fleet • One Roast Free • Free Shipping
                     </p>
@@ -2675,11 +2742,14 @@ function HomePage() {
                 </div>
               </div>
 
-              <p className="mt-4 max-w-[590px] mx-auto md:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
-                Choose individual samples for $5 each, or launch with the{" "}
-                <span className="font-semibold text-[#E6C07F]">
+              <p className="mt-4 max-w-[560px] mx-auto md:mx-0 text-neutral-300 text-[0.95rem] md:text-base xl:text-lg leading-relaxed">
+                2.5 oz samples for $5 each, or launch with the{" "}
+                <Link
+                  to="/roast/armada-sample-pack"
+                  className="font-semibold text-[#E6C07F] transition-colors duration-200 hover:text-[#F2D29A]"
+                >
                   Armada Discovery Box
-                </span>{" "}
+                </Link>{" "}
                 and get the full fleet with one roast free plus free shipping.
               </p>
 
@@ -2717,6 +2787,7 @@ function HomePage() {
                   <p className="text-[#E6C07F] text-[0.75rem] font-bold uppercase tracking-[0.18em]">
                     Discovery Box Ships Free
                   </p>
+
                   <p className="mt-1 text-neutral-500 text-xs">
                     Roasted fresh after order
                   </p>
@@ -2725,16 +2796,18 @@ function HomePage() {
             </div>
 
             {/* DESKTOP IMAGE */}
-            <div className="hidden md:flex order-2 justify-center md:justify-end">
-              <div className="relative w-full max-w-[620px]">
-                <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[#6D5333]/50 bg-black shadow-2xl shadow-black/70">
+            <div className="hidden md:flex order-2 justify-start">
+              <div className="relative w-full max-w-[340px] lg:max-w-[390px] xl:max-w-[500px] 2xl:max-w-[620px]">
+                <div className="relative aspect-[4/3] overflow-hidden">
                   <img
                     src="/sample-pack.jpg"
                     alt="Old Ironsides Coffee sample packs"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_58%,rgba(5,3,2,0.55)_100%)]" />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050302]/70 via-transparent to-[#050302]/30" />
                 </div>
 
                 <Link
@@ -2744,6 +2817,7 @@ function HomePage() {
                   <p className="font-oswald text-lg font-black uppercase tracking-[0.22em] text-black">
                     Armada Discovery Box
                   </p>
+
                   <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-black/75">
                     Full Fleet • One Roast Free • Free Shipping
                   </p>
@@ -2780,16 +2854,17 @@ function HomePage() {
             <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-14 xl:gap-20 items-center">
               {/* LEFT */}
               <div className="relative">
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.34em] text-[#B5976D]">
+                <p className="font-cinzel text-[1.2rem] font-black uppercase tracking-[0.28em] text-[#EEE4D3]">
                   Join The Fleet
                 </p>
 
-                <h2 className="mt-4 font-cinzel text-3xl md:text-5xl xl:text-6xl font-black uppercase leading-[0.95] tracking-[0.04em] text-[#E6DCC8]">
-                  Fresh Coffee.
-                  <br />
-                  <span className="text-[#C08C45]">On Your Schedule.</span>
-                </h2>
+                <h2 className="mt-4 font-cinzel text-3xl md:text-5xl xl:text-6xl font-black uppercase leading-[0.95] tracking-[0.04em]">
+                  <span className="text-[#B88A4A]">Fresh Coffee.</span>
 
+                  <br />
+
+                  <span className="text-[#DDD2BE]">On Your Schedule.</span>
+                </h2>
                 <p className="mt-5 max-w-[640px] text-neutral-300 text-base md:text-lg leading-relaxed">
                   Set your schedule once and stay stocked with fresh-roasted
                   coffee without thinking about it again.
@@ -2920,10 +2995,10 @@ function HomePage() {
               <div className="relative w-full max-w-[620px]">
                 <div className="border border-[#6D5333]/55 bg-[#0A0603]/82 backdrop-blur-sm p-7 xl:p-8 shadow-2xl shadow-black/60">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
-                    Easter Weekend Tasting Event
+                    Easter Tasting Event
                   </p>
 
-                  <h2 className="mt-5 font-playfair text-5xl xl:text-6xl font-bold italic leading-[1.02] tracking-[0.01em] text-[#E6DCC8]">
+                  <h2 className="mt-5 font-cinzel text-[2.2rem] sm:text-[2.55rem] xl:text-[3.4rem] font-black leading-[1.02] tracking-[0.03em] text-[#E6DCC8]">
                     Great Coffee.
                     <br />
                     <span className="text-[#E6C07F]">Great People.</span>
@@ -2962,16 +3037,16 @@ function HomePage() {
       {/* ===== ROASTING PROCESS ===== */}
       <section
         id="roasting-process"
-        className="relative overflow-hidden bg-[#050302] py-14 md:py-24 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40"
+        className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-[#050302] py-12 sm:py-14 md:py-16 lg:py-18 xl:py-24 2xl:py-24 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_28%,rgba(192,140,69,0.14),transparent_30%),radial-gradient(circle_at_82%_70%,rgba(109,83,51,0.14),transparent_34%)] pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none" />
 
-        <Container>
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-9 lg:gap-16 xl:gap-20 items-center">
+        <div className="relative z-10 mx-auto w-full px-5 sm:px-7 md:px-10 lg:px-14 xl:px-0 2xl:px-0 max-w-[620px] sm:max-w-[720px] md:max-w-[900px] lg:max-w-[1040px] xl:max-w-[1280px] 2xl:max-w-[1440px]">
+          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,0.9fr)_minmax(0,0.82fr)] lg:grid-cols-[minmax(0,0.92fr)_minmax(0,0.82fr)] xl:grid-cols-[0.9fr_1.1fr] 2xl:grid-cols-[0.9fr_1.1fr] gap-8 sm:gap-9 md:gap-4 lg:gap-6 xl:gap-20 2xl:gap-20 items-center">
             {/* TEXT */}
-            <div className="order-1 text-center lg:text-left">
-              <div className="mb-5 flex justify-center lg:justify-start">
+            <div className="order-1 w-full mx-auto text-center md:text-left max-w-[620px] sm:max-w-[660px] md:max-w-[470px] lg:max-w-[500px] xl:max-w-none 2xl:max-w-none md:ml-auto xl:ml-0">
+              <div className="mb-5 flex justify-center md:justify-start">
                 <div className="border-l-2 border-[#C08C45] bg-black/45 px-4 py-2">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-[#9C9791]">
                     From The Roaster
@@ -2979,88 +3054,85 @@ function HomePage() {
                 </div>
               </div>
 
-              <h3 className="font-playfair text-4xl md:text-6xl xl:text-7xl font-semibold italic leading-[1.02] tracking-[0.02em] text-[#E6DCC8]">
+              <h3 className="mx-auto md:mx-0 max-w-[620px] md:max-w-[470px] lg:max-w-[500px] xl:max-w-none font-playfair text-[2.35rem] sm:text-[2.8rem] md:text-[3.05rem] lg:text-[3.55rem] xl:text-7xl 2xl:text-7xl font-semibold italic leading-[1.02] tracking-[0.02em] text-[#E6DCC8]">
                 Roasted to order.
                 <br />
                 <span className="text-[#C08C45]">Timed to land fresh.</span>
               </h3>
 
-              <p className="mt-5 max-w-[620px] mx-auto lg:mx-0 font-oswald uppercase tracking-[0.12em] text-[#B5976D] text-sm md:text-base leading-relaxed">
-                Fresh coffee has a window. We roast around that window, not a
-                warehouse calendar.
-              </p>
-
               {/* MOBILE IMAGE */}
-              <div className="mt-8 lg:hidden">
-                <div className="relative overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
-                  <img
-                    src="/roaster.jpg"
-                    alt="Coffee roasting process"
-                    className="w-full h-[285px] object-cover object-center"
-                  />
+              <div className="mt-8 flex justify-center md:hidden">
+                <div className="relative w-full max-w-[560px] sm:max-w-[620px]">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
+                    <img
+                      src="/roaster.jpg"
+                      alt="Coffee roasting process"
+                      className="absolute inset-0 h-full w-full object-cover object-center"
+                    />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
 
-                  <div className="absolute left-4 bottom-4 right-4 grid grid-cols-2 gap-3">
-                    <div className="border border-[#6D5333]/70 bg-black/75 px-4 py-3 backdrop-blur-sm">
-                      <p className="font-oswald text-3xl font-black text-ironsideWhite leading-none">
-                        MONDAY
-                      </p>
-                      <p className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#B5976D]">
-                        Roast Day
-                      </p>
-                    </div>
+                    <div className="absolute left-3 right-3 bottom-3 sm:left-4 sm:right-4 sm:bottom-4 grid grid-cols-2 gap-2 sm:gap-3">
+                      <div className="border border-[#6D5333]/70 bg-black/75 px-3 py-3 sm:px-4 backdrop-blur-sm">
+                        <p className="font-oswald text-[1.45rem] sm:text-3xl font-black text-ironsideWhite leading-none">
+                          MONDAY
+                        </p>
+                        <p className="mt-1 text-[0.56rem] sm:text-[0.62rem] font-bold uppercase tracking-[0.16em] sm:tracking-[0.18em] text-[#B5976D]">
+                          Roast Day
+                        </p>
+                      </div>
 
-                    <div className="border border-[#6D5333]/70 bg-black/75 px-4 py-3 backdrop-blur-sm">
-                      <p className="font-oswald text-3xl font-black text-ironsideWhite leading-none">
-                        THURSDAY
-                      </p>
-                      <p className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#B5976D]">
-                        Roast Day
-                      </p>
+                      <div className="border border-[#6D5333]/70 bg-black/75 px-3 py-3 sm:px-4 backdrop-blur-sm">
+                        <p className="font-oswald text-[1.45rem] sm:text-3xl font-black text-ironsideWhite leading-none">
+                          THURSDAY
+                        </p>
+                        <p className="mt-1 text-[0.56rem] sm:text-[0.62rem] font-bold uppercase tracking-[0.16em] sm:tracking-[0.18em] text-[#B5976D]">
+                          Roast Day
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="mx-auto -mt-5 relative z-10 w-fit border border-[#6D5333]/60 bg-[#130E08] px-6 py-2 shadow-xl shadow-black/50">
-                  <p className="font-oswald text-base font-black uppercase tracking-[0.2em] text-[#C08C45]">
-                    Roasted Fresh
-                  </p>
+                  <div className="mx-auto -mt-5 relative z-10 w-fit border border-[#6D5333]/60 bg-[#130E08] px-5 sm:px-6 py-2 shadow-xl shadow-black/50">
+                    <p className="font-oswald text-sm sm:text-base font-black uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#C08C45]">
+                      Roasted Fresh
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* PROCESS */}
-              <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
-                <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-5">
-                  <p className="text-[#C08C45] text-sm font-bold uppercase tracking-[0.18em]">
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-3 lg:gap-4">
+                <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-4 sm:p-5 md:p-4 lg:p-5">
+                  <p className="text-[#C08C45] text-xs sm:text-sm font-bold uppercase tracking-[0.16em] sm:tracking-[0.18em]">
                     01 Order
                   </p>
-                  <p className="mt-3 text-neutral-300 text-sm md:text-base leading-relaxed">
+                  <p className="mt-3 text-neutral-300 text-sm md:text-sm lg:text-base leading-relaxed">
                     You place the order. Secures your beans.
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-5">
-                  <p className="text-[#C08C45] text-sm font-bold uppercase tracking-[0.18em]">
+                <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-4 sm:p-5 md:p-4 lg:p-5">
+                  <p className="text-[#C08C45] text-xs sm:text-sm font-bold uppercase tracking-[0.16em] sm:tracking-[0.18em]">
                     02 Roast
                   </p>
-                  <p className="mt-3 text-neutral-300 text-sm md:text-base leading-relaxed">
+                  <p className="mt-3 text-neutral-300 text-sm md:text-sm lg:text-base leading-relaxed">
                     We roast every Monday and Thursday.
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-5">
-                  <p className="text-[#C08C45] text-sm font-bold uppercase tracking-[0.18em]">
+                <div className="rounded-xl border border-[#6D5333]/50 bg-black/55 p-4 sm:p-5 md:p-4 lg:p-5">
+                  <p className="text-[#C08C45] text-xs sm:text-sm font-bold uppercase tracking-[0.16em] sm:tracking-[0.18em]">
                     03 Ship
                   </p>
-                  <p className="mt-3 text-neutral-300 text-sm md:text-base leading-relaxed">
+                  <p className="mt-3 text-neutral-300 text-sm md:text-sm lg:text-base leading-relaxed">
                     Degassing and shipping are timed so it lands at your
-                    doorstep at peak freshiness.
+                    doorstep at peak freshness.
                   </p>
                 </div>
               </div>
 
-              <p className="mt-6 max-w-[660px] mx-auto lg:mx-0 text-neutral-300 text-base md:text-lg leading-relaxed">
+              <p className="mt-6 mx-auto md:mx-0 max-w-[620px] md:max-w-[470px] lg:max-w-[560px] xl:max-w-[660px] text-neutral-300 text-[0.95rem] sm:text-base md:text-base lg:text-lg leading-relaxed">
                 We do not roast big batches and let them sit. Orders are roasted
                 fresh, given time to settle, then shipped so the flavor opens up
                 when it reaches your cup.
@@ -3068,50 +3140,50 @@ function HomePage() {
             </div>
 
             {/* DESKTOP IMAGE */}
-            <div className="hidden lg:block order-2">
-              <div className="relative w-full max-w-[640px] mx-auto lg:mx-0">
+            <div className="hidden md:flex order-2 justify-center md:justify-start xl:justify-end">
+              <div className="relative w-full max-w-[300px] md:max-w-[320px] lg:max-w-[390px] xl:max-w-[640px] 2xl:max-w-[640px]">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/70">
                   <img
                     src="/roaster.jpg"
                     alt="Coffee roasting process"
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 h-full w-full object-cover"
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/68 via-transparent to-black/10" />
 
-                  <div className="absolute left-6 bottom-6 grid grid-cols-2 gap-3">
-                    <div className="border border-[#6D5333]/70 bg-black/75 px-5 py-4 backdrop-blur-sm">
-                      <p className="font-oswald text-4xl font-black text-ironsideWhite leading-none">
+                  <div className="absolute left-3 right-3 bottom-3 md:left-3 md:right-auto md:bottom-3 lg:left-4 lg:bottom-4 xl:left-6 xl:bottom-6 grid grid-cols-2 gap-2 lg:gap-3">
+                    <div className="border border-[#6D5333]/70 bg-black/75 px-3 py-3 lg:px-4 lg:py-3 xl:px-5 xl:py-4 backdrop-blur-sm">
+                      <p className="font-oswald text-[1.35rem] md:text-[1.45rem] lg:text-3xl xl:text-4xl font-black text-ironsideWhite leading-none">
                         MONDAY
                       </p>
-                      <p className="mt-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#B5976D]">
+                      <p className="mt-1 text-[0.52rem] lg:text-[0.65rem] font-bold uppercase tracking-[0.14em] lg:tracking-[0.18em] text-[#B5976D]">
                         Roast Day
                       </p>
                     </div>
 
-                    <div className="border border-[#6D5333]/70 bg-black/75 px-5 py-4 backdrop-blur-sm">
-                      <p className="font-oswald text-4xl font-black text-ironsideWhite leading-none">
+                    <div className="border border-[#6D5333]/70 bg-black/75 px-3 py-3 lg:px-4 lg:py-3 xl:px-5 xl:py-4 backdrop-blur-sm">
+                      <p className="font-oswald text-[1.35rem] md:text-[1.45rem] lg:text-3xl xl:text-4xl font-black text-ironsideWhite leading-none">
                         THURSDAY
                       </p>
-                      <p className="mt-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#B5976D]">
+                      <p className="mt-1 text-[0.52rem] lg:text-[0.65rem] font-bold uppercase tracking-[0.14em] lg:tracking-[0.18em] text-[#B5976D]">
                         Roast Day
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="mx-auto lg:mx-0 -mt-6 relative z-10 w-fit border border-[#6D5333]/60 bg-[#130E08] px-7 py-2 shadow-xl shadow-black/50">
-                  <p className="font-oswald text-lg font-black uppercase tracking-[0.2em] text-[#C08C45]">
+                <div className="mx-auto md:mx-0 -mt-5 lg:-mt-6 relative z-10 w-fit border border-[#6D5333]/60 bg-[#130E08] px-5 lg:px-7 py-2 shadow-xl shadow-black/50">
+                  <p className="font-oswald text-sm lg:text-lg font-black uppercase tracking-[0.18em] lg:tracking-[0.2em] text-[#C08C45]">
                     Roasted To Order
                   </p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#B5976D]">
+                  <p className="mt-1 text-[0.65rem] lg:text-xs font-semibold uppercase tracking-[0.1em] lg:tracking-[0.12em] text-[#B5976D]">
                     Timed For Peak Freshness
                   </p>
                 </div>
               </div>
             </div>
           </div>
-        </Container>
+        </div>
       </section>
 
       {/* ===== SOURCED WITH RESPECT ===== */}
@@ -3774,110 +3846,7 @@ function HomePage() {
           </div>
         </Container>
       </section>
-      {/* ===== QUIET RITUAL SECTION ===== */}
-      <section
-        id="quiet-ritual"
-        className="relative overflow-hidden bg-[#070402] py-14 md:py-20 border-t border-[#6D5333]/35 border-b border-[#6D5333]/35"
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_28%,rgba(192,140,69,0.18),transparent_32%),radial-gradient(circle_at_78%_58%,rgba(181,151,109,0.12),transparent_34%)] pointer-events-none" />
-        <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(0,0,0,0.92)_0%,rgba(7,4,2,0.82)_42%,rgba(35,20,9,0.48)_100%)] pointer-events-none" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#C08C45]/60 to-transparent" />
 
-        <Container>
-          <div className="relative z-10 max-w-[1320px] mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-[0.88fr_1.12fr] gap-10 xl:gap-16 items-center">
-              {/* LEFT TEXT */}
-              <div className="order-1">
-                <div className="relative max-w-[590px] mx-auto lg:mx-0 rounded-2xl border border-[#6D5333]/45 bg-[#0B0704]/65 px-6 md:px-8 py-8 md:py-10 shadow-2xl shadow-black/55 backdrop-blur-sm">
-                  <p className="font-oswald text-[0.66rem] font-semibold uppercase tracking-[0.34em] text-[#D7D0C4]">
-                    Morning Ritual
-                  </p>
-
-                  <h3 className="mt-5 font-cinzel text-3xl md:text-4xl xl:text-[3.65rem] font-semibold leading-[1.12] tracking-[0.01em] text-[#A47B49]">
-                    Better coffee
-                    <br />
-                    for quieter
-                    <br />
-                    mornings.
-                  </h3>
-
-                  <div className="mt-5 h-px w-64 md:w-56 bg-gradient-to-r from-[#C08C45]/80 via-[#6D5333]/55 to-transparent" />
-
-                  <p className="mt-6 max-w-[500px] font-ebgaramond text-lg md:text-xl leading-relaxed text-[#D6C5A8]">
-                    Fresh-roasted in small batches for the slow start, the first
-                    cup, and the few quiet minutes before the day takes over.
-                  </p>
-
-                  <div className="mt-7 flex flex-col sm:flex-row gap-3">
-                    <a
-                      href="#fleet"
-                      className="inline-flex h-[46px] items-center justify-center rounded-md border border-[#C08C45] bg-[#C08C45] px-6 font-oswald text-sm font-bold uppercase tracking-[0.16em] text-black transition hover:bg-[#E6C07F] hover:border-[#E6C07F]"
-                    >
-                      Shop The Fleet
-                    </a>
-
-                    <a
-                      href="#roasting-process"
-                      className="inline-flex h-[46px] items-center justify-center rounded-md border border-[#6D5333] bg-black/25 px-6 font-oswald text-sm font-bold uppercase tracking-[0.16em] text-[#C08C45] transition hover:border-[#C08C45] hover:text-[#E6C07F]"
-                    >
-                      How We Roast
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* RIGHT COLLAGE */}
-              <div className="order-2">
-                <div className="relative mx-auto lg:ml-auto w-full max-w-[710px]">
-                  <div className="absolute -inset-5 rounded-[2rem] bg-[#C08C45]/10 blur-2xl" />
-
-                  <div className="relative grid grid-cols-1 sm:grid-cols-[1fr_0.78fr] gap-4 md:gap-5 items-center">
-                    {/* MAIN IMAGE */}
-                    <div className="relative overflow-hidden rounded-[1.4rem] border border-[#8A683F]/55 bg-[#100905] shadow-2xl shadow-black/70">
-                      <img
-                        src="/pour-1.jpg"
-                        alt="Fresh coffee in a quiet morning setting"
-                        className="w-full h-[390px] md:h-[460px] object-cover object-center opacity-95"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
-                      <div className="absolute left-5 bottom-5 right-5 rounded-xl border border-[#6D5333]/70 bg-[#090603]/78 px-5 py-4 backdrop-blur-sm shadow-xl shadow-black/60">
-                        <p className="font-playfair text-3xl md:text-4xl font-black leading-none text-[#F3E9D6]">
-                          Small batch.
-                        </p>
-                        <p className="mt-2 font-oswald text-[0.68rem] font-bold uppercase tracking-[0.24em] text-[#B5976D]">
-                          Roasted for the daily ritual
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* SIDE IMAGES */}
-                    <div className="grid grid-cols-2 sm:grid-cols-1 gap-4 md:gap-5">
-                      <div className="relative overflow-hidden rounded-[1.2rem] border border-[#6D5333]/55 bg-black shadow-xl shadow-black/60 sm:-translate-x-3">
-                        <img
-                          src="/bean-pour.jpg"
-                          alt="Fresh roasted coffee beans"
-                          className="w-full h-[165px] md:h-[205px] object-cover object-center opacity-95"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
-                      </div>
-
-                      <div className="relative overflow-hidden rounded-[1.2rem] border border-[#6D5333]/55 bg-black shadow-xl shadow-black/60 sm:translate-x-5">
-                        <img
-                          src="/coffee-fire-1.jpeg"
-                          alt="Coffee on a dark wooden table"
-                          className="w-full h-[165px] md:h-[225px] object-cover object-center opacity-95"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
       <section
         id="contact"
         className="relative overflow-hidden bg-[#050302] py-16 md:py-24 border-t border-[#6D5333]/40 border-b border-[#6D5333]/40"
@@ -6891,7 +6860,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     description:
       "A smooth, full-bodied medium roast made for everyday drinking. Balanced, never bitter, and rich enough to enjoy black or with cream and sugar.",
     bestFor: ["Daily drinkers", "Drip", "French press", "Cold brew"],
-    notes: ["Hazelnut", "Warm Spice", "Cream Finish"],
+    notes: ["Hazelnut", "Warm Spice", "Cream"],
     origins: ["El Salvador", "Indonesia"],
     roastLevel: 3,
 
@@ -6975,7 +6944,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     description:
       "A Southern pecan roast crafted for winter comfort. Smooth and full-bodied with subtle notes of toasted pecan, brown sugar, and warm spice — lightly flavored and perfectly balanced.",
     bestFor: ["Cold weather mornings", "Drip", "French press"],
-    notes: ["Pecan", "Brown Sugar", "Warm Spice"],
+    notes: ["Pecan", "Brown Sugar", "Spice"],
     origins: ["Brazil"],
     roastLevel: 3,
     lineClass: "w-full h-px bg-[#6D5333]/70 my-3",

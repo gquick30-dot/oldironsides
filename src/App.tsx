@@ -2161,7 +2161,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
               },
               {
                 title: "SHIPS FRESH",
-                copy: "Ships directly to you.",
+                copy: "3+ bags ships free.",
                 icon: "/truck.png",
               },
               {
@@ -2414,7 +2414,7 @@ function HomePage() {
 
               <h2
                 className="font-cinzel font-black leading-[0.95] tracking-[0.04em] text-left translate-y-[10%]
-  text-[1.25rem] sm:text-[1.6rem] md:text-[2.45rem] xl:text-[3rem]"
+                text-[1.38rem] sm:text-[1.76rem] md:text-[2.7rem] xl:text-[3.3rem]"
               >
                 <span className="block text-[#E6DCC8]">
                   FRESH ROASTED COFFEE.
@@ -2555,12 +2555,18 @@ function HomePage() {
                   )}
 
                   <div className="flex items-center justify-center gap-2 text-neutral-300 text-[0.95rem] sm:text-[1.1rem] text-center">
-                    <span>VETERAN OWNED. VETERAN ROASTED</span>
-                    <img
-                      src="/stars-stripes.png"
-                      alt="American flag"
-                      className="h-4 w-auto inline-block"
-                    />
+                    <span className="hidden sm:inline">
+                      Ethically sourced specialty-grade coffee
+                    </span>
+
+                    <span className="inline-flex items-center gap-2 sm:hidden">
+                      Veteran Owned. Veteran Roasted.
+                      <img
+                        src="/stars-stripes.png"
+                        alt="American flag"
+                        className="h-4 w-auto inline-block"
+                      />
+                    </span>
                   </div>
                 </div>
                 <RoastCTAInfo />
@@ -2742,17 +2748,24 @@ function HomePage() {
                 </div>
               </div>
 
-              <p className="mt-4 max-w-[560px] mx-auto md:mx-0 text-neutral-300 text-[0.95rem] md:text-base xl:text-lg leading-relaxed">
-                2.5 oz samples for $5 each, or launch with the{" "}
-                <Link
-                  to="/roast/armada-sample-pack"
-                  className="font-semibold text-[#E6C07F] transition-colors duration-200 hover:text-[#F2D29A]"
-                >
-                  Armada Discovery Box
-                </Link>{" "}
-                and get the full fleet with one roast free plus free shipping.
-              </p>
+              <div className="mt-4 max-w-[560px] mx-auto md:mx-0 space-y-3">
+                <p className="text-neutral-300 text-[0.95rem] md:text-base xl:text-lg leading-relaxed">
+                  Each 2.5 oz sample is enough to brew roughly 6–8 cups of
+                  coffee, giving you a real taste of the roast before committing
+                  to a full bag.
+                </p>
 
+                <p className="text-neutral-300 text-[0.95rem] md:text-base xl:text-lg leading-relaxed">
+                  Get the samples for $5 a piece, or get the{" "}
+                  <Link
+                    to="/roast/armada-sample-pack"
+                    className="font-semibold text-[#E6C07F] transition-colors duration-200 hover:text-[#F2D29A]"
+                  >
+                    Armada Discovery Box
+                  </Link>{" "}
+                  and get the full fleet with one roast free plus free shipping.
+                </p>
+              </div>
               <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-[520px] mx-auto md:mx-0">
                 {roastCards.map((card) => (
                   <Link
@@ -2775,21 +2788,28 @@ function HomePage() {
                 ))}
               </div>
 
-              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
-                <Link
-                  to="/roast/armada-sample-pack"
-                  className="inline-flex h-[56px] items-center justify-center px-9 bg-[#C08C45] text-black font-extrabold text-[0.95rem] md:text-[1.05rem] tracking-[0.18em] uppercase border border-[#C08C45] transition-all duration-200 hover:-translate-y-[1px] hover:bg-[#E6C07F] hover:border-[#E6C07F]"
-                >
-                  Discover The Armada
-                </Link>
+              <div className="mt-8 flex flex-col items-center md:items-start">
+                <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+                  <Link
+                    to="/roast/armada-sample-pack"
+                    className="inline-flex h-[56px] items-center justify-center px-9 bg-[#C08C45] text-black font-extrabold text-[0.95rem] md:text-[1.05rem] tracking-[0.18em] uppercase border border-[#C08C45] transition-all duration-200 hover:-translate-y-[1px] hover:bg-[#E6C07F] hover:border-[#E6C07F]"
+                  >
+                    Discover The Armada
+                  </Link>
 
-                <div className="text-center sm:text-left">
-                  <p className="text-[#E6C07F] text-[0.75rem] font-bold uppercase tracking-[0.18em]">
-                    Discovery Box Ships Free
-                  </p>
+                  <div className="text-center sm:text-left">
+                    <p className="text-[#E6C07F] text-[0.75rem] font-bold uppercase tracking-[0.18em]">
+                      Discovery Box Ships Free
+                    </p>
+                  </div>
+                </div>
 
-                  <p className="mt-1 text-neutral-500 text-xs">
-                    Roasted fresh after order
+                <div className="mt-3 relative overflow-hidden border border-[#5A4630]/60 bg-black/30 px-3 py-2 rounded-sm max-w-[500px]">
+                  <div className="absolute inset-y-0 left-0 w-[3px] bg-[#C08C45]" />
+
+                  <p className="pl-3 text-center md:text-left text-[10px] md:text-[11px] uppercase tracking-[0.16em] leading-snug text-[#D2B48C]">
+                    Sample packs excluded from 20% first-order and subscription
+                    discounts.
                   </p>
                 </div>
               </div>
@@ -2978,7 +2998,7 @@ function HomePage() {
 
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent p-5 pointer-events-none">
                       <p className="font-oswald text-2xl md:text-3xl font-black uppercase tracking-[0.08em] text-ironsideWhite/90">
-                        Easter Tasting
+                        Easter Weekend
                       </p>
 
                       <p className="mt-1 text-[0.72rem] font-bold uppercase tracking-[0.22em] text-[#E6C07F]">
@@ -2995,7 +3015,7 @@ function HomePage() {
               <div className="relative w-full max-w-[620px]">
                 <div className="border border-[#6D5333]/55 bg-[#0A0603]/82 backdrop-blur-sm p-7 xl:p-8 shadow-2xl shadow-black/60">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
-                    Easter Tasting Event
+                    Easter Weekend Tasting
                   </p>
 
                   <h2 className="mt-5 font-cinzel text-[2.2rem] sm:text-[2.55rem] xl:text-[3.4rem] font-black leading-[1.02] tracking-[0.03em] text-[#E6DCC8]">
@@ -6591,13 +6611,32 @@ function ArmadaSamplePage() {
                   THE ARMADA
                 </h1>
 
-                <p
-                  className="mt-4 text-base md:text-lg leading-relaxed"
-                  style={{ color: "rgba(255,255,255,0.75)" }}
-                >
-                  Sample any roast in the fleet, or choose The Armada Sample
-                  Pack and get one roast free plus free shipping.
-                </p>
+                <div className="mt-4 space-y-3">
+                  <p
+                    className="text-base md:text-lg leading-relaxed"
+                    style={{ color: "rgba(255,255,255,0.75)" }}
+                  >
+                    Sample any roast in the fleet, or choose The Armada Sample
+                    Pack and get one roast free plus free shipping.
+                  </p>
+
+                  <p
+                    className="text-[15px] md:text-[16px] leading-relaxed"
+                    style={{ color: "rgba(255,255,255,0.62)" }}
+                  >
+                    Each 2.5 oz sample pack is enough to brew roughly 6–8 cups
+                    of coffee, giving you a real taste of the roast before
+                    committing to a full bag.
+                  </p>
+                </div>
+                <div className="mt-4 md:hidden relative overflow-hidden border border-[#5A4630]/60 bg-black/40 px-4 py-3 rounded-sm">
+                  <div className="absolute inset-y-0 left-0 w-[3px] bg-[#C08C45]" />
+
+                  <p className="pl-3 text-[11px] tracking-[0.14em] leading-relaxed text-[#D2B48C] uppercase">
+                    Sample packs are priced separately and are not eligible for
+                    first-order or subscription discounts.
+                  </p>
+                </div>
 
                 <div className="flex items-center w-full mt-3 md:mt-4">
                   <div className="h-px flex-1 bg-[#C08C45]/70" />
@@ -6617,6 +6656,15 @@ function ArmadaSamplePage() {
                 style={{ color: "#B39871" }}
               >
                 CHOOSE YOUR SAMPLE
+              </div>
+
+              <div className="hidden md:block mb-4 relative overflow-hidden border border-[#5A4630]/60 bg-black/40 px-4 py-3 rounded-sm">
+                <div className="absolute inset-y-0 left-0 w-[3px] bg-[#C08C45]" />
+
+                <p className="pl-3 text-[11px] md:text-[12px] uppercase tracking-[0.14em] leading-relaxed text-[#D2B48C]">
+                  Sample packs are priced separately and are not eligible for
+                  first-order or subscription discounts.
+                </p>
               </div>
 
               <div className="w-full border-t border-[#6D5333]/70">
@@ -11392,7 +11440,7 @@ function PromoSubscribeModal() {
                   </div>
 
                   <p className="text-neutral-300 mb-3 md:mb-5 text-[14px] leading-snug md:text-[1.5625rem] md:leading-normal md:whitespace-nowrap">
-                    Get 20% off your first freshly roasted coffee order.
+                    Get 20% off your first fresh coffee order.
                     <br className="hidden md:block" />
                   </p>
 
@@ -11438,23 +11486,15 @@ function PromoSubscribeModal() {
                             </button>
                           </form>
 
-                          <div className="mt-2 md:mt-3 text-[11px] md:text-[0.9375rem] text-neutral-400 text-center">
-                            Already a member?{" "}
-                            <Link
-                              to="/account/login"
-                              className="text-[#C08C45] hover:underline"
-                              onClick={() => {
-                                localStorage.setItem(KEY_SUB, "1");
-                                setCookieDays(COOKIE_SUB, "1", 365);
-                                safeClose();
-                              }}
-                            >
-                              Sign in
-                            </Link>
+                          <div className="mt-3 text-[11px] md:text-[0.95rem] text-[#D2B48C] text-center uppercase tracking-[0.12em]">
+                            20% discount applied automatically at checkout
                           </div>
 
-                          <div className="mt-1 text-[11px] md:text-xs text-neutral-400 text-center">
-                            Cancel anytime
+                          <div className="mt-2 mx-auto max-w-[280px] border border-[#5A4630]/60 bg-black/30 px-3 py-2 rounded-sm">
+                            <p className="text-[9px] uppercase tracking-[0.13em] leading-snug text-[#D2B48C] text-center">
+                              Full-size bags only. Sample packs and limited
+                              releases excluded.
+                            </p>
                           </div>
                         </div>
                       )}
@@ -11488,23 +11528,17 @@ function PromoSubscribeModal() {
                         </button>
                       </form>
 
-                      <div className="mt-2 md:mt-3 text-[11px] md:text-[0.9375rem] text-neutral-400 text-center">
-                        Already a member?{" "}
-                        <Link
-                          to="/account/login"
-                          className="text-[#C08C45] hover:underline"
-                          onClick={() => {
-                            localStorage.setItem(KEY_SUB, "1");
-                            setCookieDays(COOKIE_SUB, "1", 365);
-                            safeClose();
-                          }}
-                        >
-                          Sign in
-                        </Link>
+                      <div className="mt-3 text-[11px] md:text-[0.95rem] text-[#D2B48C] text-center uppercase tracking-[0.12em]">
+                        20% discount applied automatically at checkout
                       </div>
 
-                      <div className="mt-1 text-[11px] md:text-xs text-neutral-400 text-center">
-                        Cancel anytime
+                      <div className="mt-3 mx-auto max-w-[520px] relative overflow-hidden border border-[#5A4630]/60 bg-black/30 px-4 py-2 rounded-sm">
+                        <div className="absolute inset-y-0 left-0 w-[3px] bg-[#C08C45]" />
+
+                        <p className="pl-3 text-[10px] uppercase tracking-[0.14em] leading-snug text-[#D2B48C] text-center">
+                          Full-size bags only. Sample packs and limited releases
+                          excluded.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -11947,14 +11981,18 @@ function Layout() {
                     >
                       OLD IRONSIDES COFFEE
                     </Link>
-
                     <div
                       className="mt-2 text-[1.1rem] font-semibold tracking-[0.16em] text-roastTitle uppercase whitespace-nowrap"
                       style={{ fontFamily: "'Cinzel', serif" }}
                     >
                       Veteran Owned <span className="text-roastTitle">•</span>{" "}
-                      Veteran Roasted
-                    </div>
+                      Veteran Roasted{" "}
+                      <img
+                        src="/stars-stripes.png"
+                        alt="American flag"
+                        className="h-4 w-auto inline-block"
+                      />
+                    </div>{" "}
                   </div>
                 </div>
 

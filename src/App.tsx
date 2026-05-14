@@ -2351,7 +2351,7 @@ function HomePage() {
     <>
       <header
         id="top"
-        className="relative overflow-hidden border-b-0 z-0 min-h-screen"
+        className="relative overflow-hidden border-b-0 z-0 min-h-[78svh] md:min-h-screen"
         style={{ isolation: "isolate" }}
       >
         {/* HERO background */}
@@ -2374,7 +2374,7 @@ function HomePage() {
           <div className="absolute inset-0 bg-black/10 md:bg-black/20" />
         </div>
 
-        <Container className="relative desktopHeroPad min-h-[100svh] flex items-start pt-[120px] md:items-center md:pt-0 pb-0 sm:pb-4 md:pb-10 px-10 xl:px-6">
+        <Container className="relative desktopHeroPad min-h-[98svh] md:min-h-[92svh] flex items-start pt-[120px] md:items-center md:pt-0 pb-0 px-10 xl:px-6">
           <style>{`
 @media (min-width: 768px) {
   #top .desktopHeroPad {
@@ -2487,7 +2487,7 @@ function HomePage() {
                   </Link>
                 </div>
                 {/* STAR RATING */}
-                <div className="mt-3 w-full md:w-[24rem] xl:w-[28rem]">
+                <div className="mt-4 md:mt-3 w-full md:w-[24rem] xl:w-[28rem]">
                   {siteRating && (
                     <div className="flex items-center justify-center gap-2 text-center">
                       <span className="text-roastTitle font-semibold tabular-nums text-[1.15rem]">
@@ -2554,12 +2554,8 @@ function HomePage() {
                     </div>
                   )}
 
-                  <div className="flex items-center justify-center gap-2 text-neutral-300 text-[0.95rem] sm:text-[1.1rem] text-center">
-                    <span className="hidden sm:inline">
-                      Ethically sourced specialty-grade coffee
-                    </span>
-
-                    <span className="inline-flex items-center gap-2 sm:hidden">
+                  <div className="mt-1.5 flex items-center justify-center gap-2 text-neutral-300 text-[0.95rem] sm:hidden text-center">
+                    <span className="inline-flex items-center gap-2">
                       Veteran Owned. Veteran Roasted.
                       <img
                         src="/stars-stripes.png"
@@ -2578,7 +2574,7 @@ function HomePage() {
       {/* ===== QUIET RITUAL SECTION ===== */}
       <section
         id="quiet-ritual"
-        className="relative overflow-hidden bg-[#070402] py-14 md:py-20 border-t border-[#6D5333]/35 border-b border-[#6D5333]/35"
+        className="relative overflow-hidden bg-[#070402] py-10 md:py-16 border-t border-[#6D5333]/35 border-b border-[#6D5333]/35"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_28%,rgba(192,140,69,0.18),transparent_32%),radial-gradient(circle_at_78%_58%,rgba(181,151,109,0.12),transparent_34%)] pointer-events-none" />
         <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(0,0,0,0.92)_0%,rgba(7,4,2,0.82)_42%,rgba(35,20,9,0.48)_100%)] pointer-events-none" />
@@ -3641,8 +3637,8 @@ function HomePage() {
 
                 <p className="mt-5 max-w-[720px] mx-auto lg:mx-0 text-neutral-300 text-base xl:text-lg leading-relaxed">
                   Old Ironsides Coffee Company is a veteran-owned small-batch
-                  coffee brand inspired by the USS Constitution, the oldest
-                  commissioned warship afloat in the United States Navy.
+                  coffee brand inspired by the USS Constitution, the world’s
+                  oldest commissioned warship still afloat.
                 </p>
 
                 <p className="mt-4 max-w-[720px] mx-auto lg:mx-0 text-neutral-300 text-base xl:text-lg leading-relaxed">
@@ -3653,8 +3649,9 @@ function HomePage() {
                 </p>
 
                 <p className="mt-4 max-w-[720px] mx-auto lg:mx-0 text-neutral-300 text-base xl:text-lg leading-relaxed">
-                  We built this company around that same spirit: fresh-roasted
-                  coffee made with discipline, pride, and respect for the craft.
+                  That same spirit drives everything we do today: fresh-roasted
+                  coffee crafted with discipline, pride, and respect for the
+                  work.
                 </p>
 
                 <div className="mt-7 flex justify-center lg:justify-start">
@@ -3673,9 +3670,9 @@ function HomePage() {
                   {/* TIMELINE STRIP */}
                   <div className="grid grid-cols-3 border-b border-[#6D5333]/50">
                     {[
-                      { year: "1797", label: "Commissioned" },
-                      { year: "1812", label: "Her Name" },
-                      { year: "2025", label: "Our Roast" },
+                      { year: "1797", label: "Launched At Sea" },
+                      { year: "1812", label: "Solidified Her Legacy" },
+                      { year: "2025", label: "Our Roast Launched" },
                     ].map((item, i) => (
                       <div
                         key={item.year}

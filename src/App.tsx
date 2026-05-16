@@ -6406,7 +6406,7 @@ function ArmadaSamplePage() {
 
   const sampleOptions = [
     {
-      title: "Armada Sample Pack",
+      title: "Armada Discovery Box",
       slug: "armada-sample-pack",
       price: 25,
       description: "Try the full fleet. Get one roast free plus free shipping.",
@@ -6591,7 +6591,7 @@ function ArmadaSamplePage() {
             <div className="relative -mt-6 md:-mt-8 xl:-mt-12 2xl:-mt-16 w-full">
               <img
                 src="/sample-pack.jpg"
-                alt="The Armada Sample Pack"
+                alt="The Armada Discovery Box"
                 loading="eager"
                 decoding="async"
                 className="relative z-10 block w-full max-w-[400px] md:max-w-[430px] xl:max-w-[520px] 2xl:max-w-[820px] h-auto object-contain mx-auto xl:mx-0"
@@ -6613,8 +6613,8 @@ function ArmadaSamplePage() {
                     className="text-base md:text-lg leading-relaxed"
                     style={{ color: "rgba(255,255,255,0.75)" }}
                   >
-                    Sample any roast in the fleet, or choose The Armada Sample
-                    Pack and get one roast free plus free shipping.
+                    Sample any roast in the fleet, or choose The Armada
+                    Discovery Box and get one roast free plus free shipping.
                   </p>
 
                   <p

@@ -1593,21 +1593,8 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const isStore = location.pathname.startsWith("/store");
-  const mobileMerch = [
-    { key: "tees", label: "Tees", img: "shirts-web.png" },
-    { key: "hats", label: "Hats", img: "hat1-web.jpg" },
-    { key: "mugs", label: "Mugs", img: "coffee-deck2.jpg" },
-    { key: "accessories", label: "Accessories", img: "canister-web.png" },
-  ];
-  const mainFleetCards = roastCards.filter(
-    (card) => card.slug !== "oak-and-copper" && card.slug !== "brass-monkey"
-  );
 
-  const limitedReleaseCards = roastCards.filter(
-    (card) => card.slug === "oak-and-copper" || card.slug === "brass-monkey"
-  );
-  // Inline timer data (uses your existing helpers)
-  const nowET = useEtNow(45000); // update ~45s
+  const nowET = useEtNow(45000);
   const { state, roastMonday, cutoff } = getRoastState(nowET);
 
   let left = "";
@@ -1618,231 +1605,37 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
     const m = Math.max(0, Math.floor(diff.minutes ?? 0));
     left = `${d}d ${h}h ${m}m`;
   }
-  const dateLabel = formatEtDate(roastMonday);
-  const nextInfo = state === "countdown" && left ? left : dateLabel;
 
-  // refs + state for mobile carousel
-  const scrollRef = React.useRef<HTMLDivElement | null>(null);
-  const cardRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
-  const [currentIdx, setCurrentIdx] = React.useState(0);
-
-  // helper: scroll to a given index (wrap safe)
-  const scrollToIndex = React.useCallback(
-    (idx: number) => {
-      const clamped =
-        ((idx % roastCards.length) + roastCards.length) % roastCards.length;
-      const el = cardRefs.current[clamped];
-      if (el && scrollRef.current) {
-        el.scrollIntoView({
-          behavior: "smooth",
-          inline: "center",
-          block: "nearest",
-        });
-      }
-      setCurrentIdx(clamped);
-    },
-    [roastCards.length]
-  );
-
-  // arrow handlers
-  const handlePrev = React.useCallback(() => {
-    scrollToIndex(currentIdx - 1);
-  }, [currentIdx, scrollToIndex]);
-
-  const handleNext = React.useCallback(() => {
-    scrollToIndex(currentIdx + 1);
-  }, [currentIdx, scrollToIndex]);
-
-  // sync index when user swipes manually
-  const handleScroll = React.useCallback(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-    const scrollLeft = container.scrollLeft;
-
-    let bestIdx = 0;
-    let bestDist = Infinity;
-    cardRefs.current.forEach((cardEl, idx) => {
-      if (!cardEl) return;
-      const dist = Math.abs(cardEl.offsetLeft - scrollLeft);
-      if (dist < bestDist) {
-        bestDist = dist;
-        bestIdx = idx;
-      }
-    });
-    setCurrentIdx(bestIdx);
-  }, []);
-
-  // === FULL MOBILE TUNING PER CARD (image + content) ===
-  // === MOBILE TUNING PER CARD (image + content, default same for all) ===
-  const MOBILE_TUNE: Record<
-    string,
+  const trustItems = [
     {
-      imgH: string;
-      objY: string;
-      shift: string;
-      gradH: string;
-      overlap: string;
-      stack: string;
-      title: string;
-      subtitle: string;
-      note: string;
-      fit: string;
-      sideFill: boolean; // NEW: add blurred cover filler behind contain images
-    }
-  > = {
-    flagship: {
-      imgH: "h-[24rem]", // taller image so it can bleed downward
-      objY: "object-[center_40%]",
-      shift: "",
-      gradH: "h-24", // deeper gradient for readability
-      overlap: "-mb-16", // pulls the image DOWN behind content without changing card height
-      stack: "", // leave content where it is
-      title: "text-[28px]", // ~5% bump from 26px
-      subtitle: "text-[16px]",
-      note: "",
-      fit: "object-cover",
-      sideFill: true,
+      title: "ROASTED TO ORDER",
+      copy: "Always Fresh Roasted.",
+      icon: "/anchor.png",
     },
-
-    "baptism-by-fire": {
-      imgH: "h-[24rem]", // allow the photo to bleed downward
-      objY: "object-[center_30%]", // tweak later if you want a different crop
-      shift: "",
-      gradH: "h-24", // deeper gradient for readability
-      overlap: "-mb-16", // bleed image under the text without changing card size
-      stack: "", // keep content position the same
-      title: "text-[28px]", // ~5% larger title like flagship
-      subtitle: "text-[16px]",
-      note: "",
-      fit: "object-cover",
-      sideFill: true,
+    { title: "SMALL BATCH", copy: "Craft Roasted.", icon: "/compass.png" },
+    {
+      title: "SHIPS FRESH",
+      copy: "Timed For Peak Freshness.",
+      icon: "/truck.png",
     },
-
-    "java-action": {
-      imgH: "h-[24rem]",
-      objY: "object-[center_35%]",
-      shift: "",
-      gradH: "h-24",
-      overlap: "-mb-16",
-      stack: "",
-      title: "text-[28px]",
-      subtitle: "text-[16px]",
-      note: "",
-      fit: "object-contain", // keep the zoom-out effect
-      sideFill: true, // turn on filler layer to remove side bars visually
+    {
+      title: "VETERAN OWNED",
+      copy: "Built with discipline.",
+      icon: "/army-star.png",
     },
-    "oak-and-copper": {
-      imgH: "h-[24rem]", // allow the photo to bleed under text
-      objY: "object-[center_40%]", // adjust later if you want more sea/sky
-      shift: "",
-      gradH: "h-24", // deeper gradient for readability
-      overlap: "-mb-16", // bleed image without changing card height
-      stack: "", // keep content position the same
-      title: "text-[28px]", // match your global sizes
-      subtitle: "text-[16px]",
-      note: "",
-      fit: "object-cover", // full-width; no side bars
-      sideFill: false, // no filler needed when using cover
-    },
-    "brass-monkey": {
-      imgH: "h-[24rem]",
-      objY: "object-[center_35%]",
-      shift: "",
-      gradH: "h-24",
-      overlap: "-mb-16",
-      stack: "",
-      title: "text-[28px]",
-      subtitle: "text-[16px]",
-      note: "",
-      fit: "object-contain", // zoom out
-      sideFill: true, // blurred filler behind to hide side bars
-    },
-  };
-
-  const DEFAULT_MOBILE_TUNE = {
-    imgH: "h-[20rem]",
-    objY: "object-[center_40%]",
-    shift: "",
-    gradH: "h-10",
-    overlap: "",
-    stack: "",
-    title: "",
-    subtitle: "",
-    note: "",
-    fit: "object-cover",
-    sideFill: false, // NEW
-  };
-  // Live review summaries for each roast card (avg + count from Judge.me)
-  const [summaryBySlug, setSummaryBySlug] = React.useState<
-    Record<string, { avg: number; count: number }>
-  >({});
-
-  React.useEffect(() => {
-    let cancelled = false;
-
-    async function loadAllSummaries() {
-      try {
-        const promises = roastCards.map(async (card) => {
-          const productId = PRODUCT_IDS_BY_SLUG[card.slug];
-          if (!productId) return [card.slug, { avg: 0, count: 0 }] as const;
-
-          const res = await fetch(
-            `/api/get-reviews?shopifyProductId=${encodeURIComponent(productId)}`
-          );
-          if (!res.ok) return [card.slug, { avg: 0, count: 0 }] as const;
-
-          const data = await res.json();
-          const reviews: any[] = Array.isArray(data.reviews)
-            ? data.reviews
-            : [];
-
-          if (!reviews.length)
-            return [card.slug, { avg: 0, count: 0 }] as const;
-
-          const count = reviews.length;
-          const sum = reviews.reduce(
-            (acc, r) => acc + (Number(r.rating) || 0),
-            0
-          );
-          const avg = Math.round((sum / count) * 10) / 10;
-
-          return [card.slug, { avg, count }] as const;
-        });
-
-        const entries = await Promise.all(promises);
-        if (cancelled) return;
-
-        const map: Record<string, { avg: number; count: number }> = {};
-        for (const [slug, stats] of entries) {
-          map[slug] = stats;
-        }
-        setSummaryBySlug(map);
-      } catch (err) {
-        if (!cancelled) {
-          console.error("Error loading review summaries", err);
-        }
-      }
-    }
-
-    loadAllSummaries();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  ];
 
   return (
     <section
       id="fleet"
       className={`relative overflow-hidden ${
         isHome
-          ? "pt-2 pb-4 md:pt-2 md:pb-4 min-h-[auto]"
+          ? "pt-2 pb-6 md:pt-2 md:pb-8"
           : isStore
-          ? "pt-2 pb-6 md:pt-6 md:pb-10 min-h-[auto] md:min-h-[1000px]"
-          : "pt-2 pb-6 md:py-20 min-h-[auto] md:min-h-[1100px]"
+          ? "pt-2 pb-8 md:pt-6 md:pb-12"
+          : "pt-2 pb-8 md:py-20"
       }`}
     >
-      {/* Background image just for this section */}
       {!noBg && (
         <>
           <img
@@ -1850,7 +1643,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
             alt="Dark coffee roastery backdrop"
             className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-100 -z-0"
           />
-          <div className="hidden md:block absolute inset-0 bg-black/40 -z-0" />
+          <div className="hidden md:block absolute inset-0 bg-black/50 -z-0" />
         </>
       )}
 
@@ -1859,53 +1652,45 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
           isStore ? "md:pt-10" : ""
         } px-0 sm:px-0 lg:px-0`}
       >
-        {/* header row: title + (maybe) back button */}
-        <div className="flex flex-col items-center text-center px-0 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center text-center px-3 sm:px-6 lg:px-8">
           <SectionTitle
             title={
               <div className="flex flex-col items-center w-full">
                 <span
-                  className="
-  whitespace-nowrap
-  text-[2.6rem] sm:text-[3.2rem] md:text-[4.6rem] xl:text-[5.3rem]
-  leading-none
-  tracking-[0.08em]
-  font-bold text-roastTitle
-"
+                  className="whitespace-nowrap text-[2.45rem] sm:text-[3.2rem] md:text-[4.6rem] xl:text-[5.3rem] leading-none tracking-[0.08em] font-bold text-roastTitle"
                   style={{ fontFamily: "'Cinzel', serif" }}
                 >
-                  OUR ROAST
+                  OUR ROASTS
                 </span>
 
-                {/* STAR DIVIDER */}
-                <div className="flex items-center w-full max-w-[420px] md:max-w-[560px] -mt-1 md:mt-0">
-                  <div className="h-px flex-1 bg-roastTitle" />
+                <div className="flex items-center w-full max-w-[390px] md:max-w-[560px] -mt-1 md:mt-0">
+                  <div className="h-px flex-1 bg-roastTitle/80" />
                   <span className="px-3 text-roastTitle text-base md:text-lg leading-none">
                     ★
                   </span>
-                  <div className="h-px flex-1 bg-roastTitle" />
+                  <div className="h-px flex-1 bg-roastTitle/80" />
                 </div>
               </div>
             }
             subtitle={
-              <>
-                <div
-                  className="mt-2 text-[1rem] sm:text-[1.15rem] md:text-[1.45rem] italic text-roastSubtitle text-center"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
-                  Six roasts. Built for every kind of coffee drinker.
-                </div>
-              </>
+              <div
+                className="mt-2 text-[1rem] sm:text-[1.15rem] md:text-[1.35rem] italic text-roastSubtitle text-center"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                Six roasts. Built for every kind of coffee drinker.
+              </div>
             }
           />
         </div>
 
-        {/* tighten gap before cards */}
-        <div className="mt-4 md:mt-8"></div>
-        {/* mobile: 2-up roast tiles */}
-        <div className="lg:hidden px-3 pt-4">
-          <div className="grid grid-cols-2 gap-3">
+        <div className="mt-5 md:mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-[1450px] mx-auto px-3 sm:px-6 xl:px-4 2xl:px-0">
             {roastCards.map((card) => {
+              const base =
+                card.slug === "oak-and-copper"
+                  ? 24.99
+                  : Number(card.price ?? 19.99);
+
               const badge = card.isNew
                 ? "NEW"
                 : card.slug === "brass-monkey"
@@ -1914,42 +1699,49 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                 ? "LIMITED RELEASE"
                 : "";
 
+              const roastType =
+                card.slug === "oak-and-copper"
+                  ? "Bourbon Barrel Aged"
+                  : card.slug === "baptism-by-fire"
+                  ? "Dark Roast"
+                  : card.slug === "brass-monkey"
+                  ? "Winter Seasonal"
+                  : card.subTitle || "Medium Roast";
+
               return (
                 <Link
                   key={card.id}
                   to={`/roast/${card.slug}`}
                   aria-label={`${card.title} details`}
                   className="
-            group relative overflow-hidden rounded-[10px]
-            border border-[#6D5333]/80
-            bg-[#030201]
-            h-[275px]
-            px-3 py-3
-            no-underline
-            shadow-[0_0_18px_rgba(192,140,69,0.16),0_0_24px_rgba(0,0,0,0.9),inset_0_0_22px_rgba(192,140,69,0.10)]
+                  group relative overflow-hidden rounded-[14px]
+                  h-[265px] sm:h-[340px] lg:h-[390px]
+            border border-[#6D5333]/55
+            bg-[#050302]
+            shadow-[0_0_26px_rgba(0,0,0,0.85),inset_0_0_22px_rgba(192,140,69,0.07)]
+            transition-all duration-300
+            hover:border-[#C08C45]/75
+            hover:shadow-[0_0_34px_rgba(0,0,0,0.9),0_0_16px_rgba(192,140,69,0.18),inset_0_0_22px_rgba(192,140,69,0.10)]
           "
                 >
-                  {/* subtle inner wash */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#C08C45]/5 via-[#030201] to-black" />
-                  {/* visible inner edge glow */}
-                  <div className="pointer-events-none absolute inset-0 z-[5] rounded-[10px] ring-1 ring-[#C08C45]/35 shadow-[inset_0_0_28px_rgba(192,140,69,0.22)]" />
-                  {/* controlled glow */}
-                  <div className="absolute left-1/2 top-[38%] h-[165px] w-[175px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C08C45]/24 blur-2xl" />
+                  <div className="absolute inset-0 bg-[#050302]" />
 
-                  {/* shelf */}
-                  <div className="absolute left-1/2 top-[66%] h-px w-[75%] -translate-x-1/2 bg-gradient-to-r from-transparent via-[#6D5333]/60 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#160D05] via-[#050302] to-black" />
 
-                  {/* shadow */}
-                  <div className="absolute left-1/2 top-[68%] h-[18px] w-[120px] -translate-x-1/2 rounded-full bg-black/90 blur-xl" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_52%,rgba(192,140,69,0.18),transparent_38%)]" />
+
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/20 to-black/82" />
+
+                  <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black via-black/74 to-transparent" />
 
                   {badge && (
                     <div
                       className="
-                absolute left-2 top-2 z-20
-                rounded-[5px] border border-[#6D5333]/70
+                absolute left-3 top-3 z-30
+                rounded-[5px] border border-[#6D5333]/80
                 bg-black/75 backdrop-blur-[2px]
-                px-2 py-1
-                text-center text-[9px] font-black tracking-[0.06em]
+                px-3 py-1.5
+                text-[10px] font-black tracking-[0.08em]
                 text-[#E6C07F]
               "
                       style={{ fontFamily: "'Cinzel', serif" }}
@@ -1958,59 +1750,70 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     </div>
                   )}
 
-                  <img
-                    src={
-                      card.img?.startsWith("/") || card.img?.startsWith("http")
-                        ? card.img
-                        : `/${card.img}`
-                    }
-                    alt={card.title}
-                    className="
-              absolute left-1/2 top-[6px] z-10
-              h-[150px] w-auto -translate-x-1/2
-              object-contain transition duration-300
-              group-hover:brightness-110
-            "
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => {
-                      const el = e.currentTarget as HTMLImageElement;
-                      if (!el.src.includes("/placeholder.png"))
-                        el.src = "/placeholder.png";
-                    }}
-                  />
+                  <div className="relative z-20 grid h-full grid-cols-[54%_46%] items-center px-3 py-4 sm:px-4 lg:px-5">
+                    <div className="relative flex h-full items-center justify-center overflow-visible">
+                      <div className="absolute bottom-[22px] h-[22px] w-[175px] rounded-full bg-black/90 blur-xl" />
 
-                  <div className="relative z-20 flex h-full flex-col justify-end text-center">
-                    <h3
-                      className="text-[18px] font-black leading-none tracking-[0.02em] text-[#D0A15C]"
-                      style={{ fontFamily: "'Cinzel', serif" }}
-                    >
-                      {card.title}
-                    </h3>
+                      <img
+                        src={
+                          card.img?.startsWith("/") ||
+                          card.img?.startsWith("http")
+                            ? card.img
+                            : `/${card.img}`
+                        }
+                        alt={card.title}
+                        className="
+                        relative z-10
+                        h-[255px] sm:h-[310px] lg:h-[360px]
+                        w-auto object-contain
+                        scale-[1.35] sm:scale-[1.5] lg:scale-[1.6]
+                        transition duration-300
+                        group-hover:brightness-110
+                        group-hover:scale-[1.65]
+                      "
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => {
+                          const el = e.currentTarget as HTMLImageElement;
+                          if (!el.src.includes("/placeholder.png")) {
+                            el.src = "/placeholder.png";
+                          }
+                        }}
+                      />
+                    </div>
 
-                    <p
-                      className="mt-1 text-[15px] italic leading-tight text-[#C08C45]"
-                      style={{ fontFamily: "'Playfair Display', serif" }}
-                    >
-                      {card.slug === "oak-and-copper"
-                        ? "Barrel Aged"
-                        : card.slug === "baptism-by-fire"
-                        ? "Dark Roast"
-                        : card.slug === "java-action"
-                        ? "Medium Roast"
-                        : card.slug === "flagship"
-                        ? "Medium Roast"
-                        : card.slug === "brass-monkey"
-                        ? "Seasonal Roast"
-                        : card.subTitle}
-                    </p>
+                    <div className="relative z-20 flex flex-col justify-center pl-0 pr-1">
+                      <h3
+                        className="text-[25px] sm:text-[27px] lg:text-[31px] font-black leading-[0.95] tracking-[0.01em] text-[#C08C45]"
+                        style={{ fontFamily: "'Cinzel', serif" }}
+                      >
+                        {card.title}
+                      </h3>
 
-                    <p
-                      className="mt-1 text-[14px] italic leading-snug text-neutral-200/85 font-semibold line-clamp-2"
-                      style={{ fontFamily: "'Playfair Display', serif" }}
-                    >
-                      {card.note?.replace(/micro[- ]batch\s*/i, "")}
-                    </p>
+                      <p
+                        className="mt-2 text-[15px] sm:text-[16px] lg:text-[17px] italic leading-tight text-[#B39871]"
+                        style={{ fontFamily: "'Playfair Display', serif" }}
+                      >
+                        {roastType}
+                      </p>
+
+                      <div className="mt-3 h-px w-14 bg-[#C08C45]/60" />
+
+                      <p
+                        className="mt-3 text-[15px] sm:text-[16px] lg:text-[18px] italic leading-snug text-neutral-200/85 line-clamp-2"
+                        style={{ fontFamily: "'Playfair Display', serif" }}
+                      >
+                        {card.note?.replace(/micro[- ]batch\s*/i, "")}
+                      </p>
+
+                      <div className="mt-4 text-[14px] sm:text-[15px] text-neutral-100 font-semibold">
+                        From {fmt(base)}
+                      </div>
+                    </div>
+
+                    <div className="absolute right-4 bottom-4 z-30 text-[#C08C45] opacity-70 transition group-hover:translate-x-1 group-hover:opacity-100">
+                      ›
+                    </div>
                   </div>
                 </Link>
               );
@@ -2018,262 +1821,51 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
           </div>
         </div>
 
-        {/* desktop: mockup roast grid */}
-        <div className="hidden lg:block relative mt-2 pb-8">
-          <div className="grid grid-cols-3 gap-3 max-w-[1450px] mx-auto px-6 xl:px-4 2xl:px-0">
-            {roastCards.map((card) => {
-              const base =
-                card.slug === "oak-and-copper"
-                  ? 24.99
-                  : Number(card.price ?? 19.99);
-              const sub =
-                card.slug === "oak-and-copper"
-                  ? base
-                  : Math.round(base * 0.9 * 100) / 100;
+        <div className="mt-7 grid grid-cols-2 lg:grid-cols-4 gap-y-5 max-w-[1450px] mx-auto px-4 xl:px-0 pt-6 border-t border-[#6D5333]/35">
+          {trustItems.map((item, idx) => (
+            <div
+              key={item.title}
+              className={`relative flex items-center justify-center px-3 lg:px-6 ${
+                idx !== 0 ? "lg:border-l lg:border-[#6D5333]/45" : ""
+              }`}
+            >
+              <div className="relative w-[38px] h-[38px] shrink-0">
+                <img
+                  src={item.icon}
+                  alt=""
+                  className={`
+            absolute left-1/2 top-1/2
+            -translate-x-1/2 -translate-y-1/2
+            object-contain opacity-90 pointer-events-none
+            ${
+              item.title === "ROASTED TO ORDER"
+                ? "h-[70px] w-[70px] scale-[2.5]"
+                : item.title === "SMALL BATCH"
+                ? "h-[70px] w-[70px] scale-[3.6]"
+                : item.title === "SHIPS FRESH"
+                ? "h-[70px] w-[70px] scale-[4.2]"
+                : "h-[70px] w-[70px] scale-[2.7]"
+            }
+          `}
+                />
+              </div>
 
-              const badge = card.isNew
-                ? "NEW"
-                : card.slug === "brass-monkey"
-                ? "SEASONAL"
-                : card.slug === "oak-and-copper"
-                ? "LIMITED RELEASE"
-                : "";
-
-              return (
-                <Link
-                  key={card.id}
-                  to={`/roast/${card.slug}`}
-                  className="
-                  group relative overflow-hidden rounded-[10px]
-                  scale-[0.94] xl:scale-100 origin-top
-                  border border-[#6D5333]/80
-                  bg-[#070503]
-                  h-[240px]
-                  px-5 py-3
-              
-                  shadow-[0_0_28px_rgba(0,0,0,0.85),inset_0_0_24px_rgba(192,140,69,0.11)]
-                  transition-all duration-300
-              
-                  hover:border-[#C08C45]/70
-                  hover:shadow-[0_0_34px_rgba(0,0,0,0.9),0_0_16px_rgba(192,140,69,0.18),inset_0_0_24px_rgba(192,140,69,0.12)]
-                "
+              <div className="ml-3">
+                <div
+                  className="text-[11px] sm:text-[13px] lg:text-[15px] font-black tracking-[0.12em] text-neutral-300"
+                  style={{ fontFamily: "'Cinzel', serif" }}
                 >
-                  {/* inner glow wash */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#C08C45]/10 via-[#070503] to-black" />
-
-                  {/* concentrated bag glow */}
-                  <div className="absolute left-[22%] top-1/2 h-[210px] w-[240px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C08C45]/35 blur-3xl" />
-
-                  {/* shelf */}
-                  <div className="absolute left-[22%] bottom-[28px] h-px w-[36%] -translate-x-1/2 bg-gradient-to-r from-transparent via-[#6D5333]/65 to-transparent" />
-
-                  {/* shadow */}
-                  <div className="absolute left-[22%] bottom-[18px] h-[22px] w-[165px] -translate-x-1/2 rounded-full bg-black/90 blur-xl" />
-
-                  {badge && (
-                    <div
-                      className="
-                absolute left-3 top-3 z-20
-                rounded-[5px] border border-[#6D5333]
-                bg-black/70 backdrop-blur-[2px] px-3 py-2
-                text-center text-[11px] font-black leading-tight
-                tracking-[0.06em] text-[#E6C07F]
-              "
-                      style={{ fontFamily: "'Cinzel', serif" }}
-                    >
-                      {badge}
-                    </div>
-                  )}
-
-                  <img
-                    src={
-                      card.img?.startsWith("/") || card.img?.startsWith("http")
-                        ? card.img
-                        : `/${card.img}`
-                    }
-                    alt={card.title}
-                    className="
-              absolute left-[22%] bottom-[-10px] z-10
-              h-[260px] w-auto -translate-x-1/2
-              object-contain transition duration-300
-              group-hover:brightness-110
-            "
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => {
-                      const el = e.currentTarget as HTMLImageElement;
-                      if (!el.src.includes("/placeholder.png"))
-                        el.src = "/placeholder.png";
-                    }}
-                  />
-
-                  <div className="relative z-20 ml-[40%] flex h-full flex-col justify-center pr-1">
-                    <h3
-                      className="text-[29px] font-black leading-none tracking-[0.02em] text-[#C08C45]"
-                      style={{ fontFamily: "'Cinzel', serif" }}
-                    >
-                      {card.title}
-                    </h3>
-
-                    <p
-                      className="mt-2 text-[17px] italic leading-[1.12] text-[#B39871]"
-                      style={{ fontFamily: "'Playfair Display', serif" }}
-                    >
-                      {card.subTitle}
-                    </p>
-
-                    <p
-                      className="mt-2 text-[18px] italic leading-snug text-neutral-200/85"
-                      style={{ fontFamily: "'Playfair Display', serif" }}
-                    >
-                      {card.note}
-                    </p>
-
-                    <div className="mt-3 flex items-center gap-2 whitespace-nowrap">
-                      <span className="text-[14px] text-neutral-200">
-                        From {fmt(base)}
-                      </span>
-
-                      <span className="rounded-[5px] bg-[#32220D] px-3 py-2 text-[12px] font-black leading-none text-[#E6C07F]">
-                        Subscribe {fmt(sub)}
-                      </span>
-                    </div>
-
-                    <div className="mt-4 text-[12px] font-semibold tracking-[0.12em] text-[#8A6E4A] uppercase">
-                      Click roast to view details
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* bottom trust row */}
-          <div className="hidden lg:grid mt-7 grid-cols-4 max-w-[1450px] mx-auto px-4 xl:px-0 pt-6">
-            {[
-              {
-                title: "ROASTED TO ORDER",
-                copy: "Never stale coffee.",
-                icon: "/anchor.png",
-              },
-              {
-                title: "SMALL BATCH ROASTED",
-                copy: "Ethically sourced beans.",
-                icon: "/compass.png",
-              },
-              {
-                title: "SHIPS FRESH",
-                copy: "3+ bags ships free.",
-                icon: "/truck.png",
-              },
-              {
-                title: "VETERAN OWNED",
-                copy: "Veteran owned. Veteran roasted.",
-                icon: "/army-star.png",
-              },
-            ].map((item, idx) => (
-              <div
-                key={item.title}
-                className={`relative flex items-center justify-center px-6 ${
-                  idx !== 0 ? "border-l border-[#6D5333]/55" : ""
-                }`}
-              >
-                {/* oversized icon (no layout shift) */}
-                <div className="relative w-[40px] h-[40px]">
-                  <img
-                    src={item.icon}
-                    alt=""
-                    className={`
-      absolute left-1/2 top-1/2
-      -translate-x-1/2 -translate-y-1/2
-      object-contain opacity-90 pointer-events-none
-      ${
-        item.title === "ROASTED TO ORDER"
-          ? "h-[80px] w-[80px] scale-[3]" // anchor stays same
-          : item.title === "SMALL BATCH ROASTED"
-          ? "h-[80px] w-[80px] scale-[4]" // big boost
-          : item.title === "SHIPS FRESH"
-          ? "h-[80px] w-[80px] scale-[5]" // big boost
-          : "h-[80px] w-[80px] scale-[3]" // star +25–40%
-      }
-    `}
-                  />
+                  {item.title}
                 </div>
-                {/* text */}
-                <div className="ml-4">
-                  <div
-                    className="text-[15px] font-black tracking-[0.12em] text-neutral-300"
-                    style={{ fontFamily: "'Cinzel', serif" }}
-                  >
-                    {item.title}
-                  </div>
-                  <div
-                    className="mt-1 text-[16px] italic-bold text-[#B39871]"
-                    style={{ fontFamily: "'Playfair Display', serif" }}
-                  >
-                    {item.copy}
-                  </div>
+                <div
+                  className="mt-1 text-[13px] sm:text-[15px] lg:text-[16px] italic text-[#B39871]"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  {item.copy}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* MOBILE TRUST ROW */}
-        <div className="lg:hidden mt-6 grid grid-cols-2 gap-y-4 pt-5 px-3">
-          <div className="flex items-center gap-3">
-            <div className="relative w-[42px] h-[42px] flex items-center justify-center">
-              <img
-                src="/anchor.png"
-                className="h-[32px] w-[32px] object-contain scale-[2.3]"
-              />
             </div>
-            <div
-              className="text-[13px] font-black"
-              style={{ color: "rgba(255,255,255,0.38)" }}
-            >
-              ROASTED TO ORDER
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <img
-              src="/compass.png"
-              className="h-[32px] w-[32px] object-contain scale-[3.2]"
-            />
-            <div
-              className="text-[13px] font-black"
-              style={{ color: "rgba(255,255,255,0.38)" }}
-            >
-              SMALL BATCH ROASTED
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <img
-              src="/truck.png"
-              className="h-[32px] w-[32px] object-contain scale-[3]"
-            />
-            <div
-              className="text-[13px] font-black"
-              style={{ color: "rgba(255,255,255,0.38)" }}
-            >
-              SHIPS FRESH
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <img
-              src="/army-star.png"
-              className="h-[32px] w-[32px] object-contain scale-[2.4]"
-            />
-            <div
-              className="text-[13px] font-black"
-              style={{ color: "rgba(255,255,255,0.38)" }}
-            >
-              VETERAN OWNED
-            </div>
-          </div>
+          ))}
         </div>
       </Container>
     </section>
@@ -2438,7 +2030,7 @@ function HomePage() {
 
               {/* SUBTEXT */}
               <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-[#E6DCC8]/75">
-                Fresh-roasted and shipped at peak freshiness.
+                Fresh-roasted and shipped at peak freshness.
               </div>
 
               <div className="w-full max-w-none mt-8 md:mt-12 xl:mt-14">
@@ -2481,7 +2073,7 @@ function HomePage() {
   hover:border-[#C08C45]
   hover:shadow-[0_0_18px_rgba(192,140,69,0.18)]"
                   >
-                    TRY SAMPLE PACKS
+                    START WITH A SAMPLE
                   </Link>
                 </div>
                 {/* STAR RATING */}
@@ -2838,7 +2430,18 @@ function HomePage() {
             {/* DESKTOP */}
             <div className="grid grid-cols-1 lg:grid-cols-[1.02fr_0.98fr] gap-10 lg:gap-16 xl:gap-24 items-center">
               {/* VIDEO FEATURE - LEFT */}
-              <div className="relative flex justify-start">
+              <div className="relative flex flex-col justify-start">
+                <div className="lg:hidden mb-6 text-center">
+                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.34em] text-[#B5976D]">
+                    Tasting Events
+                  </p>
+
+                  <h2 className="mt-3 font-cinzel text-[2.35rem] font-black leading-[1] tracking-[0.04em] text-[#E6DCC8]">
+                    Great Coffee.
+                    <br />
+                    <span className="text-[#E6C07F]">Great People.</span>
+                  </h2>
+                </div>
                 <div className="absolute -inset-5 bg-[#C08C45]/10 blur-3xl pointer-events-none" />
 
                 <div className="relative w-full max-w-[560px]">
@@ -2868,8 +2471,22 @@ function HomePage() {
                 </div>
               </div>
 
+              <div className="lg:hidden mt-5 text-center">
+                <p className="text-[#B5976D] italic text-[1rem] leading-relaxed max-w-[320px] mx-auto">
+                  Fresh coffee, good people, and real feedback from the
+                  community.
+                </p>
+
+                <Link
+                  to="/roast/armada-sample-pack"
+                  className="mt-5 inline-flex h-[46px] items-center justify-center px-6 rounded-none bg-[#C08C45] text-black font-oswald font-black uppercase text-[0.82rem] tracking-[0.16em] border border-[#C08C45] transition-all duration-200 hover:bg-[#E6C07F]"
+                >
+                  Try A Sample
+                </Link>
+              </div>
+
               {/* TEXT FEATURE - RIGHT */}
-              <div className="relative w-full max-w-[620px]">
+              <div className="relative w-full max-w-[620px] hidden lg:block">
                 <div className="border border-[#6D5333]/55 bg-[#0A0603]/82 backdrop-blur-sm p-7 xl:p-8 shadow-2xl shadow-black/60">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
                     Easter Weekend Tasting
@@ -2914,7 +2531,7 @@ function HomePage() {
       {/* ===== FROM THE SAND TO THE SEA ===== */}
       <section
         id="origins-service"
-        className="relative overflow-hidden bg-[#050302] scroll-mt-28 md:scroll-mt-36 py-16 md:py-24 border-b border-[#6D5333]/40"
+        className="relative overflow-hidden bg-[#050302] scroll-mt-28 md:scroll-mt-36 py-8 md:py-20 border-b border-[#6D5333]/40"
       >
         <img
           src="/iraq-moon.JPG"
@@ -2926,7 +2543,7 @@ function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/58 to-black/15 z-0 pointer-events-none" />
 
         <Container>
-          <div className="relative z-10 hidden lg:grid min-h-[640px] py-14 xl:py-16 grid-cols-[0.42fr_1.15fr_0.9fr] gap-8 xl:gap-12 items-center">
+          <div className="relative z-10 hidden lg:grid min-h-[640px] pt-8 pb-14 xl:pt-10 xl:pb-16 grid-cols-[0.42fr_1.15fr_0.9fr] gap-8 xl:gap-12 items-start">
             {/* LEFT TITLE RAIL */}
             <div className="self-stretch flex items-center">
               <div className="border-l-2 border-[#C08C45] pl-6 xl:pl-8">
@@ -2996,16 +2613,15 @@ function HomePage() {
                 </p>
 
                 <p className="mt-5 text-neutral-300 text-[0.95rem] xl:text-base leading-relaxed">
-                  My boots were in the sand, not on the deck. But the spirit of
-                  the USS Constitution always hit home: grit, discipline,
-                  loyalty, and the refusal to quit when the pressure is on.
+                  My service was in the sand, not on the deck. But the code was
+                  the same: discipline, loyalty, pressure, and the refusal to
+                  quit.
                 </p>
 
                 <p className="mt-4 text-neutral-300 text-base xl:text-lg leading-relaxed">
-                  Old Ironsides Coffee was built from that same code. Not as a
-                  gimmick. Not as decoration. As a standard for how this company
-                  shows up, how the coffee is made, and how the people behind it
-                  are represented.
+                  Old Ironsides Coffee was built from that standard. Not as a
+                  gimmick. As a way to make coffee with care, consistency, and
+                  something worth standing behind.
                 </p>
 
                 <div className="mt-6 border-l-2 border-[#C08C45] bg-[#130E08]/70 px-5 py-4">
@@ -3022,7 +2638,7 @@ function HomePage() {
           </div>
 
           {/* MOBILE VERSION UNCHANGED */}
-          <div className="relative z-10 lg:hidden grid grid-cols-1 gap-10 items-center py-16">
+          <div className="relative z-10 lg:hidden grid grid-cols-1 gap-8 items-center pt-2 pb-14">
             {/* TEXT */}
             <div className="order-1 text-center">
               <p className="mb-4 text-[0.7rem] font-semibold uppercase tracking-[0.36em] text-[#B5976D]">
@@ -3081,17 +2697,16 @@ function HomePage() {
                 </div>
               </div>
 
-              <p className="mt-5 max-w-[720px] mx-auto text-neutral-300 text-base md:text-lg leading-relaxed">
-                My boots were in the sand, not on the deck. But the spirit of
-                the USS Constitution always hit home: grit, discipline, loyalty,
-                and the refusal to quit when the pressure is on.
+              <p className="mt-5 text-neutral-300 text-[0.95rem] xl:text-base leading-relaxed">
+                My service was in the sand, not on the deck. But the code was
+                the same: discipline, loyalty, pressure, and the refusal to
+                quit.
               </p>
 
-              <p className="mt-4 max-w-[720px] mx-auto text-neutral-300 text-base md:text-lg leading-relaxed">
-                Old Ironsides Coffee was built from that same code. Not as a
-                gimmick. Not as decoration. As a standard for how this company
-                shows up, how the coffee is made, and how the people behind it
-                are represented.
+              <p className="mt-4 text-neutral-300 text-base xl:text-lg leading-relaxed">
+                Old Ironsides Coffee was built from that standard. Not as a
+                gimmick. As a way to make coffee with care, consistency, and
+                something worth standing behind.
               </p>
 
               <div className="mt-8 border-l-2 border-[#C08C45] bg-[#130E08]/65 px-6 py-5 text-left shadow-xl shadow-black/40">

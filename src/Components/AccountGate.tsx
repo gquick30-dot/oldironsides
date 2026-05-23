@@ -34,7 +34,7 @@ export default function AccountGate({ open, onClose }: Props) {
             />
             <div className="self-center">
               <h2 className="text-2xl sm:text-1xl font-extrabold tracking-tight text-amber-300 m-0">
-                Join the Fleet to unlock your 15% off
+                Subscribe to unlock your 10% off
               </h2>
               <p className="mt-2 text-neutral-300">
                 To get the subscription price, please sign in or create an

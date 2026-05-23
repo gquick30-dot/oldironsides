@@ -482,6 +482,7 @@ const roastCards = [
     subTitle: "Medium Roast",
     note: "Versatile, Smooth, Unique",
     img: "black-salvo-emblem.png",
+    detailImg: "black-salvo5.jpg",
     price: 19.99,
     canBuy: true,
     variant: "12oz Bag",

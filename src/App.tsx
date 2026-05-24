@@ -1853,7 +1853,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                               <img
                                 src={note.icon}
                                 alt={note.label}
-                                className="h-[16px] w-[16px] object-contain opacity-80 shrink-0"
+                                className="h-[32px] w-[32px] object-contain opacity-90 shrink-0"
                                 onError={(e) => {
                                   (
                                     e.currentTarget as HTMLImageElement
@@ -1861,7 +1861,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                                 }}
                               />
                               <span
-                                className="text-[11px] tracking-[0.07em] uppercase text-[#9C9791]"
+                                className="text-[13px] sm:text-[14px] tracking-[0.04em] uppercase text-[#B9B4AE]"
                                 style={{ fontFamily: "'Cinzel', serif" }}
                               >
                                 {note.label}
@@ -1897,7 +1897,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                       to="/roast/armada-sample-pack"
                       aria-label={`Try a sample of ${card.title}`}
                       className="
-                        flex-1 py-3 text-center text-[0.65rem] font-bold tracking-widest uppercase
+                        flex-1 py-3 text-center text-[0.95rem] font-bold tracking-widest uppercase
                         bg-[#C08C45] text-[#0d0d0d]
                         transition-all duration-200
                         hover:bg-[#E6C07F]
@@ -1912,7 +1912,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                       to={`/roast/${card.slug}`}
                       aria-label={`View ${card.title} roast details`}
                       className={`
-                        flex-1 py-3 text-center text-[0.65rem] font-bold tracking-widest uppercase
+                        flex-1 py-3 text-center text-[0.95rem] font-bold tracking-widest uppercase
                         border transition-all duration-200
                         ${
                           isOakCopper
@@ -2082,7 +2082,7 @@ function HomePage() {
     <>
       <header
         id="top"
-        className="relative overflow-hidden border-b-0 z-0 min-h-[78svh] md:min-h-screen"
+        className="relative overflow-hidden border-b-0 z-0 min-h-[94svh] md:min-h-screen"
         style={{ isolation: "isolate" }}
       >
         {/* HERO background */}
@@ -2105,7 +2105,7 @@ function HomePage() {
           <div className="absolute inset-0 bg-black/10 md:bg-black/20" />
         </div>
 
-        <Container className="relative desktopHeroPad min-h-[98svh] md:min-h-[92svh] flex items-start pt-[120px] md:items-center md:pt-0 pb-0 px-10 xl:px-6">
+        <Container className="relative desktopHeroPad min-h-[120svh] md:min-h-[92svh] flex items-start pt-[120px] md:items-center md:pt-0 pb-0 px-10 xl:px-6">
           <style>{`
 @media (min-width: 768px) {
   #top .desktopHeroPad {
@@ -2138,7 +2138,7 @@ function HomePage() {
           <div className="grid grid-cols-1 items-center text-center lg:text-left">
             {/* HERO TEXT */}
             <div
-              className="max-w-[560px] lg:max-w-[900px] flex flex-col items-start text-left heroCenter mt-[110px] translate-y-[10%] md:translate-y-0 md:mt-0"
+              className="max-w-[560px] lg:max-w-[900px] flex flex-col items-start text-left heroCenter mt-[138px] translate-y-[3%] md:translate-y-0 md:mt-0"
               style={{ maxWidth: "fit-content" }}
             >
               <div aria-hidden className="hidden md:block h-12 lg:h-16" />
@@ -2305,7 +2305,7 @@ hover:shadow-[0_0_18px_rgba(192,140,69,0.18)]"
       {/* ===== QUIET RITUAL SECTION ===== */}
       <section
         id="quiet-ritual"
-        className="relative overflow-hidden bg-[#070402] py-10 md:py-16 border-t border-[#6D5333]/35 border-b border-[#6D5333]/35"
+        className="relative overflow-hidden bg-[#070402] -mt-28 md:mt-0 py-10 md:py-16 border-t border-[#6D5333]/35 border-b border-[#6D5333]/35"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_28%,rgba(192,140,69,0.18),transparent_32%),radial-gradient(circle_at_78%_58%,rgba(181,151,109,0.12),transparent_34%)] pointer-events-none" />
         <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(0,0,0,0.92)_0%,rgba(7,4,2,0.82)_42%,rgba(35,20,9,0.48)_100%)] pointer-events-none" />

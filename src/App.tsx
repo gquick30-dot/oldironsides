@@ -6564,7 +6564,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     shortHook: "BOLD AND DARK WITH A SMOOTH FINISH",
     description:
       "The darkest roast in the fleet. Bold, commanding, and full-bodied, delivering deep chocolate richness with a smooth finish that never turns bitter. Strength and flavor, without the burnt taste.",
-    bestFor: ["Dark roast lovers", "Strong coffee drinkers", "Espresso"],
+    bestFor: ["French press", "Drip", "Espresso"],
     notes: ["Chocolate", "Molasses", "Smoke"],
     origins: ["Indonesia", "Colombia"],
     roastLevel: 4,

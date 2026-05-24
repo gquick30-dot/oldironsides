@@ -1610,10 +1610,10 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
   const trustItems = [
     {
       title: "ROASTED TO ORDER",
-      copy: "Always Fresh Roasted.",
+      copy: "Always Fresh.",
       icon: "/anchor.png",
     },
-    { title: "SMALL BATCH", copy: "Craft Roasted.", icon: "/compass.png" },
+    { title: "SMALL BATCH", copy: "Organically Grown.", icon: "/compass.png" },
     {
       title: "SHIPS FRESH",
       copy: "Timed For Peak Freshness.",
@@ -2031,11 +2031,12 @@ function HomePage() {
 
               {/* SUBTEXT */}
               <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-[#E6DCC8]/75">
-                Fresh-roasted and shipped at peak freshness.
+                Organically Grown. Ethically Sourced. <br />
+                Shipped at peak freshness.
               </div>
 
-              <div className="w-full max-w-none mt-8 md:mt-12 xl:mt-14">
-                <div className="flex flex-col md:flex-row items-stretch gap-3 w-full md:w-fit">
+              <div className="w-screen relative left-1/2 -translate-x-1/2 mt-8 md:w-full md:left-auto md:translate-x-0 md:mt-12 xl:mt-14">
+                <div className="mx-auto flex w-[calc(100vw-32px)] max-w-[390px] flex-col items-stretch gap-3 md:mx-0 md:w-fit md:max-w-none md:flex-row">
                   {/* SAMPLE BUTTON */}
                   <Link
                     to="/store"
@@ -2077,8 +2078,9 @@ function HomePage() {
                     START WITH A SAMPLE
                   </Link>
                 </div>
+
                 {/* STAR RATING */}
-                <div className="mt-4 md:mt-3 w-full md:w-[24rem] xl:w-[28rem]">
+                <div className="mx-auto mt-4 w-[calc(100vw-32px)] max-w-[390px] md:mx-0 md:mt-3 md:w-[24rem] md:max-w-none xl:w-[28rem]">
                   {siteRating && (
                     <div className="flex items-center justify-center gap-2 text-center">
                       <span className="text-roastTitle font-semibold tabular-nums text-[1.15rem]">
@@ -2156,7 +2158,10 @@ function HomePage() {
                     </span>
                   </div>
                 </div>
-                <RoastCTAInfo />
+
+                <div className="mx-auto w-[calc(100vw-32px)] max-w-[390px] md:mx-0 md:w-full md:max-w-none">
+                  <RoastCTAInfo />
+                </div>
               </div>
             </div>
           </div>
@@ -2748,8 +2753,10 @@ function HomePage() {
 
             <p className="mt-5 text-neutral-300 text-[1rem] leading-relaxed">
               We source coffee from regions known for quality, character, and
-              craft. Every bean is ethically sourced with respect for the people
-              behind the harvest.
+              craft. Many of the farms we work with use organic growing
+              practices, while others follow the same careful farming methods
+              without formal certification. Every bean is ethically sourced with
+              respect for the growers behind the harvest.
             </p>
           </div>
 
@@ -2866,10 +2873,11 @@ function HomePage() {
 
                   <p className="mt-4 max-w-[760px] text-neutral-300 text-base xl:text-lg leading-relaxed">
                     We source coffee from regions known for quality, character,
-                    and craft. Many farms are organic, while others follow the
-                    same careful farming practices without formal certification.
-                    Every bean is ethically sourced with respect for the growers
-                    behind the harvest.
+                    and craft. Many of the farms we work with use organic
+                    growing practices, while others follow the same careful
+                    farming methods without formal certification. Every bean is
+                    ethically sourced with respect for the growers behind the
+                    harvest.
                   </p>
 
                   <div className="mt-5 grid grid-cols-3 gap-3 max-w-[780px]">
@@ -3001,17 +3009,6 @@ function HomePage() {
                   Each 2.5 oz sample is enough to brew roughly 6–8 cups of
                   coffee, giving you a real taste of the roast before committing
                   to a full bag.
-                </p>
-
-                <p className="text-neutral-300 text-[0.95rem] md:text-base xl:text-lg leading-relaxed">
-                  Get a sample for $5 a piece, or get the{" "}
-                  <Link
-                    to="/roast/armada-sample-pack"
-                    className="font-semibold text-[#E6C07F] transition-colors duration-200 hover:text-[#F2D29A]"
-                  >
-                    Sample Box
-                  </Link>{" "}
-                  and one roast free plus free shipping.
                 </p>
               </div>
               <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-[520px] mx-auto md:mx-0">
@@ -5887,7 +5884,7 @@ function RoastDetailPage() {
                               </div>
 
                               <div className="mt-1 text-[11px] font-semibold text-[#B39871]">
-                                Whole Bean
+                                Whole Bean Only
                               </div>
                             </button>
 

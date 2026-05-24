@@ -1905,6 +1905,8 @@ function HomePage() {
     count: number;
   } | null>(null);
 
+  const tastingVideoRef = React.useRef<HTMLVideoElement | null>(null);
+
   React.useEffect(() => {
     async function loadAllReviews() {
       try {
@@ -1931,6 +1933,7 @@ function HomePage() {
           (acc, r) => acc + (Number(r.rating) || 0),
           0
         );
+
         const count = allReviews.length;
         const avg = Math.round((sum / count) * 10) / 10;
 
@@ -1942,6 +1945,30 @@ function HomePage() {
 
     loadAllReviews();
   }, []);
+
+  React.useEffect(() => {
+    const video = tastingVideoRef.current;
+
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      {
+        threshold: 0.35,
+      }
+    );
+
+    observer.observe(video);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <header
@@ -2453,12 +2480,13 @@ function HomePage() {
                 <div className="relative w-full max-w-[560px]">
                   <div className="relative aspect-[9/14] md:aspect-[4/5] overflow-hidden rounded-2xl border border-[#6D5333]/60 bg-black shadow-2xl shadow-black/80">
                     <video
-                      src="/web-movie.mp4"
+                      ref={tastingVideoRef}
+                      src="/Gallery1.mp4"
                       className="absolute inset-0 w-full h-full object-cover bg-black"
-                      autoPlay
                       muted
                       loop
                       playsInline
+                      preload="none"
                       controls
                     />
 

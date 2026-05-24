@@ -2970,12 +2970,12 @@ function HomePage() {
 
               {/* MOBILE IMAGE */}
               <div className="mt-7 md:hidden flex justify-center">
-                <div className="relative w-full max-w-[620px]">
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[#6D5333]/50 bg-black shadow-2xl shadow-black/70">
+                <div className="relative w-full max-w-[560px]">
+                  <div className="relative rounded-xl border border-[#6D5333]/50 bg-black shadow-2xl shadow-black/70 p-.5">
                     <img
                       src="/sample-pack2.jpg"
                       alt="Old Ironsides Coffee sample packs"
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="relative w-full h-auto object-contain"
                     />
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
@@ -2983,7 +2983,7 @@ function HomePage() {
 
                   <Link
                     to="/roast/armada-sample-pack"
-                    className="mx-auto -mt-7 relative z-10 block w-fit border border-[#6D5333]/60 bg-[#C08C45] px-8 py-4 text-center shadow-xl shadow-black/50 transition-all duration-200 hover:-translate-y-[1px] hover:bg-[#E6C07F] hover:border-[#E6C07F]"
+                    className="mx-auto -mt-7 relative z-10 block w-[92%] border border-[#6D5333]/60 bg-[#C08C45] px-8 py-4 text-center shadow-xl shadow-black/50 transition-all duration-200 hover:-translate-y-[1px] hover:bg-[#E6C07F] hover:border-[#E6C07F]"
                   >
                     <p className="font-oswald text-lg font-black uppercase tracking-[0.22em] text-black">
                       SAMPLE BOX
@@ -3020,16 +3020,17 @@ function HomePage() {
                     key={card.id}
                     to={`/roast/${card.slug}`}
                     className="
-                border border-[#6D5333]/70
-                bg-[#130E08]/80
-                px-3 py-2
-                text-[0.72rem] font-semibold uppercase tracking-[0.16em]
-                text-[#B5976D]
-                transition-all duration-200
-                hover:border-[#C08C45]
-                hover:text-[#E6C07F]
-                hover:bg-[#32220D]
-              "
+flex items-center justify-center text-center
+border border-[#6D5333]/70
+bg-[#130E08]/80
+px-3 py-2
+text-[0.72rem] font-semibold uppercase tracking-[0.16em]
+text-[#B5976D]
+transition-all duration-200
+hover:border-[#C08C45]
+hover:text-[#E6C07F]
+hover:bg-[#32220D]
+"
                   >
                     {card.title}
                   </Link>
@@ -3070,7 +3071,7 @@ function HomePage() {
                   <img
                     src="/sample-pack2.jpg"
                     alt="Old Ironsides Coffee sample packs"
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-contain"
                   />
 
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_58%,rgba(5,3,2,0.55)_100%)]" />
@@ -5666,91 +5667,116 @@ function RoastDetailPage() {
                       </span>
                       <div className="h-px flex-1 bg-[#C08C45]/40" />
                     </div>
-                    {/* ROAST PROFILE */}
+                    {/* SIGNATURE NOTES */}
                     <div className="mt-4 md:mt-5 w-full max-w-[560px]">
                       <div
                         className="text-[11px] tracking-[0.2em] mb-3 font-semibold uppercase"
                         style={{ color: "#8A6E4A" }}
                       >
-                        ROAST PROFILE
+                        SIGNATURE NOTES
                       </div>
 
-                      <div className="relative rounded-md border border-[#6D5333]/45 bg-[#080503]/75 px-4 py-3">
-                        <div className="absolute inset-x-5 top-[43%] h-px bg-[#6D5333]/45" />
+                      <div className="grid grid-cols-3 border-b border-[#C08C45]/55 pb-4">
+                        {(CRAFT_IN_THE_CUP_DATA[card.slug]?.notes ?? []).map(
+                          (note, index, arr) => {
+                            const iconMap: Record<string, string> = {
+                              Hazelnut: "/symbols/hazelnut.png",
+                              "Warm Spice": "/symbols/spice1.png",
+                              Cream: "/symbols/cream1.png",
 
-                        <div className="relative grid grid-cols-3 text-center">
-                          {["LIGHT", "MEDIUM", "DARK"].map((level) => {
-                            const active =
-                              (level === "DARK" &&
-                                (card.slug === "baptism-by-fire" ||
-                                  card.slug === "oak-and-copper")) ||
-                              (level === "MEDIUM" &&
-                                card.slug !== "baptism-by-fire" &&
-                                card.slug !== "oak-and-copper");
+                              Chocolate: "/symbols/chocolate1.png",
+                              Molasses: "/symbols/molasses1.png",
+                              Smoke: "/symbols/smoke1.png",
+
+                              Vanilla: "/symbols/vanilla1.png",
+                              Cocoa: "/symbols/cocoa1.png",
+                              Almond: "/symbols/almond1.png",
+
+                              Caramel: "/symbols/caramel1.png",
+                              "Red Apple": "/symbols/apple1.png",
+
+                              Oak: "/symbols/oak3.png",
+
+                              Pecan: "/symbols/pecan.jpg",
+                              "Brown Sugar": "/symbols/sugar.png",
+                              Spice: "/symbols/spice1.png",
+                            };
 
                             return (
                               <div
-                                key={level}
-                                className="flex flex-col items-center gap-1.5"
+                                key={note}
+                                className={`flex flex-col items-center justify-center px-2 py-1 ${
+                                  index !== arr.length - 1
+                                    ? "border-r border-[#6D5333]/70"
+                                    : ""
+                                }`}
                               >
-                                <div
-                                  className={
-                                    "h-3 w-3 rounded-full border " +
-                                    (active
-                                      ? "bg-[#C08C45] border-[#E6C07F] shadow-[0_0_10px_rgba(192,140,69,0.65)]"
-                                      : "bg-black border-[#6D5333]")
-                                  }
+                                <img
+                                  src={iconMap[note]}
+                                  alt={note}
+                                  className="h-9 w-9 md:h-10 md:w-10 object-contain opacity-95"
                                 />
 
-                                <div
-                                  className={
-                                    "text-[10px] md:text-[11px] font-bold tracking-[0.18em] uppercase " +
-                                    (active
-                                      ? "text-[#E6C07F]"
-                                      : "text-[#8A6E4A]")
-                                  }
-                                >
-                                  {level}
-                                </div>
+                                <span className="mt-2 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.14em] text-[#B5976D] text-center leading-tight">
+                                  {note}
+                                </span>
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                      {/* BEST FOR */}
+                      <div className="mt-4 md:mt-5 w-full max-w-[560px]">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div
+                            className="text-[11px] tracking-[0.2em] font-semibold uppercase shrink-0"
+                            style={{ color: "#8A6E4A" }}
+                          >
+                            BEST FOR
+                          </div>
+                          <div className="h-px flex-1 bg-[#C08C45]/55" />
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-y-4 border-b border-[#C08C45]/55 pb-4">
+                          {(
+                            CRAFT_IN_THE_CUP_DATA[card.slug]?.bestFor ?? []
+                          ).map((item) => {
+                            const bestForIconMap: Record<string, string> = {
+                              "Daily drinkers": "/symbols/cup1.png",
+                              Drip: "/symbols/dripbrewer1.png",
+                              "French press": "/symbols/frenchpress1.png",
+                              "Cold brew": "/symbols/coldbrew1.png",
+
+                              "Dark roast lovers": "/symbols/DOUBLE BEAN.png",
+                              "Strong coffee drinkers": "/symbols/cup1.png",
+                              Espresso: "/symbols/espresso1.png",
+                              "Black or with cream": "/symbols/cream1.png",
+
+                              "Pour over": "/symbols/pourer1.png",
+                              "Bourbon lovers": "/symbols/oak3.png",
+                              "Premium drip": "/symbols/dripbrewer1.png",
+                              "Cold weather mornings": "/symbols/snowflake.png",
+                            };
+
+                            return (
+                              <div
+                                key={item}
+                                className="flex flex-col items-center justify-start px-2 text-center"
+                              >
+                                <img
+                                  src={bestForIconMap[item]}
+                                  alt={item}
+                                  className="h-9 w-9 md:h-10 md:w-10 object-contain opacity-95"
+                                />
+
+                                <span className="mt-2 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.12em] text-[#B5976D] leading-tight">
+                                  {item}
+                                </span>
                               </div>
                             );
                           })}
                         </div>
                       </div>
-                    </div>
-
-                    {/* TASTING NOTES */}
-                    <div className="mt-5 md:mt-6 w-full max-w-[560px]">
-                      <div
-                        className="text-[11px] tracking-[0.2em] mb-3 font-semibold uppercase"
-                        style={{ color: "#8A6E4A" }}
-                      >
-                        TASTING NOTES
-                      </div>
-
-                      <div className="rounded-md border border-[#6D5333]/45 bg-[#080503]/75 px-5 md:px-6 py-3">
-                        <div className="flex items-center justify-between gap-3">
-                          {(CRAFT_IN_THE_CUP_DATA[card.slug]?.notes ?? []).map(
-                            (note, index) => (
-                              <React.Fragment key={note}>
-                                <span className="px-1 text-[12px] md:text-[13px] font-bold uppercase tracking-[0.16em] text-[#B5976D] whitespace-nowrap">
-                                  {note}
-                                </span>
-
-                                {index <
-                                  (
-                                    CRAFT_IN_THE_CUP_DATA[card.slug]?.notes ??
-                                    []
-                                  ).length -
-                                    1 && (
-                                  <span className="h-px flex-1 bg-[#6D5333]/45" />
-                                )}
-                              </React.Fragment>
-                            )
-                          )}
-                        </div>
-                      </div>
-
                       {(card.canBuy || isOak) && (
                         <div className="mt-6">
                           <div
@@ -6522,7 +6548,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     shortHook: "SMOOTH, BALANCED, EVERYDAY DRINKER.",
     description:
       "A smooth, full-bodied medium roast made for everyday drinking. Balanced, never bitter, and rich enough to enjoy black or with cream and sugar.",
-    bestFor: ["Daily drinkers", "Drip", "French press", "Cold brew"],
+    bestFor: ["Drip", "French press", "Cold brew"],
     notes: ["Hazelnut", "Warm Spice", "Cream"],
     origins: ["El Salvador", "Indonesia"],
     roastLevel: 3,
@@ -6538,12 +6564,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     shortHook: "BOLD AND DARK WITH A SMOOTH FINISH",
     description:
       "The darkest roast in the fleet. Bold, commanding, and full-bodied, delivering deep chocolate richness with a smooth finish that never turns bitter. Strength and flavor, without the burnt taste.",
-    bestFor: [
-      "Dark roast lovers",
-      "Strong coffee drinkers",
-      "Espresso",
-      "Black or with cream",
-    ],
+    bestFor: ["Dark roast lovers", "Strong coffee drinkers", "Espresso"],
     notes: ["Chocolate", "Molasses", "Smoke"],
     origins: ["Indonesia", "Colombia"],
     roastLevel: 4,
@@ -6557,7 +6578,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     shortHook: "SMOOTH, FULL-BODIED, EASY TO DRINK",
     description:
       "A smooth, balanced medium roast with a creamy sweet finish and just enough depth to keep things interesting. Rich, satisfying, and easy to drink black or with a touch of cream.",
-    bestFor: ["Daily drinkers", "Drip", "Pour over", "French press"],
+    bestFor: ["Drip", "Pour over", "French press"],
     notes: ["Hazelnut", "Caramel", "Red Apple"],
     origins: ["Guatemala", "Ethiopia", "Colombia"],
     roastLevel: 3,
@@ -6592,7 +6613,7 @@ const CRAFT_IN_THE_CUP_DATA: Record<
     shortHook: "Bourbon barrel aged with oak, caramel, and warm spice.",
     description:
       "Coffee beans aged in freshly emptied bourbon barrels, slowly absorbing notes of oak, caramel, and warm spice. Roasted to reveal a rich, smooth cup with subtle bourbon character and deep complexity. Never artificially flavored.",
-    bestFor: ["Bourbon lovers", "Premium drip", "Pour over", "Espresso"],
+    bestFor: ["Premium drip", "Pour over", "Espresso"],
     notes: ["Vanilla", "Caramel", "Oak"],
     origins: ["Colombia"],
     roastLevel: 3,
@@ -6649,28 +6670,8 @@ function CraftInTheCupBlock({ slug }: { slug: string }) {
 
       <div className={lineClass} />
 
-      <div>
-        <h3
-          className="text-base md:text-lg font-semibold"
-          style={{ color: "#C08C45" }}
-        >
-          Best For
-        </h3>
+      <div></div>
 
-        <div
-          className="mt-0.5 text-lg leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.60)" }}
-        >
-          {data.bestFor.map((item, i) => (
-            <span key={item}>
-              {i > 0 && <span style={{ color: "#6D5333" }}> | </span>}
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className={lineClass} />
       <div className={originRowClass}>
         <h3
           className="text-base md:text-lg font-semibold shrink-0"
@@ -11777,24 +11778,19 @@ function Layout() {
         }
       />
       {!hidePromoTab && (
-        <div
-          className="fixed right-0 md:left-0 md:right-auto top-1/2 z-40"
-          style={{ transform: "translateY(-50%)" }}
-        >
-          <div className="flex flex-col items-center bg-[#C08C45] text-black rounded-l-md md:rounded-r-md md:rounded-l-none shadow-lg overflow-hidden promo-tab-pulse">
-            {/* close button */}
+        <div className="fixed right-0 md:left-0 md:right-auto top-[58%] md:top-1/2 z-40 -translate-y-1/2 scale-[0.78] md:scale-100 origin-right md:origin-left">
+          <div className="flex flex-col items-center bg-[#B98238] md:bg-[#C08C45] text-black rounded-l-md md:rounded-r-md md:rounded-l-none shadow-lg overflow-hidden md:promo-tab-pulse">
             <button
               onClick={() => {
                 const until = Date.now() + 24 * 60 * 60 * 1000;
                 localStorage.setItem("promoTabHiddenUntil", String(until));
                 setHidePromoTab(true);
               }}
-              className="w-full flex items-center justify-center text-black text-xl font-extrabold py-2 bg-[#C08C45] hover:bg-[#C08C45] border-b border-black/20"
+              className="w-full flex items-center justify-center text-black text-lg md:text-xl font-extrabold py-1.5 md:py-2 bg-[#B98238] md:bg-[#C08C45] border-b border-black/20"
             >
               ✖
             </button>
 
-            {/* vertical promo tab */}
             <button
               onClick={() =>
                 document.dispatchEvent(
@@ -11804,7 +11800,7 @@ function Layout() {
                   })
                 )
               }
-              className="px-3 py-10 font-bold tracking-wider hover:bg-[#C08C45] transition"
+              className="px-2 md:px-3 py-7 md:py-10 font-black text-[0.9rem] md:text-[0.92rem] tracking-[0.14em] hover:bg-[#C08C45] transition"
               style={{
                 writingMode: "vertical-rl",
                 textOrientation: "mixed",

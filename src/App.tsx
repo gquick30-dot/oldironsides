@@ -1746,7 +1746,8 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
               const notes = tastingNotes[card.slug] ?? [];
 
               return (
-                <div
+                <Link
+                  to={`/roast/${card.slug}`}
                   key={card.id}
                   className={`
                     group relative overflow-hidden rounded-[14px]
@@ -1896,6 +1897,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     <Link
                       to="/roast/armada-sample-pack"
                       aria-label={`Try a sample of ${card.title}`}
+                      onClick={(e) => e.stopPropagation()}
                       className="
                         flex-1 py-3 text-center text-[0.95rem] font-bold tracking-widest uppercase
                         bg-[#C08C45] text-[#0d0d0d]
@@ -1911,6 +1913,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                     <Link
                       to={`/roast/${card.slug}`}
                       aria-label={`View ${card.title} roast details`}
+                      onClick={(e) => e.stopPropagation()}
                       className={`
                         flex-1 py-3 text-center text-[0.95rem] font-bold tracking-widest uppercase
                         border transition-all duration-200
@@ -1925,7 +1928,7 @@ function LaunchedFromHarbor({ noBg = false }: { noBg?: boolean }) {
                       View Roast
                     </Link>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
@@ -2164,7 +2167,7 @@ function HomePage() {
               </div>
 
               {/* SUBTEXT */}
-              <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1rem] sm:text-[1.1rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-[#E6DCC8]/75">
+              <div className="mt-6 md:mt-5 font-playfair font-semibold text-[1.14rem] sm:text-[1.2rem] md:text-[1.35rem] xl:text-[1.55rem] leading-snug text-[#E6DCC8]/75">
                 Organically Sourced. <br />
                 Small Farm Grown. <br />
                 No Compromises.
